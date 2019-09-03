@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <!-- Bootstrap CSS -->
+    <link crossorigin="anonymous"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          rel="stylesheet">
+    <!-- Fonts icons -->
+    <link crossorigin="anonymous"
+          href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+          integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf"
+          rel="stylesheet">
+    <title>Hexlet Correction Service</title>
+</head>
+<body>
+<div class="container" th:fragment="header">
+    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #e3f2fd;">
+        <a class="navbar-brand" href="#" th:href="@{/}">
+            <i class="fas fa-mountain"></i>
+            Hexlet
+        </a>
+        <button aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation"
+                class="navbar-toggler"
+                data-target="#navbarNavDropdown" data-toggle="collapse" type="button">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav">
+                <li class="nav-item dropdown">
+                    <a aria-expanded="false"
+                       aria-haspopup="true" class="nav-link dropdown-toggle"
+                       data-toggle="dropdown" href="#"
+                       id="formDropdown" role="button">
+                        Forms
+                    </a>
+                    <div aria-labelledby="formDropdown" class="dropdown-menu">
+                        <a class="dropdown-item" href="#" th:href="@{/correction/new}">Correction form</a>
+                        <div class="dropdown-divider"></div>
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a aria-expanded="false"
+                       aria-haspopup="true" class="nav-link dropdown-toggle"
+                       data-toggle="dropdown" href="#"
+                       id="correctionDropdown" role="button">
+                        Corrections
+                    </a>
+                    <div aria-labelledby="correctionDropdown" class="dropdown-menu">
+                        <a class="dropdown-item" href="#" th:href="@{/correction/list}">Correction list</a>
+                    </div>
+                </li>
+                <li th:if="${#authorization.expression('!isAuthenticated()')}">
+                    <a class="nav-link" href="/login" th:href="@{/login}">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Log in
+                    </a>
+                </li>
+                <li th:if="${#authorization.expression('isAuthenticated()')}">
+                    <a class="nav-link" href="/logout" onclick="$('#form').submit();" th:href="@{#}">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Logout
+                    </a>
+                    <form action="#"
+                          id="form"
+                          method="post"
+                          style="visibility: hidden"
+                          th:action="@{/logout}">
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</div>
+<script crossorigin="anonymous"
+        integrity="sha256-BJeo0qm959uMBGb65z40ejJYGSgR7REI4+CW1fNKwOg="
+        src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+<script crossorigin="anonymous"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script crossorigin="anonymous"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head}"></head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+<div class="container">
+    <h4>Add new site</h4>
+    <form method="post" th:action="@{/correction}" th:object="${correctionMessage}">
+        <input th:field="*{id}" type="hidden"/>
+        <div class="form-row">
+            <div class="form-group col-md-3">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">userName</span>
+                    </div>
+                    <input aria-describedby="nameHelp" autofocus class="form-control" id="userName" maxlength="50"
+                           minlength="2" placeholder="Enter userName" required th:field="*{userName}" type="text">
+                </div>
+                <small class="form-text text-muted" id="nameHelp">Size: 2 - 50 characters</small>
+            </div>
+            <div class="form-group col-md-3">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Page URL</span>
+                    </div>
+                    <input aria-describedby="URLHelp" class="form-control" id="pageURL" maxlength="255"
+                           minlength="2"
+                           placeholder="Enter country" required th:field="*{pageURL}" type="text">
+                </div>
+                <small class="form-text text-muted" id="URLHelp">Size: 2 - 255 characters</small>
+            </div>
+            <div class="form-group col-md-3">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Comment</span>
+                    </div>
+                    <input aria-describedby="commentHelp" class="form-control" id="comment" maxlength="255"
+                           minlength="2"
+                           placeholder="Enter region" required th:field="*{comment}" type="text">
+                </div>
+                <small class="form-text text-muted" id="commentHelp">Size: 2 - 255 characters</small>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="highlightText">Description</label>
+            <textarea aria-describedby="highlightTextHelp" class="form-control" id="highlightText" maxlength="1000"
+                      placeholder="Enter highlight text" th:field="*{highlightText}"></textarea>
+            <small class="form-text text-muted" id="highlightTextHelp">Size maximal: 1000 characters</small>
+        </div>
+        <button class="btn btn-primary" type="submit">Add correction message</button>
+    </form>
+</div>
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>
