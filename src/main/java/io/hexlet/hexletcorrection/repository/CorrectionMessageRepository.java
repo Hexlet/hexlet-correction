@@ -1,14 +1,15 @@
 package io.hexlet.hexletcorrection.repository;
 
 import io.hexlet.hexletcorrection.domain.CorrectionMessage;
-import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import reactor.core.publisher.Flux;
+
+import java.util.List;
 
 @Repository
-public interface CorrectionMessageRepository extends ReactiveMongoRepository<CorrectionMessage, String> {
+public interface CorrectionMessageRepository extends JpaRepository<CorrectionMessage, Long> {
 
-    Flux<CorrectionMessage> findCorrectionMessageByUsernameContainingIgnoreCase(String username);
+    List<CorrectionMessage> findCorrectionMessageByUsernameContainingIgnoreCase(String username);
 
-    Flux<CorrectionMessage> findCorrectionMessageByPageURL(String pageURL);
+    List<CorrectionMessage> findCorrectionMessageByPageURL(String pageURL);
 }

@@ -2,21 +2,22 @@ package io.hexlet.hexletcorrection.service;
 
 import io.hexlet.hexletcorrection.domain.CorrectionMessage;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public interface CorrectionMessageService {
 
-    Mono<CorrectionMessage> findById(String id);
+    Optional<CorrectionMessage> findById(Long id);
 
-    Flux<CorrectionMessage> findByUsername(String name);
+    List<CorrectionMessage> findByUsername(String name);
 
-    Flux<CorrectionMessage> findByURL(String url);
+    List<CorrectionMessage> findByURL(String url);
 
-    Flux<CorrectionMessage> findAll();
+    List<CorrectionMessage> findAll();
 
-    Mono<CorrectionMessage> save(CorrectionMessage correctionMessage);
+    CorrectionMessage save(CorrectionMessage correctionMessage);
 
-    Mono<Void> delete(String id);
+    void delete(Long id);
 }

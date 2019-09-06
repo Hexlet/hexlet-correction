@@ -16,8 +16,8 @@
 ### Стек технологий проекта
 
 * Java 12
-* Spring Boot 2 (WebFlux)
-* MongoDB
+* Spring Boot 2
+* PostgreSQL
 * Frontend - ReactJs
 
 ### Компиляция и запуск

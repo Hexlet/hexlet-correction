@@ -5,8 +5,9 @@ import io.hexlet.hexletcorrection.repository.CorrectionMessageRepository;
 import io.hexlet.hexletcorrection.service.CorrectionMessageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -15,32 +16,32 @@ public class CorrectionMessageServiceImpl implements CorrectionMessageService {
     private final CorrectionMessageRepository correctionMessageRepository;
 
     @Override
-    public Mono<CorrectionMessage> findById(String id) {
+    public Optional<CorrectionMessage> findById(Long id) {
         return correctionMessageRepository.findById(id);
     }
 
     @Override
-    public Flux<CorrectionMessage> findByUsername(String username) {
+    public List<CorrectionMessage> findByUsername(String username) {
         return correctionMessageRepository.findCorrectionMessageByUsernameContainingIgnoreCase(username);
     }
 
     @Override
-    public Flux<CorrectionMessage> findByURL(String url) {
+    public List<CorrectionMessage> findByURL(String url) {
         return correctionMessageRepository.findCorrectionMessageByPageURL(url);
     }
 
     @Override
-    public Flux<CorrectionMessage> findAll() {
+    public List<CorrectionMessage> findAll() {
         return correctionMessageRepository.findAll();
     }
 
     @Override
-    public Mono<CorrectionMessage> save(CorrectionMessage correctionMessage) {
+    public CorrectionMessage save(CorrectionMessage correctionMessage) {
         return correctionMessageRepository.save(correctionMessage);
     }
 
     @Override
-    public Mono<Void> delete(String id) {
-        return correctionMessageRepository.deleteById(id);
+    public void delete(Long id) {
+        correctionMessageRepository.deleteById(id);
     }
 }
