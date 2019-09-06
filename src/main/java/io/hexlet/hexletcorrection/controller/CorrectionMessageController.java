@@ -13,36 +13,36 @@ import javax.validation.Valid;
 @RequestMapping(path = "/correction")
 @RequiredArgsConstructor
 public class CorrectionMessageController {
-    
-    private final CorrectionMessageService corrMsgServ;
-    
+
+    private final CorrectionMessageService correctionMessageService;
+
     @GetMapping(path = "/list")
-    public Flux<CorrectionMessage> getAllMsg() {
-        return corrMsgServ.findAll();
+    public Flux<CorrectionMessage> getAllMessages() {
+        return correctionMessageService.findAll();
     }
-    
-    @GetMapping(path = "/msg/{id}")
-    public Mono<CorrectionMessage> getById(@PathVariable("id") String id) {
-        return corrMsgServ.findById(id);
+
+    @GetMapping(path = "/message/{id}")
+    public Mono<CorrectionMessage> getMessageById(@PathVariable("id") String id) {
+        return correctionMessageService.findById(id);
     }
-    
+
     @GetMapping(path = "/user/{username}")
-    public Flux<CorrectionMessage> getByUsername(@PathVariable("username") String username) {
-        return corrMsgServ.findByUsername(username);
+    public Flux<CorrectionMessage> getMessageByUsername(@PathVariable("username") String username) {
+        return correctionMessageService.findByUsername(username);
     }
-    
+
     @GetMapping(path = "/url/{url}")
-    public Flux<CorrectionMessage> getByURL(@PathVariable("url") String url) {
-        return corrMsgServ.findByURL(url);
+    public Flux<CorrectionMessage> getMessageByUrl(@PathVariable("url") String url) {
+        return correctionMessageService.findByURL(url);
     }
-    
+
     @PostMapping("/post")
-    public Mono<CorrectionMessage> postMsg(@Valid @RequestBody CorrectionMessage correctionMessage) {
-        return corrMsgServ.save(correctionMessage);
+    public Mono<CorrectionMessage> postMessage(@Valid @RequestBody CorrectionMessage correctionMessage) {
+        return correctionMessageService.save(correctionMessage);
     }
-    
-    @DeleteMapping(path = "/msg/{id}")
-    public Mono<CorrectionMessage> deleteMsg(@PathVariable("id") String id) {
-        return corrMsgServ.delete(id);
+
+    @DeleteMapping(path = "/message/{id}")
+    public Mono<Void> deleteMessage(@PathVariable("id") String id) {
+        return correctionMessageService.delete(id);
     }
 }

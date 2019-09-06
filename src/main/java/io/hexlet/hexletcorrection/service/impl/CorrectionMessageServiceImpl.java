@@ -11,38 +11,36 @@ import reactor.core.publisher.Mono;
 @Service
 @RequiredArgsConstructor
 public class CorrectionMessageServiceImpl implements CorrectionMessageService {
-    
-    private final CorrectionMessageRepository corrMsgRep;
-    
+
+    private final CorrectionMessageRepository correctionMessageRepository;
+
     @Override
     public Mono<CorrectionMessage> findById(String id) {
-        return corrMsgRep.findById(id);
+        return correctionMessageRepository.findById(id);
     }
-    
+
     @Override
     public Flux<CorrectionMessage> findByUsername(String username) {
-        return corrMsgRep.findCorrectionMessageByUsernameContainingIgnoreCase(username);
+        return correctionMessageRepository.findCorrectionMessageByUsernameContainingIgnoreCase(username);
     }
-    
+
     @Override
     public Flux<CorrectionMessage> findByURL(String url) {
-        return corrMsgRep.findCorrectionMessageByPageURL(url);
+        return correctionMessageRepository.findCorrectionMessageByPageURL(url);
     }
-    
+
     @Override
     public Flux<CorrectionMessage> findAll() {
-        return corrMsgRep.findAll();
+        return correctionMessageRepository.findAll();
     }
-    
+
     @Override
     public Mono<CorrectionMessage> save(CorrectionMessage correctionMessage) {
-        return corrMsgRep.save(correctionMessage);
+        return correctionMessageRepository.save(correctionMessage);
     }
-    
+
     @Override
-    public Mono<CorrectionMessage> delete(String id) {
-        Mono<CorrectionMessage> deletedMsg = corrMsgRep.findById(id);
-        corrMsgRep.deleteById(id);
-        return deletedMsg;
+    public Mono<Void> delete(String id) {
+        return correctionMessageRepository.deleteById(id);
     }
 }

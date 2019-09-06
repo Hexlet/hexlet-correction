@@ -7,16 +7,16 @@ import reactor.core.publisher.Mono;
 
 @Service
 public interface CorrectionMessageService {
-    
+
     Mono<CorrectionMessage> findById(String id);
-    
+
     Flux<CorrectionMessage> findByUsername(String name);
-    
+
     Flux<CorrectionMessage> findByURL(String url);
-    
+
     Flux<CorrectionMessage> findAll();
-    
+
     Mono<CorrectionMessage> save(CorrectionMessage correctionMessage);
-    
-    Mono<CorrectionMessage> delete(String id);
+
+    Mono<Void> delete(String id);
 }

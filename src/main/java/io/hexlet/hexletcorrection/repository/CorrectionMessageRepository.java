@@ -7,7 +7,8 @@ import reactor.core.publisher.Flux;
 
 @Repository
 public interface CorrectionMessageRepository extends ReactiveMongoRepository<CorrectionMessage, String> {
+
     Flux<CorrectionMessage> findCorrectionMessageByUsernameContainingIgnoreCase(String username);
-    
+
     Flux<CorrectionMessage> findCorrectionMessageByPageURL(String pageURL);
 }

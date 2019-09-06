@@ -18,14 +18,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class CorrectionMessageControllerTest {
-    
+
     @Autowired
-    CorrectionMessageService corrMsgServ;
+    CorrectionMessageService correctionMessageService;
     @Autowired
     private WebTestClient webTestClient;
-    
+
     @Test
-    public void getAllMsg() {
+    public void getAllMessagesTest() {
         webTestClient.get().uri("/correction/list")
                 .accept(MediaType.APPLICATION_JSON_UTF8)
                 .exchange()
@@ -33,79 +33,79 @@ public class CorrectionMessageControllerTest {
                 .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
                 .expectBodyList(CorrectionMessage.class);
     }
-    
+
     @Test
-    public void getById() {
-        CorrectionMessage corrMsg = CorrectionMessage.builder()
+    public void getMessageByIdTest() {
+        CorrectionMessage correctionMessage = CorrectionMessage.builder()
                 .comment("test comment")
                 .highlightText("text to correction")
                 .pageURL("hexlet.io")
                 .username("Artem")
                 .build();
-        
-        CorrectionMessage savedMsg = corrMsgServ.save(corrMsg).block();
-        
+
+        CorrectionMessage savedMessage = correctionMessageService.save(correctionMessage).block();
+
         webTestClient.get()
-                .uri("/correction/msg/{id}", Collections.singletonMap("id", savedMsg.getId()))
+                .uri("/correction/message/{id}", Collections.singletonMap("id", savedMessage.getId()))
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
                 .consumeWith(response -> assertThat(response.getResponseBody()).isNotNull());
     }
-    
+
     @Test
-    public void getByUsername() {
-        CorrectionMessage corrMsg = CorrectionMessage.builder()
+    public void getMessageByUsernameTest() {
+        CorrectionMessage correctionMessage = CorrectionMessage.builder()
                 .comment("test comment")
                 .highlightText("text to correction")
                 .pageURL("hexlet.io")
                 .username("Artem")
                 .build();
-        
-        CorrectionMessage savedMsg = corrMsgServ.save(corrMsg).block();
-        
+
+        CorrectionMessage savedMessage = correctionMessageService.save(correctionMessage).block();
+
         webTestClient.get()
-                .uri("/correction/user/{username}", Collections.singletonMap("username", savedMsg.getUsername()))
+                .uri("/correction/user/{username}", Collections.singletonMap("username", savedMessage.getUsername()))
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
                 .consumeWith(response -> assertThat(response.getResponseBody()).isNotNull());
     }
-    
+
     @Test
-    public void getByURL() {
-        CorrectionMessage corrMsg = CorrectionMessage.builder()
+    public void getMessageByUrlTest() {
+        CorrectionMessage correctionMessage = CorrectionMessage.builder()
                 .comment("test comment")
                 .highlightText("text to correction")
                 .pageURL("hexlet.io")
                 .username("Artem")
                 .build();
-        
-        CorrectionMessage savedMsg = corrMsgServ.save(corrMsg).block();
-        
+
+        CorrectionMessage savedMessage = correctionMessageService.save(correctionMessage).block();
+
         webTestClient.get()
-                .uri("/correction/url/{url}", Collections.singletonMap("url", savedMsg.getPageURL()))
+                .uri("/correction/url/{url}", Collections.singletonMap("url", savedMessage.getPageURL()))
                 .exchange()
                 .expectStatus().isOk()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
                 .expectBody()
                 .consumeWith(response -> assertThat(response.getResponseBody()).isNotNull());
     }
-    
+
     @Test
-    public void postMsg() {
-        CorrectionMessage corrMsg = CorrectionMessage.builder()
+    public void postMessageTest() {
+        CorrectionMessage correctionMessage = CorrectionMessage.builder()
                 .comment("test comment")
                 .highlightText("text to correction")
                 .pageURL("hexlet.io")
                 .username("Artem")
                 .id("1")
                 .build();
-        
+
         webTestClient.post().uri("/correction/post")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .accept(MediaType.APPLICATION_JSON_UTF8)
-                .body(Mono.just(corrMsg), CorrectionMessage.class)
+                .body(Mono.just(correctionMessage), CorrectionMessage.class)
                 .exchange()
                 .expectStatus().isOk()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -116,20 +116,20 @@ public class CorrectionMessageControllerTest {
                 .jsonPath("$.pageURL").isEqualTo("hexlet.io")
                 .jsonPath("$.username").isEqualTo("Artem");
     }
-    
+
     @Test
-    public void deleteMsg() {
-        CorrectionMessage corrMsg = CorrectionMessage.builder()
+    public void deleteMessageTest() {
+        CorrectionMessage correctionMessage = CorrectionMessage.builder()
                 .comment("test comment")
                 .highlightText("text to correction")
                 .pageURL("hexlet.io")
                 .username("Artem")
                 .build();
-        
-        CorrectionMessage savedMsg = corrMsgServ.save(corrMsg).block();
-        
+
+        CorrectionMessage savedMessage = correctionMessageService.save(correctionMessage).block();
+
         webTestClient.delete()
-                .uri("correction/msg/{id}", Collections.singletonMap("id", savedMsg.getId()))
+                .uri("correction/message/{id}", Collections.singletonMap("id", savedMessage.getId()))
                 .exchange()
                 .expectStatus().isOk();
     }
