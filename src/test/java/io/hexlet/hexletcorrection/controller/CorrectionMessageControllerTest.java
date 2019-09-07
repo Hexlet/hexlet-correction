@@ -1,7 +1,9 @@
 package io.hexlet.hexletcorrection.controller;
 
 import io.hexlet.hexletcorrection.domain.CorrectionMessage;
+import io.hexlet.hexletcorrection.domain.User;
 import io.hexlet.hexletcorrection.service.CorrectionMessageService;
+import io.hexlet.hexletcorrection.service.UserService;
 import io.restassured.http.ContentType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,88 +22,76 @@ public class CorrectionMessageControllerTest {
     @Autowired
     CorrectionMessageService correctionMessageService;
 
+    @Autowired
+    UserService userService;
+
     private final static String HOST = "http://localhost";
+
+    private final static String CORRECTION_MESSAGE_PATH = "/correction-message";
 
     @LocalServerPort
     private int port;
 
     @Test
     public void getAllMessagesTest() {
-        given().when().get(HOST + ":" + port + "/correction/list").then().statusCode(HttpStatus.OK.value()).contentType(ContentType.JSON);
+        given().when().get(HOST + ":" + port + CORRECTION_MESSAGE_PATH).then().statusCode(HttpStatus.OK.value()).contentType(ContentType.JSON);
     }
 
     @Test
     public void getMessageByIdTest() {
-        CorrectionMessage correctionMessage = CorrectionMessage.builder()
-                .comment("test comment")
-                .highlightText("text to correction")
-                .pageURL("hexlet.io")
-                .username("Artem")
-                .build();
+        CorrectionMessage savedMessage = createMessage(createUser());
 
-        CorrectionMessage savedMessage = correctionMessageService.save(correctionMessage);
-
-        given().when().get(HOST + ":" + port + "/correction/message/" + savedMessage.getId())
-                .then().statusCode(HttpStatus.OK.value()).contentType(ContentType.JSON);
-    }
-
-    @Test
-    public void getMessageByUsernameTest() {
-        CorrectionMessage correctionMessage = CorrectionMessage.builder()
-                .comment("test comment")
-                .highlightText("text to correction")
-                .pageURL("hexlet.io")
-                .username("Artem")
-                .build();
-
-        CorrectionMessage savedMessage = correctionMessageService.save(correctionMessage);
-
-        given().when().get(HOST + ":" + port + "/correction/user/" + savedMessage.getUsername())
+        given().when().get(HOST + ":" + port + CORRECTION_MESSAGE_PATH + "/" + savedMessage.getId())
                 .then().statusCode(HttpStatus.OK.value()).contentType(ContentType.JSON);
     }
 
     @Test
     public void getMessageByUrlTest() {
-        CorrectionMessage correctionMessage = CorrectionMessage.builder()
-                .comment("test comment")
-                .highlightText("text to correction")
-                .pageURL("hexlet.io")
-                .username("Artem")
-                .build();
+        CorrectionMessage savedMessage = createMessage(createUser());
 
-        CorrectionMessage savedMessage = correctionMessageService.save(correctionMessage);
-
-        given().when().get(HOST + ":" + port + "/correction/url/" + savedMessage.getPageURL())
+        given().when().get(HOST + ":" + port + CORRECTION_MESSAGE_PATH + "/?url=" + savedMessage.getPageURL())
                 .then().statusCode(HttpStatus.OK.value()).contentType(ContentType.JSON);
     }
 
     @Test
     public void postMessageTest() {
+        User user = createUser();
+
         CorrectionMessage correctionMessage = CorrectionMessage.builder()
                 .comment("test comment")
                 .highlightText("text to correction")
                 .pageURL("hexlet.io")
-                .username("Artem")
+                .user(user)
                 .build();
 
         given().when().body(correctionMessage).contentType(ContentType.JSON)
-                .post(HOST + ":" + port + "/correction/post")
+                .post(HOST + ":" + port + CORRECTION_MESSAGE_PATH)
                 .then()
                 .statusCode(HttpStatus.CREATED.value());
     }
 
     @Test
     public void deleteMessageTest() {
+        CorrectionMessage savedMessage = createMessage(createUser());
+
+        given().when().delete(HOST + ":" + port + CORRECTION_MESSAGE_PATH + "/" + savedMessage.getId())
+                .then().statusCode(HttpStatus.NO_CONTENT.value());
+    }
+
+    private User createUser() {
+        User user = User.builder().name("Artem").email("artem@hexlet.io").build();
+
+        return userService.create(user);
+    }
+
+    private CorrectionMessage createMessage(User user) {
         CorrectionMessage correctionMessage = CorrectionMessage.builder()
                 .comment("test comment")
                 .highlightText("text to correction")
                 .pageURL("hexlet.io")
-                .username("Artem")
+                .user(createUser())
                 .build();
 
-        CorrectionMessage savedMessage = correctionMessageService.save(correctionMessage);
-
-        given().when().delete(HOST + ":" + port + "/correction/message/" + savedMessage.getId())
-                .then().statusCode(HttpStatus.NO_CONTENT.value());
+        return correctionMessageService.create(correctionMessage);
     }
 }

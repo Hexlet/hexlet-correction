@@ -11,39 +11,33 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping(path = "/correction")
+@RequestMapping(path = "/correction-message")
 @RequiredArgsConstructor
 public class CorrectionMessageController {
 
     private final CorrectionMessageService correctionMessageService;
 
-    @GetMapping(path = "/list")
-    public List<CorrectionMessage> getAllMessages() {
-        return correctionMessageService.findAll();
+    @GetMapping
+    public List<CorrectionMessage> getMessages(@RequestParam(required = false) String url) {
+        if (url == null) {
+            return correctionMessageService.findAll();
+        }
+
+        return correctionMessageService.findByURL(url);
     }
 
-    @GetMapping(path = "/message/{id}")
+    @GetMapping(path = "/{id}")
     public Optional<CorrectionMessage> getMessageById(@PathVariable("id") Long id) {
         return correctionMessageService.findById(id);
     }
 
-    @GetMapping(path = "/user/{username}")
-    public List<CorrectionMessage> getMessageByUsername(@PathVariable("username") String username) {
-        return correctionMessageService.findByUsername(username);
-    }
-
-    @GetMapping(path = "/url/{url}")
-    public List<CorrectionMessage> getMessageByUrl(@PathVariable("url") String url) {
-        return correctionMessageService.findByURL(url);
-    }
-
-    @PostMapping("/post")
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public CorrectionMessage postMessage(@Valid @RequestBody CorrectionMessage correctionMessage) {
-        return correctionMessageService.save(correctionMessage);
+    public CorrectionMessage createMessage(@Valid @RequestBody CorrectionMessage correctionMessage) {
+        return correctionMessageService.create(correctionMessage);
     }
 
-    @DeleteMapping(path = "/message/{id}")
+    @DeleteMapping(path = "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteMessage(@PathVariable("id") Long id) {
         correctionMessageService.delete(id);

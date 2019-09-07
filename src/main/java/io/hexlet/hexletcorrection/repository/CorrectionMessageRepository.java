@@ -9,7 +9,5 @@ import java.util.List;
 @Repository
 public interface CorrectionMessageRepository extends JpaRepository<CorrectionMessage, Long> {
 
-    List<CorrectionMessage> findCorrectionMessageByUsernameContainingIgnoreCase(String username);
-
-    List<CorrectionMessage> findCorrectionMessageByPageURL(String pageURL);
+    List<CorrectionMessage> findByPageURL(String pageURL);
 }

@@ -10,8 +10,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.validation.constraints.NotNull;
+import javax.persistence.OneToMany;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -19,21 +19,16 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @Builder
 @Entity
-public class CorrectionMessage {
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String comment;
+    private String name;
 
-    @NotNull
-    private String highlightText;
+    private String email;
 
-    @NotNull
-    @ManyToOne
-    private User user;
-
-    @NotNull
-    private String pageURL;
+    @OneToMany(mappedBy = "user")
+    private Set<CorrectionMessage> correctionMessages;
 }

@@ -21,13 +21,8 @@ public class CorrectionMessageServiceImpl implements CorrectionMessageService {
     }
 
     @Override
-    public List<CorrectionMessage> findByUsername(String username) {
-        return correctionMessageRepository.findCorrectionMessageByUsernameContainingIgnoreCase(username);
-    }
-
-    @Override
     public List<CorrectionMessage> findByURL(String url) {
-        return correctionMessageRepository.findCorrectionMessageByPageURL(url);
+        return correctionMessageRepository.findByPageURL(url);
     }
 
     @Override
@@ -36,7 +31,7 @@ public class CorrectionMessageServiceImpl implements CorrectionMessageService {
     }
 
     @Override
-    public CorrectionMessage save(CorrectionMessage correctionMessage) {
+    public CorrectionMessage create(CorrectionMessage correctionMessage) {
         return correctionMessageRepository.save(correctionMessage);
     }
 
