@@ -21,7 +21,7 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @Builder
 @Entity
-public class CorrectionMessage {
+public class Correction {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

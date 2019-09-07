@@ -22,7 +22,7 @@ public class UserControllerTest {
 
     private final static String HOST = "http://localhost";
 
-    private final static String USER_PATH = "/user";
+    private final static String USER_PATH = "/users";
 
     @LocalServerPort
     private int port;

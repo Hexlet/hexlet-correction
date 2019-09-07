@@ -1,8 +1,8 @@
 package io.hexlet.hexletcorrection.controller;
 
-import io.hexlet.hexletcorrection.domain.CorrectionMessage;
+import io.hexlet.hexletcorrection.domain.Correction;
 import io.hexlet.hexletcorrection.domain.User;
-import io.hexlet.hexletcorrection.service.CorrectionMessageService;
+import io.hexlet.hexletcorrection.service.CorrectionService;
 import io.hexlet.hexletcorrection.service.UserService;
 import io.restassured.http.ContentType;
 import org.junit.Test;
@@ -17,65 +17,64 @@ import static io.restassured.RestAssured.given;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class CorrectionMessageControllerTest {
+public class CorrectionControllerTest {
 
     @Autowired
-    CorrectionMessageService correctionMessageService;
+    CorrectionService correctionService;
 
     @Autowired
     UserService userService;
 
     private final static String HOST = "http://localhost";
 
-    private final static String CORRECTION_MESSAGE_PATH = "/correction-message";
+    private final static String CORRECTIONS_PATH = "/corrections";
 
     @LocalServerPort
     private int port;
 
     @Test
-    public void getAllMessagesTest() {
-        given().when().get(HOST + ":" + port + CORRECTION_MESSAGE_PATH).then().statusCode(HttpStatus.OK.value()).contentType(ContentType.JSON);
+    public void getAllCorrectionsTest() {
+        given().when().get(HOST + ":" + port + CORRECTIONS_PATH).then().statusCode(HttpStatus.OK.value()).contentType(ContentType.JSON);
     }
 
     @Test
-    public void getMessageByIdTest() {
-        CorrectionMessage savedMessage = createMessage(createUser());
+    public void getCorrectionByIdTest() {
+        Correction savedCorrection = createCorrection(createUser());
 
-        given().when().get(HOST + ":" + port + CORRECTION_MESSAGE_PATH + "/" + savedMessage.getId())
+        given().when().get(HOST + ":" + port + CORRECTIONS_PATH + "/" + savedCorrection.getId())
                 .then().statusCode(HttpStatus.OK.value()).contentType(ContentType.JSON);
     }
 
     @Test
-    public void getMessageByUrlTest() {
-        CorrectionMessage savedMessage = createMessage(createUser());
-        savedMessage.setPageURL("hexlet.io");
+    public void getCorrectionByUrlTest() {
+        Correction savedCorrection = createCorrection(createUser());
 
-        given().when().get(HOST + ":" + port + CORRECTION_MESSAGE_PATH + "/?url=" + savedMessage.getPageURL())
+        given().when().get(HOST + ":" + port + CORRECTIONS_PATH + "/?url=" + savedCorrection.getPageURL())
                 .then().statusCode(HttpStatus.OK.value()).contentType(ContentType.JSON);
     }
 
     @Test
-    public void postMessageTest() {
+    public void postCorrectionTest() {
         User user = createUser();
 
-        CorrectionMessage correctionMessage = CorrectionMessage.builder()
+        Correction correction = Correction.builder()
                 .comment("test comment")
                 .highlightText("text to correction")
                 .pageURL("hexlet.io")
                 .user(user)
                 .build();
 
-        given().when().body(correctionMessage).contentType(ContentType.JSON)
-                .post(HOST + ":" + port + CORRECTION_MESSAGE_PATH)
+        given().when().body(correction).contentType(ContentType.JSON)
+                .post(HOST + ":" + port + CORRECTIONS_PATH)
                 .then()
                 .statusCode(HttpStatus.CREATED.value());
     }
 
     @Test
-    public void deleteMessageTest() {
-        CorrectionMessage savedMessage = createMessage(createUser());
+    public void deleteCorrectionTest() {
+        Correction savedCorrection = createCorrection(createUser());
 
-        given().when().delete(HOST + ":" + port + CORRECTION_MESSAGE_PATH + "/" + savedMessage.getId())
+        given().when().delete(HOST + ":" + port + CORRECTIONS_PATH + "/" + savedCorrection.getId())
                 .then().statusCode(HttpStatus.NO_CONTENT.value());
     }
 
@@ -85,14 +84,14 @@ public class CorrectionMessageControllerTest {
         return userService.create(user);
     }
 
-    private CorrectionMessage createMessage(User user) {
-        CorrectionMessage correctionMessage = CorrectionMessage.builder()
+    private Correction createCorrection(User user) {
+        Correction correction = Correction.builder()
                 .comment("test comment")
                 .highlightText("text to correction")
                 .pageURL("hexlet.io")
                 .user(createUser())
                 .build();
 
-        return correctionMessageService.create(correctionMessage);
+        return correctionService.create(correction);
     }
 }
