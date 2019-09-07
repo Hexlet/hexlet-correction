@@ -48,6 +48,7 @@ public class CorrectionMessageControllerTest {
     @Test
     public void getMessageByUrlTest() {
         CorrectionMessage savedMessage = createMessage(createUser());
+        savedMessage.setPageURL("hexlet.io");
 
         given().when().get(HOST + ":" + port + CORRECTION_MESSAGE_PATH + "/?url=" + savedMessage.getPageURL())
                 .then().statusCode(HttpStatus.OK.value()).contentType(ContentType.JSON);
