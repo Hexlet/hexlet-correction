@@ -21,7 +21,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/user")
 @AllArgsConstructor
-public class UserController {
+public class UserController implements FormValidator{
 
     private final UserService userService;
 
