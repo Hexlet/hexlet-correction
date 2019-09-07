@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.com/Hexlet/hexlet-correction.svg?branch=master)](https://travis-ci.com/Hexlet/hexlet-correction)
+[![codecov](https://codecov.io/gh/Hexlet/hexlet-correction/branch/master/graph/badge.svg)](https://codecov.io/gh/Hexlet/hexlet-correction)
 
 # hexlet-correction
 
