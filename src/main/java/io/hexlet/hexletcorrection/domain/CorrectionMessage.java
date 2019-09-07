@@ -40,6 +40,5 @@ public class CorrectionMessage {
 
     @NotNull(message = "URL not be null")
     @NotBlank(message = "URL not be empty")
-    @URL(message = "Invalid URL provided")
     private String pageURL;
 }
