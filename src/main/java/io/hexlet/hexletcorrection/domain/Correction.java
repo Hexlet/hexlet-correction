@@ -19,7 +19,7 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @Builder
 @Entity
-public class CorrectionMessage {
+public class Correction {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -30,5 +30,5 @@ public class User {
     private String email;
 
     @OneToMany(mappedBy = "user")
-    private Set<CorrectionMessage> correctionMessages;
+    private Set<Correction> corrections;
 }
