@@ -13,7 +13,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping(path = "/correction-message")
 @RequiredArgsConstructor
-public class CorrectionMessageController {
+public class CorrectionMessageController implements FormValidator {
 
     private final CorrectionMessageService correctionMessageService;
 
