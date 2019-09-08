@@ -8,12 +8,14 @@ import io.restassured.http.ContentType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.equalTo;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -31,6 +33,9 @@ public class CorrectionControllerTest {
 
     @LocalServerPort
     private int port;
+
+    @Value("${hexlet.correction.maxComment}")
+    private int maxComment;
 
     @Test
     public void getAllCorrectionsTest() {
@@ -68,6 +73,84 @@ public class CorrectionControllerTest {
                 .post(HOST + ":" + port + CORRECTIONS_PATH)
                 .then()
                 .statusCode(HttpStatus.CREATED.value());
+    }
+
+    @Test
+    public void postCorrectionCommentEmptyTest() {
+        Correction correction = Correction.builder()
+                .comment("")
+                .highlightText("text to correction")
+                .pageURL("hexlet.io")
+                .user(createUser())
+                .build();
+
+        given().when().body(correction).contentType(ContentType.JSON)
+                .post(HOST + ":" + port + CORRECTIONS_PATH)
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("comment", equalTo("Comment not be empty"));
+    }
+
+    @Test
+    public void postCorrectionCommentTooLongTest() {
+        Correction correction = Correction.builder()
+                .comment("A".repeat(++maxComment))
+                .highlightText("text to correction")
+                .pageURL("hexlet.io")
+                .user(createUser())
+                .build();
+
+        given().when().body(correction).contentType(ContentType.JSON)
+                .post(HOST + ":" + port + CORRECTIONS_PATH)
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("comment", equalTo("Comment not be more than 200 characters"));
+    }
+
+    @Test
+    public void postCorrectionHighlightTextEmptyTest() {
+        Correction correction = Correction.builder()
+                .comment("test comment")
+                .highlightText("")
+                .pageURL("hexlet.io")
+                .user(createUser())
+                .build();
+
+        given().when().body(correction).contentType(ContentType.JSON)
+                .post(HOST + ":" + port + CORRECTIONS_PATH)
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("highlightText", equalTo("Highlight text not be empty"));
+    }
+
+    @Test
+    public void postCorrectionUserNullTest() {
+        Correction correction = Correction.builder()
+                .comment("test comment")
+                .highlightText("text to correction")
+                .pageURL("hexlet.io")
+                .build();
+
+        given().when().body(correction).contentType(ContentType.JSON)
+                .post(HOST + ":" + port + CORRECTIONS_PATH)
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("user", equalTo("User not be null"));
+    }
+
+    @Test
+    public void postCorrectionURLEmptyTest() {
+        Correction correction = Correction.builder()
+                .comment("test comment")
+                .highlightText("text to correction")
+                .user(createUser())
+                .build();
+
+        given().when().body(correction).contentType(ContentType.JSON)
+                .post(HOST + ":" + port + CORRECTIONS_PATH)
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("pageURL", equalTo("URL not be empty"));
     }
 
     @Test
