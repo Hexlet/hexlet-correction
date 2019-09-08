@@ -12,8 +12,13 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
+import static io.hexlet.hexletcorrection.domain.EntityConstrainConstants.MAX_COMMENT_LENGTH;
+import static io.hexlet.hexletcorrection.domain.EntityConstrainConstants.NOT_EMPTY;
+import static io.hexlet.hexletcorrection.domain.EntityConstrainConstants.NOT_NULL;
 
 @Getter
 @Setter
@@ -27,17 +32,17 @@ public class Correction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Size(message = "comment not be more than 200 characters", max = 200)
+    @NotEmpty(message = "Comment " + NOT_EMPTY)
+    @Size(message = "Comment not be more than " + MAX_COMMENT_LENGTH + " characters", max = MAX_COMMENT_LENGTH)
     private String comment;
 
-    @NotNull(message = "highlight text not be null")
+    @NotEmpty(message = "Highlight text " + NOT_EMPTY)
     private String highlightText;
 
-    @NotNull(message = "User not be null")
+    @NotNull(message = "User " + NOT_NULL)
     @ManyToOne
     private User user;
 
-    @NotNull(message = "URL not be null")
-    @NotBlank(message = "URL not be empty")
+    @NotBlank(message = "URL " + NOT_EMPTY)
     private String pageURL;
 }

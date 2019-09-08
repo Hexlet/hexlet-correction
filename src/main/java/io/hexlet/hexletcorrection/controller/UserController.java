@@ -1,5 +1,6 @@
 package io.hexlet.hexletcorrection.controller;
 
+import io.hexlet.hexletcorrection.controller.exception.UserNotFoundException;
 import io.hexlet.hexletcorrection.domain.User;
 import io.hexlet.hexletcorrection.service.UserService;
 import lombok.AllArgsConstructor;
@@ -16,18 +17,19 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
+
+import static io.hexlet.hexletcorrection.controller.ControllerConstrainConstants.USER_PATH;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping(USER_PATH)
 @AllArgsConstructor
-public class UserController implements FormValidator{
+public class UserController {
 
     private final UserService userService;
 
     @GetMapping("/{id}")
-    public Optional<User> getUserById(@PathVariable("id") Long id) {
-        return userService.findById(id);
+    public User getUserById(@PathVariable("id") Long id) {
+        return userService.findById(id).orElseThrow(() -> new UserNotFoundException(id));
     }
 
     @PostMapping
