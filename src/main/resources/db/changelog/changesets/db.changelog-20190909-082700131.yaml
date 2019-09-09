@@ -1,0 +1,60 @@
+databaseChangeLog:
+- changeSet:
+    id: 1568017632656-1
+    author: timur (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              primaryKey: true
+              primaryKeyName: CorrectionPK
+            name: id
+            type: BIGINT
+        - column:
+            name: comment
+            type: VARCHAR(255)
+        - column:
+            name: highlight_text
+            type: VARCHAR(255)
+        - column:
+            name: page_url
+            type: VARCHAR(255)
+        - column:
+            name: user_id
+            type: BIGINT
+        tableName: Correction
+- changeSet:
+    id: 1568017632656-2
+    author: timur (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              primaryKey: true
+              primaryKeyName: UserPK
+            name: id
+            type: BIGINT
+        - column:
+            name: email
+            type: VARCHAR(255)
+        - column:
+            name: name
+            type: VARCHAR(255)
+        tableName: User
+- changeSet:
+    id: 1568017632656-3
+    author: timur (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: user_id
+        baseTableName: Correction
+        constraintName: FK90rvrrr8fmopff9m16tnjjfc3
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: User
+

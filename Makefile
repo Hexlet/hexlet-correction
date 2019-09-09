@@ -16,3 +16,7 @@ update:
 
 test:
 	./mvnw clean test
+
+
+generate-migration:
+	 ./mvnw clean install liquibase:diff -DskipTests=true
