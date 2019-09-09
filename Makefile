@@ -1,7 +1,7 @@
 .DEFAULT_GOAL := build-run
 
 run:
-	java -jar ./target/hexlet-correction-0.0.1-SNAPSHOT.jar
+	java -jar ./target/hexlet-correction-*.jar
 
 clean:
 	rm -rf ./target
@@ -13,3 +13,6 @@ build:
 
 update:
 	./mvnw versions:update-properties versions:display-plugin-updates
+
+test:
+	./mvnw clean test
