@@ -1,17 +1,27 @@
 package io.hexlet.hexletcorrection.controller;
 
+import io.hexlet.hexletcorrection.controller.exception.CorrectionNotFoundException;
 import io.hexlet.hexletcorrection.domain.Correction;
 import io.hexlet.hexletcorrection.service.CorrectionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
+
+import static io.hexlet.hexletcorrection.controller.ControllerConstrainConstants.CORRECTIONS_PATH;
 
 @RestController
-@RequestMapping(path = "/corrections")
+@RequestMapping(CORRECTIONS_PATH)
 @RequiredArgsConstructor
 public class CorrectionController {
 
@@ -27,8 +37,10 @@ public class CorrectionController {
     }
 
     @GetMapping(path = "/{id}")
-    public Optional<Correction> getCorrectionById(@PathVariable("id") Long id) {
-        return correctionService.findById(id);
+    public Correction getCorrectionById(@PathVariable("id") Long id) {
+        return correctionService
+                .findById(id)
+                .orElseThrow(() -> new CorrectionNotFoundException(id));
     }
 
     @PostMapping
