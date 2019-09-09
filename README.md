@@ -1,4 +1,6 @@
 [![Build Status](https://travis-ci.com/Hexlet/hexlet-correction.svg?branch=master)](https://travis-ci.com/Hexlet/hexlet-correction)
+[![Maintainability](https://api.codeclimate.com/v1/badges/377ea817e9c8b7d9d6cf/maintainability)](https://codeclimate.com/github/Hexlet/hexlet-correction/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/377ea817e9c8b7d9d6cf/test_coverage)](https://codeclimate.com/github/Hexlet/hexlet-correction/test_coverage)
 
 # hexlet-correction
 

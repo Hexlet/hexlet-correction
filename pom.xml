@@ -21,6 +21,11 @@
         <lombok.version>1.18.8</lombok.version>
         <h2database.version>1.4.199</h2database.version>
         <checkstyle.config.location>checkstyle.xml</checkstyle.config.location>
+
+        <!-- Code Coverage -->
+        <jacoco-maven-plugin.version>0.8.4</jacoco-maven-plugin.version>
+        <jacoco-maven-plugin.lines-coverage-ratio>0.8</jacoco-maven-plugin.lines-coverage-ratio>
+        <jacoco-maven-plugin.methods-coverage-ratio>0.8</jacoco-maven-plugin.methods-coverage-ratio>
     </properties>
 
     <dependencies>
@@ -84,6 +89,57 @@
                         </goals>
                         <configuration>
                             <configLocation>${checkstyle.config.location}</configLocation>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco-maven-plugin.version}</version>
+                <configuration>
+                    <excludes>
+                        <exclude>**/HexletCorrectionApplication.*</exclude>
+                    </excludes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>jacoco-check</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <rule>
+                                    <element>PACKAGE</element>
+                                    <limits>
+                                        <limit>
+                                            <counter>LINE</counter>
+                                            <value>COVEREDRATIO</value>
+                                            <minimum>${jacoco-maven-plugin.lines-coverage-ratio}</minimum>
+                                        </limit>
+                                        <limit>
+                                            <counter>METHOD</counter>
+                                            <value>COVEREDRATIO</value>
+                                            <minimum>${jacoco-maven-plugin.methods-coverage-ratio}</minimum>
+                                        </limit>
+                                    </limits>
+                                </rule>
+                            </rules>
                         </configuration>
                     </execution>
                 </executions>
