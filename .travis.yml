@@ -1,5 +1,23 @@
 language: java
 jdk:
   - openjdk12
-after_success:
-  - bash <(curl -s https://codecov.io/bash)
+
+env:
+  global:
+    - JACOCO_SOURCE_PATH=src/main/java
+
+cache:
+  directories:
+    - $HOME/.m2
+
+before_script:
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+  - ./cc-test-reporter before-build
+
+script:
+  - make test
+
+after_script:
+  - if [[ "$TRAVIS_TEST_RESULT" == 0 ]]; then ./cc-test-reporter format-coverage target/site/jacoco/jacoco.xml -t jacoco; fi
+  - if [[ "$TRAVIS_TEST_RESULT" == 0 ]]; then ./cc-test-reporter upload-coverage; fi
