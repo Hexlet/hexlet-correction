@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.util.List;
 
-import static io.hexlet.hexletcorrection.controller.ControllerConstrainConstants.CORRECTIONS_PATH;
+import static io.hexlet.hexletcorrection.controller.ControllerConstants.CORRECTIONS_PATH;
 
 @RestController
 @RequestMapping(CORRECTIONS_PATH)

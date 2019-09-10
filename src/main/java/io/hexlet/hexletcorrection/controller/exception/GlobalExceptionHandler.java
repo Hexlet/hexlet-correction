@@ -18,9 +18,9 @@ import static java.util.Objects.nonNull;
 public class GlobalExceptionHandler {
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(UserNotFoundException.class)
-    protected Map<String, String> handleUserNotFoundException(UserNotFoundException ex) {
-        return Map.of("user", ex.getMessage());
+    @ExceptionHandler(AccountNotFoundException.class)
+    protected Map<String, String> handleAccountNotFoundException(AccountNotFoundException ex) {
+        return Map.of("account", ex.getMessage());
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)

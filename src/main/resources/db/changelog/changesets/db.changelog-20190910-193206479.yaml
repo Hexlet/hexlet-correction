@@ -1,6 +1,30 @@
 databaseChangeLog:
 - changeSet:
-    id: 1568140690849-1
+    id: 1568143937138-1
+    author: timur.malikin (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              primaryKey: true
+              primaryKeyName: accountPK
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: email
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
+            name: name
+            type: VARCHAR(255)
+        tableName: account
+- changeSet:
+    id: 1568143937138-2
     author: timur.malikin (generated)
     changes:
     - createTable:
@@ -26,43 +50,19 @@ databaseChangeLog:
             name: page_url
             type: VARCHAR(255)
         - column:
-            name: user_id
+            name: account_id
             type: BIGINT
         tableName: correction
 - changeSet:
-    id: 1568140690849-2
-    author: timur (generated)
-    changes:
-    - createTable:
-        columns:
-        - column:
-            autoIncrement: true
-            constraints:
-              primaryKey: true
-              primaryKeyName: userPK
-            name: id
-            type: BIGINT
-        - column:
-            constraints:
-              nullable: false
-            name: email
-            type: VARCHAR(255)
-        - column:
-            constraints:
-              nullable: false
-            name: name
-            type: VARCHAR(255)
-        tableName: user
-- changeSet:
-    id: 1568140690849-3
+    id: 1568143937138-3
     author: timur.malikin (generated)
     changes:
     - addForeignKeyConstraint:
-        baseColumnNames: user_id
+        baseColumnNames: account_id
         baseTableName: correction
-        constraintName: FKarr07t6y45sp0e2cibk2b3wok
+        constraintName: FK7qjxj0dskd1mqkosuen5mpkxj
         deferrable: false
         initiallyDeferred: false
         referencedColumnNames: id
-        referencedTableName: user
+        referencedTableName: account
 

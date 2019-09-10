@@ -19,7 +19,7 @@ import javax.validation.constraints.Size;
 import java.util.Set;
 
 import static io.hexlet.hexletcorrection.domain.EntityConstrainConstants.INVALID_EMAIL;
-import static io.hexlet.hexletcorrection.domain.EntityConstrainConstants.MAX_LENGTH_USER_NAME;
+import static io.hexlet.hexletcorrection.domain.EntityConstrainConstants.MAX_ACCOUNT_NAME;
 import static io.hexlet.hexletcorrection.domain.EntityConstrainConstants.NOT_EMPTY;
 import static javax.persistence.FetchType.EAGER;
 
@@ -29,8 +29,8 @@ import static javax.persistence.FetchType.EAGER;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "user")
-public class User {
+@Table(name = "account")
+public class Account {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,7 +38,7 @@ public class User {
 
     @Column(nullable = false)
     @NotBlank(message = "Name " + NOT_EMPTY)
-    @Size(message = "Name not be more than " + MAX_LENGTH_USER_NAME + " characters", max = MAX_LENGTH_USER_NAME)
+    @Size(message = "Name not be more than " + MAX_ACCOUNT_NAME + " characters", max = MAX_ACCOUNT_NAME)
     private String name;
 
     @Column(nullable = false)
@@ -46,6 +46,6 @@ public class User {
     @Email(message = INVALID_EMAIL)
     private String email;
 
-    @OneToMany(mappedBy = "user", fetch = EAGER)
+    @OneToMany(mappedBy = "account", fetch = EAGER)
     private Set<Correction> corrections;
 }

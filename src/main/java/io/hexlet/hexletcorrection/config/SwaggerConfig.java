@@ -29,13 +29,13 @@ public class SwaggerConfig {
     }
 
     @Bean
-    public Docket usersApi() {
+    public Docket accountsApi() {
         return new Docket(DocumentationType.SWAGGER_2)
-                .groupName("users-api")
+                .groupName("accounts-api")
                 .produces(Set.of(MediaType.APPLICATION_JSON_VALUE))
                 .select()
                     .apis(baseControllersPackage())
-                    .paths(PathSelectors.regex("/users.*"))
+                    .paths(PathSelectors.regex("/accounts.*"))
                     .build();
     }
 

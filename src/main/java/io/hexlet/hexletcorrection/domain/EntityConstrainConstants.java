@@ -4,7 +4,7 @@ public class EntityConstrainConstants {
 
     public static final int MAX_COMMENT_LENGTH = 200;
 
-    public static final int MAX_LENGTH_USER_NAME = 50;
+    public static final int MAX_ACCOUNT_NAME = 50;
 
     public static final String INVALID_EMAIL = "Invalid Email provided";
 

@@ -1,7 +1,7 @@
 package io.hexlet.hexletcorrection.controller;
 
-import io.hexlet.hexletcorrection.domain.User;
-import io.hexlet.hexletcorrection.service.UserService;
+import io.hexlet.hexletcorrection.domain.Account;
+import io.hexlet.hexletcorrection.service.AccountService;
 import io.restassured.http.ContentType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,168 +11,168 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import static io.hexlet.hexletcorrection.controller.ControllerConstrainConstants.TEST_HOST;
-import static io.hexlet.hexletcorrection.controller.ControllerConstrainConstants.USER_PATH;
+import static io.hexlet.hexletcorrection.controller.ControllerConstants.TEST_HOST;
+import static io.hexlet.hexletcorrection.controller.ControllerConstants.ACCOUNTS_PATH;
 import static io.hexlet.hexletcorrection.domain.EntityConstrainConstants.INVALID_EMAIL;
-import static io.hexlet.hexletcorrection.domain.EntityConstrainConstants.MAX_LENGTH_USER_NAME;
+import static io.hexlet.hexletcorrection.domain.EntityConstrainConstants.MAX_ACCOUNT_NAME;
 import static io.hexlet.hexletcorrection.domain.EntityConstrainConstants.NOT_EMPTY;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class UserControllerTest {
+public class AccountControllerTest {
 
     @Autowired
-    UserService userService;
+    AccountService accountService;
 
     @LocalServerPort
     private int port;
 
     @Test
-    public void getAllUsersTest() {
+    public void getAllAccountsTest() {
         given().when()
-                .get(TEST_HOST + ":" + port + USER_PATH)
+                .get(TEST_HOST + ":" + port + ACCOUNTS_PATH)
                 .then()
                 .statusCode(HttpStatus.OK.value())
                 .contentType(ContentType.JSON);
     }
 
     @Test
-    public void getUserByIdTest() {
-        User user = createUser();
+    public void getAccountByIdTest() {
+        Account account = createAccount();
 
         given().when()
-                .get(TEST_HOST + ":" + port + USER_PATH + "/" + user.getId())
+                .get(TEST_HOST + ":" + port + ACCOUNTS_PATH + "/" + account.getId())
                 .then()
                 .statusCode(HttpStatus.OK.value())
                 .contentType(ContentType.JSON);
     }
 
     @Test
-    public void getUserByFalseIdTest() {
-        long falseId = createUser().getId() + 1L;
+    public void getAccountByFalseIdTest() {
+        long falseId = createAccount().getId() + 1L;
 
         given().when()
-                .get(TEST_HOST + ":" + port + USER_PATH + "/" + falseId)
+                .get(TEST_HOST + ":" + port + ACCOUNTS_PATH + "/" + falseId)
                 .then()
                 .statusCode(HttpStatus.NOT_FOUND.value())
                 .contentType(ContentType.JSON)
-                .body("user", equalTo("User with ID '" + falseId + "' not found"));
+                .body("account", equalTo("Account with ID '" + falseId + "' not found"));
     }
 
     @Test
-    public void getUserByNameTest() {
+    public void getAccountByNameTest() {
         given().when()
-                .get(TEST_HOST + ":" + port + USER_PATH + "/?name=" + createUser().getName())
+                .get(TEST_HOST + ":" + port + ACCOUNTS_PATH + "/?name=" + createAccount().getName())
                 .then()
                 .statusCode(HttpStatus.OK.value())
                 .contentType(ContentType.JSON);
     }
 
     @Test
-    public void getUserByFalseNameTest() {
-        String falseName = createUser().getName() + "A";
+    public void getAccountByFalseNameTest() {
+        String falseName = createAccount().getName() + "A";
 
         given().when()
-                .get(TEST_HOST + ":" + port + USER_PATH + "/?name=" + falseName)
+                .get(TEST_HOST + ":" + port + ACCOUNTS_PATH + "/?name=" + falseName)
                 .then()
                 .statusCode(HttpStatus.OK.value())
                 .contentType(ContentType.JSON);
     }
 
     @Test
-    public void postUserTest() {
-        User user = User.builder()
+    public void postAccountTest() {
+        Account account = Account.builder()
                 .name("Artem")
                 .email("artem@hexlet.io")
                 .build();
 
         given().when()
-                .body(user)
+                .body(account)
                 .contentType(ContentType.JSON)
-                .post(TEST_HOST + ":" + port + USER_PATH)
+                .post(TEST_HOST + ":" + port + ACCOUNTS_PATH)
                 .then()
                 .statusCode(HttpStatus.CREATED.value());
     }
 
     @Test
-    public void postUserNameEmptyTest() {
-        User user = User.builder()
+    public void postAccountNameEmptyTest() {
+        Account account = Account.builder()
                 .email("artem@hexlet.io")
                 .build();
 
         given().when()
-                .body(user)
+                .body(account)
                 .contentType(ContentType.JSON)
-                .post(TEST_HOST + ":" + port + USER_PATH)
+                .post(TEST_HOST + ":" + port + ACCOUNTS_PATH)
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("name", equalTo("Name " + NOT_EMPTY));
     }
 
     @Test
-    public void postUserNameTooLongTest() {
-        User user = User.builder()
+    public void postAccountNameTooLongTest() {
+        Account account = Account.builder()
                 .email("artem@hexlet.io")
-                .name("A".repeat(MAX_LENGTH_USER_NAME + 1)).build();
+                .name("A".repeat(MAX_ACCOUNT_NAME + 1)).build();
 
         given().when()
-                .body(user)
+                .body(account)
                 .contentType(ContentType.JSON)
-                .post(TEST_HOST + ":" + port + USER_PATH)
+                .post(TEST_HOST + ":" + port + ACCOUNTS_PATH)
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body("name", equalTo("Name not be more than " + MAX_LENGTH_USER_NAME + " characters"));
+                .body("name", equalTo("Name not be more than " + MAX_ACCOUNT_NAME + " characters"));
     }
 
     @Test
-    public void postUserEmailEmptyTest() {
-        User user = User.builder()
+    public void postAccountEmailEmptyTest() {
+        Account account = Account.builder()
                 .name("Artem")
                 .build();
 
         given().when()
-                .body(user)
+                .body(account)
                 .contentType(ContentType.JSON)
-                .post(TEST_HOST + ":" + port + USER_PATH)
+                .post(TEST_HOST + ":" + port + ACCOUNTS_PATH)
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("email", equalTo("Email " + NOT_EMPTY));
     }
 
     @Test
-    public void postUserEmailInvalidTest() {
-        User user = User.builder()
+    public void postAccountEmailInvalidTest() {
+        Account account = Account.builder()
                 .name("Artem")
                 .email("123")
                 .build();
 
         given().when()
-                .body(user)
+                .body(account)
                 .contentType(ContentType.JSON)
-                .post(TEST_HOST + ":" + port + USER_PATH)
+                .post(TEST_HOST + ":" + port + ACCOUNTS_PATH)
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("email", equalTo(INVALID_EMAIL));
     }
 
     @Test
-    public void deleteUserTest() {
-        User user = createUser();
+    public void deleteAccountTest() {
+        Account account = createAccount();
 
         given().when()
-                .delete(TEST_HOST + ":" + port + USER_PATH + "/" + user.getId())
+                .delete(TEST_HOST + ":" + port + ACCOUNTS_PATH + "/" + account.getId())
                 .then()
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
-    private User createUser() {
-        User user = User.builder()
+    private Account createAccount() {
+        Account account = Account.builder()
                 .name("Artem")
                 .email("artem@hexlet.io")
                 .build();
 
-        return userService.create(user);
+        return accountService.create(account);
     }
 }

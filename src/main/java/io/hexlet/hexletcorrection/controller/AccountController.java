@@ -1,8 +1,8 @@
 package io.hexlet.hexletcorrection.controller;
 
-import io.hexlet.hexletcorrection.controller.exception.UserNotFoundException;
-import io.hexlet.hexletcorrection.domain.User;
-import io.hexlet.hexletcorrection.service.UserService;
+import io.hexlet.hexletcorrection.controller.exception.AccountNotFoundException;
+import io.hexlet.hexletcorrection.domain.Account;
+import io.hexlet.hexletcorrection.service.AccountService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,39 +18,39 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.util.List;
 
-import static io.hexlet.hexletcorrection.controller.ControllerConstrainConstants.USER_PATH;
+import static io.hexlet.hexletcorrection.controller.ControllerConstants.ACCOUNTS_PATH;
 
 @RestController
-@RequestMapping(USER_PATH)
+@RequestMapping(ACCOUNTS_PATH)
 @AllArgsConstructor
-public class UserController {
+public class AccountController {
 
-    private final UserService userService;
+    private final AccountService accountService;
 
     @GetMapping("/{id}")
-    public User getUserById(@PathVariable("id") Long id) {
-        return userService
+    public Account getAccountById(@PathVariable("id") Long id) {
+        return accountService
                 .findById(id)
-                .orElseThrow(() -> new UserNotFoundException(id));
+                .orElseThrow(() -> new AccountNotFoundException(id));
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public User createUser(@Valid @RequestBody User user) {
-        return userService.create(user);
+    public Account createAccount(@Valid @RequestBody Account account) {
+        return accountService.create(account);
     }
 
     @GetMapping
-    public List<User> getUsers(@RequestParam(required = false) String name) {
+    public List<Account> getAccounts(@RequestParam(required = false) String name) {
         if (name == null) {
-            return userService.findAll();
+            return accountService.findAll();
         }
-        return userService.findByName(name);
+        return accountService.findByName(name);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteUser(@PathVariable("id") Long id) {
-        userService.delete(id);
+    public void deleteAccount(@PathVariable("id") Long id) {
+        accountService.delete(id);
     }
 }

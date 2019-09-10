@@ -43,9 +43,9 @@ public class Correction {
     @NotEmpty(message = "Highlight text " + NOT_EMPTY)
     private String highlightText;
 
-    @NotNull(message = "User " + NOT_NULL)
+    @NotNull(message = "Account " + NOT_NULL)
     @ManyToOne
-    private User user;
+    private Account account;
 
     @NotBlank(message = "URL " + NOT_EMPTY)
     @Column(name = "page_url", nullable = false)
