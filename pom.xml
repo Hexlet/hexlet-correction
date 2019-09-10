@@ -198,6 +198,7 @@
                 <version>${liquibase-maven-plugin.version}</version>
                 <configuration>
                     <propertyFile>${project.build.outputDirectory}/liquibase-maven-plugin.properties</propertyFile>
+                    <promptOnNonLocalDatabase>false</promptOnNonLocalDatabase>
                     <logging>info</logging>
                 </configuration>
                 <dependencies>
