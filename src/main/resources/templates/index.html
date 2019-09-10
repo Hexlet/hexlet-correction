@@ -3,12 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <title>Hexlet Corrections</title>
+    <link
+            rel="stylesheet"
+            href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+            integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+            crossorigin="anonymous"
+    />
 </head>
 <body>
     <div id="react-app">
+        <noscript>You need to enable JavaScript to run this app.</noscript>
         <h1>Home Page</h1>
     </div>
 
-    <div th:replace="head-scripts"></div>
+    <script src="https://unpkg.com/react/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-bootstrap@next/dist/react-bootstrap.min.js" crossorigin></script>
+    <script type="text/javascript" th:src="@{/dist/app-bundle.js}" src="../static/dist/app-bundle.js"></script>
 </body>
 </html>
