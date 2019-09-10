@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -36,6 +37,7 @@ public class Correction {
     @Size(message = "Comment not be more than " + MAX_COMMENT_LENGTH + " characters", max = MAX_COMMENT_LENGTH)
     private String comment;
 
+    @Column(name = "highlight_text", nullable = false)
     @NotEmpty(message = "Highlight text " + NOT_EMPTY)
     private String highlightText;
 
@@ -44,5 +46,6 @@ public class Correction {
     private User user;
 
     @NotBlank(message = "URL " + NOT_EMPTY)
+    @Column(name = "page_url", nullable = false)
     private String pageURL;
 }

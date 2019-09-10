@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -33,10 +34,12 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     @NotBlank(message = "Name " + NOT_EMPTY)
     @Size(message = "Name not be more than " + MAX_LENGTH_USER_NAME + " characters", max = MAX_LENGTH_USER_NAME)
     private String name;
 
+    @Column(nullable = false)
     @NotBlank(message = "Email " + NOT_EMPTY)
     @Email(message = INVALID_EMAIL)
     private String email;
