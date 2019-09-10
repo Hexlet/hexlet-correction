@@ -19,4 +19,4 @@ test:
 
 
 generate-migration:
-	 ./mvnw clean install liquibase:diff -DskipTests=true
+	 ./mvnw clean compile liquibase:diff -DskipTests=true
