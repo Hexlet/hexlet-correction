@@ -15,17 +15,21 @@
     <description>Demo project for Spring Boot</description>
 
     <properties>
-        <java.version>12</java.version>
-        <rest-assured.version>4.1.0</rest-assured.version>
-        <maven-checkstyle-plugin.version>3.1.0</maven-checkstyle-plugin.version>
-        <lombok.version>1.18.8</lombok.version>
-        <h2database.version>1.4.199</h2database.version>
         <checkstyle.config.location>checkstyle.xml</checkstyle.config.location>
 
         <!-- Code Coverage -->
         <jacoco-maven-plugin.version>0.8.4</jacoco-maven-plugin.version>
         <jacoco-maven-plugin.lines-coverage-ratio>0.8</jacoco-maven-plugin.lines-coverage-ratio>
         <jacoco-maven-plugin.methods-coverage-ratio>0.8</jacoco-maven-plugin.methods-coverage-ratio>
+
+        <!-- Dependencies versions -->
+        <java.version>12</java.version>
+        <rest-assured.version>4.1.0</rest-assured.version>
+        <maven-checkstyle-plugin.version>3.1.0</maven-checkstyle-plugin.version>
+        <lombok.version>1.18.8</lombok.version>
+        <h2database.version>1.4.199</h2database.version>
+        <springfox-swagger2.version>2.9.2</springfox-swagger2.version>
+        <springfox-swagger-ui.version>2.9.2</springfox-swagger-ui.version>
     </properties>
 
     <dependencies>
@@ -60,6 +64,16 @@
             <artifactId>h2</artifactId>
             <version>${h2database.version}</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>${springfox-swagger2.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>${springfox-swagger-ui.version}</version>
         </dependency>
     </dependencies>
 
