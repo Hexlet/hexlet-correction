@@ -1,7 +1,7 @@
 databaseChangeLog:
 - changeSet:
-    id: 1568017632656-1
-    author: timur (generated)
+    id: 1568117525026-1
+    author: timur.malikin (generated)
     changes:
     - createTable:
         columns:
@@ -16,9 +16,13 @@ databaseChangeLog:
             name: comment
             type: VARCHAR(255)
         - column:
+            constraints:
+              nullable: false
             name: highlight_text
             type: VARCHAR(255)
         - column:
+            constraints:
+              nullable: false
             name: page_url
             type: VARCHAR(255)
         - column:
@@ -26,8 +30,8 @@ databaseChangeLog:
             type: BIGINT
         tableName: Correction
 - changeSet:
-    id: 1568017632656-2
-    author: timur (generated)
+    id: 1568117525026-2
+    author: timur.malikin (generated)
     changes:
     - createTable:
         columns:
@@ -39,15 +43,19 @@ databaseChangeLog:
             name: id
             type: BIGINT
         - column:
+            constraints:
+              nullable: false
             name: email
             type: VARCHAR(255)
         - column:
+            constraints:
+              nullable: false
             name: name
             type: VARCHAR(255)
         tableName: User
 - changeSet:
-    id: 1568017632656-3
-    author: timur (generated)
+    id: 1568117525026-3
+    author: timur.malikin (generated)
     changes:
     - addForeignKeyConstraint:
         baseColumnNames: user_id
