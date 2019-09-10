@@ -1,6 +1,6 @@
 databaseChangeLog:
 - changeSet:
-    id: 1568117525026-1
+    id: 1568140690849-1
     author: timur.malikin (generated)
     changes:
     - createTable:
@@ -9,7 +9,7 @@ databaseChangeLog:
             autoIncrement: true
             constraints:
               primaryKey: true
-              primaryKeyName: CorrectionPK
+              primaryKeyName: correctionPK
             name: id
             type: BIGINT
         - column:
@@ -28,10 +28,10 @@ databaseChangeLog:
         - column:
             name: user_id
             type: BIGINT
-        tableName: Correction
+        tableName: correction
 - changeSet:
-    id: 1568117525026-2
-    author: timur.malikin (generated)
+    id: 1568140690849-2
+    author: timur (generated)
     changes:
     - createTable:
         columns:
@@ -39,7 +39,7 @@ databaseChangeLog:
             autoIncrement: true
             constraints:
               primaryKey: true
-              primaryKeyName: UserPK
+              primaryKeyName: userPK
             name: id
             type: BIGINT
         - column:
@@ -52,17 +52,17 @@ databaseChangeLog:
               nullable: false
             name: name
             type: VARCHAR(255)
-        tableName: User
+        tableName: user
 - changeSet:
-    id: 1568117525026-3
+    id: 1568140690849-3
     author: timur.malikin (generated)
     changes:
     - addForeignKeyConstraint:
         baseColumnNames: user_id
-        baseTableName: Correction
-        constraintName: FK90rvrrr8fmopff9m16tnjjfc3
+        baseTableName: correction
+        constraintName: FKarr07t6y45sp0e2cibk2b3wok
         deferrable: false
         initiallyDeferred: false
         referencedColumnNames: id
-        referencedTableName: User
+        referencedTableName: user
 

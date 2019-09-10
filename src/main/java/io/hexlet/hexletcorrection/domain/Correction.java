@@ -12,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -27,6 +28,7 @@ import static io.hexlet.hexletcorrection.domain.EntityConstrainConstants.NOT_NUL
 @NoArgsConstructor
 @Builder
 @Entity
+@Table(name = "correction")
 public class Correction {
 
     @Id
