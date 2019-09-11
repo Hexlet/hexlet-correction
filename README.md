@@ -8,7 +8,7 @@
 
 ### Участие
 
-* Обсуждение в канале #java слака http://slack-ru.hexlet.io
+* Обсуждение в канале #hexlet-volunteers слака http://slack-ru.hexlet.io
 
 ### Требования к системе для запуска и разработки (без учета OS)
 
@@ -43,6 +43,12 @@ $ make generate-migration
 * Генерация JS кода для установки на сайт
 * Отправка на сервис ошибок (через REST API)
 * Возможность просмотра ошибок пользователем в интерфейсе сервиса
+
+### Swagger
+
+Swagger UI доступен по адресу `host[:port]/swagger-ui.html`
+
+https://hexlet-correction.herokuapp.com/swagger-ui.html
 
 ##
 [![Hexlet Ltd. logo](https://raw.githubusercontent.com/Hexlet/hexletguides.github.io/master/images/hexlet_logo128.png)](https://ru.hexlet.io/pages/about?utm_source=github&utm_medium=link&utm_campaign=exercises-java)
