@@ -19,7 +19,7 @@ public class SwaggerTest {
 
     private static final String TEST_HOST = "http://localhost";
     private static final String SWAGGER_UI_PATH = "/swagger-ui.html";
-    private static final String SWAGGER_API_DOCS_PATH = "/v2/api-docs";
+    private static final String SWAGGER_API_DOCS_PATH = "/v2/api-docs?group=full-api";
 
     @Test
     public void swaggerUiLoadingTest() {
