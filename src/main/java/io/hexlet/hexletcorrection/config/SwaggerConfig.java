@@ -23,31 +23,9 @@ public class SwaggerConfig {
                 .groupName("full-api")
                 .produces(Set.of(MediaType.APPLICATION_JSON_VALUE))
                 .select()
-                    .apis(baseControllersPackage())
-                    .paths(PathSelectors.any())
-                    .build();
-    }
-
-    @Bean
-    public Docket accountsApi() {
-        return new Docket(DocumentationType.SWAGGER_2)
-                .groupName("accounts-api")
-                .produces(Set.of(MediaType.APPLICATION_JSON_VALUE))
-                .select()
-                    .apis(baseControllersPackage())
-                    .paths(PathSelectors.regex("/accounts.*"))
-                    .build();
-    }
-
-    @Bean
-    public Docket correctionsApi() {
-        return new Docket(DocumentationType.SWAGGER_2)
-                .groupName("corrections-api")
-                .produces(Set.of(MediaType.APPLICATION_JSON_VALUE))
-                .select()
-                    .apis(baseControllersPackage())
-                    .paths(PathSelectors.regex("/corrections.*"))
-                    .build();
+                .apis(baseControllersPackage())
+                .paths(PathSelectors.any())
+                .build();
     }
 
     private Predicate<RequestHandler> baseControllersPackage() {
