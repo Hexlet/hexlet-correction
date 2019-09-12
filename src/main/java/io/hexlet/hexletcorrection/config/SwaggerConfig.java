@@ -12,6 +12,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.util.Set;
 
+import static io.hexlet.hexletcorrection.controller.ControllerConstants.BASE_API_PATH;
 import static springfox.documentation.builders.PathSelectors.regex;
 
 @Configuration
@@ -25,7 +26,7 @@ public class SwaggerConfig {
                 .produces(Set.of(MediaType.APPLICATION_JSON_VALUE))
                 .select()
                 .apis(baseControllersPackage())
-                .paths(regex("/api/v1/.*"))
+                .paths(regex(BASE_API_PATH + "/.*"))
                 .build();
     }
 
