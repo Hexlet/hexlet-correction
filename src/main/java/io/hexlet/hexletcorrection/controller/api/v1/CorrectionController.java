@@ -1,7 +1,8 @@
 package io.hexlet.hexletcorrection.controller.api.v1;
 
 import io.hexlet.hexletcorrection.controller.exception.CorrectionNotFoundException;
-import io.hexlet.hexletcorrection.domain.Correction;
+import io.hexlet.hexletcorrection.dto.CorrectionDto;
+import io.hexlet.hexletcorrection.dto.mapper.CorrectionMapper;
 import io.hexlet.hexletcorrection.service.CorrectionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static io.hexlet.hexletcorrection.controller.ControllerConstants.API_PATH_V1;
 import static io.hexlet.hexletcorrection.controller.ControllerConstants.CORRECTIONS_PATH;
@@ -29,25 +31,38 @@ public class CorrectionController {
     private final CorrectionService correctionService;
 
     @GetMapping
-    public List<Correction> getCorrections(@RequestParam(required = false) String url) {
+    public List<CorrectionDto> getCorrections(@RequestParam(required = false) String url) {
         if (url == null) {
-            return correctionService.findAll();
+            return correctionService.findAll()
+                    .stream()
+                    .map(CorrectionMapper.INSTANCE::correctionToCorrectionDto)
+                    .collect(Collectors.toList());
         }
 
-        return correctionService.findByURL(url);
+        return correctionService.findByURL(url)
+                .stream()
+                .map(CorrectionMapper.INSTANCE::correctionToCorrectionDto)
+                .collect(Collectors.toList());
     }
 
     @GetMapping(path = "/{id}")
-    public Correction getCorrectionById(@PathVariable("id") Long id) {
-        return correctionService
-                .findById(id)
-                .orElseThrow(() -> new CorrectionNotFoundException(id));
+    public CorrectionDto getCorrectionById(@PathVariable("id") Long id) {
+        return CorrectionMapper.INSTANCE.correctionToCorrectionDto(
+                correctionService
+                        .findById(id)
+                        .orElseThrow(() -> new CorrectionNotFoundException(id))
+        );
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Correction createCorrection(@Valid @RequestBody Correction correction) {
-        return correctionService.create(correction);
+    public CorrectionDto createCorrection(@Valid @RequestBody CorrectionDto correction) {
+        correction.setId(null);
+        return CorrectionMapper.INSTANCE.correctionToCorrectionDto(
+                correctionService.create(
+                        CorrectionMapper.INSTANCE.correctionDtoToCorrection(correction)
+                )
+        );
     }
 
     @DeleteMapping(path = "/{id}")
