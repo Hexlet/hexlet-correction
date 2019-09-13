@@ -1,4 +1,4 @@
-package io.hexlet.hexletcorrection.controller;
+package io.hexlet.hexletcorrection.controller.api.v1;
 
 import io.hexlet.hexletcorrection.controller.exception.CorrectionNotFoundException;
 import io.hexlet.hexletcorrection.domain.Correction;
@@ -18,10 +18,11 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.util.List;
 
+import static io.hexlet.hexletcorrection.controller.ControllerConstants.API_PATH_V1;
 import static io.hexlet.hexletcorrection.controller.ControllerConstants.CORRECTIONS_PATH;
 
 @RestController
-@RequestMapping(CORRECTIONS_PATH)
+@RequestMapping(API_PATH_V1 + CORRECTIONS_PATH)
 @RequiredArgsConstructor
 public class CorrectionController {
 

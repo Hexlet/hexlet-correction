@@ -1,4 +1,4 @@
-package io.hexlet.hexletcorrection.controller;
+package io.hexlet.hexletcorrection.controller.api.v1;
 
 import io.hexlet.hexletcorrection.domain.Account;
 import io.hexlet.hexletcorrection.service.AccountService;
@@ -11,8 +11,7 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import static io.hexlet.hexletcorrection.controller.ControllerConstants.TEST_HOST;
-import static io.hexlet.hexletcorrection.controller.ControllerConstants.ACCOUNTS_PATH;
+import static io.hexlet.hexletcorrection.controller.ControllerConstants.*;
 import static io.hexlet.hexletcorrection.domain.EntityConstrainConstants.INVALID_EMAIL;
 import static io.hexlet.hexletcorrection.domain.EntityConstrainConstants.MAX_ACCOUNT_NAME;
 import static io.hexlet.hexletcorrection.domain.EntityConstrainConstants.NOT_EMPTY;
@@ -32,7 +31,7 @@ public class AccountControllerTest {
     @Test
     public void getAllAccountsTest() {
         given().when()
-                .get(TEST_HOST + ":" + port + ACCOUNTS_PATH)
+                .get(TEST_HOST + ":" + port + API_PATH_V1 + ACCOUNTS_PATH)
                 .then()
                 .statusCode(HttpStatus.OK.value())
                 .contentType(ContentType.JSON);
@@ -43,7 +42,7 @@ public class AccountControllerTest {
         Account account = createAccount();
 
         given().when()
-                .get(TEST_HOST + ":" + port + ACCOUNTS_PATH + "/" + account.getId())
+                .get(TEST_HOST + ":" + port + API_PATH_V1 + ACCOUNTS_PATH + "/" + account.getId())
                 .then()
                 .statusCode(HttpStatus.OK.value())
                 .contentType(ContentType.JSON);
@@ -54,7 +53,7 @@ public class AccountControllerTest {
         long falseId = createAccount().getId() + 1L;
 
         given().when()
-                .get(TEST_HOST + ":" + port + ACCOUNTS_PATH + "/" + falseId)
+                .get(TEST_HOST + ":" + port + API_PATH_V1 + ACCOUNTS_PATH + "/" + falseId)
                 .then()
                 .statusCode(HttpStatus.NOT_FOUND.value())
                 .contentType(ContentType.JSON)
@@ -64,7 +63,7 @@ public class AccountControllerTest {
     @Test
     public void getAccountByNameTest() {
         given().when()
-                .get(TEST_HOST + ":" + port + ACCOUNTS_PATH + "/?name=" + createAccount().getName())
+                .get(TEST_HOST + ":" + port + API_PATH_V1 + ACCOUNTS_PATH + "/?name=" + createAccount().getName())
                 .then()
                 .statusCode(HttpStatus.OK.value())
                 .contentType(ContentType.JSON);
@@ -75,7 +74,7 @@ public class AccountControllerTest {
         String falseName = createAccount().getName() + "A";
 
         given().when()
-                .get(TEST_HOST + ":" + port + ACCOUNTS_PATH + "/?name=" + falseName)
+                .get(TEST_HOST + ":" + port + API_PATH_V1 + ACCOUNTS_PATH + "/?name=" + falseName)
                 .then()
                 .statusCode(HttpStatus.OK.value())
                 .contentType(ContentType.JSON);
@@ -91,7 +90,7 @@ public class AccountControllerTest {
         given().when()
                 .body(account)
                 .contentType(ContentType.JSON)
-                .post(TEST_HOST + ":" + port + ACCOUNTS_PATH)
+                .post(TEST_HOST + ":" + port + API_PATH_V1 + ACCOUNTS_PATH)
                 .then()
                 .statusCode(HttpStatus.CREATED.value());
     }
@@ -105,7 +104,7 @@ public class AccountControllerTest {
         given().when()
                 .body(account)
                 .contentType(ContentType.JSON)
-                .post(TEST_HOST + ":" + port + ACCOUNTS_PATH)
+                .post(TEST_HOST + ":" + port + API_PATH_V1 + ACCOUNTS_PATH)
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("name", equalTo("Name " + NOT_EMPTY));
@@ -120,7 +119,7 @@ public class AccountControllerTest {
         given().when()
                 .body(account)
                 .contentType(ContentType.JSON)
-                .post(TEST_HOST + ":" + port + ACCOUNTS_PATH)
+                .post(TEST_HOST + ":" + port + API_PATH_V1 + ACCOUNTS_PATH)
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("name", equalTo("Name not be more than " + MAX_ACCOUNT_NAME + " characters"));
@@ -135,7 +134,7 @@ public class AccountControllerTest {
         given().when()
                 .body(account)
                 .contentType(ContentType.JSON)
-                .post(TEST_HOST + ":" + port + ACCOUNTS_PATH)
+                .post(TEST_HOST + ":" + port + API_PATH_V1 + ACCOUNTS_PATH)
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("email", equalTo("Email " + NOT_EMPTY));
@@ -151,7 +150,7 @@ public class AccountControllerTest {
         given().when()
                 .body(account)
                 .contentType(ContentType.JSON)
-                .post(TEST_HOST + ":" + port + ACCOUNTS_PATH)
+                .post(TEST_HOST + ":" + port + API_PATH_V1 + ACCOUNTS_PATH)
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("email", equalTo(INVALID_EMAIL));
@@ -162,7 +161,7 @@ public class AccountControllerTest {
         Account account = createAccount();
 
         given().when()
-                .delete(TEST_HOST + ":" + port + ACCOUNTS_PATH + "/" + account.getId())
+                .delete(TEST_HOST + ":" + port + API_PATH_V1 + ACCOUNTS_PATH + "/" + account.getId())
                 .then()
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }

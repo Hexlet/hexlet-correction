@@ -1,4 +1,4 @@
-package io.hexlet.hexletcorrection.controller;
+package io.hexlet.hexletcorrection.controller.api.v1;
 
 import io.hexlet.hexletcorrection.controller.exception.AccountNotFoundException;
 import io.hexlet.hexletcorrection.domain.Account;
@@ -19,9 +19,10 @@ import javax.validation.Valid;
 import java.util.List;
 
 import static io.hexlet.hexletcorrection.controller.ControllerConstants.ACCOUNTS_PATH;
+import static io.hexlet.hexletcorrection.controller.ControllerConstants.API_PATH_V1;
 
 @RestController
-@RequestMapping(ACCOUNTS_PATH)
+@RequestMapping(API_PATH_V1 + ACCOUNTS_PATH)
 @AllArgsConstructor
 public class AccountController {
 
