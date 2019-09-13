@@ -19,8 +19,8 @@
 
         <!-- Code Coverage -->
         <jacoco-maven-plugin.version>0.8.4</jacoco-maven-plugin.version>
-        <jacoco-maven-plugin.lines-coverage-ratio>0.8</jacoco-maven-plugin.lines-coverage-ratio>
-        <jacoco-maven-plugin.methods-coverage-ratio>0.8</jacoco-maven-plugin.methods-coverage-ratio>
+        <jacoco-maven-plugin.lines-coverage-ratio>80%</jacoco-maven-plugin.lines-coverage-ratio>
+        <jacoco-maven-plugin.methods-coverage-ratio>80%</jacoco-maven-plugin.methods-coverage-ratio>
 
         <!-- Frontend -->
         <frontend-maven-plugin.version>1.8.0</frontend-maven-plugin.version>
@@ -228,7 +228,7 @@
                         <configuration>
                             <rules>
                                 <rule>
-                                    <element>PACKAGE</element>
+                                    <element>BUNDLE</element>
                                     <limits>
                                         <limit>
                                             <counter>LINE</counter>
