@@ -2,9 +2,11 @@ package io.hexlet.hexletcorrection.controller;
 
 public class ControllerConstants {
 
-    final static String TEST_HOST = "http://localhost";
+    public final static String TEST_HOST = "http://localhost";
 
-    final static String CORRECTIONS_PATH = "/corrections";
+    public final static String API_PATH_V1 = "/api/v1";
 
-    final static String ACCOUNTS_PATH = "/accounts";
+    public final static String CORRECTIONS_PATH = "/corrections";
+
+    public final static String ACCOUNTS_PATH = "/accounts";
 }

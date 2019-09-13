@@ -29,6 +29,6 @@ public class SwaggerConfig {
     }
 
     private Predicate<RequestHandler> baseControllersPackage() {
-        return RequestHandlerSelectors.basePackage("io.hexlet.hexletcorrection.controller");
+        return RequestHandlerSelectors.basePackage("io.hexlet.hexletcorrection.controller.api");
     }
 }

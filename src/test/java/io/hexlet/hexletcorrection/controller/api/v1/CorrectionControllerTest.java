@@ -1,4 +1,4 @@
-package io.hexlet.hexletcorrection.controller;
+package io.hexlet.hexletcorrection.controller.api.v1;
 
 import io.hexlet.hexletcorrection.domain.Account;
 import io.hexlet.hexletcorrection.domain.Correction;
@@ -13,8 +13,7 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import static io.hexlet.hexletcorrection.controller.ControllerConstants.CORRECTIONS_PATH;
-import static io.hexlet.hexletcorrection.controller.ControllerConstants.TEST_HOST;
+import static io.hexlet.hexletcorrection.controller.ControllerConstants.*;
 import static io.hexlet.hexletcorrection.domain.EntityConstrainConstants.MAX_COMMENT_LENGTH;
 import static io.hexlet.hexletcorrection.domain.EntityConstrainConstants.NOT_EMPTY;
 import static io.hexlet.hexletcorrection.domain.EntityConstrainConstants.NOT_NULL;
@@ -37,7 +36,7 @@ public class CorrectionControllerTest {
     @Test
     public void getAllCorrectionsTest() {
         given().when()
-                .get(TEST_HOST + ":" + port + CORRECTIONS_PATH)
+                .get(TEST_HOST + ":" + port + API_PATH_V1 + CORRECTIONS_PATH)
                 .then()
                 .statusCode(HttpStatus.OK.value())
                 .contentType(ContentType.JSON);
@@ -48,7 +47,7 @@ public class CorrectionControllerTest {
         Correction savedCorrection = createCorrection(createAccount());
 
         given().when()
-                .get(TEST_HOST + ":" + port + CORRECTIONS_PATH + "/" + savedCorrection.getId())
+                .get(TEST_HOST + ":" + port + API_PATH_V1 + CORRECTIONS_PATH + "/" + savedCorrection.getId())
                 .then()
                 .statusCode(HttpStatus.OK.value())
                 .contentType(ContentType.JSON);
@@ -59,7 +58,7 @@ public class CorrectionControllerTest {
         long falseId = createCorrection(createAccount()).getId() + 1L;
 
         given().when()
-                .get(TEST_HOST + ":" + port + CORRECTIONS_PATH + "/" + falseId)
+                .get(TEST_HOST + ":" + port + API_PATH_V1 + CORRECTIONS_PATH + "/" + falseId)
                 .then()
                 .statusCode(HttpStatus.NOT_FOUND.value())
                 .contentType(ContentType.JSON)
@@ -71,7 +70,7 @@ public class CorrectionControllerTest {
         Correction savedCorrection = createCorrection(createAccount());
 
         given().when()
-                .get(TEST_HOST + ":" + port + CORRECTIONS_PATH + "/?url=" + savedCorrection.getPageURL())
+                .get(TEST_HOST + ":" + port + API_PATH_V1 + CORRECTIONS_PATH + "/?url=" + savedCorrection.getPageURL())
                 .then()
                 .statusCode(HttpStatus.OK.value())
                 .contentType(ContentType.JSON);
@@ -91,7 +90,7 @@ public class CorrectionControllerTest {
         given().when()
                 .body(correction)
                 .contentType(ContentType.JSON)
-                .post(TEST_HOST + ":" + port + CORRECTIONS_PATH)
+                .post(TEST_HOST + ":" + port + API_PATH_V1 + CORRECTIONS_PATH)
                 .then()
                 .statusCode(HttpStatus.CREATED.value());
     }
@@ -108,7 +107,7 @@ public class CorrectionControllerTest {
         given().when()
                 .body(correction)
                 .contentType(ContentType.JSON)
-                .post(TEST_HOST + ":" + port + CORRECTIONS_PATH)
+                .post(TEST_HOST + ":" + port + API_PATH_V1 + CORRECTIONS_PATH)
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("comment", equalTo("Comment " + NOT_EMPTY));
@@ -126,7 +125,7 @@ public class CorrectionControllerTest {
         given().when()
                 .body(correction)
                 .contentType(ContentType.JSON)
-                .post(TEST_HOST + ":" + port + CORRECTIONS_PATH)
+                .post(TEST_HOST + ":" + port + API_PATH_V1 + CORRECTIONS_PATH)
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("comment", equalTo("Comment not be more than " + MAX_COMMENT_LENGTH + " characters"));
@@ -144,7 +143,7 @@ public class CorrectionControllerTest {
         given().when()
                 .body(correction)
                 .contentType(ContentType.JSON)
-                .post(TEST_HOST + ":" + port + CORRECTIONS_PATH)
+                .post(TEST_HOST + ":" + port + API_PATH_V1 + CORRECTIONS_PATH)
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("highlightText", equalTo("Highlight text " + NOT_EMPTY));
@@ -161,7 +160,7 @@ public class CorrectionControllerTest {
         given().when()
                 .body(correction)
                 .contentType(ContentType.JSON)
-                .post(TEST_HOST + ":" + port + CORRECTIONS_PATH)
+                .post(TEST_HOST + ":" + port + API_PATH_V1 + CORRECTIONS_PATH)
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("account", equalTo("Account " + NOT_NULL));
@@ -178,7 +177,7 @@ public class CorrectionControllerTest {
         given().when()
                 .body(correction)
                 .contentType(ContentType.JSON)
-                .post(TEST_HOST + ":" + port + CORRECTIONS_PATH)
+                .post(TEST_HOST + ":" + port + API_PATH_V1 + CORRECTIONS_PATH)
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("pageURL", equalTo("URL " + NOT_EMPTY));
@@ -189,7 +188,7 @@ public class CorrectionControllerTest {
         Correction savedCorrection = createCorrection(createAccount());
 
         given().when()
-                .delete(TEST_HOST + ":" + port + CORRECTIONS_PATH + "/" + savedCorrection.getId())
+                .delete(TEST_HOST + ":" + port + API_PATH_V1 + CORRECTIONS_PATH + "/" + savedCorrection.getId())
                 .then()
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }
