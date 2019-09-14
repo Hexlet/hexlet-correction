@@ -11,12 +11,15 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import static io.hexlet.hexletcorrection.controller.ControllerConstants.*;
+import static io.hexlet.hexletcorrection.controller.ControllerConstants.ACCOUNTS_PATH;
+import static io.hexlet.hexletcorrection.controller.ControllerConstants.API_PATH_V1;
+import static io.hexlet.hexletcorrection.controller.ControllerConstants.TEST_HOST;
 import static io.hexlet.hexletcorrection.domain.EntityConstrainConstants.INVALID_EMAIL;
 import static io.hexlet.hexletcorrection.domain.EntityConstrainConstants.MAX_ACCOUNT_NAME;
 import static io.hexlet.hexletcorrection.domain.EntityConstrainConstants.NOT_EMPTY;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
+import static org.junit.Assert.assertNotEquals;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -93,6 +96,36 @@ public class AccountControllerTest {
                 .post(TEST_HOST + ":" + port + API_PATH_V1 + ACCOUNTS_PATH)
                 .then()
                 .statusCode(HttpStatus.CREATED.value());
+    }
+
+    @Test
+    public void postAccountTestNotSameIdDuringUpdate() {
+        Account account = Account.builder()
+                .name("Artem")
+                .email("artem@hexlet.io")
+                .build();
+
+        long firstId = given().when()
+                .body(account)
+                .contentType(ContentType.JSON)
+                .post(TEST_HOST + ":" + port + API_PATH_V1 + ACCOUNTS_PATH)
+                .then()
+                .statusCode(HttpStatus.CREATED.value())
+                .extract()
+                .body().jsonPath().getLong("id");
+
+        account.setId(firstId);
+
+        long secondId = given().when()
+                .body(account)
+                .contentType(ContentType.JSON)
+                .post(TEST_HOST + ":" + port + API_PATH_V1 + ACCOUNTS_PATH)
+                .then()
+                .statusCode(HttpStatus.CREATED.value())
+                .extract()
+                .body().jsonPath().getLong("id");
+
+        assertNotEquals(firstId, secondId);
     }
 
     @Test

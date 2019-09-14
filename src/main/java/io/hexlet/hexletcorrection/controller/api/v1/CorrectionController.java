@@ -47,6 +47,7 @@ public class CorrectionController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Correction createCorrection(@Valid @RequestBody Correction correction) {
+        correction.setId(null);
         return correctionService.create(correction);
     }
 

@@ -2,8 +2,8 @@ package io.hexlet.hexletcorrection.controller.api.v1;
 
 import io.hexlet.hexletcorrection.domain.Account;
 import io.hexlet.hexletcorrection.domain.Correction;
-import io.hexlet.hexletcorrection.service.CorrectionService;
 import io.hexlet.hexletcorrection.service.AccountService;
+import io.hexlet.hexletcorrection.service.CorrectionService;
 import io.restassured.http.ContentType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,12 +13,15 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import static io.hexlet.hexletcorrection.controller.ControllerConstants.*;
+import static io.hexlet.hexletcorrection.controller.ControllerConstants.API_PATH_V1;
+import static io.hexlet.hexletcorrection.controller.ControllerConstants.CORRECTIONS_PATH;
+import static io.hexlet.hexletcorrection.controller.ControllerConstants.TEST_HOST;
 import static io.hexlet.hexletcorrection.domain.EntityConstrainConstants.MAX_COMMENT_LENGTH;
 import static io.hexlet.hexletcorrection.domain.EntityConstrainConstants.NOT_EMPTY;
 import static io.hexlet.hexletcorrection.domain.EntityConstrainConstants.NOT_NULL;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
+import static org.junit.Assert.assertNotEquals;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -94,6 +97,42 @@ public class CorrectionControllerTest {
                 .then()
                 .statusCode(HttpStatus.CREATED.value());
     }
+
+    @Test
+    public void postCorrectionTestNotSameIdDuringUpdate() {
+        Account account = createAccount();
+
+        Correction correction = Correction.builder()
+                .comment("test comment")
+                .highlightText("text to correction")
+                .pageURL("hexlet.io")
+                .account(account)
+                .build();
+
+        long firstId = given().when()
+                .body(correction)
+                .contentType(ContentType.JSON)
+                .post(TEST_HOST + ":" + port + API_PATH_V1 + CORRECTIONS_PATH)
+                .then()
+                .statusCode(HttpStatus.CREATED.value())
+                .extract()
+                .body().jsonPath().getLong("id");
+
+        correction.setId(firstId);
+
+        long secondId = given().when()
+                .body(correction)
+                .contentType(ContentType.JSON)
+                .post(TEST_HOST + ":" + port + API_PATH_V1 + CORRECTIONS_PATH)
+                .then()
+                .statusCode(HttpStatus.CREATED.value())
+                .extract()
+                .body().jsonPath().getLong("id");
+
+        assertNotEquals(firstId, secondId);
+    }
+
+
 
     @Test
     public void postCorrectionCommentEmptyTest() {

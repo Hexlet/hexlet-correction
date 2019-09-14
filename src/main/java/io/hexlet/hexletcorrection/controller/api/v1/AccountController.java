@@ -38,6 +38,7 @@ public class AccountController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Account createAccount(@Valid @RequestBody Account account) {
+        account.setId(null);
         return accountService.create(account);
     }
 
