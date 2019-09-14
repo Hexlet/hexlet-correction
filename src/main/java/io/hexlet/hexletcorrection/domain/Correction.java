@@ -1,5 +1,6 @@
 package io.hexlet.hexletcorrection.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -45,6 +46,7 @@ public class Correction {
 
     @NotNull(message = "Account " + NOT_NULL)
     @ManyToOne
+    @JsonIgnoreProperties("corrections")
     private Account account;
 
     @NotBlank(message = "URL " + NOT_EMPTY)

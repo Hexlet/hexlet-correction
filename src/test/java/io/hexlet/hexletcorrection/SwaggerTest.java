@@ -8,6 +8,9 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import static io.hexlet.hexletcorrection.controller.ControllerConstants.SWAGGER_API_DOCS_PATH;
+import static io.hexlet.hexletcorrection.controller.ControllerConstants.SWAGGER_UI_PATH;
+import static io.hexlet.hexletcorrection.controller.ControllerConstants.TEST_HOST;
 import static io.restassured.RestAssured.given;
 
 @RunWith(SpringRunner.class)
@@ -16,10 +19,6 @@ public class SwaggerTest {
 
     @LocalServerPort
     private int port;
-
-    private static final String TEST_HOST = "http://localhost";
-    private static final String SWAGGER_UI_PATH = "/swagger-ui.html";
-    private static final String SWAGGER_API_DOCS_PATH = "/v2/api-docs?group=full-api";
 
     @Test
     public void swaggerUiLoadingTest() {
