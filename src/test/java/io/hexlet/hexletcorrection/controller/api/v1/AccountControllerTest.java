@@ -1,40 +1,52 @@
 package io.hexlet.hexletcorrection.controller.api.v1;
 
+import io.hexlet.hexletcorrection.controller.AbstractControlerTest;
 import io.hexlet.hexletcorrection.domain.Account;
-import io.hexlet.hexletcorrection.service.AccountService;
 import io.restassured.http.ContentType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import static io.hexlet.hexletcorrection.controller.ControllerConstants.*;
+import static io.hexlet.hexletcorrection.controller.ControllerConstants.ACCOUNTS_PATH;
+import static io.hexlet.hexletcorrection.controller.ControllerConstants.API_PATH_V1;
+import static io.hexlet.hexletcorrection.controller.ControllerConstants.TEST_HOST;
 import static io.hexlet.hexletcorrection.domain.EntityConstrainConstants.INVALID_EMAIL;
 import static io.hexlet.hexletcorrection.domain.EntityConstrainConstants.MAX_ACCOUNT_NAME;
 import static io.hexlet.hexletcorrection.domain.EntityConstrainConstants.NOT_EMPTY;
 import static io.restassured.RestAssured.given;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.hamcrest.Matchers.equalTo;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class AccountControllerTest {
-
-    @Autowired
-    AccountService accountService;
+public class AccountControllerTest extends AbstractControlerTest {
 
     @LocalServerPort
     private int port;
 
     @Test
     public void getAllAccountsTest() {
+        createCorrection(createAccount());
         given().when()
                 .get(TEST_HOST + ":" + port + API_PATH_V1 + ACCOUNTS_PATH)
                 .then()
                 .statusCode(HttpStatus.OK.value())
                 .contentType(ContentType.JSON);
+    }
+
+    @Test(expected = NumberFormatException.class)
+    public void getAllAccountsTestRecursionInfinite() {
+        createCorrection(createAccount());
+        given().when()
+                .get(TEST_HOST + ":" + port + API_PATH_V1 + ACCOUNTS_PATH)
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .contentType(ContentType.JSON)
+                .extract().body().jsonPath().getLong("corrections.account.id");
+        assertThatExceptionOfType(StackOverflowError.class);
     }
 
     @Test
@@ -164,14 +176,5 @@ public class AccountControllerTest {
                 .delete(TEST_HOST + ":" + port + API_PATH_V1 + ACCOUNTS_PATH + "/" + account.getId())
                 .then()
                 .statusCode(HttpStatus.NO_CONTENT.value());
-    }
-
-    private Account createAccount() {
-        Account account = Account.builder()
-                .name("Artem")
-                .email("artem@hexlet.io")
-                .build();
-
-        return accountService.create(account);
     }
 }

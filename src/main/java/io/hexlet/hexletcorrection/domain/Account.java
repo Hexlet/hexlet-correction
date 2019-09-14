@@ -1,5 +1,6 @@
 package io.hexlet.hexletcorrection.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,6 +17,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.util.HashSet;
 import java.util.Set;
 
 import static io.hexlet.hexletcorrection.domain.EntityConstrainConstants.INVALID_EMAIL;
@@ -47,5 +49,6 @@ public class Account {
     private String email;
 
     @OneToMany(mappedBy = "account", fetch = EAGER)
-    private Set<Correction> corrections;
+    @JsonIgnoreProperties("account")
+    private Set<Correction> corrections = new HashSet<>();
 }
