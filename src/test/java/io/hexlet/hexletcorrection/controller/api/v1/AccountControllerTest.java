@@ -29,7 +29,7 @@ public class AccountControllerTest extends AbstractControlerTest {
 
     @Test
     public void getAllAccountsTest() {
-        createCorrection(createAccount());
+        createCorrection(createAccount(DEFAULT_USER_NAME, "getAllAccounts@mail.com"));
         given().when()
                 .get(TEST_HOST + ":" + port + API_PATH_V1 + ACCOUNTS_PATH)
                 .then()
@@ -38,8 +38,8 @@ public class AccountControllerTest extends AbstractControlerTest {
     }
 
     @Test(expected = NumberFormatException.class)
-    public void getAllAccountsTestRecursionInfinite() {
-        createCorrection(createAccount());
+    public void getAllAccountsRecursionInfiniteTest() {
+        createCorrection(createAccount(DEFAULT_USER_NAME, "getAllAccountsRecursionInfinite@mail.com"));
         given().when()
                 .get(TEST_HOST + ":" + port + API_PATH_V1 + ACCOUNTS_PATH)
                 .then()
@@ -51,7 +51,7 @@ public class AccountControllerTest extends AbstractControlerTest {
 
     @Test
     public void getAccountByIdTest() {
-        Account account = createAccount();
+        Account account = createAccount(DEFAULT_USER_NAME, "getAccountById@mail.com");
 
         given().when()
                 .get(TEST_HOST + ":" + port + API_PATH_V1 + ACCOUNTS_PATH + "/" + account.getId())
@@ -62,20 +62,18 @@ public class AccountControllerTest extends AbstractControlerTest {
 
     @Test
     public void getAccountByFalseIdTest() {
-        long falseId = createAccount().getId() + 1L;
-
         given().when()
-                .get(TEST_HOST + ":" + port + API_PATH_V1 + ACCOUNTS_PATH + "/" + falseId)
+                .get(TEST_HOST + ":" + port + API_PATH_V1 + ACCOUNTS_PATH + "/" + 1000L)
                 .then()
                 .statusCode(HttpStatus.NOT_FOUND.value())
                 .contentType(ContentType.JSON)
-                .body("account", equalTo("Account with ID '" + falseId + "' not found"));
+                .body("account", equalTo("Account with ID '" + 1000L + "' not found"));
     }
 
     @Test
     public void getAccountByNameTest() {
         given().when()
-                .get(TEST_HOST + ":" + port + API_PATH_V1 + ACCOUNTS_PATH + "/?name=" + createAccount().getName())
+                .get(TEST_HOST + ":" + port + API_PATH_V1 + ACCOUNTS_PATH + "/?name=" + DEFAULT_USER_NAME)
                 .then()
                 .statusCode(HttpStatus.OK.value())
                 .contentType(ContentType.JSON);
@@ -83,7 +81,7 @@ public class AccountControllerTest extends AbstractControlerTest {
 
     @Test
     public void getAccountByFalseNameTest() {
-        String falseName = createAccount().getName() + "A";
+        String falseName = DEFAULT_USER_NAME + "A";
 
         given().when()
                 .get(TEST_HOST + ":" + port + API_PATH_V1 + ACCOUNTS_PATH + "/?name=" + falseName)
@@ -95,8 +93,8 @@ public class AccountControllerTest extends AbstractControlerTest {
     @Test
     public void postAccountTest() {
         Account account = Account.builder()
-                .name("Artem")
-                .email("artem@hexlet.io")
+                .name(DEFAULT_USER_NAME)
+                .email("postAccount@hexlet.io")
                 .build();
 
         given().when()
@@ -108,9 +106,36 @@ public class AccountControllerTest extends AbstractControlerTest {
     }
 
     @Test
+    public void postAccountDoubleTest() {
+        Account account = Account.builder()
+                .name(DEFAULT_USER_NAME)
+                .email("postAccountDouble@hexlet.io")
+                .build();
+
+        given().when()
+                .body(account)
+                .contentType(ContentType.JSON)
+                .post(TEST_HOST + ":" + port + API_PATH_V1 + ACCOUNTS_PATH)
+                .then()
+                .statusCode(HttpStatus.CREATED.value());
+
+        Account account2 = Account.builder()
+                .name(DEFAULT_USER_NAME)
+                .email("postAccountDouble@hexlet.io")
+                .build();
+
+        given().when()
+                .body(account2)
+                .contentType(ContentType.JSON)
+                .post(TEST_HOST + ":" + port + API_PATH_V1 + ACCOUNTS_PATH)
+                .then()
+                .statusCode(HttpStatus.CONFLICT.value());
+    }
+
+    @Test
     public void postAccountNameEmptyTest() {
         Account account = Account.builder()
-                .email("artem@hexlet.io")
+                .email("postAccountNameEmpty@hexlet.io")
                 .build();
 
         given().when()
@@ -170,7 +195,7 @@ public class AccountControllerTest extends AbstractControlerTest {
 
     @Test
     public void deleteAccountTest() {
-        Account account = createAccount();
+        Account account = createAccount(DEFAULT_USER_NAME, "deleteAccount@mail.com");
 
         given().when()
                 .delete(TEST_HOST + ":" + port + API_PATH_V1 + ACCOUNTS_PATH + "/" + account.getId())

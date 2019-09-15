@@ -43,7 +43,7 @@ public class Account {
     @Size(message = "Name not be more than " + MAX_ACCOUNT_NAME + " characters", max = MAX_ACCOUNT_NAME)
     private String name;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     @NotBlank(message = "Email " + NOT_EMPTY)
     @Email(message = INVALID_EMAIL)
     private String email;

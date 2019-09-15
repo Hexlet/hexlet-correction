@@ -1,5 +1,6 @@
 package io.hexlet.hexletcorrection.controller.exception;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
@@ -42,5 +43,11 @@ public class GlobalExceptionHandler {
                         FieldError::getField,
                         ObjectError::getDefaultMessage,
                         mergeFunction::apply));
+    }
+
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    protected Map<String, String> handleUniqueConstraintsException(DataIntegrityViolationException ex) {
+        return Map.of("Error:", "Entity already exist", "Developer message:", ex.getMessage());
     }
 }

@@ -8,16 +8,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public abstract class AbstractControlerTest {
 
+    public final String DEFAULT_USER_NAME = "Test user";
+
     @Autowired
     private AccountService accountService;
 
     @Autowired
     private CorrectionService correctionService;
 
-    protected Account createAccount() {
+    protected Account createAccount(String name, String email) {
         Account account = Account.builder()
-                .name("Artem")
-                .email("artem@hexlet.io")
+                .name(name)
+                .email(email)
                 .build();
 
         return accountService.create(account);
