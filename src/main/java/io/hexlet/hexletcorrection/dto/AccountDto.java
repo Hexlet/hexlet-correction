@@ -1,5 +1,7 @@
 package io.hexlet.hexletcorrection.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,6 +22,7 @@ import static io.hexlet.hexletcorrection.domain.EntityConstrainConstants.NOT_EMP
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class AccountDto {
 
     private Long id;
@@ -32,5 +35,6 @@ public class AccountDto {
     @Email(message = INVALID_EMAIL)
     private String email;
 
+    @JsonIgnoreProperties("account")
     private Set<CorrectionDto> corrections;
 }
