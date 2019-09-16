@@ -2,6 +2,7 @@ package io.hexlet.hexletcorrection.controller.api.v1;
 
 import io.hexlet.hexletcorrection.controller.exception.AccountNotFoundException;
 import io.hexlet.hexletcorrection.dto.AccountDto;
+import io.hexlet.hexletcorrection.dto.AccountPostDto;
 import io.hexlet.hexletcorrection.dto.mapper.AccountMapper;
 import io.hexlet.hexletcorrection.service.AccountService;
 import lombok.AllArgsConstructor;
@@ -42,12 +43,10 @@ public class AccountController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public AccountDto createAccount(@Valid @RequestBody AccountDto account) {
-        account.setId(null);
-        account.setCorrections(null);
+    public AccountDto createAccount(@Valid @RequestBody AccountPostDto account) {
         return accountMapper.toAccountDto(
                 accountService.create(
-                        accountMapper.toAccount(account)
+                        accountMapper.postDtoToAccount(account)
                 )
         );
     }

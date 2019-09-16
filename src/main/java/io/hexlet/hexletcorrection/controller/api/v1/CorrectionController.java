@@ -2,6 +2,7 @@ package io.hexlet.hexletcorrection.controller.api.v1;
 
 import io.hexlet.hexletcorrection.controller.exception.CorrectionNotFoundException;
 import io.hexlet.hexletcorrection.dto.CorrectionDto;
+import io.hexlet.hexletcorrection.dto.CorrectionPostDto;
 import io.hexlet.hexletcorrection.dto.mapper.CorrectionMapper;
 import io.hexlet.hexletcorrection.service.CorrectionService;
 import lombok.RequiredArgsConstructor;
@@ -57,11 +58,10 @@ public class CorrectionController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public CorrectionDto createCorrection(@Valid @RequestBody CorrectionDto correction) {
-        correction.setId(null);
+    public CorrectionDto createCorrection(@Valid @RequestBody CorrectionPostDto correction) {
         return correctionMapper.toCorrectionDto(
                 correctionService.create(
-                        correctionMapper.toCorrection(correction)
+                        correctionMapper.postDtoToCorrection(correction)
                 )
         );
     }

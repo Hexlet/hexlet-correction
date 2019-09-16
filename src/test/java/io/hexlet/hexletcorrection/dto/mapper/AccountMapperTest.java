@@ -3,6 +3,7 @@ package io.hexlet.hexletcorrection.dto.mapper;
 import io.hexlet.hexletcorrection.domain.Account;
 import io.hexlet.hexletcorrection.domain.Correction;
 import io.hexlet.hexletcorrection.dto.AccountDto;
+import io.hexlet.hexletcorrection.dto.AccountPostDto;
 import io.hexlet.hexletcorrection.dto.CorrectionDto;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -58,6 +59,25 @@ public class AccountMapperTest {
     @Test
     public void correctionsToCorrectionsDtoNullTest() {
         assertNull(accountMapper.toCorrectionsDto(null));
+    }
+
+    @Test
+    public void accountPostDtoTest() {
+        final Account expectedAccount = Account.builder()
+                .name("Anatoly")
+                .email("anatoly@hexlet.io")
+                .build();
+        final Account actualAccount = accountMapper.postDtoToAccount(getAccountPostDto());
+
+        assertEquals(expectedAccount.getName(), actualAccount.getName());
+        assertEquals(expectedAccount.getEmail(), actualAccount.getEmail());
+        assertNull(actualAccount.getId());
+        assertNull(actualAccount.getCorrections());
+    }
+
+    @Test
+    public void accountPostDtoNullTest() {
+        assertNull(accountMapper.postDtoToAccount(null));
     }
 
     private Account getAccount() {
@@ -121,6 +141,13 @@ public class AccountMapperTest {
                                 .pageURL("https://hexlet.io/test6")
                                 .build()
                 ))
+                .build();
+    }
+
+    private AccountPostDto getAccountPostDto() {
+        return AccountPostDto.builder()
+                .name("Anatoly")
+                .email("anatoly@hexlet.io")
                 .build();
     }
 }

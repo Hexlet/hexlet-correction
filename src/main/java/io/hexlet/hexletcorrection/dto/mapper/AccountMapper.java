@@ -3,6 +3,7 @@ package io.hexlet.hexletcorrection.dto.mapper;
 import io.hexlet.hexletcorrection.domain.Account;
 import io.hexlet.hexletcorrection.domain.Correction;
 import io.hexlet.hexletcorrection.dto.AccountDto;
+import io.hexlet.hexletcorrection.dto.AccountPostDto;
 import io.hexlet.hexletcorrection.dto.CorrectionDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -24,4 +25,10 @@ public interface AccountMapper {
             @Mapping(target = "id", ignore = true)
     })
     Account toAccount(AccountDto accountDto);
+
+    @Mappings({
+            @Mapping(target = "id", ignore = true),
+            @Mapping(target = "corrections", ignore = true)
+    })
+    Account postDtoToAccount(AccountPostDto accountPostDto);
 }
