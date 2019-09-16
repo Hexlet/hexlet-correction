@@ -1,0 +1,51 @@
+<!doctype html>
+<html class="h-100" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Hexlet Corrections | Регистрация</title>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link th:replace="fragments/head-styles">
+</head>
+<body class="d-flex flex-column h-100">
+<!-- Header -->
+<div th:replace="fragments/header :: header"></div>
+<!-- Main -->
+<main class="flex-shrink-0 my-5">
+    <div class="container">
+        <div class="row d-flex">
+            <div class="col-lg-5 col-md-8 mx-auto">
+                <h1>Регистрация</h1>
+                <form class="new_user" id="new_user" action="#" accept-charset="UTF-8" method="post">
+                    <div class="form-group">
+                        <label for="user_email">Email</label>
+                        <input autofocus="autofocus" autocomplete="email" class="form-control" type="email"
+                               name="email" id="user_email">
+                    </div>
+                    <div class="form-group">
+                        <label for="user_password">Пароль</label>
+                        <input autocomplete="current-password" class="form-control" type="password"
+                               name="password" id="user_password">
+                        <small class="form-text text-muted">(минимум 6 знаков)</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="user_password_confirmation">Подтверждение пароля</label>
+                        <input autocomplete="current-password" class="form-control" type="password"
+                               name="password_confirmation" id="user_password_confirmation">
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" name="commit" value="Регистрация" class="btn btn-primary"
+                               data-disable-with="Регистрация">
+                    </div>
+                </form>
+                <div class="form-group">
+                    <a href="/accounts/sign-in">Войти</a><br>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<!-- Footer -->
+<div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>
