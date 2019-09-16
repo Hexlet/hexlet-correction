@@ -1,9 +1,8 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head></head>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
 <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm" th:fragment="header">
-    <a href="/" class="navbar-brand">Hexlet Corrections</a>
+    <a href="/" class="navbar-brand" th:text="#{common.header.title}">Hexlet Corrections</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -12,11 +11,13 @@
         <ul class="navbar-nav ml-auto">
             <li class="nav-item">
                 <a class="nav-link" href="/login"
-                   th:classappend="${module == 'login' ? 'active' : ''}">Войти</a>
+                   th:classappend="${module == 'login' ? 'active' : ''}"
+                   th:text="#{common.header.login}">login</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="/registration"
-                   th:classappend="${module == 'registration' ? 'active' : ''}">Регистрация</a>
+                   th:classappend="${module == 'registration' ? 'active' : ''}"
+                   th:text="#{common.header.registration}">registration</a>
             </li>
         </ul>
     </div>
