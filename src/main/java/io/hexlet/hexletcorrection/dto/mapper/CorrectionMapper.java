@@ -7,23 +7,20 @@ import io.hexlet.hexletcorrection.dto.CorrectionDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
-import org.mapstruct.factory.Mappers;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface CorrectionMapper {
 
-    CorrectionMapper INSTANCE = Mappers.getMapper(CorrectionMapper.class);
-
     @Mapping(target = "account", qualifiedByName = "accountToAccountDto")
-    CorrectionDto correctionToCorrectionDto(Correction correction);
+    CorrectionDto toCorrectionDto(Correction correction);
 
     @Named("accountToAccountDto")
     @Mapping(target = "corrections", expression = "java(null)")
-    AccountDto accountToAccountDto(Account account);
+    AccountDto toAccountDto(Account account);
 
     @Mapping(target = "id", ignore = true)
-    Correction correctionDtoToCorrection(CorrectionDto correctionDto);
+    Correction toCorrection(CorrectionDto correctionDto);
 
     @Mapping(target = "corrections", ignore = true)
-    Account accountDtoToAccount(AccountDto accountDto);
+    Account toAccount(AccountDto accountDto);
 }

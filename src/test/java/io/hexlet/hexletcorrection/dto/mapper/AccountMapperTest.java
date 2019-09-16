@@ -5,18 +5,27 @@ import io.hexlet.hexletcorrection.domain.Correction;
 import io.hexlet.hexletcorrection.dto.AccountDto;
 import io.hexlet.hexletcorrection.dto.CorrectionDto;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class AccountMapperTest {
 
+    @Autowired
+    private AccountMapper accountMapper;
+    
     @Test
     public void accountToAccountDtoTest() {
         final AccountDto expectedAccountDto = getAccountDto();
-        final AccountDto actualAccountDto = AccountMapper.INSTANCE.accountToAccountDto(getAccount());
+        final AccountDto actualAccountDto = accountMapper.toAccountDto(getAccount());
 
         assertEquals(expectedAccountDto.getId(), actualAccountDto.getId());
         assertEquals(expectedAccountDto.getName(), actualAccountDto.getName());
@@ -28,7 +37,7 @@ public class AccountMapperTest {
     @Test
     public void accountDtoToAccountTest() {
         final Account expectedAccount = getAccount();
-        final Account actualAccount = AccountMapper.INSTANCE.accountDtoToAccount(getAccountDto());
+        final Account actualAccount = accountMapper.toAccount(getAccountDto());
 
         assertNull(actualAccount.getId());
         assertNull(actualAccount.getCorrections());
@@ -38,17 +47,17 @@ public class AccountMapperTest {
 
     @Test
     public void accountToAccountDtoNullTest() {
-        assertNull(AccountMapper.INSTANCE.accountToAccountDto(null));
+        assertNull(accountMapper.toAccountDto(null));
     }
 
     @Test
     public void accountDtoToAccountNullTest() {
-        assertNull(AccountMapper.INSTANCE.accountDtoToAccount(null));
+        assertNull(accountMapper.toAccount(null));
     }
 
     @Test
     public void correctionsToCorrectionsDtoNullTest() {
-        assertNull(AccountMapper.INSTANCE.correctionsToCorrectionsDto(null));
+        assertNull(accountMapper.toCorrectionsDto(null));
     }
 
     private Account getAccount() {

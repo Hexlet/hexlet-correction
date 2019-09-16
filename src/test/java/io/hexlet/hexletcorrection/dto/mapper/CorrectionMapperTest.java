@@ -5,16 +5,25 @@ import io.hexlet.hexletcorrection.domain.Correction;
 import io.hexlet.hexletcorrection.dto.AccountDto;
 import io.hexlet.hexletcorrection.dto.CorrectionDto;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class CorrectionMapperTest {
+
+    @Autowired
+    private CorrectionMapper correctionMapper;
 
     @Test
     public void correctionToCorrectionDtoTest() {
         final CorrectionDto expectedCorrectionDto = getCorrectionDto();
-        final CorrectionDto actualCorrectionDto = CorrectionMapper.INSTANCE.correctionToCorrectionDto(getCorrection());
+        final CorrectionDto actualCorrectionDto = correctionMapper.toCorrectionDto(getCorrection());
 
         assertEquals(expectedCorrectionDto.getId(), actualCorrectionDto.getId());
         assertEquals(expectedCorrectionDto.getPageURL(), actualCorrectionDto.getPageURL());
@@ -26,7 +35,7 @@ public class CorrectionMapperTest {
     @Test
     public void correctionDtoToCorrectionTest() {
         final Correction expectedCorrection = getCorrection();
-        final Correction actualCorrection = CorrectionMapper.INSTANCE.correctionDtoToCorrection(getCorrectionDto());
+        final Correction actualCorrection = correctionMapper.toCorrection(getCorrectionDto());
 
         assertNull(actualCorrection.getId());
         assertEquals(expectedCorrection.getPageURL(), actualCorrection.getPageURL());
@@ -37,22 +46,22 @@ public class CorrectionMapperTest {
 
     @Test
     public void correctionToCorrectionDtoNullTest() {
-        assertNull(CorrectionMapper.INSTANCE.correctionToCorrectionDto(null));
+        assertNull(correctionMapper.toCorrectionDto(null));
     }
 
     @Test
     public void correctionDtoToCorrectionNullTest() {
-        assertNull(CorrectionMapper.INSTANCE.correctionDtoToCorrection(null));
+        assertNull(correctionMapper.toCorrection(null));
     }
 
     @Test
     public void accountToAccountDtoNullTest() {
-        assertNull(CorrectionMapper.INSTANCE.accountToAccountDto(null));
+        assertNull(correctionMapper.toAccountDto(null));
     }
 
     @Test
     public void accountDtoToAccountNullTest() {
-        assertNull(CorrectionMapper.INSTANCE.accountDtoToAccount(null));
+        assertNull(correctionMapper.toAccount(null));
     }
 
     private Correction getCorrection() {

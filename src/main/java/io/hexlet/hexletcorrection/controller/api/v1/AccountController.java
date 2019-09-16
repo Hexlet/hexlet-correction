@@ -29,10 +29,11 @@ import static io.hexlet.hexletcorrection.controller.ControllerConstants.API_PATH
 public class AccountController {
 
     private final AccountService accountService;
+    private final AccountMapper accountMapper;
 
     @GetMapping("/{id}")
     public AccountDto getAccountById(@PathVariable("id") Long id) {
-        return AccountMapper.INSTANCE.accountToAccountDto(
+        return accountMapper.toAccountDto(
                 accountService
                         .findById(id)
                         .orElseThrow(() -> new AccountNotFoundException(id))
@@ -44,9 +45,9 @@ public class AccountController {
     public AccountDto createAccount(@Valid @RequestBody AccountDto account) {
         account.setId(null);
         account.setCorrections(null);
-        return AccountMapper.INSTANCE.accountToAccountDto(
+        return accountMapper.toAccountDto(
                 accountService.create(
-                        AccountMapper.INSTANCE.accountDtoToAccount(account)
+                        accountMapper.toAccount(account)
                 )
         );
     }
@@ -56,11 +57,11 @@ public class AccountController {
         if (name == null) {
             return accountService.findAll()
                     .stream()
-                    .map(AccountMapper.INSTANCE::accountToAccountDto)
+                    .map(accountMapper::toAccountDto)
                     .collect(Collectors.toList());
         }
         return accountService.findByName(name).stream()
-                .map(AccountMapper.INSTANCE::accountToAccountDto)
+                .map(accountMapper::toAccountDto)
                 .collect(Collectors.toList());
     }
 

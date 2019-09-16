@@ -29,25 +29,26 @@ import static io.hexlet.hexletcorrection.controller.ControllerConstants.CORRECTI
 public class CorrectionController {
 
     private final CorrectionService correctionService;
+    private final CorrectionMapper correctionMapper;
 
     @GetMapping
     public List<CorrectionDto> getCorrections(@RequestParam(required = false) String url) {
         if (url == null) {
             return correctionService.findAll()
                     .stream()
-                    .map(CorrectionMapper.INSTANCE::correctionToCorrectionDto)
+                    .map(correctionMapper::toCorrectionDto)
                     .collect(Collectors.toList());
         }
 
         return correctionService.findByURL(url)
                 .stream()
-                .map(CorrectionMapper.INSTANCE::correctionToCorrectionDto)
+                .map(correctionMapper::toCorrectionDto)
                 .collect(Collectors.toList());
     }
 
     @GetMapping(path = "/{id}")
     public CorrectionDto getCorrectionById(@PathVariable("id") Long id) {
-        return CorrectionMapper.INSTANCE.correctionToCorrectionDto(
+        return correctionMapper.toCorrectionDto(
                 correctionService
                         .findById(id)
                         .orElseThrow(() -> new CorrectionNotFoundException(id))
@@ -58,9 +59,9 @@ public class CorrectionController {
     @ResponseStatus(HttpStatus.CREATED)
     public CorrectionDto createCorrection(@Valid @RequestBody CorrectionDto correction) {
         correction.setId(null);
-        return CorrectionMapper.INSTANCE.correctionToCorrectionDto(
+        return correctionMapper.toCorrectionDto(
                 correctionService.create(
-                        CorrectionMapper.INSTANCE.correctionDtoToCorrection(correction)
+                        correctionMapper.toCorrection(correction)
                 )
         );
     }
