@@ -10,7 +10,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import static io.hexlet.hexletcorrection.controller.ControllerConstants.LOGIN_PATH;
 import static io.hexlet.hexletcorrection.controller.ControllerConstants.TEST_HOST;
-import static io.hexlet.hexletcorrection.controller.ControllerConstants.USERS_PATH;
 import static io.restassured.RestAssured.given;
 
 @RunWith(SpringRunner.class)
@@ -23,7 +22,7 @@ public class LoginControllerTest {
     @Test
     public void loginPageTest() {
         given().when()
-                .get(TEST_HOST + ":" + port + USERS_PATH + LOGIN_PATH)
+                .get(TEST_HOST + ":" + port + LOGIN_PATH)
                 .then()
                 .statusCode(HttpStatus.OK.value())
                 .contentType(ContentType.HTML);

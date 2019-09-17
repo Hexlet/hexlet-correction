@@ -6,10 +6,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import static io.hexlet.hexletcorrection.controller.ControllerConstants.LOGIN_PATH;
-import static io.hexlet.hexletcorrection.controller.ControllerConstants.USERS_PATH;
 
 @Controller
-@RequestMapping(USERS_PATH + LOGIN_PATH)
+@RequestMapping(LOGIN_PATH)
 public class LoginController {
 
     @ModelAttribute("module")
