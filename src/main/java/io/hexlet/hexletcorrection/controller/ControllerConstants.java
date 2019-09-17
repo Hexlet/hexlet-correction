@@ -15,4 +15,8 @@ public class ControllerConstants {
     public final static String CORRECTIONS_PATH = "/corrections";
 
     public final static String ACCOUNTS_PATH = "/accounts";
+
+    public final static String LOGIN_PATH = "/login";
+
+    public final static String REGISTRATION_PATH = "/registration";
 }

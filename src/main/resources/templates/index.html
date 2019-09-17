@@ -1,24 +1,28 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html class="h-100" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Hexlet Corrections</title>
-    <link
-            rel="stylesheet"
-            href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-            integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
-            crossorigin="anonymous"
-    />
+    <link th:replace="fragments/head-styles">
 </head>
-<body>
-    <div id="react-app">
-        <noscript>You need to enable JavaScript to run this app.</noscript>
-        <h1>Home Page</h1>
+<body class="d-flex flex-column h-100">
+<!-- Header -->
+<div th:replace="fragments/header :: header"></div>
+<!-- Main -->
+<main class="flex-shrink-0 my-5">
+    <div class="container">
+        <div class="row">
+            <h1>Content container</h1>
+        </div>
+        <div class="row" id="react-app"></div>
     </div>
+</main>
+<!-- Footer -->
+<div th:replace="fragments/footer :: footer"></div>
 
-    <script src="https://unpkg.com/react/umd/react.production.min.js" crossorigin></script>
-    <script src="https://unpkg.com/react-dom/umd/react-dom.production.min.js" crossorigin></script>
-    <script src="https://unpkg.com/react-bootstrap@next/dist/react-bootstrap.min.js" crossorigin></script>
-    <script type="text/javascript" th:src="@{/dist/app-bundle.js}" src="../static/dist/app-bundle.js"></script>
+<script src="https://unpkg.com/react/umd/react.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom/umd/react-dom.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/react-bootstrap@next/dist/react-bootstrap.min.js" crossorigin></script>
+<script type="text/javascript" th:src="@{/dist/app-bundle.js}" src="../static/dist/app-bundle.js"></script>
 </body>
 </html>
