@@ -12,7 +12,6 @@ import static io.hexlet.hexletcorrection.controller.ControllerConstants.ACCOUNTS
 import static io.hexlet.hexletcorrection.controller.ControllerConstants.SIGN_IN_PATH;
 import static io.hexlet.hexletcorrection.controller.ControllerConstants.TEST_HOST;
 import static io.restassured.RestAssured.given;
-import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
