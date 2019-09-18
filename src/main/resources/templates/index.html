@@ -1,13 +1,9 @@
 <!DOCTYPE html>
-<html class="h-100" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Hexlet Corrections</title>
-    <link th:replace="fragments/head-styles">
-</head>
-<body class="d-flex flex-column h-100">
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/utils :: simple-head}"></head>
+<body>
 <!-- Header -->
-<div th:replace="fragments/header :: header"></div>
+<div th:replace="~{fragments/utils :: header}"></div>
 <!-- Main -->
 <main class="flex-shrink-0 my-5">
     <div class="container">
@@ -17,12 +13,10 @@
         <div class="row" id="react-app"></div>
     </div>
 </main>
-<!-- Footer -->
-<div th:replace="fragments/footer :: footer"></div>
-
+<div th:include="~{fragments/utils :: scripts}"></div>
 <script src="https://unpkg.com/react/umd/react.production.min.js" crossorigin></script>
 <script src="https://unpkg.com/react-dom/umd/react-dom.production.min.js" crossorigin></script>
 <script src="https://unpkg.com/react-bootstrap@next/dist/react-bootstrap.min.js" crossorigin></script>
-<script type="text/javascript" th:src="@{/dist/app-bundle.js}" src="../static/dist/app-bundle.js"></script>
+<script type="text/javascript" th:src="@{/dist/app-bundle.js}"></script>
 </body>
 </html>

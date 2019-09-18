@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/utils :: simple-head}"></head>
+<body>
+<!-- Header -->
+<div th:replace="~{fragments/utils :: header}"></div>
+<div class="container">
+    <div class="text-left">
+        <h4 th:text="${'Accounts: ' + accountDtos.size()}"></h4>
+    </div>
+    <div class="lead">
+        <div class="table-responsive-md">
+            <table class="table table-striped">
+                <thead class="thead-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Number of corrections</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="accountDto : ${accountDtos}">
+                    <td th:text="${accountDto.id}"></td>
+                    <td th:text="${accountDto.name}"></td>
+                    <td th:text="${accountDto.email}"></td>
+                    <td th:text="${accountDto.corrections.size()}"></td>
+                    <td><a class="btn btn-outline-info"
+                           th:href="${'/accounts/' + accountDto.id}">View</a></td>
+                    <td><a class="btn btn-outline-secondary"
+                           th:href="${'/accounts/edit/' + accountDto.id}">Edit</a></td>
+                    <td>
+                        <form method="delete" th:action="@{'/accounts/' + ${accountDto.id}}">
+                            <button type="submit" class="btn btn-outline-danger">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div th:include="~{fragments/utils :: scripts}"></div>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/utils :: simple-head}"></head>
+<body>
+<!-- Header -->
+<div th:replace="~{fragments/utils :: header}"></div>
+<div class="container">
+    <h2>Account info</h2>
+    <div class="lead">
+        <div class="table-responsive-md">
+            <table class="table table-striped">
+                <thead class="thead">
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Number of corrections</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td th:text="${accountDto.id}"></td>
+                    <td th:text="${accountDto.name}"></td>
+                    <td th:text="${accountDto.email}"></td>
+                    <td th:text="${accountDto.corrections.size()}"></td>
+                    <td><a class="btn btn-outline-secondary" th:href="${'/accounts/update/' + accountDto.id}">Edit</a></td>
+                    <td><form method="delete" th:action="@{'/accounts/' + ${accountDto.id}}" th:object="${accountDto}">
+                        <button type="submit" class="btn btn-outline-danger">Delete</button>
+                    </form></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="table-responsive-md">
+            <table class="table table-striped">
+                <thead class="thead-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>URL</th>
+                    <th>Comment</th>
+                    <th>Highlight text</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="correctionDto : ${accountDto.corrections}">
+                    <td th:text="${correctionDto.id}"></td>
+                    <td th:text="${correctionDto.pageURL}"></td>
+                    <td th:text="${correctionDto.comment}"></td>
+                    <td th:text="${correctionDto.highlightText}"></td>
+                    <td><a class="btn btn-outline-info"
+                           th:href="${'/corrections/' + correctionDto.id}">View</a></td>
+                    <td><a class="btn btn-outline-secondary"
+                           th:href="${'/corrections/update/' + correctionDto.id}">Edit</a></td>
+                    <td>
+                        <form method="delete" th:action="@{'/corrections/' + ${correctionDto.id}}">
+                            <button type="submit" class="btn btn-outline-danger">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div th:include="~{fragments/utils :: scripts}"></div>
+</body>
+</html>

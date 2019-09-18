@@ -34,7 +34,7 @@ public class FrontendTest {
                 .get(TEST_HOST + ":" + port + REACT_APP_BUNDLE_PATH)
                 .then()
                 .statusCode(HttpStatus.OK.value())
-                .contentType(ContentType.fromContentType("application/javascript"));
+                .contentType(ContentType.fromContentType("text/html;charset=UTF-8"));
     }
 
 }

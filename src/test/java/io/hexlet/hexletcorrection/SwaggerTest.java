@@ -35,6 +35,6 @@ public class SwaggerTest {
                 .get(TEST_HOST + ":" + port + SWAGGER_API_DOCS_PATH)
                 .then()
                 .statusCode(HttpStatus.OK.value())
-                .contentType(ContentType.JSON);
+                .contentType("text/html;charset=UTF-8");
     }
 }
