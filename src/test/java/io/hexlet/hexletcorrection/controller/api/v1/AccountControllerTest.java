@@ -1,6 +1,6 @@
 package io.hexlet.hexletcorrection.controller.api.v1;
 
-import io.hexlet.hexletcorrection.controller.AbstractControlerTest;
+import io.hexlet.hexletcorrection.controller.AbstractControllerTest;
 import io.hexlet.hexletcorrection.domain.Account;
 import io.restassured.http.ContentType;
 import org.junit.Test;
@@ -22,7 +22,7 @@ import static org.hamcrest.Matchers.equalTo;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class AccountControllerTest extends AbstractControlerTest {
+public class AccountControllerTest extends AbstractControllerTest {
 
     @LocalServerPort
     private int port;

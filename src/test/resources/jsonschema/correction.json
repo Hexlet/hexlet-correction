@@ -1,0 +1,96 @@
+{
+  "definitions": {},
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://example.com/root.json",
+  "type": "object",
+  "title": "The Root Schema",
+  "required": [
+    "id",
+    "comment",
+    "highlightText",
+    "account",
+    "pageURL"
+  ],
+  "properties": {
+    "id": {
+      "$id": "#/properties/id",
+      "type": "integer",
+      "title": "The Id Schema",
+      "default": 0,
+      "examples": [
+        1
+      ]
+    },
+    "comment": {
+      "$id": "#/properties/comment",
+      "type": "string",
+      "title": "The Comment Schema",
+      "default": "",
+      "examples": [
+        "test comment"
+      ],
+      "pattern": "^(.*)$"
+    },
+    "highlightText": {
+      "$id": "#/properties/highlightText",
+      "type": "string",
+      "title": "The Highlighttext Schema",
+      "default": "",
+      "examples": [
+        "text to correction"
+      ],
+      "pattern": "^(.*)$"
+    },
+    "account": {
+      "$id": "#/properties/account",
+      "type": "object",
+      "title": "The Account Schema",
+      "required": [
+        "id",
+        "name",
+        "email"
+      ],
+      "properties": {
+        "id": {
+          "$id": "#/properties/account/properties/id",
+          "type": "integer",
+          "title": "The Id Schema",
+          "default": 0,
+          "examples": [
+            1
+          ]
+        },
+        "name": {
+          "$id": "#/properties/account/properties/name",
+          "type": "string",
+          "title": "The Name Schema",
+          "default": "",
+          "examples": [
+            "bob"
+          ],
+          "pattern": "^(.*)$"
+        },
+        "email": {
+          "$id": "#/properties/account/properties/email",
+          "type": "string",
+          "title": "The Email Schema",
+          "default": "",
+          "examples": [
+            "bob@gmail.com"
+          ],
+          "pattern": "^(.*)$"
+        }
+      }
+    },
+    "pageURL": {
+      "$id": "#/properties/pageURL",
+      "type": "string",
+      "title": "The Pageurl Schema",
+      "default": "",
+      "examples": [
+        "hexlet.io"
+      ],
+      "pattern": "^(.*)$"
+    }
+  }
+}
