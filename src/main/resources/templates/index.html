@@ -1,13 +1,14 @@
 <!DOCTYPE html>
-<html class="h-100" xmlns:th="http://www.thymeleaf.org">
+<html class="h-100" xmlns:th="http://www.thymeleaf.org" lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Hexlet Corrections</title>
-    <link th:replace="fragments/head-styles">
+    <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport">
+    <title th:text="#{common.header.title}">Hexlet Corrections</title>
+    <link th:replace="~{fragments/head-styles}">
 </head>
 <body class="d-flex flex-column h-100">
 <!-- Header -->
-<div th:replace="fragments/header :: header"></div>
+<div th:replace="~{fragments/header :: header}"></div>
 <!-- Main -->
 <main class="flex-shrink-0 my-5">
     <div class="container">
@@ -18,7 +19,7 @@
     </div>
 </main>
 <!-- Footer -->
-<div th:replace="fragments/footer :: footer"></div>
+<div th:replace="~{fragments/footer :: footer}"></div>
 
 <script src="https://unpkg.com/react/umd/react.production.min.js" crossorigin></script>
 <script src="https://unpkg.com/react-dom/umd/react-dom.production.min.js" crossorigin></script>
