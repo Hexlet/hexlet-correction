@@ -1,0 +1,14 @@
+databaseChangeLog:
+- changeSet:
+    id: 1568800030053-1
+    author: timur.malikin (generated)
+    changes:
+    - addColumn:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+            name: password
+            type: varchar(255)
+        tableName: account
+

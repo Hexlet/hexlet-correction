@@ -1,5 +1,5 @@
 <!doctype html>
-<html class="h-100" xmlns:th="http://www.thymeleaf.org" lang="ru">
+<html class="h-100" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3" lang="ru">
 <head>
     <title th:text="#{common.header.login}">login</title>
     <meta charset="UTF-8">
@@ -16,7 +16,19 @@
         <div class="row">
             <div class="col-lg-5 col-md-8 mx-auto">
                 <h1 th:text="#{common.header.login}">login</h1>
-                <form class="new_user" id="new_user" action="#" accept-charset="UTF-8" method="post">
+                <form th:action="@{/login}" class="new_user" id="new_user" accept-charset="UTF-8" method="post">
+
+                    <div th:if="${error}">
+                        <div class="alert alert-danger">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                            <h4 class="alert-heading">Вход не удался из-за ошибки:</h4>
+                            <ul class="mb-0">
+                                <li>Неправильный Email или пароль.</li>
+                            </ul>
+                        </div>
+                    </div>
                     <div class="form-group">
                         <label for="user_email" th:text="#{auth.email}">email</label>
                         <input autofocus="autofocus" autocomplete="email" class="form-control" type="email"

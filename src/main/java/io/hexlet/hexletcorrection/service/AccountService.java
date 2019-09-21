@@ -9,6 +9,8 @@ public interface AccountService {
 
     Optional<Account> findById(Long id);
 
+    Optional<Account> findByEmail(String email);
+
     List<Account> findByName(String name);
 
     List<Account> findAll();
