@@ -23,9 +23,9 @@
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true">×</span>
                             </button>
-                            <h4 class="alert-heading">Вход не удался из-за ошибки:</h4>
-                            <ul class="mb-0">
-                                <li>Неправильный Email или пароль.</li>
+                            <h4 class="alert-heading" th:text="#{alert.login}"></h4>
+                            <ul class="mb-0" >
+                                <li th:text="${error}"></li>
                             </ul>
                         </div>
                     </div>

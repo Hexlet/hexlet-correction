@@ -18,7 +18,7 @@ public class AccountPostDtoValidator implements Validator {
         AccountPostDto accountPostDto = (AccountPostDto) o;
 
         if (!accountPostDto.getPasswordConfirm().equals(accountPostDto.getPassword())) {
-            errors.rejectValue("passwordConfirm", "Not equals to password!");
+            errors.rejectValue("passwordConfirm", "error.validation.password.confirmation");
         }
     }
 }

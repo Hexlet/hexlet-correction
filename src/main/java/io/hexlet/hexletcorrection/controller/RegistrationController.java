@@ -6,6 +6,7 @@ import io.hexlet.hexletcorrection.dto.AccountPostDto;
 import io.hexlet.hexletcorrection.dto.mapper.AccountMapper;
 import io.hexlet.hexletcorrection.service.AccountService;
 import lombok.AllArgsConstructor;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.Locale;
 import java.util.Optional;
 
 import static io.hexlet.hexletcorrection.controller.ControllerConstants.REGISTRATION_PATH;
@@ -27,6 +29,7 @@ public class RegistrationController {
     private final AccountService accountService;
     private final AccountMapper accountMapper;
     private final AccountPostDtoValidator accountPostDtoValidator;
+    private final MessageSource messageSource;
 
     @ModelAttribute("module")
     String module() {
@@ -41,7 +44,8 @@ public class RegistrationController {
     @PostMapping
     public String registration(@Validated @ModelAttribute("accountPostDto") AccountPostDto accountPostDto,
                                BindingResult bindingResult,
-                               Model model) {
+                               Model model,
+                               Locale locale) {
 
         accountPostDtoValidator.validate(accountPostDto, bindingResult);
 
@@ -51,7 +55,8 @@ public class RegistrationController {
 
         Optional<Account> account = accountService.findByEmail(accountPostDto.getEmail());
         if (account.isPresent()) {
-            model.addAttribute("error", "User with current email exist!");
+            String errorMessage = messageSource.getMessage("error.registration.user.exist", null, locale);
+            model.addAttribute("error", errorMessage);
             return "registration";
         }
 
