@@ -69,6 +69,10 @@
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
@@ -129,6 +133,10 @@
             <artifactId>mapstruct</artifactId>
             <version>${mapstruct.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.thymeleaf.extras</groupId>
+            <artifactId>thymeleaf-extras-springsecurity5</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -148,6 +156,7 @@
                     <include>templates/**/*.*</include>
                     <include>static/dist/**/app-bundle.js</include>
                     <include>static/favicon.ico</include>
+                    <include>static/public/**/*.*</include>
                 </includes>
             </resource>
         </resources>
@@ -202,12 +211,12 @@
                         </configuration>
                     </execution>
                     <execution>
-                        <id>npm run build-prod</id>
+                        <id>npm run build</id>
                         <goals>
                             <goal>npm</goal>
                         </goals>
                         <configuration>
-                            <arguments>run build-prod</arguments>
+                            <arguments>run build</arguments>
                         </configuration>
                     </execution>
                 </executions>

@@ -1,0 +1,22 @@
+databaseChangeLog:
+- changeSet:
+    id: 1570530704138-1
+    author: samokisha (generated)
+    changes:
+    - addColumn:
+        columns:
+        - column:
+            name: after_highlight
+            type: varchar(255)
+        tableName: correction
+- changeSet:
+    id: 1570530704138-2
+    author: samokisha (generated)
+    changes:
+    - addColumn:
+        columns:
+        - column:
+            name: before_highlight
+            type: varchar(255)
+        tableName: correction
+

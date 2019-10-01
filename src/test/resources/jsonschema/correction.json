@@ -34,10 +34,30 @@
     "highlightText": {
       "$id": "#/properties/highlightText",
       "type": "string",
-      "title": "The Highlighttext Schema",
+      "title": "The HighlightText Schema",
       "default": "",
       "examples": [
         "text to correction"
+      ],
+      "pattern": "^(.*)$"
+    },
+    "beforeHighlight": {
+      "$id": "#/properties/beforeHighlight",
+      "type": "string",
+      "title": "The Before HighlightText Schema",
+      "default": "",
+      "examples": [
+        "text before highlight"
+      ],
+      "pattern": "^(.*)$"
+    },
+    "afterHighlight": {
+      "$id": "#/properties/afterHighlight",
+      "type": "string",
+      "title": "The After HighlightText Schema",
+      "default": "",
+      "examples": [
+        "text after highlight"
       ],
       "pattern": "^(.*)$"
     },

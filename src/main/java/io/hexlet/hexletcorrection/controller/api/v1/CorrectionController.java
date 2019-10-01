@@ -7,6 +7,7 @@ import io.hexlet.hexletcorrection.dto.mapper.CorrectionMapper;
 import io.hexlet.hexletcorrection.service.CorrectionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -56,6 +57,7 @@ public class CorrectionController {
         );
     }
 
+    @CrossOrigin
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public CorrectionDto createCorrection(@Valid @RequestBody CorrectionPostDto correction) {

@@ -8,7 +8,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Column;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -32,9 +31,12 @@ public class CorrectionDto {
     @Size(message = "Comment not be more than " + MAX_COMMENT_LENGTH + " characters", max = MAX_COMMENT_LENGTH)
     private String comment;
 
-    @Column(name = "highlight_text", nullable = false)
     @NotEmpty(message = "Highlight text " + NOT_EMPTY)
     private String highlightText;
+
+    private String beforeHighlight;
+
+    private String afterHighlight;
 
     @NotNull(message = "Account " + NOT_NULL)
     @JsonIgnoreProperties("corrections")
