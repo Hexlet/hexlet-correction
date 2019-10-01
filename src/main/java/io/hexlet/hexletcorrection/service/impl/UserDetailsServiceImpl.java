@@ -24,7 +24,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         return account.map(
                 acc -> User.builder()
-                        .username(acc.getName())
+                        .username(acc.getEmail())
                         .password(acc.getPassword())
                         .roles("USER")
                         .build()

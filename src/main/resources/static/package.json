@@ -10,8 +10,10 @@
     "react-scripts": "3.1.1"
   },
   "scripts": {
+    "build": "npm run build-prod && npm run build-script",
     "build-prod": "webpack --config webpack.prod.js",
-    "build-dev": "webpack --config webpack.dev.js"
+    "build-dev": "webpack --config webpack.dev.js",
+    "build-script": "webpack --config webpack.script.js"
   },
   "devDependencies": {
     "@babel/cli": "^7.6.0",
@@ -26,6 +28,7 @@
     "style-loader": "^1.0.0",
     "webpack": "^4.39.3",
     "webpack-cli": "^3.3.8",
-    "webpack-merge": "^4.2.2"
+    "webpack-merge": "^4.2.2",
+    "uglifyjs-webpack-plugin": "^2.2.0"
   }
 }

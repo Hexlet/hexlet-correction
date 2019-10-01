@@ -44,6 +44,12 @@ public class Correction {
     @NotEmpty(message = "Highlight text " + NOT_EMPTY)
     private String highlightText;
 
+    @Column(name = "before_highlight")
+    private String beforeHighlight;
+
+    @Column(name = "after_highlight")
+    private String afterHighlight;
+
     @NotNull(message = "Account " + NOT_NULL)
     @ManyToOne
     @JsonIgnoreProperties("corrections")
