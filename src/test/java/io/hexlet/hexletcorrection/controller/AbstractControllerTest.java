@@ -10,6 +10,8 @@ public abstract class AbstractControllerTest {
 
     public final String DEFAULT_USER_NAME = "Test user";
 
+    public final String DEFAULT_USER_PASSWORD = "password";
+
     @Autowired
     private AccountService accountService;
 
@@ -19,6 +21,7 @@ public abstract class AbstractControllerTest {
     protected Account createAccount(String name, String email) {
         Account account = Account.builder()
                 .name(name)
+                .password(DEFAULT_USER_PASSWORD)
                 .email(email)
                 .build();
 
