@@ -26,7 +26,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 acc -> User.builder()
                         .username(acc.getName())
                         .password(acc.getPassword())
-                        .roles("ROLE_USER")
+                        .roles("USER")
                         .build()
         ).orElseThrow(() -> new UsernameNotFoundException("User with current email not found!"));
     }
