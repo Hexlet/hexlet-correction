@@ -23,6 +23,7 @@ public class SwaggerTest {
     @Test
     public void swaggerUiLoadingTest() {
         given().when()
+                .redirects().follow(false)
                 .get(TEST_HOST + ":" + port + SWAGGER_UI_PATH)
                 .then()
                 .statusCode(HttpStatus.OK.value())
@@ -32,6 +33,7 @@ public class SwaggerTest {
     @Test
     public void getSwaggerJsonTest() {
         given().accept(ContentType.JSON).contentType(ContentType.JSON).when()
+                .redirects().follow(false)
                 .get(TEST_HOST + ":" + port + SWAGGER_API_DOCS_PATH)
                 .then()
                 .statusCode(HttpStatus.OK.value())
