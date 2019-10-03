@@ -1,5 +1,6 @@
 <!doctype html>
-<html class="h-100" xmlns:th="http://www.thymeleaf.org" lang="ru">
+<html class="h-100" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3" lang="ru">
 <head>
     <title th:text="#{common.header.registration}">registration</title>
     <meta charset="UTF-8">
@@ -16,24 +17,53 @@
         <div class="row">
             <div class="col-lg-5 col-md-8 mx-auto">
                 <h1 th:text="#{common.header.registration}">registration</h1>
-                <form class="new_user" id="new_user" action="#" accept-charset="UTF-8" method="post">
+                <form th:action="@{/registration}" th:object="${accountPostDto}" class="new_user" id="new_user" accept-charset="UTF-8" method="post">
+
+                    <div th:if="${error}">
+                        <div class="alert alert-danger">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                            <h4 class="alert-heading" th:text="#{alert.registration}"></h4>
+                            <ul class="mb-0">
+                                <li th:text="${error}"></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="user_name">Name</label>
+                        <input th:field="*{name}" autofocus="autofocus" class="form-control"
+                               th:classappend="${#fields.hasErrors('name')} ? is-invalid"
+                               type="text" name="name" id="user_name">
+                        <div th:if="${#fields.hasErrors('name')}" class="invalid-feedback" th:errors="*{name}">Name Error</div>
+                    </div>
                     <div class="form-group">
                         <label for="user_email" th:text="#{auth.email}">email</label>
-                        <input autofocus="autofocus" autocomplete="email" class="form-control" type="email"
-                               name="email" id="user_email">
+                        <input th:field="*{email}" autofocus="autofocus" autocomplete="email" class="form-control"
+                               th:classappend="${#fields.hasErrors('email')} ? is-invalid"
+                               type="email" name="email" id="user_email">
+                        <div th:if="${#fields.hasErrors('email')}" class="invalid-feedback" th:errors="*{email}">Email Error</div>
                     </div>
+
                     <div class="form-group">
                         <label for="user_password" th:text="#{auth.password}">password</label>
-                        <input autocomplete="current-password" class="form-control" type="password"
-                               name="password" id="user_password">
+                        <input th:field="*{password}" autocomplete="current-password" class="form-control"
+                               th:classappend="${#fields.hasErrors('password')} ? is-invalid"
+                               type="password" name="password" id="user_password">
                         <small class="form-text text-muted" th:text="#{auth.password.hint}">password_hint</small>
+                        <div th:if="${#fields.hasErrors('password')}" class="invalid-feedback" th:errors="*{password}">Password Error</div>
                     </div>
+
                     <div class="form-group">
                         <label for="user_password_confirmation"
                                th:text="#{auth.password.confirmation}">confirm_password</label>
-                        <input autocomplete="current-password" class="form-control" type="password"
-                               name="password_confirmation" id="user_password_confirmation">
+                        <input th:field="*{passwordConfirm}" autocomplete="current-password" class="form-control"
+                               th:classappend="${#fields.hasErrors('passwordConfirm')} ? is-invalid"
+                               type="password" name="password_confirm" id="user_password_confirmation">
+                        <div th:if="${#fields.hasErrors('passwordConfirm')}" class="invalid-feedback" th:errors="*{passwordConfirm}">Password confirm Error</div>
                     </div>
+
                     <div class="form-group">
                         <input type="submit" name="commit" value="registration" class="btn btn-primary"
                                th:value="#{auth.registration}">

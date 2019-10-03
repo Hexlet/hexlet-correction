@@ -51,4 +51,8 @@ public class Account {
     @OneToMany(mappedBy = "account", fetch = EAGER)
     @JsonIgnoreProperties("account")
     private Set<Correction> corrections = new HashSet<>();
+
+    @Column(nullable = false)
+    @NotBlank(message = "Password " + NOT_EMPTY)
+    private String password;
 }

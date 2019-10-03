@@ -26,7 +26,7 @@ public class AccountValidateSchema extends AbstractControllerTest {
     @Test
     public void SchemaValidationTest() {
         val name = "bob";
-        val email = "bob@gmail.com";
+        val email = "bob2@gmail.com";
         val account = createAccount(name, email);
         InputStream schema = Thread.currentThread().getContextClassLoader().getResourceAsStream("jsonschema/account.json");
 

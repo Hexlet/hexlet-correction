@@ -19,4 +19,6 @@ public class ControllerConstants {
     public final static String LOGIN_PATH = "/login";
 
     public final static String REGISTRATION_PATH = "/registration";
+
+    public final static String RESOURCES_PATH = "/resources";
 }

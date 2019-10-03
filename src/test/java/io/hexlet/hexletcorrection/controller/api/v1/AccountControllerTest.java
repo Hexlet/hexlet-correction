@@ -2,6 +2,7 @@ package io.hexlet.hexletcorrection.controller.api.v1;
 
 import io.hexlet.hexletcorrection.controller.AbstractControllerTest;
 import io.hexlet.hexletcorrection.domain.Account;
+import io.hexlet.hexletcorrection.dto.AccountPostDto;
 import io.restassured.http.ContentType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -92,9 +93,11 @@ public class AccountControllerTest extends AbstractControllerTest {
 
     @Test
     public void postAccountTest() {
-        Account account = Account.builder()
+        AccountPostDto account = AccountPostDto.builder()
                 .name(DEFAULT_USER_NAME)
                 .email("postAccount@hexlet.io")
+                .password(DEFAULT_USER_PASSWORD)
+                .passwordConfirm(DEFAULT_USER_PASSWORD)
                 .build();
 
         given().when()
@@ -107,9 +110,11 @@ public class AccountControllerTest extends AbstractControllerTest {
 
     @Test
     public void postAccountDoubleTest() {
-        Account account = Account.builder()
+        AccountPostDto account = AccountPostDto.builder()
                 .name(DEFAULT_USER_NAME)
                 .email("postAccountDouble@hexlet.io")
+                .password(DEFAULT_USER_PASSWORD)
+                .passwordConfirm(DEFAULT_USER_PASSWORD)
                 .build();
 
         given().when()
@@ -119,9 +124,11 @@ public class AccountControllerTest extends AbstractControllerTest {
                 .then()
                 .statusCode(HttpStatus.CREATED.value());
 
-        Account account2 = Account.builder()
+        AccountPostDto account2 = AccountPostDto.builder()
                 .name(DEFAULT_USER_NAME)
                 .email("postAccountDouble@hexlet.io")
+                .password(DEFAULT_USER_PASSWORD)
+                .passwordConfirm(DEFAULT_USER_PASSWORD)
                 .build();
 
         given().when()
@@ -136,6 +143,7 @@ public class AccountControllerTest extends AbstractControllerTest {
     public void postAccountNameEmptyTest() {
         Account account = Account.builder()
                 .email("postAccountNameEmpty@hexlet.io")
+                .password(DEFAULT_USER_PASSWORD)
                 .build();
 
         given().when()
@@ -151,6 +159,7 @@ public class AccountControllerTest extends AbstractControllerTest {
     public void postAccountNameTooLongTest() {
         Account account = Account.builder()
                 .email("artem@hexlet.io")
+                .password(DEFAULT_USER_PASSWORD)
                 .name("A".repeat(MAX_ACCOUNT_NAME + 1)).build();
 
         given().when()
@@ -166,6 +175,7 @@ public class AccountControllerTest extends AbstractControllerTest {
     public void postAccountEmailEmptyTest() {
         Account account = Account.builder()
                 .name("Artem")
+                .password(DEFAULT_USER_PASSWORD)
                 .build();
 
         given().when()
@@ -182,6 +192,7 @@ public class AccountControllerTest extends AbstractControllerTest {
         Account account = Account.builder()
                 .name("Artem")
                 .email("123")
+                .password(DEFAULT_USER_PASSWORD)
                 .build();
 
         given().when()

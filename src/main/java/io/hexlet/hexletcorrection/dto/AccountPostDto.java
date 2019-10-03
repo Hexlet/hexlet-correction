@@ -28,4 +28,10 @@ public class AccountPostDto {
     @NotBlank(message = "Email " + NOT_EMPTY)
     @Email(message = INVALID_EMAIL)
     private String email;
+
+    @NotBlank(message = "Password " + NOT_EMPTY)
+    private String password;
+
+    @NotBlank(message = "Password confirm " + NOT_EMPTY)
+    private String passwordConfirm;
 }

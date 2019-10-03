@@ -31,7 +31,7 @@ public class SwaggerTest {
 
     @Test
     public void getSwaggerJsonTest() {
-        given().when()
+        given().accept(ContentType.JSON).contentType(ContentType.JSON).when()
                 .get(TEST_HOST + ":" + port + SWAGGER_API_DOCS_PATH)
                 .then()
                 .statusCode(HttpStatus.OK.value())
