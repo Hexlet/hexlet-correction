@@ -9,8 +9,10 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import static io.hexlet.hexletcorrection.controller.ControllerConstants.API_PATH_V1;
+import static io.hexlet.hexletcorrection.controller.ControllerConstants.LOGIN_PATH;
 import static io.hexlet.hexletcorrection.controller.ControllerConstants.REGISTRATION_PATH;
 import static io.hexlet.hexletcorrection.controller.ControllerConstants.RESOURCES_PATH;
+import static io.hexlet.hexletcorrection.controller.ControllerConstants.SWAGGER_UI_PATH;
 
 @Configuration
 @EnableWebSecurity
@@ -25,7 +27,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers(REGISTRATION_PATH, "/").permitAll()
+                .antMatchers(REGISTRATION_PATH, LOGIN_PATH, "/").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
@@ -41,6 +43,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) throws Exception {
         web
                 .ignoring()
-                .antMatchers(RESOURCES_PATH + "/**", API_PATH_V1 + "/**", "/v2/api-docs/**", "/dist/**");
+                .antMatchers(RESOURCES_PATH + "/**",
+                        API_PATH_V1 + "/**",
+                        SWAGGER_UI_PATH + "/**",
+                        "/v2/api-docs/**",
+                        "/dist/**");
     }
 }
