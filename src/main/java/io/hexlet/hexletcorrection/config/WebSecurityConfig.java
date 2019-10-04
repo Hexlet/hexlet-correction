@@ -40,13 +40,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Override
-    public void configure(WebSecurity web) throws Exception {
+    public void configure(WebSecurity web) {
         web
                 .ignoring()
                 .antMatchers(RESOURCES_PATH + "/**",
                         API_PATH_V1 + "/**",
                         SWAGGER_UI_PATH + "/**",
                         "/v2/api-docs/**",
+                        "/webjars/springfox-swagger-ui/**",
+                        "/swagger-resources/**",
                         "/dist/**");
     }
 }
