@@ -8,7 +8,7 @@
 git clone https://github.com/<your_username>/hexlet-correction.git
 ```
 
-Добавте `remote` на оригинальный репозиторий под именем `upstream`.
+Добавьте `remote` на оригинальный репозиторий под именем `upstream`.
 ```bash
 git remote add upstream https://github.com/Hexlet/hexlet-correction.git
 ```
@@ -30,7 +30,7 @@ git pull upstream --rebase
 git checkout new-feature
 ```
 
-Добавте изменения из ветки `master` в ветку с фичей.
+Добавьте изменения из ветки `master` в ветку с фичей.
 ```bash
 git rebase master
 ```
@@ -41,7 +41,7 @@ git commit
 git rebase --continue
 ```
 
-Отправте ветку с фичей в ваш форк. А затем создайте Pull Request.
+Отправьте ветку с фичей в ваш форк. А затем создайте Pull Request.
 ```bash
 git push origin new-feature
 ```
