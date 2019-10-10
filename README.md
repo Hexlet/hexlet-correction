@@ -9,6 +9,7 @@
 ### Участие
 
 * Обсуждение в канале #hexlet-volunteers слака http://slack-ru.hexlet.io
+* Как добавить свой вклад описанно в [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ### Требования к системе для запуска и разработки (без учета OS)
 
