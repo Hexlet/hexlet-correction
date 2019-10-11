@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/simple-head :: simple-head}">
+<body>
+<!-- Header -->
+<div th:replace="~{fragments/header :: header}"></div>
+<!-- Main -->
+<main class="flex-shrink-0 my-5">
+    <div class="container">
+        <h4 th:text="#{account.header.info}"></h4>
+        <h4 th:if="${error}" th:text="${error}"></h4>
+        <div th:if="${accountDto}">
+            <div class="table-responsive-md">
+                <table class="table table-striped">
+                    <thead class="thead-light">
+                    <tr>
+                        <th th:text="#{field.id}"></th>
+                        <th th:text="#{account.field.name}"></th>
+                        <th th:text="#{account.field.email}"></th>
+                        <th th:text="#{account.field.corrections.size}"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td th:text="${accountDto.id}"></td>
+                        <td th:text="${accountDto.name}"></td>
+                        <td th:text="${accountDto.email}"></td>
+                        <td th:text="${accountDto.corrections.size()}"></td>
+                        <td>
+                            <a class="btn btn-outline-secondary"
+                               th:href="${'/accounts/edit/' + accountDto.id}" th:text="#{action.edit}"></a>
+                        </td>
+                        <td>
+                            <form action="#" th:action="@{'/accounts/{id}'(id=${accountDto.id})}" th:method="delete">
+                                <input type="hidden" name="_method" value="delete"/>
+                                <button class="btn btn-outline-danger" type="submit" id="deleteAccount"
+                                        th:text="#{action.delete}"></button>
+                            </form>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div th:unless="${#lists.isEmpty(accountDto.corrections)}" class="table-responsive-md">
+                <table class="table table-striped">
+                    <thead class="thead-dark">
+                    <tr>
+                        <th th:text="#{field.id}"></th>
+                        <th th:text="#{correction.field.url}"></th>
+                        <th th:text="#{correction.field.comment}"></th>
+                        <th th:text="#{correction.field.highlight}"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="correctionDto : ${accountDto.corrections}">
+                        <td th:text="${correctionDto.id}"></td>
+                        <td th:text="${correctionDto.pageURL}"></td>
+                        <td th:text="${correctionDto.comment}"></td>
+                        <td th:text="${correctionDto.highlightText}"></td>
+                        <td>
+                            <a class="btn btn-outline-info"
+                               th:href="${'/corrections/' + correctionDto.id}" th:text="#{action.view}"></a>
+                        </td>
+                        <td>
+                            <a class="btn btn-outline-secondary"
+                               th:href="${'/corrections/update/' + correctionDto.id}" th:text="#{action.edit}"></a>
+                        </td>
+                        <td>
+                            <form action="#" th:action="@{'/corrections/{id}'(id=${accountDto.id})}" th:method="delete">
+                                <input type="hidden" name="_method" value="delete"/>
+                                <button class="btn btn-outline-danger" type="submit" id="deleteCorrection"
+                                        th:text="#{action.delete}"></button>
+                            </form>
+                        </td>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

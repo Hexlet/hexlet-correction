@@ -1,4 +1,4 @@
-package io.hexlet.hexletcorrection;
+package io.hexlet.hexletcorrection.controller;
 
 import io.restassured.http.ContentType;
 import org.junit.Test;
