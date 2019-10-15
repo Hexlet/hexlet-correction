@@ -8,15 +8,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public abstract class AbstractControllerTest {
 
-    public final String DEFAULT_USER_NAME = "Test user";
+    protected final String DEFAULT_USER_NAME = "Test user";
 
-    public final String DEFAULT_USER_PASSWORD = "password";
-
-    @Autowired
-    private AccountService accountService;
+    protected final String DEFAULT_USER_PASSWORD = "password";
 
     @Autowired
-    private CorrectionService correctionService;
+    protected AccountService accountService;
+
+    @Autowired
+    protected CorrectionService correctionService;
 
     protected Account createAccount(String name, String email) {
         Account account = Account.builder()

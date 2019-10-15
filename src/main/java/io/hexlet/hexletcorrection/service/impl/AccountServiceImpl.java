@@ -4,6 +4,7 @@ import io.hexlet.hexletcorrection.domain.Account;
 import io.hexlet.hexletcorrection.repository.AccountRepository;
 import io.hexlet.hexletcorrection.service.AccountService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -45,6 +46,9 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public void delete(Long id) {
-        accountRepository.deleteById(id);
+        try {
+            accountRepository.deleteById(id);
+        } catch (EmptyResultDataAccessException ignored) {
+        }
     }
 }
