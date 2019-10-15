@@ -22,7 +22,7 @@ public class AccountMapperTest {
 
     @Autowired
     private AccountMapper accountMapper;
-    
+
     @Test
     public void accountToAccountDtoTest() {
         final AccountDto expectedAccountDto = getAccountDto();

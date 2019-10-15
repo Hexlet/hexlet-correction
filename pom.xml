@@ -49,6 +49,7 @@
         <postgresql.version>42.2.6</postgresql.version>
         <mapstruct.version>1.3.0.Final</mapstruct.version>
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
+        <editorconfig-maven-plugin.version>0.0.10</editorconfig-maven-plugin.version>
     </properties>
 
     <dependencies>
@@ -333,6 +334,30 @@
                         <version>${javassist.version}</version>
                     </dependency>
                 </dependencies>
+            </plugin>
+
+            <plugin>
+                <groupId>org.ec4j.maven</groupId>
+                <artifactId>editorconfig-maven-plugin</artifactId>
+                <version>${editorconfig-maven-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>check</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <excludes>
+                        <exclude>src/main/resources/static/dist/**</exclude>
+                        <exclude>src/main/resources/static/public/**</exclude>
+                        <exclude>src/main/resources/static/node*/**</exclude>
+                        <exclude>mvnw*</exclude>
+                        <exclude>cc-test-reporter*</exclude>
+                    </excludes>
+                </configuration>
             </plugin>
         </plugins>
     </build>
