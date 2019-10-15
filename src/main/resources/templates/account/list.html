@@ -12,7 +12,7 @@
                th:text="#{account.action.new}"></a>
         </div>
         <div th:unless="${accountDtos.isEmpty()}">
-            <h4 th:text="${#{account.header.quantity} + accountDtos.size()}"></h4>
+            <h4 th:text="${'#{account.header.quantity}' + 'accountDtos.size()'}"></h4>
             <div class="table-responsive-md">
                 <table class="table table-striped">
                     <thead class="thead-light">

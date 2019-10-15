@@ -2,6 +2,7 @@ package io.hexlet.hexletcorrection.controller;
 
 import io.hexlet.hexletcorrection.domain.Account;
 import io.restassured.http.ContentType;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,44 +36,51 @@ public class AccountControllerStaticTest extends AbstractControllerTest {
 
     private MockMvc mvc;
 
+    private Account testAccount;
 
     private final String CONTENT_TYPE = ContentType.HTML.withCharset(StandardCharsets.UTF_8);
 
     @Before
     public void setUp() {
         mvc = MockMvcBuilders.webAppContextSetup(context)
-                .apply(springSecurity())
-                .build();
+            .apply(springSecurity())
+            .build();
+        testAccount = createAccount("testAccountOne", "testAccountOne@email.com");
+    }
+
+    @After
+    public void tearDown() {
+        deleteAccount(testAccount.getId());
+        testAccount = null;
     }
 
     @WithMockUser("spring")
     @Test
     public void getAccounts() throws Exception {
         mvc.perform(get(ACCOUNTS_PATH))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(CONTENT_TYPE));
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(CONTENT_TYPE));
     }
 
     @WithMockUser("spring")
     @Test
     public void getAccountByIdNotFound() throws Exception {
-        final Long accountId = 1L;
+        final Long accountId = testAccount.getId() + 1;
         mvc.perform(get(ACCOUNTS_PATH + "/" + accountId))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(CONTENT_TYPE))
-                .andExpect(content().string(containsString(format("Account with id=%d not found", accountId))));
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(CONTENT_TYPE))
+            .andExpect(content().string(containsString(format("Account with id=%d not found", accountId))));
     }
 
     @WithMockUser("spring")
     @Test
     public void getAccountById() throws Exception {
-        Account testAccountOne = createAccount("testAccountOne", "testAccountOne@email.com");
-        mvc.perform(get(ACCOUNTS_PATH + "/" + testAccountOne.getId()))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(CONTENT_TYPE))
-                .andExpect(content().string(containsString(format("<td>%s</td>", testAccountOne.getName()))))
-                .andExpect(content().string(containsString(format("<td>%d</td>", testAccountOne.getId()))))
-                .andExpect(content().string(containsString(format("<td>%s</td>", testAccountOne.getEmail()))));
+        mvc.perform(get(ACCOUNTS_PATH + "/" + testAccount.getId()))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(CONTENT_TYPE))
+            .andExpect(content().string(containsString(format("<td>%s</td>", testAccount.getName()))))
+            .andExpect(content().string(containsString(format("<td>%d</td>", testAccount.getId()))))
+            .andExpect(content().string(containsString(format("<td>%s</td>", testAccount.getEmail()))));
     }
 
     @WithMockUser("spring")
@@ -87,29 +95,28 @@ public class AccountControllerStaticTest extends AbstractControllerTest {
     @Test
     public void postAccount() throws Exception {
         mvc.perform(post(ACCOUNTS_PATH))
-                .andExpect(status().isFound());
+            .andExpect(status().isFound());
     }
 
     @WithMockUser("spring")
     @Test
     public void getEditForm() throws Exception {
         mvc.perform(get(ACCOUNTS_PATH + "/edit/1"))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(CONTENT_TYPE));
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(CONTENT_TYPE));
     }
 
     @WithMockUser("spring")
     @Test
     public void putAccount() throws Exception {
         mvc.perform(put(ACCOUNTS_PATH))
-                .andExpect(status().isFound());
+            .andExpect(status().isFound());
     }
 
     @WithMockUser("spring")
     @Test
     public void deleteAccount() throws Exception {
-        Account testAccountOne = createAccount("testAccountOne", "testAccountOne@email.com");
-        mvc.perform(delete(ACCOUNTS_PATH + "/" + testAccountOne.getId()))
-                .andExpect(status().isFound());
+        mvc.perform(delete(ACCOUNTS_PATH + "/" + testAccount.getId()))
+            .andExpect(status().isFound());
     }
 }

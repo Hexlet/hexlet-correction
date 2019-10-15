@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      lang="ru">
 <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm" th:fragment="header">
     <a href="/" class="navbar-brand" th:text="#{common.header.title}">Hexlet Corrections</a>
@@ -8,7 +10,7 @@
         <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav">
+        <ul class="navbar-nav" sec:authorize="isAuthenticated()">
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle"
                    href="#" id="accountsDropdown"
@@ -34,17 +36,23 @@
         <div class="dropdown-menu" aria-labelledby="accountsDropdown">
             <a class="dropdown-item" th:href="@{/accounts/}" th:text="#{account.header.list}"></a>
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="/login"
-                       th:classappend="${module == 'login' ? 'active' : ''}"
-                       th:text="#{common.header.login}"></a>
+                <li class="nav-item" sec:authorize="isAuthenticated()">
+                    <a href="/profile" class="nav-link"
+                       th:classappend="${module == 'profile' ? 'active' : ''}"
+                       th:text="#{common.header.profile}">profile</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/registration"
+                <li class="nav-item" sec:authorize="!isAuthenticated()">
+                    <a href="/login" class="nav-link"
+                       th:classappend="${module == 'login' ? 'active' : ''}"
+                       th:text="#{common.header.login}">login</a>
+                </li>
+                <li class="nav-item" sec:authorize="!isAuthenticated()">
+                    <a href="/registration" class="nav-link"
                        th:classappend="${module == 'registration' ? 'active' : ''}"
-                       th:text="#{common.header.registration}"></a>
+                       th:text="#{common.header.registration}">registration</a>
                 </li>
             </ul>
         </div>
+    </div>
 </nav>
 </body>

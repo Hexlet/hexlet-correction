@@ -38,4 +38,8 @@ public abstract class AbstractControllerTest {
 
         return correctionService.create(correction);
     }
+
+    protected void deleteAccount(final Long id) {
+        accountService.delete(id);
+    }
 }
