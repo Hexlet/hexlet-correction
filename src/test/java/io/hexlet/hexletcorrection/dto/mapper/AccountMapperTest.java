@@ -40,8 +40,9 @@ public class AccountMapperTest {
         final Account expectedAccount = getAccount();
         final Account actualAccount = accountMapper.toAccount(getAccountDto());
 
-        assertNull(actualAccount.getId());
+        assertNull(actualAccount.getPassword());
         assertNull(actualAccount.getCorrections());
+        assertEquals(expectedAccount.getId(), actualAccount.getId());
         assertEquals(expectedAccount.getName(), actualAccount.getName());
         assertEquals(expectedAccount.getEmail(), actualAccount.getEmail());
     }

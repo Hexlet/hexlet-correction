@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AccountServiceImpl implements AccountService {
@@ -55,7 +56,8 @@ public class AccountServiceImpl implements AccountService {
     public void delete(Long id) {
         try {
             accountRepository.deleteById(id);
-        } catch (EmptyResultDataAccessException ignored) {
+        } catch (EmptyResultDataAccessException e) {
+            log.info("Delete non existing entity with id=" + id, e);
         }
     }
 }
