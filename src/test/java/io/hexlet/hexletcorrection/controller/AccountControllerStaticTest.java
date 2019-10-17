@@ -1,8 +1,8 @@
 package io.hexlet.hexletcorrection.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.hexlet.hexletcorrection.domain.Account;
 import io.hexlet.hexletcorrection.dto.AccountDto;
-import io.hexlet.hexletcorrection.dto.AccountPostDto;
 import io.restassured.http.ContentType;
 import org.junit.After;
 import org.junit.Before;
@@ -26,6 +26,7 @@ import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -41,6 +42,9 @@ public class AccountControllerStaticTest extends AbstractControllerTest {
 
     @Autowired
     private WebApplicationContext context;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     private MockMvc mvc;
 
@@ -128,25 +132,19 @@ public class AccountControllerStaticTest extends AbstractControllerTest {
     public void postAccount() throws Exception {
         String testEmail = "test@email.com";
 
-        AccountPostDto accountPostDto = AccountPostDto.builder()
-            .email(testEmail)
-            .name(DEFAULT_USER_NAME)
-            .password(DEFAULT_USER_PASSWORD)
-            .passwordConfirm(DEFAULT_USER_PASSWORD)
-            .build();
+        mvc.perform(
+            post(ACCOUNTS_PATH)
+                .param("email", testEmail)
+                .param("name", DEFAULT_USER_NAME)
+                .param("password", DEFAULT_USER_PASSWORD)
+                .param("passwordConfirm", DEFAULT_USER_PASSWORD)
+                .with(csrf())
+        ).andExpect(status().isFound());
 
-        mvc.perform(post(ACCOUNTS_PATH)
-            .param("email", accountPostDto.getEmail())
-            .param("name", accountPostDto.getName())
-            .param("password", accountPostDto.getPassword())
-            .param("passwordConfirm", accountPostDto.getPasswordConfirm())
-            .with(csrf()))
-            .andExpect(status().isFound());
-
-        Account actuel = accountService.findByEmail(testEmail).orElse(null);
-        assertNotNull(actuel);
-        assertEquals(actuel.getEmail(), accountPostDto.getEmail());
-        assertEquals(actuel.getName(), accountPostDto.getName());
+        Account actualAccount = accountService.findByEmail(testEmail).orElse(null);
+        assertNotNull(actualAccount);
+        assertEquals(actualAccount.getEmail(), testEmail);
+        assertEquals(actualAccount.getName(), DEFAULT_USER_NAME);
     }
 
     @WithMockUser
@@ -175,10 +173,8 @@ public class AccountControllerStaticTest extends AbstractControllerTest {
 
         mvc.perform(
             put(ACCOUNTS_PATH)
-                .param("id", accountDto.getId().toString())
-                .param("name", accountDto.getName())
-                .param("email", accountDto.getEmail())
-                .param("corrections", accountDto.getCorrections().toString())
+                .contentType(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(accountDto))
                 .with(csrf())
         ).andExpect(status().isFound());
 
