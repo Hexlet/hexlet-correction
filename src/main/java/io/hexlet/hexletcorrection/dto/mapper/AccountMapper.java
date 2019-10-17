@@ -22,7 +22,7 @@ public interface AccountMapper {
 
     @Mappings({
             @Mapping(target = "corrections", ignore = true),
-            @Mapping(target = "id", ignore = true)
+            @Mapping(target = "password", ignore = true)
     })
     Account toAccount(AccountDto accountDto);
 

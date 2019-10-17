@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/simple-head :: simple-head}">
+<body>
+<!-- Header -->
+<div th:replace="~{fragments/header :: header}"></div>
+<!-- Main -->
+<main class="flex-shrink-0 my-5">
+    <div class="container">
+        <div class="row justify-content-md-center" th:if="${accountDtos.isEmpty()}">
+            <a class="btn btn-outline-info col col-lg-2" th:href="${'/accounts/new'}"
+               th:text="#{account.action.new}"></a>
+        </div>
+        <div th:unless="${accountDtos.isEmpty()}">
+            <h4 th:text="${'#{account.header.quantity}' + 'accountDtos.size()'}"></h4>
+            <div class="table-responsive-md">
+                <table class="table table-striped">
+                    <thead class="thead-light">
+                    <tr>
+                        <th th:text="#{field.id}"></th>
+                        <th th:text="#{account.field.name}"></th>
+                        <th th:text="#{account.field.email}"></th>
+                        <th th:text="#{account.field.corrections.size}"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="accountDto : ${accountDtos}">
+                        <td th:text="${accountDto.id}"></td>
+                        <td th:text="${accountDto.name}"></td>
+                        <td th:text="${accountDto.email}"></td>
+                        <td th:text="${accountDto.corrections.size()}"></td>
+                        <td>
+                            <a class="btn btn-outline-info"
+                               th:href="${'/accounts/' + accountDto.id}" th:text="#{action.view}"></a>
+                        </td>
+                        <td>
+                            <a class="btn btn-outline-secondary"
+                               th:href="${'/accounts/edit/' + accountDto.id}" th:text="#{action.edit}"></a>
+                        </td>
+                        <td>
+                            <form action="#" th:action="@{'/accounts/{id}'(id=${accountDto.id})}" th:method="delete">
+                                <input type="hidden" name="_method" value="delete"/>
+                                <button class="btn btn-outline-danger" type="submit" id="deleteAccount"
+                                        th:text="#{action.delete}"></button>
+                            </form>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

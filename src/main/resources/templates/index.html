@@ -1,11 +1,6 @@
 <!DOCTYPE html>
 <html class="h-100" xmlns:th="http://www.thymeleaf.org" lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport">
-    <title th:text="#{common.header.title}">Hexlet Corrections</title>
-    <link th:replace="~{fragments/head-styles}">
-</head>
+<head th:replace="~{fragments/simple-head :: simple-head}">
 <body class="d-flex flex-column h-100">
 <!-- Header -->
 <div th:replace="~{fragments/header :: header}"></div>
