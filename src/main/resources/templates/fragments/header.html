@@ -47,6 +47,9 @@
                    th:classappend="${module == 'profile' ? 'active' : ''}"
                    th:text="#{common.header.profile}">profile</a>
             </li>
+            <form action="#" th:action="@{/logout}" method="post" sec:authorize="isAuthenticated()" class="form-inline">
+                <input type="submit" th:value="#{common.header.logout}"/>
+            </form>
         </ul>
     </div>
 </nav>
