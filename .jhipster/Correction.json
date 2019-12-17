@@ -1,0 +1,118 @@
+{
+    "name": "Correction",
+    "fields": [
+        {
+            "fieldName": "reporterRemark",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "maxlength"
+            ],
+            "fieldValidateRulesMaxlength": 200
+        },
+        {
+            "fieldName": "correcterRemark",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "maxlength"
+            ],
+            "fieldValidateRulesMaxlength": 200
+        },
+        {
+            "fieldName": "resolverRemark",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "maxlength"
+            ],
+            "fieldValidateRulesMaxlength": 200
+        },
+        {
+            "fieldName": "textBeforeCorrection",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "maxlength"
+            ],
+            "fieldValidateRulesMaxlength": 1000
+        },
+        {
+            "fieldName": "textCorrection",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required",
+                "minlength",
+                "maxlength"
+            ],
+            "fieldValidateRulesMinlength": 1,
+            "fieldValidateRulesMaxlength": 1000
+        },
+        {
+            "fieldName": "textAfterCorrection",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "maxlength"
+            ],
+            "fieldValidateRulesMaxlength": 1000
+        },
+        {
+            "fieldName": "reporterName",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required",
+                "minlength",
+                "maxlength"
+            ],
+            "fieldValidateRulesMinlength": 1,
+            "fieldValidateRulesMaxlength": 50
+        },
+        {
+            "fieldName": "pageURL",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required",
+                "maxlength"
+            ],
+            "fieldValidateRulesMaxlength": 50
+        },
+        {
+            "fieldName": "correctionStatus",
+            "fieldType": "CorrectionStatus",
+            "fieldValues": "REPORTED,IN_PROGRESS,RESOLVED,CANCELED",
+            "fieldValidateRules": [
+                "required"
+            ]
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "one-to-many",
+            "otherEntityName": "comment",
+            "otherEntityRelationshipName": "correction",
+            "relationshipName": "comments"
+        },
+        {
+            "relationshipType": "many-to-one",
+            "otherEntityName": "correcter",
+            "otherEntityRelationshipName": "correctionsInProgress",
+            "relationshipName": "correcter",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipType": "many-to-one",
+            "otherEntityName": "correcter",
+            "otherEntityRelationshipName": "correctionsResolved",
+            "relationshipName": "resolver",
+            "otherEntityField": "id"
+        }
+    ],
+    "changelogDate": "20191217164453",
+    "entityTableName": "correction",
+    "dto": "mapstruct",
+    "pagination": "pagination",
+    "service": "serviceImpl",
+    "jpaMetamodelFiltering": true,
+    "fluentMethods": true,
+    "readOnly": false,
+    "clientRootFolder": "",
+    "applications": [
+        "hexletCorrection"
+    ]
+}

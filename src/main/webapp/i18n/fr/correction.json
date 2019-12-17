@@ -1,0 +1,33 @@
+{
+  "hexletCorrectionApp": {
+    "correction": {
+      "home": {
+        "title": "Corrections",
+        "createLabel": "Créer un nouveau Correction",
+        "createOrEditLabel": "Créer ou éditer un Correction",
+        "notFound": "Aucun Correction trouvé"
+      },
+      "created": "Un nouveau Correction a été créé avec l'identifiant {{ param }}",
+      "updated": "Le Correction avec l'identifiant {{ param }} a été mis à jour",
+      "deleted": "Le Correction avec l'identifiant {{ param }} a été supprimé",
+      "delete": {
+        "question": "Etes-vous certain de vouloir supprimer le Correction {{ id }} ?"
+      },
+      "detail": {
+        "title": "Correction"
+      },
+      "reporterRemark": "Reporter Remark",
+      "correcterRemark": "Correcter Remark",
+      "resolverRemark": "Resolver Remark",
+      "textBeforeCorrection": "Text Before Correction",
+      "textCorrection": "Text Correction",
+      "textAfterCorrection": "Text After Correction",
+      "reporterName": "Reporter Name",
+      "pageURL": "Page URL",
+      "correctionStatus": "Correction Status",
+      "comments": "Comments",
+      "correcter": "Correcter",
+      "resolver": "Resolver"
+    }
+  }
+}

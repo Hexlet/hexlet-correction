@@ -1,0 +1,91 @@
+application {
+	config {
+		baseName hexletCorrection,
+		packageName io.hexlet.hexletcorrection,
+		applicationType monolith,
+		buildTool maven,
+		authenticationType jwt,
+		databaseType sql
+		prodDatabaseType postgresql,
+		devDatabaseType postgresql,
+		cacheProvider ehcache,
+		clientFramework react,
+		clientTheme slate,
+		testFrameworks []
+		nativeLanguage en,
+		languages [en, fr, ru],
+	}
+	entities Correcter, Correction, Comment
+}
+
+DEFAULT_MIN_LENGTH = 2
+NAME_MAX_LENGTH = 50
+PHONE_MAX_LENGTH = 20
+ADDRESS_MAX_LENGTH = 200
+
+
+NAME_LENGTH_MIN = 1
+NAME_LENGTH_MAX = 50
+PASSWORD_LENGTH_MIN = 8
+PASSWORD_LENGTH_MAX = 50
+PHONE_LENGTH_MIN = 8
+PHONE_LENGTH_MAX = 50
+
+entity Correcter {
+	firstName String required minlength(NAME_LENGTH_MIN) maxlength(NAME_LENGTH_MAX)
+	lastName String required minlength(NAME_LENGTH_MIN) maxlength(NAME_LENGTH_MAX)
+	status CorrecterStatus required
+	email String required unique
+    password String required minlength(PASSWORD_LENGTH_MIN) maxlength(PASSWORD_LENGTH_MAX)
+	phone String minlength(PHONE_LENGTH_MIN) maxlength(PHONE_LENGTH_MAX)
+	avatar ImageBlob
+}
+
+enum CorrecterStatus {
+	NON_ACTIVATED, BLOCKED, READY
+}
+
+REMARK_LENGTH_MAX = 200
+TEXT_CORRECTION_LENGTH_MIN = 1
+TEXT_CORRECTION_LENGTH_MAX = 1000
+PAGE_URL_LENGTH_MAX = 50
+
+entity Correction {
+	reporterRemark String maxlength(REMARK_LENGTH_MAX)
+    correcterRemark String maxlength(REMARK_LENGTH_MAX)
+    resolverRemark String maxlength(REMARK_LENGTH_MAX)
+    textBeforeCorrection String maxlength(TEXT_CORRECTION_LENGTH_MAX)
+    textCorrection String required minlength(TEXT_CORRECTION_LENGTH_MIN) maxlength(TEXT_CORRECTION_LENGTH_MAX)
+    textAfterCorrection String maxlength(TEXT_CORRECTION_LENGTH_MAX)
+	reporterName String required minlength(NAME_LENGTH_MIN) maxlength(NAME_LENGTH_MAX)
+    pageURL String required maxlength(PAGE_URL_LENGTH_MAX)
+    correctionStatus CorrectionStatus required
+}
+
+enum CorrectionStatus {
+	REPORTED, IN_PROGRESS, RESOLVED, CANCELED
+}
+
+COMMENT_MESSAGE_LENGTH_MIN = 1
+COMMENT_MESSAGE_LENGTH_MAX = 200
+
+entity Comment {
+    message String required minlength(COMMENT_MESSAGE_LENGTH_MIN) maxlength(COMMENT_MESSAGE_LENGTH_MAX)
+    date ZonedDateTime required
+}
+
+relationship OneToMany {
+  Correcter{correctionsInProgress} to Correction{correcter}
+  Correcter{correctionsResolved} to Correction{resolver}
+  Correction{comments} to Comment{correction}
+  Correcter{comments} to Comment{correcter}
+}
+
+relationship OneToOne {
+	Correcter{user(login) required} to User
+}
+
+service Correcter, Correction, Comment with serviceImpl
+paginate Correcter, Correction, Comment with pagination
+dto Correcter, Correction, Comment with mapstruct
+filter Correcter, Correction, Comment

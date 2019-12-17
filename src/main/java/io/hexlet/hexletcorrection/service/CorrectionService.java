@@ -1,19 +1,46 @@
 package io.hexlet.hexletcorrection.service;
 
-import io.hexlet.hexletcorrection.domain.Correction;
+import io.hexlet.hexletcorrection.service.dto.CorrectionDTO;
 
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import java.util.Optional;
 
+/**
+ * Service Interface for managing {@link io.hexlet.hexletcorrection.domain.Correction}.
+ */
 public interface CorrectionService {
 
-    Optional<Correction> findById(Long id);
+    /**
+     * Save a correction.
+     *
+     * @param correctionDTO the entity to save.
+     * @return the persisted entity.
+     */
+    CorrectionDTO save(CorrectionDTO correctionDTO);
 
-    List<Correction> findByURL(String url);
+    /**
+     * Get all the corrections.
+     *
+     * @param pageable the pagination information.
+     * @return the list of entities.
+     */
+    Page<CorrectionDTO> findAll(Pageable pageable);
 
-    List<Correction> findAll();
 
-    Correction create(Correction correction);
+    /**
+     * Get the "id" correction.
+     *
+     * @param id the id of the entity.
+     * @return the entity.
+     */
+    Optional<CorrectionDTO> findOne(Long id);
 
+    /**
+     * Delete the "id" correction.
+     *
+     * @param id the id of the entity.
+     */
     void delete(Long id);
 }

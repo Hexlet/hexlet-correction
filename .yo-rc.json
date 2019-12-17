@@ -1,0 +1,50 @@
+{
+  "generator-jhipster": {
+    "databaseType": "sql",
+    "devDatabaseType": "postgresql",
+    "enableHibernateCache": true,
+    "enableSwaggerCodegen": false,
+    "enableTranslation": true,
+    "jhiPrefix": "jhi",
+    "languages": [
+      "en",
+      "fr",
+      "ru"
+    ],
+    "messageBroker": false,
+    "nativeLanguage": "en",
+    "packageName": "io.hexlet.hexletcorrection",
+    "packageFolder": "io/hexlet/hexletcorrection",
+    "prodDatabaseType": "postgresql",
+    "searchEngine": false,
+    "serviceDiscoveryType": false,
+    "skipClient": false,
+    "skipServer": false,
+    "testFrameworks": [],
+    "websocket": false,
+    "baseName": "hexletCorrection",
+    "applicationType": "monolith",
+    "buildTool": "maven",
+    "authenticationType": "jwt",
+    "cacheProvider": "ehcache",
+    "clientFramework": "react",
+    "clientTheme": "slate",
+    "jhipsterVersion": "6.5.1",
+    "skipUserManagement": false,
+    "clientPackageManager": "npm",
+    "clientThemeVariant": "primary",
+    "serverPort": "8080",
+    "useSass": true,
+    "jwtSecretKey": "NjU0YTdhYWMzOWZmYzA2OTQ4NjdiYTg1NDQ4MjI1NzVmMmM0MzgyNDdiNmM1YTk5MDI5NWI2MzQzMTMwNmQwNzA0M2VlMmMwMmE5NjMzY2VjZGY2YWM5Y2MzYTZiMzE5ZGY0ZWNmMjJlYWIzYjI1MjU3YWFhNzk2YmI3ZTIxY2Q=",
+    "embeddableLaunchScript": false,
+    "entitySuffix": "",
+    "dtoSuffix": "DTO",
+    "otherModules": [],
+    "blueprints": []
+  },
+  "entities": [
+    "Correcter",
+    "Correction",
+    "Comment"
+  ]
+}

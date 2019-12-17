@@ -1,0 +1,32 @@
+{
+  "hexletCorrectionApp": {
+    "correcter": {
+      "home": {
+        "title": "Correcters",
+        "createLabel": "Create a new Correcter",
+        "createOrEditLabel": "Create or edit a Correcter",
+        "notFound": "No Correcters found"
+      },
+      "created": "A new Correcter is created with identifier {{ param }}",
+      "updated": "A Correcter is updated with identifier {{ param }}",
+      "deleted": "A Correcter is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Correcter {{ id }}?"
+      },
+      "detail": {
+        "title": "Correcter"
+      },
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "status": "Status",
+      "email": "Email",
+      "password": "Password",
+      "phone": "Phone",
+      "avatar": "Avatar",
+      "user": "User",
+      "correctionsInProgress": "Corrections In Progress",
+      "correctionsResolved": "Corrections Resolved",
+      "comments": "Comments"
+    }
+  }
+}

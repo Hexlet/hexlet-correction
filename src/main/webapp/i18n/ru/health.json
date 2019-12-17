@@ -1,0 +1,28 @@
+{
+  "health": {
+    "title": "Состояние",
+    "refresh.button": "Обновить",
+    "stacktrace": "Трассировки стека",
+    "details": {
+      "details": "Детали",
+      "properties": "Параметры",
+      "name": "Имя",
+      "value": "Значение",
+      "error": "Ошибка"
+    },
+    "indicator": {
+      "diskSpace": "Место на диске",
+      "mail": "Email",
+      "db": "База данных"
+    },
+    "table": {
+      "service": "Название сервиса",
+      "status": "Статус"
+    },
+    "status": {
+      "UNKNOWN": "UNKNOWN",
+      "UP": "UP",
+      "DOWN": "DOWN"
+    }
+  }
+}

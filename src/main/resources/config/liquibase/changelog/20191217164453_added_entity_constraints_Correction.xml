@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <!--
+        Added the constraints for entity Correction.
+    -->
+    <changeSet id="20191217164453-2" author="jhipster">
+        
+        <addForeignKeyConstraint baseColumnNames="correcter_id"
+                                 baseTableName="correction"
+                                 constraintName="fk_correction_correcter_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="correcter"/>
+
+        <addForeignKeyConstraint baseColumnNames="resolver_id"
+                                 baseTableName="correction"
+                                 constraintName="fk_correction_resolver_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="correcter"/>
+
+    </changeSet>
+</databaseChangeLog>
