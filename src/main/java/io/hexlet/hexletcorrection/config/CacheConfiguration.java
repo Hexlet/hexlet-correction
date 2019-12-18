@@ -49,6 +49,7 @@ public class CacheConfiguration {
             createCache(cm, io.hexlet.hexletcorrection.domain.Correction.class.getName());
             createCache(cm, io.hexlet.hexletcorrection.domain.Correction.class.getName() + ".comments");
             createCache(cm, io.hexlet.hexletcorrection.domain.Comment.class.getName());
+            cm.createCache(io.hexlet.hexletcorrection.domain.EntityAuditEvent.class.getName(), jcacheConfiguration);
             // jhipster-needle-ehcache-add-entry
         };
     }

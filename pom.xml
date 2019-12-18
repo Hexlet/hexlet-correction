@@ -22,7 +22,7 @@
     <properties>
         <!-- Build properties -->
         <maven.version>3.3.9</maven.version>
-        <java.version>1.8</java.version>
+        <java.version>12</java.version>
         <node.version>v12.13.0</node.version>
         <npm.version>6.13.0</npm.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -76,6 +76,7 @@
         <maven-war-plugin.version>3.2.3</maven-war-plugin.version>
         <maven-checkstyle.version>3.1.0</maven-checkstyle.version>
         <checkstyle.version>8.24</checkstyle.version>
+        <checkstyle.config.location>checkstyle.xml</checkstyle.config.location>
         <spring-nohttp-checkstyle.version>0.0.3.RELEASE</spring-nohttp-checkstyle.version>
         <frontend-maven-plugin.version>1.8.0</frontend-maven-plugin.version>
         <git-commit-id-plugin.version>3.0.1</git-commit-id-plugin.version>
@@ -330,6 +331,14 @@
             <groupId>io.dropwizard.metrics</groupId>
             <artifactId>metrics-core</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-localconfig-connector</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-heroku-connector</artifactId>
+        </dependency>
         <!-- jhipster-needle-maven-add-dependency -->
     </dependencies>
 
@@ -385,13 +394,19 @@
                     </dependency>
                 </dependencies>
                 <configuration>
-                    <configLocation>checkstyle.xml</configLocation>
+                    <encoding>UTF-8</encoding>
+                    <consoleOutput>true</consoleOutput>
+                    <failsOnError>true</failsOnError>
+                    <logViolationsToConsole>true</logViolationsToConsole>
+                    <configLocation>${checkstyle.config.location}</configLocation>
                     <includes>pom.xml,README.md</includes>
                     <excludes>.git/**/*,target/**/*,node_modules/**/*,node/**/*</excludes>
                     <sourceDirectories>./</sourceDirectories>
                 </configuration>
                 <executions>
                     <execution>
+                        <id>validate</id>
+                        <phase>validate</phase>
                         <goals>
                             <goal>check</goal>
                         </goals>
@@ -433,6 +448,52 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco-maven-plugin.version}</version>
+                <configuration>
+                    <excludes>
+                        <exclude>**/HexletCorrectionApp.*</exclude>
+                    </excludes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>jacoco-check</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <rule>
+                                    <element>BUNDLE</element>
+                                    <limits>
+                                        <limit>
+                                            <counter>LINE</counter>
+                                            <value>COVEREDRATIO</value>
+                                            <minimum>${jacoco-maven-plugin.lines-coverage-ratio}</minimum>
+                                        </limit>
+                                        <limit>
+                                            <counter>METHOD</counter>
+                                            <value>COVEREDRATIO</value>
+                                            <minimum>${jacoco-maven-plugin.methods-coverage-ratio}</minimum>
+                                        </limit>
+                                    </limits>
+                                </rule>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.sonarsource.scanner.maven</groupId>
@@ -1128,6 +1189,59 @@
                         </plugin>
                     </plugins>
                 </pluginManagement>
+            </build>
+        </profile>
+        <profile>
+            <id>heroku</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.liquibase</groupId>
+                        <artifactId>liquibase-maven-plugin</artifactId>
+                        <configuration combine.self="override">
+                            <changeLogFile>src/main/resources/config/liquibase/master.xml</changeLogFile>
+                            <diffChangeLogFile>src/main/resources/config/liquibase/changelog/${maven.build.timestamp}_changelog.xml</diffChangeLogFile>
+                            <driver></driver>
+                            <url>${env.JDBC_DATABASE_URL}</url>
+                            <defaultSchemaName></defaultSchemaName>
+                            <username>${env.JDBC_DATABASE_USERNAME}</username>
+                            <password>${env.JDBC_DATABASE_PASSWORD}</password>
+                            <referenceUrl>hibernate:spring:io.hexlet.hexletcorrection.domain?dialect=io.github.jhipster.domain.util.FixedPostgreSQL95Dialect&amp;hibernate.physical_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy&amp;hibernate.implicit_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy</referenceUrl>
+                            <verbose>true</verbose>
+                            <logging>debug</logging>
+                            <promptOnNonLocalDatabase>false</promptOnNonLocalDatabase>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <artifactId>maven-clean-plugin</artifactId>
+                        <version>${maven-clean-plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>clean-artifacts</id>
+                                <phase>install</phase>
+                                <goals>
+                                    <goal>clean</goal>
+                                </goals>
+                                <configuration>
+                                    <excludeDefaultDirectories>true</excludeDefaultDirectories>
+                                    <filesets>
+                                        <fileset>
+                                            <directory>target</directory>
+                                            <excludes>
+                                                <exclude>*.jar</exclude>
+                                            </excludes>
+                                            <followSymlinks>false</followSymlinks>
+                                        </fileset>
+                                        <fileset>
+                                            <directory>node_modules</directory>
+                                            <followSymlinks>false</followSymlinks>
+                                        </fileset>
+                                    </filesets>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
             </build>
         </profile>
         <!-- jhipster-needle-maven-add-profile -->

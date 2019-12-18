@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
-<!DOCTYPE module PUBLIC "-//Puppy Crawl//DTD Check Configuration 1.3//EN"
-        "https://www.puppycrawl.com/dtds/configuration_1_3.dtd">
+<!DOCTYPE module PUBLIC
+    "-//Puppy Crawl//DTD Check Configuration 1.3//EN"
+    "https://www.puppycrawl.com/dtds/configuration_1_3.dtd">
 <module name="Checker">
 
     <!-- Configure checker to use UTF-8 encoding -->
@@ -18,4 +19,36 @@
        // CHECKSTYLE:ON
     -->
     <module name="SuppressWithPlainTextCommentFilter"/>
+    <module name="NewlineAtEndOfFile"/>
+    <module name="TreeWalker">
+        <module name="UnusedImports"/>
+        <module name="EmptyCatchBlock"/>
+        <module name="NeedBraces"/>
+        <module name="InnerTypeLast"/>
+        <module name="InterfaceIsType"/>
+        <module name="DeclarationOrder"/>
+        <module name="EqualsAvoidNull"/>
+        <module name="IllegalType"/>
+        <module name="MissingSwitchDefault"/>
+        <module name="NestedForDepth"/>
+        <module name="NestedTryDepth"/>
+        <module name="OneStatementPerLine"/>
+        <module name="UnnecessaryParentheses"/>
+        <module name="VariableDeclarationUsageDistance"/>
+        <module name="StaticVariableName"/>
+        <module name="TypeName">
+            <property name="format" value="^_?[A-Z][a-zA-Z0-9]*$"/>
+        </module>
+    </module>
+    <module name="FileTabCharacter"/>
+    <module name="RegexpMultiline">
+        <property name="format" value="^([^\n ]+ )*(class|interface|enum)[^{]*\{.*(\r\n|\n)[^(\r\n|\n)}]"/>
+        <property name="message" value="Leave empty row after class/interface/enum definition!"/>
+        <property name="severity" value="error"/>
+        <property name="fileExtensions" value="java"/>
+    </module>
+    <module name="FileLength">
+        <property name="max" value="3000"/>
+        <property name="fileExtensions" value="java"/>
+    </module>
 </module>

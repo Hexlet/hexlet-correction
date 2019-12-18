@@ -17,7 +17,7 @@ import io.hexlet.hexletcorrection.domain.enumeration.CorrecterStatus;
 @Entity
 @Table(name = "correcter")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class Correcter implements Serializable {
+public class Correcter extends AbstractAuditingEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

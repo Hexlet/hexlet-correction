@@ -8,7 +8,7 @@ import io.hexlet.hexletcorrection.domain.enumeration.CorrecterStatus;
 /**
  * A DTO for the {@link io.hexlet.hexletcorrection.domain.Correcter} entity.
  */
-public class CorrecterDTO implements Serializable {
+public class CorrecterDTO extends AbstractAuditingDTO implements Serializable {
 
     private Long id;
 

@@ -1,0 +1,10 @@
+[
+    {
+        "name": "Audit Helper generator",
+        "npmPackageName": "generator-jhipster-audit-helper",
+        "description": "Add support for entity audit",
+        "hookFor": "entity",
+        "hookType": "post",
+        "generatorCallback": "jhipster-audit-helper:entity"
+    }
+]

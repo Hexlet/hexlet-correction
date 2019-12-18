@@ -40,7 +40,15 @@
     "entitySuffix": "",
     "dtoSuffix": "DTO",
     "otherModules": [],
-    "blueprints": []
+    "blueprints": [],
+    "appsFolders": [
+      "hexlet-correction"
+    ],
+    "directoryPath": "../",
+    "monitoring": "no",
+    "consoleOptions": [],
+    "herokuAppName": "hexlet-correction",
+    "herokuDeployType": "git"
   },
   "entities": [
     "Correcter",

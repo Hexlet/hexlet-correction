@@ -7,7 +7,7 @@ import java.util.Objects;
 /**
  * A DTO for the {@link io.hexlet.hexletcorrection.domain.Comment} entity.
  */
-public class CommentDTO implements Serializable {
+public class CommentDTO extends AbstractAuditingDTO implements Serializable {
 
     private Long id;
 
