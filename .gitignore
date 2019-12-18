@@ -145,3 +145,30 @@ Desktop.ini
 # ESLint
 ######################
 .eslintcache
+
+######################
+# Java
+######################
+target/
+!**/src/main/**
+!**/src/test/**
+
+### STS ###
+.apt_generated
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+
+### Others ###
+.java-version
