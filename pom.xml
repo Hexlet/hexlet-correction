@@ -50,6 +50,7 @@
         <mapstruct.version>1.3.0.Final</mapstruct.version>
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
         <editorconfig-maven-plugin.version>0.0.10</editorconfig-maven-plugin.version>
+        <rider-spring.version>1.7.3</rider-spring.version>
     </properties>
 
     <dependencies>
@@ -117,6 +118,12 @@
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.database-rider</groupId>
+            <artifactId>rider-spring</artifactId>
+            <version>${rider-spring.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
