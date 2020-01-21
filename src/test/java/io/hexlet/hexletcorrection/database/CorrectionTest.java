@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-
 @RunWith(SpringRunner.class)
 @DataJpaTest
 @DBRider
@@ -25,16 +24,16 @@ public class CorrectionTest {
     private CorrectionRepository correctionRepository;
 
     @Test
-    @DataSet("account.yml")
+    @DataSet(value = "account.yml", cleanAfter = true)
     @ExpectedDataSet("expectedAccount.yml")
-    public void shouldCreateCorrection(){
+    public void shouldCreateCorrection() {
         var account = accountRepository.findById(1L).get();
         var correction = Correction.builder()
-                .comment("comment")
-                .highlightText("text")
-                .account(account)
-                .pageURL("url")
-                .build();
+            .comment("comment")
+            .highlightText("text")
+            .account(account)
+            .pageURL("url")
+            .build();
 
         correctionRepository.save(correction);
     }

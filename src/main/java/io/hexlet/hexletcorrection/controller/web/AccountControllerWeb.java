@@ -1,4 +1,4 @@
-package io.hexlet.hexletcorrection.controller;
+package io.hexlet.hexletcorrection.controller.web;
 
 import io.hexlet.hexletcorrection.domain.Account;
 import io.hexlet.hexletcorrection.dto.AccountDto;
@@ -30,7 +30,7 @@ import static java.util.Objects.isNull;
 @Controller
 @RequestMapping(ACCOUNTS_PATH)
 @AllArgsConstructor
-public class AccountControllerStatic {
+public class AccountControllerWeb {
 
     private static final String TEMPLATE_DIR = "account";
     private static final String VIEW_TEMPLATE = TEMPLATE_DIR + "/view";

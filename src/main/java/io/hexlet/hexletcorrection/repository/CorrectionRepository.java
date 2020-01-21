@@ -10,4 +10,6 @@ import java.util.List;
 public interface CorrectionRepository extends JpaRepository<Correction, Long> {
 
     List<Correction> findByPageURL(String pageURL);
+
+    List<Correction> findByAccountId(Long accountId);
 }

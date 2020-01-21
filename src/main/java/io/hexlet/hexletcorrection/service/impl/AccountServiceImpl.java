@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,27 +16,32 @@ import java.util.Optional;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class AccountServiceImpl implements AccountService {
 
     private final AccountRepository accountRepository;
     private final BCryptPasswordEncoder passwordEncoder;
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<Account> findById(Long id) {
         return accountRepository.findById(id);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<Account> findByEmail(String email) {
         return accountRepository.findOneByEmail(email);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Account> findByName(String name) {
         return accountRepository.findByName(name);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Account> findAll() {
         return accountRepository.findAll();
     }

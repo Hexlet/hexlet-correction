@@ -8,12 +8,10 @@ import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import static io.hexlet.hexletcorrection.domain.EntityConstrainConstants.MAX_COMMENT_LENGTH;
 import static io.hexlet.hexletcorrection.domain.EntityConstrainConstants.NOT_EMPTY;
-import static io.hexlet.hexletcorrection.domain.EntityConstrainConstants.NOT_NULL;
 
 @Getter
 @Setter
@@ -33,7 +31,6 @@ public class CorrectionPostDto {
 
     private String afterHighlight;
 
-    @NotNull(message = "Account " + NOT_NULL)
     private AccountDto account;
 
     @NotBlank(message = "URL " + NOT_EMPTY)

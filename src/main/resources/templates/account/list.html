@@ -12,7 +12,7 @@
                th:text="#{account.action.new}"></a>
         </div>
         <div th:unless="${accountDtos.isEmpty()}">
-            <h4 th:text="${'#{account.header.quantity}' + 'accountDtos.size()'}"></h4>
+            <h4 th:text="#{account.header.quantity} + ' ' + ${accountDtos.size()}"></h4>
             <div class="table-responsive-md">
                 <table class="table table-striped">
                     <thead class="thead-light">
@@ -28,7 +28,7 @@
                         <td th:text="${accountDto.id}"></td>
                         <td th:text="${accountDto.name}"></td>
                         <td th:text="${accountDto.email}"></td>
-                        <td th:text="${accountDto.corrections.size()}"></td>
+                        <td th:if="${accountDto.corrections}" th:text="${accountDto.corrections.size()}"></td>
                         <td>
                             <a class="btn btn-outline-info"
                                th:href="${'/accounts/' + accountDto.id}" th:text="#{action.view}"></a>

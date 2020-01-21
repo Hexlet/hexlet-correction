@@ -1,4 +1,4 @@
-package io.hexlet.hexletcorrection.controller;
+package io.hexlet.hexletcorrection.controller.web;
 
 import io.restassured.http.ContentType;
 import org.junit.Test;
@@ -22,19 +22,19 @@ public class FrontendTest {
     @Test
     public void getRootPathTest() {
         given().when()
-                .get(TEST_HOST + ":" + port)
-                .then()
-                .statusCode(HttpStatus.OK.value())
-                .contentType(ContentType.HTML);
+            .get(TEST_HOST + ":" + port)
+            .then()
+            .statusCode(HttpStatus.OK.value())
+            .contentType(ContentType.HTML);
     }
 
     @Test
     public void getReactAppBundleTest() {
         given().when()
-                .get(TEST_HOST + ":" + port + REACT_APP_BUNDLE_PATH)
-                .then()
-                .statusCode(HttpStatus.OK.value())
-                .contentType(ContentType.fromContentType("application/javascript"));
+            .get(TEST_HOST + ":" + port + REACT_APP_BUNDLE_PATH)
+            .then()
+            .statusCode(HttpStatus.OK.value())
+            .contentType(ContentType.fromContentType("application/javascript"));
     }
 
 }
