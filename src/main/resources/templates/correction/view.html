@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/simple-head :: simple-head}">
+<body>
+<!-- Header -->
+<div th:replace="~{fragments/header :: header}"></div>
+<!-- Main -->
+<main class="flex-shrink-0 my-5">
+    <div class="container">
+        <h4 th:text="#{correction.header.info}"></h4>
+        <h4 th:if="${error}" th:text="${error}"></h4>
+        <div th:if="${correctionDto}">
+            <div class="table-responsive-md">
+                <table class="table table-striped">
+                    <thead class="thead-light">
+                    <tr>
+                        <th th:text="#{field.id}"></th>
+                        <th th:text="#{correction.field.url}"></th>
+                        <th th:text="#{correction.field.highlight}"></th>
+                        <th th:text="#{correction.field.comment}"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td th:text="${correctionDto.id}"></td>
+                        <td th:text="${correctionDto.pageURL}"></td>
+                        <td th:text="${correctionDto.highlightText}"></td>
+                        <td th:text="${correctionDto.comment}"></td>
+                        <td>
+                            <form action="#" th:action="@{'/corrections/{id}'(id=${correctionDto.id})}" th:method="delete">
+                                <input type="hidden" name="_method" value="delete"/>
+                                <button class="btn btn-outline-danger" type="submit" id="deleteAccount"
+                                        th:text="#{action.delete}"></button>
+                            </form>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/simple-head :: simple-head}">
+<body>
+<!-- Header -->
+<div th:replace="~{fragments/header :: header}"></div>
+<!-- Main -->
+<main class="flex-shrink-0 my-5">
+    <div class="container">
+        <div class="row justify-content-md-center" th:if="${correctionDtos.isEmpty()}">
+            <a class="btn btn-outline-info col col-lg-2" th:href="${'/corrections/new'}"
+               th:text="#{correction.action.new}"></a>
+        </div>
+        <div th:unless="${correctionDtos.isEmpty()}">
+            <h4 th:text="#{correction.header.quantity} + ' ' + ${correctionDtos.size()}"></h4>
+            <div class="table-responsive-md">
+                <table class="table table-striped">
+                    <thead class="thead-light">
+                    <tr>
+                        <th th:text="#{field.id}"></th>
+                        <th th:text="#{correction.field.url}"></th>
+                        <th th:text="#{correction.field.highlight}"></th>
+                        <th th:text="#{correction.field.comment}"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="correctionDto : ${correctionDtos}">
+                        <td th:text="${correctionDto.id}"></td>
+                        <td th:text="${correctionDto.pageURL}"></td>
+                        <td th:text="${correctionDto.highlightText}"></td>
+                        <td th:text="${correctionDto.comment}"></td>
+                        <td>
+                            <a class="btn btn-outline-info"
+                               th:href="${'/corrections/' + correctionDto.id}" th:text="#{action.view}"></a>
+                        </td>
+                        <td>
+                            <form action="#" th:action="@{'/corrections/{id}'(id=${correctionDto.id})}" th:method="delete">
+                                <input type="hidden" name="_method" value="delete"/>
+                                <button class="btn btn-outline-danger" type="submit" id="deleteAccount"
+                                        th:text="#{action.delete}"></button>
+                            </form>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

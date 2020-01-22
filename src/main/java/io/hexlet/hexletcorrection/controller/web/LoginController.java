@@ -1,4 +1,4 @@
-package io.hexlet.hexletcorrection.controller;
+package io.hexlet.hexletcorrection.controller.web;
 
 import lombok.AllArgsConstructor;
 import org.springframework.context.MessageSource;

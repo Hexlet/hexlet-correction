@@ -9,6 +9,8 @@ public interface CorrectionService {
 
     Optional<Correction> findById(Long id);
 
+    List<Correction> findByAccountId(Long accountId);
+
     List<Correction> findByURL(String url);
 
     List<Correction> findAll();

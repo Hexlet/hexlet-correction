@@ -1,4 +1,4 @@
-package io.hexlet.hexletcorrection.controller;
+package io.hexlet.hexletcorrection.controller.web;
 
 import io.hexlet.hexletcorrection.controller.validator.AccountPostDtoValidator;
 import io.hexlet.hexletcorrection.domain.Account;

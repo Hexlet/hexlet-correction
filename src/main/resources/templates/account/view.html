@@ -25,7 +25,7 @@
                         <td th:text="${accountDto.id}"></td>
                         <td th:text="${accountDto.name}"></td>
                         <td th:text="${accountDto.email}"></td>
-                        <td th:text="${accountDto.corrections.size()}"></td>
+                        <td th:if="${accountDto.corrections}" th:text="${accountDto.corrections.size()}"></td>
                         <td>
                             <a class="btn btn-outline-secondary"
                                th:href="${'/accounts/edit/' + accountDto.id}" th:text="#{action.edit}"></a>
@@ -60,10 +60,6 @@
                         <td>
                             <a class="btn btn-outline-info"
                                th:href="${'/corrections/' + correctionDto.id}" th:text="#{action.view}"></a>
-                        </td>
-                        <td>
-                            <a class="btn btn-outline-secondary"
-                               th:href="${'/corrections/update/' + correctionDto.id}" th:text="#{action.edit}"></a>
                         </td>
                         <td>
                             <form action="#" th:action="@{'/corrections/{id}'(id=${accountDto.id})}" th:method="delete">

@@ -1,4 +1,4 @@
-package io.hexlet.hexletcorrection.controller;
+package io.hexlet.hexletcorrection.controller.web;
 
 import io.restassured.http.ContentType;
 import org.junit.Test;
@@ -22,9 +22,9 @@ public class LoginControllerTest {
     @Test
     public void loginPageTest() {
         given().when()
-                .get(TEST_HOST + ":" + port + LOGIN_PATH)
-                .then()
-                .statusCode(HttpStatus.OK.value())
-                .contentType(ContentType.HTML);
+            .get(TEST_HOST + ":" + port + LOGIN_PATH)
+            .then()
+            .statusCode(HttpStatus.OK.value())
+            .contentType(ContentType.HTML);
     }
 }
