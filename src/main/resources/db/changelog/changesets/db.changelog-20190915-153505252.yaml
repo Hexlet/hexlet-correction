@@ -1,9 +1,0 @@
-databaseChangeLog:
-- changeSet:
-    id: 1568561731101-1
-    author: timur.malikin (generated)
-    changes:
-    - addUniqueConstraint:
-        columnNames: email
-        constraintName: UC_ACCOUNTEMAIL_COL
-        tableName: account

@@ -1,6 +1,0 @@
-account:
-- id: 1
-  email: "bob@gmail.com"
-  name: "bob"
-  password: "pass"
-
