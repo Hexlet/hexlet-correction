@@ -1,0 +1,11 @@
+version: '2'
+services:
+  hexletcorrection-postgresql:
+    image: postgres:12.1
+    # volumes:
+    #     - ~/volumes/jhipster/hexletCorrection/postgresql/:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=hexletCorrection
+      - POSTGRES_PASSWORD=
+    ports:
+      - 5432:5432

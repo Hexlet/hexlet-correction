@@ -1,1 +1,2 @@
-web: java -jar target/hexlet-correction-0.0.1-SNAPSHOT.jar
+web: java $JAVA_OPTS -Xmx256m -jar target/*.jar --spring.profiles.active=prod,heroku,no-liquibase,swagger --server.port=$PORT
+release: cp -R src/main/resources/config config && ./mvnw -ntp liquibase:update -Pprod,heroku

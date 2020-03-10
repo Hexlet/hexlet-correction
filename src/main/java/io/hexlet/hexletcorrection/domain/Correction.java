@@ -1,61 +1,127 @@
 package io.hexlet.hexletcorrection.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import io.hexlet.hexletcorrection.domain.enumeration.CorrectionStatus;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
-import static io.hexlet.hexletcorrection.domain.EntityConstrainConstants.MAX_COMMENT_LENGTH;
-import static io.hexlet.hexletcorrection.domain.EntityConstrainConstants.NOT_EMPTY;
-import static io.hexlet.hexletcorrection.domain.EntityConstrainConstants.NOT_NULL;
+import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.FetchType.LAZY;
 
+/**
+ * A Correction.
+ */
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
+@ToString
 @Entity
 @Table(name = "correction")
-public class Correction {
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+public class Correction implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
+    @SequenceGenerator(name = "sequenceGenerator")
     private Long id;
 
-    @NotEmpty(message = "Comment " + NOT_EMPTY)
-    @Size(message = "Comment not be more than " + MAX_COMMENT_LENGTH + " characters", max = MAX_COMMENT_LENGTH)
-    private String comment;
+    @Size(max = 1000)
+    @Column(name = "reporter_remark", length = 1000)
+    private String reporterRemark;
 
-    @Column(name = "highlight_text", nullable = false)
-    @NotEmpty(message = "Highlight text " + NOT_EMPTY)
-    private String highlightText;
+    @Size(max = 1000)
+    @Column(name = "correcter_remark", length = 1000)
+    private String correcterRemark;
 
-    @Column(name = "before_highlight")
-    private String beforeHighlight;
+    @Size(max = 1000)
+    @Column(name = "resolver_remark", length = 1000)
+    private String resolverRemark;
 
-    @Column(name = "after_highlight")
-    private String afterHighlight;
+    @Size(max = 100)
+    @Column(name = "text_before_correction", length = 100)
+    private String textBeforeCorrection;
 
-    @NotNull(message = "Account " + NOT_NULL)
-    @ManyToOne
-    @JsonIgnoreProperties("corrections")
-    private Account account;
+    @NotNull
+    @Size(max = 100)
+    @Column(name = "text_correction", length = 100, nullable = false)
+    private String textCorrection;
 
-    @NotBlank(message = "URL " + NOT_EMPTY)
-    @Column(name = "page_url", nullable = false)
+    @Size(max = 100)
+    @Column(name = "text_after_correction", length = 100)
+    private String textAfterCorrection;
+
+    @NotNull
+    @Size(min = 1, max = 50)
+    @Column(name = "reporter_name", length = 50, nullable = false)
+    private String reporterName;
+
+    @NotNull
+    @Size(max = 50)
+    @Column(name = "page_url", length = 50, nullable = false)
     private String pageURL;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(name = "correction_status", nullable = false)
+    private CorrectionStatus correctionStatus;
+
+    @OneToMany(mappedBy = "correction", cascade = ALL, orphanRemoval = true)
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    @ToString.Exclude
+    private Set<Comment> comments = new HashSet<>();
+
+    @ManyToOne(fetch = LAZY)
+    @JsonIgnoreProperties({"resolvedCorrections", "correctionsInProgresses"})
+    private Preference correcter;
+
+    @ManyToOne(fetch = LAZY)
+    @JsonIgnoreProperties({"resolvedCorrections", "correctionsInProgresses"})
+    private Preference resolver;
+
+    public void addComment(final Comment comment) {
+        comments.add(comment);
+        comment.setCorrection(this);
+    }
+
+    public void removeComment(final Comment comment) {
+        comments.remove(comment);
+        comment.setCorrection(null);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Correction)) {
+            return false;
+        }
+        return id != null && id.equals(((Correction) o).id);
+    }
+
+    @Override
+    public int hashCode() {
+        return 31;
+    }
 }
