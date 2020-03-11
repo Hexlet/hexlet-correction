@@ -84,10 +84,7 @@ public class CustomAuditEventRepositoryIT {
     @Test
     public void addAuditEventTruncateLargeData() {
         Map<String, Object> data = new HashMap<>();
-        StringBuilder largeData = new StringBuilder();
-        for (int i = 0; i < EVENT_DATA_COLUMN_MAX_LENGTH + 10; i++) {
-            largeData.append("a");
-        }
+        StringBuilder largeData = new StringBuilder("a".repeat(EVENT_DATA_COLUMN_MAX_LENGTH + 10));
         data.put("test-key", largeData);
         AuditEvent event = new AuditEvent("test-user", "test-type", data);
         customAuditEventRepository.add(event);

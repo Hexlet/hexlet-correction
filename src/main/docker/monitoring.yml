@@ -1,18 +1,17 @@
 version: '2'
 services:
   hexletcorrection-prometheus:
-    image: prom/prometheus:v2.15.2
+    image: prom/prometheus:v2.16.0
     volumes:
       - ./prometheus/:/etc/prometheus/
-    command:
-      - '--config.file=/etc/prometheus/prometheus.yml'
+    command: '--config.file=/etc/prometheus/prometheus.yml'
     ports:
       - 9090:9090
     # On MacOS, remove next line and replace localhost by host.docker.internal in prometheus/prometheus.yml and
     # grafana/provisioning/datasources/datasource.yml
     network_mode: 'host' # to test locally running service
   hexletcorrection-grafana:
-    image: grafana/grafana:6.6.0
+    image: grafana/grafana:6.6.2
     volumes:
       - ./grafana/provisioning/:/etc/grafana/provisioning/
     environment:

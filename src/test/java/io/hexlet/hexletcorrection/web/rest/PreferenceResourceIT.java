@@ -6,32 +6,26 @@ import io.hexlet.hexletcorrection.domain.Correction;
 import io.hexlet.hexletcorrection.domain.Preference;
 import io.hexlet.hexletcorrection.domain.User;
 import io.hexlet.hexletcorrection.repository.PreferenceRepository;
-import io.hexlet.hexletcorrection.service.PreferenceQueryService;
-import io.hexlet.hexletcorrection.service.PreferenceService;
 import io.hexlet.hexletcorrection.service.dto.PreferenceDTO;
 import io.hexlet.hexletcorrection.service.mapper.PreferenceMapper;
-import io.hexlet.hexletcorrection.web.rest.errors.ExceptionTranslator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Base64Utils;
-import org.springframework.validation.Validator;
 
 import javax.persistence.EntityManager;
 import java.util.List;
 
-import static io.hexlet.hexletcorrection.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.not;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -44,6 +38,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * Integration tests for the {@link PreferenceResource} REST controller.
  */
 @SpringBootTest(classes = HexletCorrectionApp.class)
+@AutoConfigureMockMvc
+@WithMockUser
 public class PreferenceResourceIT {
 
     private static final byte[] DEFAULT_AVATAR = TestUtil.createByteArray(1, "0");
@@ -61,26 +57,9 @@ public class PreferenceResourceIT {
     private PreferenceMapper preferenceMapper;
 
     @Autowired
-    private PreferenceService preferenceService;
-
-    @Autowired
-    private PreferenceQueryService preferenceQueryService;
-
-    @Autowired
-    private MappingJackson2HttpMessageConverter jacksonMessageConverter;
-
-    @Autowired
-    private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
-
-    @Autowired
-    private ExceptionTranslator exceptionTranslator;
-
-    @Autowired
     private EntityManager em;
 
     @Autowired
-    private Validator validator;
-
     private MockMvc restPreferenceMockMvc;
 
     private Preference preference;
@@ -122,18 +101,6 @@ public class PreferenceResourceIT {
     }
 
     @BeforeEach
-    public void setup() {
-        MockitoAnnotations.initMocks(this);
-        final PreferenceResource preferenceResource = new PreferenceResource(preferenceService, preferenceQueryService);
-        this.restPreferenceMockMvc = MockMvcBuilders.standaloneSetup(preferenceResource)
-            .setCustomArgumentResolvers(pageableArgumentResolver)
-            .setControllerAdvice(exceptionTranslator)
-            .setConversionService(createFormattingConversionService())
-            .setMessageConverters(jacksonMessageConverter)
-            .setValidator(validator).build();
-    }
-
-    @BeforeEach
     public void initTest() {
         preferenceRepository.deleteAll();
         preference = createEntity(em);
@@ -147,7 +114,7 @@ public class PreferenceResourceIT {
         // Create the Preference
         PreferenceDTO preferenceDTO = preferenceMapper.toDto(preference);
         restPreferenceMockMvc.perform(post("/api/preferences")
-            .contentType(TestUtil.APPLICATION_JSON)
+            .contentType(APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(preferenceDTO)))
             .andExpect(status().isCreated());
 
@@ -173,7 +140,7 @@ public class PreferenceResourceIT {
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restPreferenceMockMvc.perform(post("/api/preferences")
-            .contentType(TestUtil.APPLICATION_JSON)
+            .contentType(APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(preferenceDTO)))
             .andExpect(status().isBadRequest());
 
@@ -195,7 +162,7 @@ public class PreferenceResourceIT {
         em.flush();
 
         // Load the preference
-        Preference updatedPreference = preferenceRepository.findById(preference.getId()).get();
+        Preference updatedPreference = preferenceRepository.findById(preference.getId()).orElseThrow();
         // Disconnect from session so that the updates on updatedPreference are not directly saved in db
         em.detach(updatedPreference);
 
@@ -205,7 +172,7 @@ public class PreferenceResourceIT {
 
         // Update the entity
         restPreferenceMockMvc.perform(put("/api/preferences")
-            .contentType(TestUtil.APPLICATION_JSON)
+            .contentType(APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(updatedPreferenceDTO)))
             .andExpect(status().isOk());
 
@@ -291,7 +258,7 @@ public class PreferenceResourceIT {
     public void getAllPreferencesByCorrectionsInProgressIsEqualToSomething() throws Exception {
         // Initialize the database
         preferenceRepository.saveAndFlush(preference);
-        Correction correctionInProgresses = CorrectionResourceIT.createEntity(em);
+        Correction correctionInProgresses = CorrectionResourceIT.createEntity();
         em.persist(correctionInProgresses);
         em.flush();
         preference.addCorrectionInProgresses(correctionInProgresses);
@@ -311,7 +278,7 @@ public class PreferenceResourceIT {
     public void getAllPreferencesByResolvedCorrectionsIsEqualToSomething() throws Exception {
         // Initialize the database
         preferenceRepository.saveAndFlush(preference);
-        Correction resolvedCorrections = CorrectionResourceIT.createEntity(em);
+        Correction resolvedCorrections = CorrectionResourceIT.createEntity();
         em.persist(resolvedCorrections);
         em.flush();
         preference.addResolvedCorrections(resolvedCorrections);
@@ -331,7 +298,7 @@ public class PreferenceResourceIT {
     public void getAllPreferencesByCommentsIsEqualToSomething() throws Exception {
         // Initialize the database
         preferenceRepository.saveAndFlush(preference);
-        Comment comment = CommentResourceIT.createEntity(em);
+        Comment comment = CommentResourceIT.createEntity();
         em.persist(comment);
         em.flush();
         preference.addComment(comment);
@@ -399,7 +366,7 @@ public class PreferenceResourceIT {
         final int databaseSizeBeforeUpdate = preferenceRepository.findAll().size();
 
         // Update the preference
-        Preference updatedPreference = preferenceRepository.findById(preference.getId()).get();
+        Preference updatedPreference = preferenceRepository.findById(preference.getId()).orElseThrow();
         // Disconnect from session so that the updates on updatedPreference are not directly saved in db
         em.detach(updatedPreference);
         updatedPreference.setAvatar(UPDATED_AVATAR);
@@ -407,7 +374,7 @@ public class PreferenceResourceIT {
         PreferenceDTO preferenceDTO = preferenceMapper.toDto(updatedPreference);
 
         restPreferenceMockMvc.perform(put("/api/preferences")
-            .contentType(TestUtil.APPLICATION_JSON)
+            .contentType(APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(preferenceDTO)))
             .andExpect(status().isOk());
 
@@ -429,7 +396,7 @@ public class PreferenceResourceIT {
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restPreferenceMockMvc.perform(put("/api/preferences")
-            .contentType(TestUtil.APPLICATION_JSON)
+            .contentType(APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(preferenceDTO)))
             .andExpect(status().isBadRequest());
 
@@ -448,7 +415,7 @@ public class PreferenceResourceIT {
 
         // Delete the preference
         restPreferenceMockMvc.perform(delete("/api/preferences/{id}", preference.getId())
-            .accept(TestUtil.APPLICATION_JSON))
+            .accept(APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item

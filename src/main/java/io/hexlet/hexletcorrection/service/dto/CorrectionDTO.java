@@ -1,7 +1,6 @@
 package io.hexlet.hexletcorrection.service.dto;
 
 import io.hexlet.hexletcorrection.domain.enumeration.CorrectionStatus;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,7 +18,6 @@ import java.util.Objects;
 @Setter
 @ToString
 @NoArgsConstructor
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class CorrectionDTO implements Serializable {
 
     private Long id;

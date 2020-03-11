@@ -22,7 +22,6 @@ import org.springframework.web.filter.CorsFilter;
 import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration;
 import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
@@ -44,7 +43,7 @@ public class WebConfigurer implements ServletContextInitializer, WebServerFactor
     private final JHipsterProperties jHipsterProperties;
 
     @Override
-    public void onStartup(ServletContext servletContext) throws ServletException {
+    public void onStartup(ServletContext servletContext) {
         if (env.getActiveProfiles().length != 0) {
             log.info("Web application configuration, using profiles: {}", env.getActiveProfiles());
         }

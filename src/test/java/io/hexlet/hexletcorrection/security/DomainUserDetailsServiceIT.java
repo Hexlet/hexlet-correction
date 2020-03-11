@@ -42,15 +42,9 @@ public class DomainUserDetailsServiceIT {
     @Autowired
     private UserDetailsService domainUserDetailsService;
 
-    private User userOne;
-
-    private User userTwo;
-
-    private User userThree;
-
     @BeforeEach
     public void init() {
-        userOne = new User();
+        final User userOne = new User();
         userOne.setLogin(USER_ONE_LOGIN);
         userOne.setPassword(RandomStringUtils.random(60));
         userOne.setActivated(true);
@@ -60,7 +54,7 @@ public class DomainUserDetailsServiceIT {
         userOne.setLangKey("en");
         userRepository.save(userOne);
 
-        userTwo = new User();
+        final User userTwo = new User();
         userTwo.setLogin(USER_TWO_LOGIN);
         userTwo.setPassword(RandomStringUtils.random(60));
         userTwo.setActivated(true);
@@ -70,7 +64,7 @@ public class DomainUserDetailsServiceIT {
         userTwo.setLangKey("en");
         userRepository.save(userTwo);
 
-        userThree = new User();
+        final User userThree = new User();
         userThree.setLogin(USER_THREE_LOGIN);
         userThree.setPassword(RandomStringUtils.random(60));
         userThree.setActivated(false);

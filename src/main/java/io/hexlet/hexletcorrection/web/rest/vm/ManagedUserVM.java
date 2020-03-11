@@ -14,7 +14,7 @@ import javax.validation.constraints.Size;
 @Getter
 @Setter
 @ToString
-@NoArgsConstructor
+@NoArgsConstructor// Empty constructor needed for Jackson.
 public class ManagedUserVM extends UserDTO {
 
     public static final int PASSWORD_MIN_LENGTH = 4;

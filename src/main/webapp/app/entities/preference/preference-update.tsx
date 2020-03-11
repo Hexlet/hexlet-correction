@@ -54,6 +54,7 @@ export const PreferenceUpdate = (props: IPreferenceUpdateProps) => {
         ...preferenceEntity,
         ...values
       };
+      entity.user = users[values.user];
 
       if (isNew) {
         props.createEntity(entity);

@@ -1,6 +1,6 @@
 export const enum CorrectionStatus {
-  REPORTED,
-  IN_PROGRESS,
-  RESOLVED,
-  CANCELED
+  REPORTED = 'REPORTED',
+  IN_PROGRESS = 'IN_PROGRESS',
+  RESOLVED = 'RESOLVED',
+  CANCELED = 'CANCELED'
 }

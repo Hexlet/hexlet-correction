@@ -78,10 +78,9 @@ public class PreferenceResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated preferenceDTO,
      * or with status {@code 400 (Bad Request)} if the preferenceDTO is not valid,
      * or with status {@code 500 (Internal Server Error)} if the preferenceDTO couldn't be updated.
-     * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/preferences")
-    public ResponseEntity<PreferenceDTO> updatePreference(@RequestBody PreferenceDTO preferenceDTO) throws URISyntaxException {
+    public ResponseEntity<PreferenceDTO> updatePreference(@RequestBody PreferenceDTO preferenceDTO) {
         log.debug("REST request to update Preference : {}", preferenceDTO);
         if (preferenceDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");

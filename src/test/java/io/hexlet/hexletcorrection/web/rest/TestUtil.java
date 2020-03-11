@@ -9,7 +9,6 @@ import org.hamcrest.TypeSafeDiagnosingMatcher;
 import org.springframework.format.datetime.standard.DateTimeFormatterRegistrar;
 import org.springframework.format.support.DefaultFormattingConversionService;
 import org.springframework.format.support.FormattingConversionService;
-import org.springframework.http.MediaType;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -27,11 +26,6 @@ import static org.assertj.core.api.Assertions.assertThat;
  * Utility class for testing REST controllers.
  */
 public final class TestUtil {
-
-    /**
-     * MediaType for JSON
-     */
-    public static final MediaType APPLICATION_JSON = MediaType.APPLICATION_JSON;
 
     private static final ObjectMapper mapper = createObjectMapper();
 

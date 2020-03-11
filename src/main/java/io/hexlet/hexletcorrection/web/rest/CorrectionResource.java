@@ -78,10 +78,9 @@ public class CorrectionResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated correctionDTO,
      * or with status {@code 400 (Bad Request)} if the correctionDTO is not valid,
      * or with status {@code 500 (Internal Server Error)} if the correctionDTO couldn't be updated.
-     * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/corrections")
-    public ResponseEntity<CorrectionDTO> updateCorrection(@Valid @RequestBody CorrectionDTO correctionDTO) throws URISyntaxException {
+    public ResponseEntity<CorrectionDTO> updateCorrection(@Valid @RequestBody CorrectionDTO correctionDTO) {
         log.debug("REST request to update Correction : {}", correctionDTO);
         if (correctionDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");

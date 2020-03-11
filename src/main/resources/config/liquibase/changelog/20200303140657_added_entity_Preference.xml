@@ -2,7 +2,7 @@
 <databaseChangeLog
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
 
     <!--
@@ -36,9 +36,9 @@
           This can be customized by adding or removing 'faker' in the 'spring.liquibase.contexts'
           Spring Boot configuration key.
     -->
-    <changeSet id="20200303140657-1-data" author="jhipster">
+    <changeSet id="20200303140657-1-data" author="jhipster" context="faker">
         <loadData
-            file="config/liquibase/data/preference.csv"
+            file="config/liquibase/fake-data/preference.csv"
             separator=";"
             tableName="preference">
             <column name="id" type="numeric" />
