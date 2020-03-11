@@ -32,13 +32,12 @@ import java.util.Set;
 import java.util.function.Consumer;
 
 import static io.hexlet.hexletcorrection.config.Constants.SYSTEM_ACCOUNT;
-import static io.hexlet.hexletcorrection.web.rest.TestUtil.APPLICATION_JSON;
 import static io.hexlet.hexletcorrection.web.rest.TestUtil.convertObjectToJsonBytes;
 import static java.util.Objects.nonNull;
-import static java.util.Objects.requireNonNull;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasItems;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -294,7 +293,7 @@ public class UserResourceIT {
 
         // Get all the users
         restUserMockMvc.perform(get("/api/users?sort=id,desc")
-            .accept(MediaType.APPLICATION_JSON))
+            .accept(APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].login").value(hasItem(DEFAULT_LOGIN)))
@@ -571,7 +570,9 @@ public class UserResourceIT {
             .accept(APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
-        assertThat(requireNonNull(cacheManager.getCache(UserRepository.USERS_BY_LOGIN_CACHE)).get(user.getLogin())).isNull();
+        final Cache cache = cacheManager.getCache(UserRepository.USERS_BY_LOGIN_CACHE);
+        assertThat(cache).isNotNull();
+        assertThat(cache.get(user.getLogin())).isNull();
 
         // Validate the database is empty
         assertPersistedUsers(users -> assertThat(users).hasSize(databaseSizeBeforeDelete - 1));

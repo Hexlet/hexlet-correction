@@ -6,30 +6,25 @@ import io.hexlet.hexletcorrection.domain.Correction;
 import io.hexlet.hexletcorrection.domain.Preference;
 import io.hexlet.hexletcorrection.domain.enumeration.CorrectionStatus;
 import io.hexlet.hexletcorrection.repository.CorrectionRepository;
-import io.hexlet.hexletcorrection.service.CorrectionQueryService;
-import io.hexlet.hexletcorrection.service.CorrectionService;
 import io.hexlet.hexletcorrection.service.dto.CorrectionDTO;
 import io.hexlet.hexletcorrection.service.mapper.CorrectionMapper;
-import io.hexlet.hexletcorrection.web.rest.errors.ExceptionTranslator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.Validator;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 
-import static io.hexlet.hexletcorrection.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -42,6 +37,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * Integration tests for the {@link CorrectionResource} REST controller.
  */
 @SpringBootTest(classes = HexletCorrectionApp.class)
+@AutoConfigureMockMvc
+@WithMockUser
 public class CorrectionResourceIT {
 
     private static final String DEFAULT_REPORTER_REMARK = "AAAAAAAAAA";
@@ -87,26 +84,9 @@ public class CorrectionResourceIT {
     private CorrectionMapper correctionMapper;
 
     @Autowired
-    private CorrectionService correctionService;
-
-    @Autowired
-    private CorrectionQueryService correctionQueryService;
-
-    @Autowired
-    private MappingJackson2HttpMessageConverter jacksonMessageConverter;
-
-    @Autowired
-    private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
-
-    @Autowired
-    private ExceptionTranslator exceptionTranslator;
-
-    @Autowired
     private EntityManager em;
 
     @Autowired
-    private Validator validator;
-
     private MockMvc restCorrectionMockMvc;
 
     private Correction correction;
@@ -117,7 +97,7 @@ public class CorrectionResourceIT {
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
-    public static Correction createEntity(EntityManager em) {
+    public static Correction createEntity() {
         Correction correction = new Correction();
         correction.setReporterRemark(DEFAULT_REPORTER_REMARK);
         correction.setCorrecterRemark(DEFAULT_CORRECTER_REMARK);
@@ -131,41 +111,9 @@ public class CorrectionResourceIT {
         return correction;
     }
 
-    /**
-     * Create an updated entity for this test.
-     * <p>
-     * This is a static method, as tests for other entities might also need it,
-     * if they test an entity which requires the current entity.
-     */
-    public static Correction createUpdatedEntity(EntityManager em) {
-        Correction correction = new Correction();
-        correction.setReporterRemark(UPDATED_REPORTER_REMARK);
-        correction.setCorrecterRemark(UPDATED_CORRECTER_REMARK);
-        correction.setResolverRemark(UPDATED_RESOLVER_REMARK);
-        correction.setTextBeforeCorrection(UPDATED_TEXT_BEFORE_CORRECTION);
-        correction.setTextCorrection(UPDATED_TEXT_CORRECTION);
-        correction.setTextAfterCorrection(UPDATED_TEXT_AFTER_CORRECTION);
-        correction.setReporterName(UPDATED_REPORTER_NAME);
-        correction.setPageURL(UPDATED_PAGE_URL);
-        correction.setCorrectionStatus(UPDATED_CORRECTION_STATUS);
-        return correction;
-    }
-
-    @BeforeEach
-    public void setup() {
-        MockitoAnnotations.initMocks(this);
-        final CorrectionResource correctionResource = new CorrectionResource(correctionService, correctionQueryService);
-        this.restCorrectionMockMvc = MockMvcBuilders.standaloneSetup(correctionResource)
-            .setCustomArgumentResolvers(pageableArgumentResolver)
-            .setControllerAdvice(exceptionTranslator)
-            .setConversionService(createFormattingConversionService())
-            .setMessageConverters(jacksonMessageConverter)
-            .setValidator(validator).build();
-    }
-
     @BeforeEach
     public void initTest() {
-        correction = createEntity(em);
+        correction = createEntity();
     }
 
     @Test
@@ -176,7 +124,7 @@ public class CorrectionResourceIT {
         // Create the Correction
         CorrectionDTO correctionDTO = correctionMapper.toDto(correction);
         restCorrectionMockMvc.perform(post("/api/corrections")
-            .contentType(TestUtil.APPLICATION_JSON)
+            .contentType(APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(correctionDTO)))
             .andExpect(status().isCreated());
 
@@ -206,7 +154,7 @@ public class CorrectionResourceIT {
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restCorrectionMockMvc.perform(post("/api/corrections")
-            .contentType(TestUtil.APPLICATION_JSON)
+            .contentType(APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(correctionDTO)))
             .andExpect(status().isBadRequest());
 
@@ -227,7 +175,7 @@ public class CorrectionResourceIT {
         CorrectionDTO correctionDTO = correctionMapper.toDto(correction);
 
         restCorrectionMockMvc.perform(post("/api/corrections")
-            .contentType(TestUtil.APPLICATION_JSON)
+            .contentType(APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(correctionDTO)))
             .andExpect(status().isBadRequest());
 
@@ -246,7 +194,7 @@ public class CorrectionResourceIT {
         CorrectionDTO correctionDTO = correctionMapper.toDto(correction);
 
         restCorrectionMockMvc.perform(post("/api/corrections")
-            .contentType(TestUtil.APPLICATION_JSON)
+            .contentType(APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(correctionDTO)))
             .andExpect(status().isBadRequest());
 
@@ -265,7 +213,7 @@ public class CorrectionResourceIT {
         CorrectionDTO correctionDTO = correctionMapper.toDto(correction);
 
         restCorrectionMockMvc.perform(post("/api/corrections")
-            .contentType(TestUtil.APPLICATION_JSON)
+            .contentType(APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(correctionDTO)))
             .andExpect(status().isBadRequest());
 
@@ -284,7 +232,7 @@ public class CorrectionResourceIT {
         CorrectionDTO correctionDTO = correctionMapper.toDto(correction);
 
         restCorrectionMockMvc.perform(post("/api/corrections")
-            .contentType(TestUtil.APPLICATION_JSON)
+            .contentType(APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(correctionDTO)))
             .andExpect(status().isCreated());
 
@@ -1045,7 +993,7 @@ public class CorrectionResourceIT {
     public void getAllCorrectionsByCommentsIsEqualToSomething() throws Exception {
         // Initialize the database
         correctionRepository.saveAndFlush(correction);
-        Comment comment = CommentResourceIT.createEntity(em);
+        Comment comment = CommentResourceIT.createEntity();
         em.persist(comment);
         em.flush();
         correction.addComment(comment);
@@ -1159,7 +1107,9 @@ public class CorrectionResourceIT {
         final int databaseSizeBeforeUpdate = correctionRepository.findAll().size();
 
         // Update the correction
-        Correction updatedCorrection = correctionRepository.findById(correction.getId()).get();
+        final Optional<Correction> optionalCorrection = correctionRepository.findById(correction.getId());
+        assertThat(optionalCorrection).isPresent();
+        Correction updatedCorrection = optionalCorrection.get();
         // Disconnect from session so that the updates on updatedCorrection are not directly saved in db
         em.detach(updatedCorrection);
         updatedCorrection.setReporterRemark(UPDATED_REPORTER_REMARK);
@@ -1174,7 +1124,7 @@ public class CorrectionResourceIT {
         CorrectionDTO correctionDTO = correctionMapper.toDto(updatedCorrection);
 
         restCorrectionMockMvc.perform(put("/api/corrections")
-            .contentType(TestUtil.APPLICATION_JSON)
+            .contentType(APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(correctionDTO)))
             .andExpect(status().isOk());
 
@@ -1203,7 +1153,7 @@ public class CorrectionResourceIT {
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restCorrectionMockMvc.perform(put("/api/corrections")
-            .contentType(TestUtil.APPLICATION_JSON)
+            .contentType(APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(correctionDTO)))
             .andExpect(status().isBadRequest());
 
@@ -1222,7 +1172,7 @@ public class CorrectionResourceIT {
 
         // Delete the correction
         restCorrectionMockMvc.perform(delete("/api/corrections/{id}", correction.getId())
-            .accept(TestUtil.APPLICATION_JSON))
+            .accept(APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item

@@ -143,7 +143,6 @@ export const updateEntity: ICrudPutAction<IPreference> = entity => async dispatc
     type: ACTION_TYPES.UPDATE_PREFERENCE,
     payload: axios.put(apiUrl, cleanEntity(entity))
   });
-  dispatch(getEntities());
   return result;
 };
 
@@ -153,7 +152,6 @@ export const deleteEntity: ICrudDeleteAction<IPreference> = id => async dispatch
     type: ACTION_TYPES.DELETE_PREFERENCE,
     payload: axios.delete(requestUrl)
   });
-  dispatch(getEntities());
   return result;
 };
 

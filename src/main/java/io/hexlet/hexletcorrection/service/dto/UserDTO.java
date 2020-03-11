@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 @Getter
 @Setter
 @ToString
-@NoArgsConstructor
+@NoArgsConstructor// Empty constructor needed for Jackson.
 public class UserDTO {
 
     private Long id;

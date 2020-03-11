@@ -12,6 +12,7 @@ import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import javax.cache.CacheManager;
 import java.time.Duration;
 
 @Configuration
@@ -31,7 +32,7 @@ public class CacheConfiguration {
     }
 
     @Bean
-    public HibernatePropertiesCustomizer hibernatePropertiesCustomizer(javax.cache.CacheManager cacheManager) {
+    public HibernatePropertiesCustomizer hibernatePropertiesCustomizer(CacheManager cacheManager) {
         return hibernateProperties -> hibernateProperties.put(ConfigSettings.CACHE_MANAGER, cacheManager);
     }
 
@@ -54,7 +55,7 @@ public class CacheConfiguration {
         };
     }
 
-    private void createCache(javax.cache.CacheManager cm, String cacheName) {
+    private void createCache(CacheManager cm, String cacheName) {
         javax.cache.Cache<Object, Object> cache = cm.getCache(cacheName);
         if (cache == null) {
             cm.createCache(cacheName, jcacheConfiguration);

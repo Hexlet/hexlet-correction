@@ -29,7 +29,7 @@
     "authenticationType": "jwt",
     "cacheProvider": "ehcache",
     "clientFramework": "react",
-    "jhipsterVersion": "6.7.1",
+    "jhipsterVersion": "6.8.0",
     "creationTimestamp": 1583244300869,
     "skipUserManagement": false,
     "clientPackageManager": "npm",
@@ -47,6 +47,7 @@
       "hexlet-correction"
     ],
     "directoryPath": "../",
+    "consoleOptions": [],
     "herokuAppName": "hexlet-correction",
     "herokuDeployType": "git",
     "monitoring": "no"

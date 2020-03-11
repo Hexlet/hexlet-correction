@@ -131,7 +131,6 @@ export const updateEntity: ICrudPutAction<IComment> = entity => async dispatch =
     type: ACTION_TYPES.UPDATE_COMMENT,
     payload: axios.put(apiUrl, cleanEntity(entity))
   });
-  dispatch(getEntities());
   return result;
 };
 
@@ -141,7 +140,6 @@ export const deleteEntity: ICrudDeleteAction<IComment> = id => async dispatch =>
     type: ACTION_TYPES.DELETE_COMMENT,
     payload: axios.delete(requestUrl)
   });
-  dispatch(getEntities());
   return result;
 };
 

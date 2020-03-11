@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
  * A DTO representing a password change required data - current and new password.
  */
 @Data
-@NoArgsConstructor
+@NoArgsConstructor// Empty constructor needed for Jackson.
 @AllArgsConstructor
 public class PasswordChangeDTO {
 
