@@ -18,7 +18,7 @@ import java.util.Objects;
 @Setter
 @ToString
 @NoArgsConstructor
-public class CorrectionDTO implements Serializable {
+public class CorrectionDTO extends AbstractAuditingDTO implements Serializable {
 
     private Long id;
 

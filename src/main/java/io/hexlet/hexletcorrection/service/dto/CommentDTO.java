@@ -16,7 +16,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @ToString
-public class CommentDTO implements Serializable {
+public class CommentDTO extends AbstractAuditingDTO implements Serializable {
 
     private Long id;
 

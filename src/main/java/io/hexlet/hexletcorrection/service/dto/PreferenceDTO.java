@@ -16,7 +16,7 @@ import java.util.Objects;
 @Setter
 @ToString
 @NoArgsConstructor
-public class PreferenceDTO implements Serializable {
+public class PreferenceDTO extends AbstractAuditingDTO implements Serializable {
 
     private Long id;
 

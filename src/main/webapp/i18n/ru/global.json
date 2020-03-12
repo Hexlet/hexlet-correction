@@ -32,6 +32,7 @@
         "audits": "Аудит",
         "apidocs": "API",
         "database": "База данных",
+        "entity-audit": "Entity Audit",
         "jhipster-needle-menu-add-admin-element": "JHipster will add additional menu entries here (do not translate!)"
       },
       "language": "Язык"
