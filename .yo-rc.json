@@ -56,5 +56,8 @@
     "Preference",
     "Correction",
     "Comment"
-  ]
+  ],
+  "generator-jhipster-entity-audit": {
+    "auditFramework": "javers"
+  }
 }

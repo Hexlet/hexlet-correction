@@ -31,7 +31,7 @@ import static javax.persistence.FetchType.LAZY;
 @Entity
 @Table(name = "comment")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class Comment implements Serializable {
+public class Comment extends AbstractAuditingEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

@@ -88,6 +88,8 @@
         <junit.itReportFolder>${project.testresult.directory}/integrationTest</junit.itReportFolder>
         <!-- jhipster-needle-maven-property -->
         <lombok.version>1.18.12</lombok.version>
+        <!-- For the entity audit-->
+        <javers-spring-boot-starter-sql.version>5.8.8</javers-spring-boot-starter-sql.version>
     </properties>
 
     <dependencyManagement>
@@ -345,6 +347,11 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-heroku-connector</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.javers</groupId>
+            <artifactId>javers-spring-boot-starter-sql</artifactId>
+            <version>${javers-spring-boot-starter-sql.version}</version>
         </dependency>
         <!-- jhipster-needle-maven-add-dependency -->
     </dependencies>

@@ -45,5 +45,6 @@
   "clientRootFolder": "",
   "applications": [
     "hexletCorrection"
-  ]
+  ],
+  "enableEntityAudit": true
 }
