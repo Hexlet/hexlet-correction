@@ -1,6 +1,12 @@
-# hexletCorrection
+# Hexlet Correction
 
-This application was generated using JHipster 6.7.1, you can find documentation and help at [https://www.jhipster.tech/documentation-archive/v6.7.1](https://www.jhipster.tech/documentation-archive/v6.7.1).
+This application created for receive the typo errors from a site.
+
+![UML](hexlet-correction-jdl.png)
+
+**Correction** this is an error aggregated from a site.  
+**Comment** this is a comment for the Correction.  
+**Preference** this is a user settings for a **User**.
 
 ## Development
 
@@ -146,10 +152,6 @@ Then run:
     docker-compose -f src/main/docker/app.yml up -d
 
 For more information refer to [Using Docker and Docker-Compose][], this page also contains information on the docker-compose sub-generator (`jhipster docker-compose`), which is able to generate docker configurations for one or several JHipster applications.
-
-## Continuous Integration (optional)
-
-To configure CI for your project, run the ci-cd sub-generator (`jhipster ci-cd`), this will let you generate configuration files for a number of Continuous Integration systems. Consult the [Setting up Continuous Integration][] page for more information.
 
 [jhipster homepage and latest documentation]: https://www.jhipster.tech
 [jhipster 6.7.1 archive]: https://www.jhipster.tech/documentation-archive/v6.7.1
