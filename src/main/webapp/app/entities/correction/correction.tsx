@@ -4,12 +4,10 @@ import { Link, RouteComponentProps } from 'react-router-dom';
 import { Button, Row, Table } from 'reactstrap';
 import { getSortState, JhiItemCount, JhiPagination, Translate } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import cn from "classnames";
 import { IRootState } from 'app/shared/reducers';
 import { getEntities } from './correction.reducer';
 import { ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
-
-import Card from './card';
+import cn from "classnames";
 export interface ICorrectionProps extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> {
 }
 
