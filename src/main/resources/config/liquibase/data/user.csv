@@ -1,6 +1,0 @@
-id;login;password_hash;first_name;last_name;email;image_url;activated;lang_key;created_by;last_modified_by
-1;system;$2a$10$yc4rqycor17vCsyAR.9N5OYlCUASO/kA6Y1IYX4GpxK967hVIqzF2;System;System;system@localhost;;true;en;system;system
-2;anonymoususer;$2a$10$j8S5d7Sr7.8VTOYNviDPOeWX8KcYILUVJBsYV83Y5NtECayypx9lO;Anonymous;User;anonymous@localhost;;true;en;system;system
-3;admin;$2a$10$2IgcPGfmkyNXVnMQ1O3/su6PWO6j1hQanPIc0vYZbV6SzhhUU3VZ6;Administrator;Administrator;admin@localhost;;true;en;system;system
-4;kirill.mokevnin;$2a$10$EcTovul2LqvxYB3sStwYtuMOWz4vEutWkJXKinYoCLVMwHOYcFrTq;Kirill;Mokevnin;kirill.m@hexlet.io;;true;en;system;system
-5;user;$2a$10$VEjxo0jq2YG9Rbk2HmX9S.k1uZBGYUHdUcid3g/vfiEl7lwWgOH/K;User;User;user@localhost;;true;en;system;system

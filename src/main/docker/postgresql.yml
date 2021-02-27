@@ -1,11 +1,10 @@
-version: '2'
+version: '3'
 services:
-  hexletcorrection-postgresql:
-    image: postgres:12.1
-    # volumes:
-    #     - ~/volumes/jhipster/hexletCorrection/postgresql/:/var/lib/postgresql/data/
+  typo-reporter-db-postgresql:
+    image: postgres:12-alpine
     environment:
-      - POSTGRES_USER=hexletCorrection
-      - POSTGRES_PASSWORD=
+      - POSTGRES_DB=typo-reporter
+      - POSTGRES_USER=developer
+      - POSTGRES_PASSWORD=password
     ports:
       - 5432:5432
