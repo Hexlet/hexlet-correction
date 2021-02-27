@@ -10,15 +10,8 @@
 # http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
 # ===================================================================
 
-eureka:
-  instance:
-    hostname: hexlet-correction.herokuapp.com
-    non-secure-port: 80
-    prefer-ip-address: false
-
 spring:
   datasource:
-    type: com.zaxxer.hikari.HikariDataSource
     url: ${JDBC_DATABASE_URL}
     username: ${JDBC_DATABASE_USERNAME}
     password: ${JDBC_DATABASE_PASSWORD}

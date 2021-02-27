@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="simple-head">
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+
+    <title>Typo Reporter</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/dist/css/bootstrap.min.css}" type="text/css" />
+    <!-- Bootstrap Bundle with Popper -->
+    <script th:src="@{/webjars/bootstrap/dist/js/bootstrap.bundle.js}" type="text/javascript"></script>
+</head>
+<body>
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h4>Typo's list</h4>
+        </div>
+    </div>
+    <div class="row" th:object="${typoPage}">
+        <div class="col-2">
+            <div class="dropdown">
+                <button aria-expanded="false" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown"
+                        id="dropdownSizePage" type="button">
+                    Page size [[*{size}]]
+                </button>
+                <ul aria-labelledby="dropdownSizePage" class="dropdown-menu">
+                    <li th:each="size : ${pageSizes}">
+                        <a class="dropdown-item" th:classappend="${size} == *{size} ? 'disabled'"
+                           th:href="@{~/typos(page=0,size=${size},sort=|${sortProp},${sortDir}|)}">
+                            [[${size}]]
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <nav class="col">
+            <ul class="pagination">
+                <li class="page-item" th:classappend="*{first}? 'disabled'">
+                    <a aria-label="Previous" class="page-link"
+                       th:aria-disabled="*{first}"
+                       th:href="@{~/typos(page=*{number - 1},size=*{size},sort=|${sortProp},${sortDir}|)}"
+                       th:tabindex="*{first}? -1">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <li class="page-item"
+                    th:attrappend="aria-current=${isCurrent}?'page'"
+                    th:classappend="${isCurrent}?'active'"
+                    th:each="number, stat : ${pageNumbers}"
+                    th:with="isCurrent = ${number == typoPage.number + 1}">
+                    <a class="page-link"
+                       th:href="@{~/typos(page=${number - 1},size=*{size},sort=|${sortProp},${sortDir}|)}"
+                       th:unless="${isCurrent || number == null }">[[${number}]]</a>
+                    <span class="page-link" th:if="${isCurrent && number != null}">[[${number}]]</span>
+                    <span class="page-link" th:if="${number == null}">...</span>
+                </li>
+                <li class="page-item" th:classappend="*{last}? 'disabled'">
+                    <a aria-label="Next" class="page-link"
+                       th:aria-disabled="*{last}"
+                       th:href="@{~/typos(page=*{number + 1},size=*{size},sort=|${sortProp},${sortDir}|)}"
+                       th:tabindex="*{last}?-1">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    <div class="row">
+        <div class="col">
+            <table class="table table-hover">
+                <thead th:object="${typoPage}">
+                <tr>
+                    <th scope="col">
+                        <a class="btn btn-light"
+                           th:href="@{~/typos(size=*{size},sort=|id,${sortProp == 'id' && sortDir.isAscending() ? 'DESC' : 'ASC'}|)}">
+                            #
+                            <span th:text="${sortProp == 'id' && sortDir.isAscending() ? '&uArr;' : '&dArr;'}"></span>
+                        </a>
+                    </th>
+                    <th scope="col">
+                        <a class="btn btn-light"
+                           th:href="@{~/typos(size=*{size},sort=|pageUrl,${sortProp == 'pageUrl' && sortDir.isAscending() ? 'DESC' : 'ASC'}|)}">
+                            Page Url
+                            <span
+                                th:text="${sortProp == 'pageUrl' && sortDir.isAscending() ? '&uArr;' : '&dArr;'}"></span>
+                        </a>
+                    </th>
+                    <th scope="col">
+                        <a class="btn btn-light"
+                           th:href="@{~/typos(size=*{size},sort=|reporterName,${sortProp == 'reporterName' && sortDir.isAscending() ? 'DESC' : 'ASC'}|)}">
+                            Reporter Name
+                            <span
+                                th:text="${sortProp == 'reporterName' && sortDir.isAscending() ? '&uArr;' : '&dArr;'}"></span>
+                        </a>
+                    </th>
+                    <th scope="col">
+                        <a class="btn btn-light"
+                           th:href="@{~/typos(size=*{size},sort=|createdDate,${sortProp == 'createdDate' && sortDir.isAscending() ? 'DESC' : 'ASC'}|)}">
+                            Created Date
+                            <span
+                                th:text="${sortProp == 'createdDate' && sortDir.isAscending() ? '&uArr;' : '&dArr;'}"></span>
+                        </a>
+                    </th>
+                    <th scope="col">
+                        <a class="btn btn-light"
+                           th:href="@{~/typos(size=*{size},sort=|modifiedDate,${sortProp == 'modifiedDate' && sortDir.isAscending() ? 'DESC' : 'ASC'}|)}">
+                            Modified Date
+                            <span
+                                th:text="${sortProp == 'modifiedDate' && sortDir.isAscending() ? '&uArr;' : '&dArr;'}"></span>
+                        </a>
+                    </th>
+                    <th scope="col">
+                        <a class="btn btn-light"
+                           th:href="@{~/typos(size=*{size},sort=|modifiedBy,${sortProp == 'modifiedBy' && sortDir.isAscending() ? 'DESC' : 'ASC'}|)}">
+                            Modified By
+                            <span
+                                th:text="${sortProp == 'modifiedBy' && sortDir.isAscending() ? '&uArr;' : '&dArr;'}"></span>
+                        </a>
+                    </th>
+                    <th scope="col">
+                        <a class="btn btn-light"
+                           th:href="@{~/typos(size=*{size},sort=|typoStatus,${sortProp == 'typoStatus' && sortDir.isAscending() ? 'DESC' : 'ASC'}|)}">
+                            Typo Status
+                            <span
+                                th:text="${sortProp == 'typoStatus' && sortDir.isAscending() ? '&uArr;' : '&dArr;'}">
+                            </span>
+                        </a>
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <th:block th:each="typo : ${typoPage.content}" th:object="${typo}">
+                    <tr aria-expanded="false" class="accordion collapsed" data-bs-toggle="collapse"
+                        th:aria-controls="|clpsTypo*{id}|"
+                        th:classappend="(*{#strings.equals(typoStatus, 'REPORTED')}? 'table-danger' : '') + (*{#strings.equals(typoStatus, 'IN_PROGRESS')}? 'table-warning' : '') + (*{#strings.equals(typoStatus, 'RESOLVED')}? 'table-success' : '') + (*{#strings.equals(typoStatus, 'CANCELED')}? 'table-secondary' : '')"
+                        th:data-bs-target="|#clpsTypo*{id}|">
+                        <th th:text="*{id}"></th>
+                        <td th:text="*{pageUrl}"></td>
+                        <td th:text="*{reporterName}"></td>
+                        <td th:text="*{#temporals.format(createdDate, 'dd/MM/yyyy hh:mm:ss')}"></td>
+                        <td th:text="*{#temporals.format(modifiedDate, 'dd/MM/yyyy hh:mm:ss')}"></td>
+                        <td th:text="*{modifiedBy}"></td>
+                        <td th:text="*{typoStatus}"></td>
+                    </tr>
+                    <tr>
+                        <td class="p-0" colspan="7">
+                            <div class="accordion-collapse collapse" th:id="|clpsTypo*{id}|">
+                                <div class="p-4">
+                                    <div class="row">
+                                        <div class="col fst-italic">
+                                            [[reporterName]]: [[*{reporterComment}]]
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col text-muted">
+                                            [[*{textBeforeTypo}]]<span class="text-danger">[[*{textTypo}]]</span>[[*{textAfterTypo}]]
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </th:block>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>
