@@ -6,10 +6,13 @@ run-dev: docker-db
 build-run: build run-dev
 
 unit-test:
-	./mvnw -B -ntp -fae clean test
+	./mvnw -B -ntp -fae test
 
 integration-test:
 	./mvnw -B -ntp -Dtest=noTest -DfailIfNoTests=false verify
+
+test:
+	./mvnw -B -ntp -fae test verify
 
 build:
 	./mvnw -B -ntp -fae clean verify
