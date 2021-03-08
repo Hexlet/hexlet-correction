@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
@@ -23,6 +24,7 @@
         <problem-spring-web-starter.version>0.26.2</problem-spring-web-starter.version>
         <!-- Test -->
         <testcontainers.version>1.15.2</testcontainers.version>
+        <database-rider.version>1.23.0</database-rider.version>
     </properties>
 
     <dependencyManagement>
@@ -118,6 +120,12 @@
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>postgresql</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.database-rider</groupId>
+            <artifactId>rider-spring</artifactId>
+            <version>${database-rider.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

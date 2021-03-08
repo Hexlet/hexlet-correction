@@ -1,8 +1,12 @@
 package io.hexlet.typoreporter.web;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.database.rider.core.api.configuration.DBUnit;
+import com.github.database.rider.core.api.dataset.DataSet;
+import com.github.database.rider.spring.api.DBRider;
 import io.hexlet.typoreporter.repository.TypoRepository;
 import io.hexlet.typoreporter.service.dto.typo.*;
+import io.hexlet.typoreporter.test.DBUnitEnumPostgres;
 import io.hexlet.typoreporter.test.asserts.ReportedTypoAssert;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
@@ -13,12 +17,12 @@ import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.*;
-import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.*;
 
+import static com.github.database.rider.core.api.configuration.Orthography.LOWERCASE;
 import static io.hexlet.typoreporter.TypoReporterApplicationIT.POSTGRES_IMAGE;
 import static io.hexlet.typoreporter.domain.typo.TypoEvent.*;
 import static io.hexlet.typoreporter.domain.typo.TypoStatus.*;
@@ -35,7 +39,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
-@Sql(value = "classpath:db/test-data/CREATE_TYPOS.sql")
+@DBRider
+@DBUnit(caseInsensitiveStrategy = LOWERCASE, dataTypeFactoryClass = DBUnitEnumPostgres.class, cacheConnection = false)
+@DataSet("typos.yml")
 class TypoControllerIT {
 
     @Container

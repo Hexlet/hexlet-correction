@@ -1,8 +1,12 @@
 package io.hexlet.typoreporter.service;
 
+import com.github.database.rider.core.api.configuration.DBUnit;
+import com.github.database.rider.core.api.dataset.DataSet;
+import com.github.database.rider.spring.api.DBRider;
 import io.hexlet.typoreporter.domain.typo.Typo;
 import io.hexlet.typoreporter.repository.TypoRepository;
 import io.hexlet.typoreporter.service.dto.typo.*;
+import io.hexlet.typoreporter.test.DBUnitEnumPostgres;
 import io.hexlet.typoreporter.test.asserts.ReportedTypoAssert;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -11,28 +15,29 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.*;
 import org.springframework.test.context.*;
-import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.*;
 
+import static com.github.database.rider.core.api.configuration.Orthography.LOWERCASE;
 import static io.hexlet.typoreporter.TypoReporterApplicationIT.POSTGRES_IMAGE;
 import static io.hexlet.typoreporter.domain.typo.TypoEvent.*;
 import static io.hexlet.typoreporter.domain.typo.TypoStatus.*;
 import static io.hexlet.typoreporter.web.Routers.TYPO_SORT;
 import static org.assertj.core.api.Assertions.assertThat;
 
-
 @SpringBootTest
 @Testcontainers
 @Transactional
-@Sql("classpath:db/test-data/CREATE_TYPOS.sql")
+@DBRider
+@DBUnit(caseInsensitiveStrategy = LOWERCASE, dataTypeFactoryClass = DBUnitEnumPostgres.class, cacheConnection = false)
+@DataSet("typos.yml")
 public class TypoServiceIT {
 
     @Container
     public static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>(POSTGRES_IMAGE)
-            .withPassword("inmemory")
-            .withUsername("inmemory");
+        .withPassword("inmemory")
+        .withUsername("inmemory");
 
     @Autowired
     private TypoRepository repository;
@@ -111,9 +116,9 @@ public class TypoServiceIT {
     @MethodSource("io.hexlet.typoreporter.test.utils.EntitiesFactory#getTypoIdsExist")
     void patchTypoEventResolveToResolved(final Long id) {
         final var typo = repository.findById(id)
-                .map(t -> t.setTypoStatus(t.getTypoStatus().next(OPEN)))
-                .map(repository::save)
-                .orElseThrow();
+            .map(t -> t.setTypoStatus(t.getTypoStatus().next(OPEN)))
+            .map(repository::save)
+            .orElseThrow();
         final var patchTypo = new PatchTypo(typo.getReporterComment(), RESOLVE);
         final var patchedTypo = service.patchTypoById(id, patchTypo).orElseThrow();
 

@@ -19,3 +19,6 @@ build:
 
 docker-db:
 	docker-compose -f ./src/main/docker/postgresql.yml up -d
+
+update:
+	./mvnw versions:update-properties versions:display-plugin-updates
