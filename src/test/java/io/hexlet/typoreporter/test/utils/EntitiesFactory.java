@@ -65,7 +65,7 @@ public class EntitiesFactory {
     }
 
     public static Stream<Long> getTypoIdsExist() {
-        return Stream.of(1L, 5L, 10L);
+        return Stream.of(201L, 205L, 210L);
     }
 
     public static Stream<Long> getTypoIdsNotExist() {
