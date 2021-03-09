@@ -46,8 +46,8 @@ class TypoControllerIT {
 
     @Container
     static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>(POSTGRES_IMAGE)
-            .withPassword("inmemory")
-            .withUsername("inmemory");
+        .withPassword("inmemory")
+        .withUsername("inmemory");
 
     @Autowired
     private SpringDataWebProperties dataWebProperties;
@@ -88,15 +88,15 @@ class TypoControllerIT {
     @MethodSource("io.hexlet.typoreporter.test.utils.EntitiesFactory#getTypoReport")
     void addTypoReport(final TypoReport typoReport) throws Exception {
         final var content = mockMvc
-                .perform(post(API_TYPOS)
-                        .content(objectMapper.writeValueAsString(typoReport))
-                        .contentType(APPLICATION_JSON)
-                )
-                .andDo(print())
-                .andExpect(status().isCreated())
-                .andExpect(content().contentType(APPLICATION_JSON))
-                .andExpect(header().exists("Location"))
-                .andReturn().getResponse().getContentAsString();
+            .perform(post(API_TYPOS)
+                .content(objectMapper.writeValueAsString(typoReport))
+                .contentType(APPLICATION_JSON)
+            )
+            .andDo(print())
+            .andExpect(status().isCreated())
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(header().exists("Location"))
+            .andReturn().getResponse().getContentAsString();
         final var reportedTypo = objectMapper.readValue(content, ReportedTypo.class);
 
         ReportedTypoAssert.assertThat(reportedTypo).isEqualsToTypoReport(typoReport);
@@ -107,81 +107,81 @@ class TypoControllerIT {
     @Test
     void addTypoReportWithPageUrlBlank() throws Exception {
         final var typoJson = """
-                {
-                  "pageUrl": "",
-                  "reporterName": "reporterName",
-                  "textTypo": "textTypo"
-                }
-                """;
+            {
+              "pageUrl": "",
+              "reporterName": "reporterName",
+              "textTypo": "textTypo"
+            }
+            """;
 
         mockMvc.perform(post(API_TYPOS)
-                .content(typoJson)
-                .contentType(APPLICATION_JSON))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().contentType(APPLICATION_PROBLEM_JSON))
-                .andExpect(jsonPath("$.title").value("Constraint Violation"))
-                .andExpect(jsonPath("$.violations").isArray())
-                .andExpect(jsonPath("$.violations", hasSize(1)))
-                .andExpect(jsonPath("$.violations[*].field", hasItem("pageUrl")))
-                .andExpect(jsonPath("$.violations[*].message", hasItem("must not be blank")));
+            .content(typoJson)
+            .contentType(APPLICATION_JSON))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().contentType(APPLICATION_PROBLEM_JSON))
+            .andExpect(jsonPath("$.title").value("Constraint Violation"))
+            .andExpect(jsonPath("$.violations").isArray())
+            .andExpect(jsonPath("$.violations", hasSize(1)))
+            .andExpect(jsonPath("$.violations[*].field", hasItem("pageUrl")))
+            .andExpect(jsonPath("$.violations[*].message", hasItem("must not be blank")));
     }
 
     @Test
     void addTypoReportWithPageUrlNull() throws Exception {
         final var typoJson = """
-                {
-                  "reporterName": "reporterName",
-                  "textTypo": "textTypo"
-                }
-                """;
+            {
+              "reporterName": "reporterName",
+              "textTypo": "textTypo"
+            }
+            """;
 
         mockMvc.perform(post(API_TYPOS)
-                .content(typoJson)
-                .contentType(APPLICATION_JSON))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().contentType(APPLICATION_PROBLEM_JSON))
-                .andExpect(jsonPath("$.title").value("Constraint Violation"))
-                .andExpect(jsonPath("$.violations").isArray())
-                .andExpect(jsonPath("$.violations", hasSize(2)))
-                .andExpect(jsonPath("$.violations[*].field", hasItem("pageUrl")))
-                .andExpect(jsonPath("$.violations[*].message", hasItem("must not be null")))
-                .andExpect(jsonPath("$.violations[*].message", hasItem("must not be blank")));
+            .content(typoJson)
+            .contentType(APPLICATION_JSON))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().contentType(APPLICATION_PROBLEM_JSON))
+            .andExpect(jsonPath("$.title").value("Constraint Violation"))
+            .andExpect(jsonPath("$.violations").isArray())
+            .andExpect(jsonPath("$.violations", hasSize(2)))
+            .andExpect(jsonPath("$.violations[*].field", hasItem("pageUrl")))
+            .andExpect(jsonPath("$.violations[*].message", hasItem("must not be null")))
+            .andExpect(jsonPath("$.violations[*].message", hasItem("must not be blank")));
     }
 
     @Test
     void addTypoReportWithPageUrlNotValid() throws Exception {
         final var typoJson = """
-                {
-                  "pageUrl": "not valid",
-                  "reporterName": "reporterName",
-                  "textTypo": "textTypo"
-                }
-                """;
+            {
+              "pageUrl": "not valid",
+              "reporterName": "reporterName",
+              "textTypo": "textTypo"
+            }
+            """;
 
         mockMvc.perform(post(API_TYPOS)
-                .content(typoJson)
-                .contentType(APPLICATION_JSON))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().contentType(APPLICATION_PROBLEM_JSON))
-                .andExpect(jsonPath("$.title").value("Constraint Violation"))
-                .andExpect(jsonPath("$.violations").isArray())
-                .andExpect(jsonPath("$.violations", hasSize(1)))
-                .andExpect(jsonPath("$.violations[*].field", hasItem("pageUrl")))
-                .andExpect(jsonPath("$.violations[*].message", hasItem("must be a valid URL")));
+            .content(typoJson)
+            .contentType(APPLICATION_JSON))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().contentType(APPLICATION_PROBLEM_JSON))
+            .andExpect(jsonPath("$.title").value("Constraint Violation"))
+            .andExpect(jsonPath("$.violations").isArray())
+            .andExpect(jsonPath("$.violations", hasSize(1)))
+            .andExpect(jsonPath("$.violations[*].field", hasItem("pageUrl")))
+            .andExpect(jsonPath("$.violations[*].message", hasItem("must be a valid URL")));
     }
 
     @Test
     void getPageTypoDefault() throws Exception {
         final var totalSize = repository.count();
         mockMvc.perform(get(API_TYPOS))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(APPLICATION_JSON))
-                .andExpect(jsonPath("$.totalPages").value(totalSize / defaultPageSize + 1))
-                .andExpect(jsonPath("$.totalElements").value(totalSize))
-                .andExpect(jsonPath("$.size").value(defaultPageSize))
-                .andExpect(jsonPath("$.number").value(firstPageNumber))
-                .andExpect(jsonPath("$.numberOfElements").value(totalSize % defaultPageSize));
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(jsonPath("$.totalPages").value(totalSize / defaultPageSize + 1))
+            .andExpect(jsonPath("$.totalElements").value(totalSize))
+            .andExpect(jsonPath("$.size").value(defaultPageSize))
+            .andExpect(jsonPath("$.number").value(firstPageNumber))
+            .andExpect(jsonPath("$.numberOfElements").value(totalSize % defaultPageSize));
     }
 
     @Test
@@ -190,24 +190,24 @@ class TypoControllerIT {
         final var pageSize = 3;
         final var page = 1;
         mockMvc.perform(get(API_TYPOS).param(sizeParameter, pageSize + "").param(pageParameter, page + ""))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(APPLICATION_JSON))
-                .andExpect(jsonPath("$.totalPages").value(totalSize / pageSize + 1))
-                .andExpect(jsonPath("$.totalElements").value(totalSize))
-                .andExpect(jsonPath("$.size").value(pageSize))
-                .andExpect(jsonPath("$.number").value(page))
-                .andExpect(jsonPath("$.numberOfElements").value(pageSize));
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(jsonPath("$.totalPages").value(totalSize / pageSize + 1))
+            .andExpect(jsonPath("$.totalElements").value(totalSize))
+            .andExpect(jsonPath("$.size").value(pageSize))
+            .andExpect(jsonPath("$.number").value(page))
+            .andExpect(jsonPath("$.numberOfElements").value(pageSize));
     }
 
     @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.utils.EntitiesFactory#getTypoIdsExist")
     void getTypoById(final Long id) throws Exception {
         mockMvc.perform(get(API_TYPOS + ID, id))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(APPLICATION_JSON))
-                .andExpect(jsonPath("$.id").value(id));
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(jsonPath("$.id").value(id));
     }
 
     @ParameterizedTest
@@ -215,9 +215,9 @@ class TypoControllerIT {
     void getTypoByIdNoFound(final Long id) throws Exception {
         Assertions.assertThat(repository.existsById(id)).isFalse();
         mockMvc.perform(get(API_TYPOS + ID, id))
-                .andDo(print())
-                .andExpect(status().isNotFound())
-                .andExpect(content().contentType(APPLICATION_PROBLEM_JSON));
+            .andDo(print())
+            .andExpect(status().isNotFound())
+            .andExpect(content().contentType(APPLICATION_PROBLEM_JSON));
     }
 
     @ParameterizedTest
@@ -227,14 +227,13 @@ class TypoControllerIT {
         final var newComment = typo.getReporterComment() + " <- new comment";
         final var body = format("'{' \"reporterComment\" : \"{0}\" '}'", newComment);
         mockMvc.perform(patch(API_TYPOS + ID, id)
-                .content(body)
-                .contentType(APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(APPLICATION_JSON))
-                .andExpect(jsonPath("$.id").value(id))
-                .andExpect(jsonPath("$.reporterComment").value(newComment))
-                .andExpect(jsonPath("$.typoStatus", is(typo.getTypoStatus() + "")));
+            .content(body)
+            .contentType(APPLICATION_JSON))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(jsonPath("$.id").value(id))
+            .andExpect(jsonPath("$.reporterComment").value(newComment));
     }
 
     @ParameterizedTest
@@ -243,16 +242,14 @@ class TypoControllerIT {
         final var typo = repository.findById(id).orElseThrow();
         final var body = "{}";
         mockMvc.perform(patch(API_TYPOS + ID, typo.getId())
-                .content(body)
-                .contentType(APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(APPLICATION_JSON))
-                .andExpect(jsonPath("$.id").value(id))
-                .andExpect(jsonPath("$.reporterComment").value(nullValue()))
-                .andExpect(jsonPath("$.typoStatus", is(typo.getTypoStatus() + "")));
+            .content(body)
+            .contentType(APPLICATION_JSON))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(jsonPath("$.id").value(id))
+            .andExpect(jsonPath("$.reporterComment").value(nullValue()));
     }
-
 
     @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.utils.EntitiesFactory#getTypoIdsExist")
@@ -260,14 +257,13 @@ class TypoControllerIT {
         final var typo = repository.findById(id).orElseThrow();
         final var body = "{ \"reporterComment\" : null }";
         mockMvc.perform(patch(API_TYPOS + ID, id)
-                .content(body)
-                .contentType(APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(APPLICATION_JSON))
-                .andExpect(jsonPath("$.id").value(id))
-                .andExpect(jsonPath("$.reporterComment").value(nullValue()))
-                .andExpect(jsonPath("$.typoStatus", is(typo.getTypoStatus() + "")));
+            .content(body)
+            .contentType(APPLICATION_JSON))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(jsonPath("$.id").value(id))
+            .andExpect(jsonPath("$.reporterComment").value(nullValue()));
     }
 
 
@@ -276,85 +272,97 @@ class TypoControllerIT {
     void patchTypoReporterCommentEmptyNotValid(final Long id) throws Exception {
         final var body = "{ \"reporterComment\" : \"\" }";
         mockMvc.perform(patch(API_TYPOS + ID, id)
-                .content(body)
-                .contentType(APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isBadRequest())
-                .andExpect(content().contentType(APPLICATION_PROBLEM_JSON))
-                .andExpect(jsonPath("$.title").value("Constraint Violation"))
-                .andExpect(jsonPath("$.violations").isArray())
-                .andExpect(jsonPath("$.violations", hasSize(2)))
-                .andExpect(jsonPath("$.violations[*].field", hasItem("reporterComment")))
-                .andExpect(jsonPath("$.violations[*].message", hasItem("Reporter comment must be null")))
-                .andExpect(jsonPath("$.violations[*].message", hasItem("Reporter comment must not be blank")));
+            .content(body)
+            .contentType(APPLICATION_JSON))
+            .andDo(print())
+            .andExpect(status().isBadRequest())
+            .andExpect(content().contentType(APPLICATION_PROBLEM_JSON))
+            .andExpect(jsonPath("$.title").value("Constraint Violation"))
+            .andExpect(jsonPath("$.violations").isArray())
+            .andExpect(jsonPath("$.violations", hasSize(2)))
+            .andExpect(jsonPath("$.violations[*].field", hasItem("reporterComment")))
+            .andExpect(jsonPath("$.violations[*].message", hasItem("Reporter comment must be null")))
+            .andExpect(jsonPath("$.violations[*].message", hasItem("Reporter comment must not be blank")));
+    }
+
+    @ParameterizedTest
+    @MethodSource("io.hexlet.typoreporter.test.utils.EntitiesFactory#getTypoIdsExist")
+    void patchTypoReporterCommentBlankNotValid(final Long id) throws Exception {
+        final var body = "{ \"reporterComment\" : \"   \" }";
+        mockMvc.perform(patch(API_TYPOS + ID, id)
+            .content(body)
+            .contentType(APPLICATION_JSON))
+            .andDo(print())
+            .andExpect(status().isBadRequest())
+            .andExpect(content().contentType(APPLICATION_PROBLEM_JSON))
+            .andExpect(jsonPath("$.title").value("Constraint Violation"))
+            .andExpect(jsonPath("$.violations").isArray())
+            .andExpect(jsonPath("$.violations", hasSize(2)))
+            .andExpect(jsonPath("$.violations[*].field", hasItem("reporterComment")))
+            .andExpect(jsonPath("$.violations[*].message", hasItem("Reporter comment must be null")))
+            .andExpect(jsonPath("$.violations[*].message", hasItem("Reporter comment must not be blank")));
     }
 
 
     @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.utils.EntitiesFactory#getTypoIdsExist")
     void patchTypoEventResolveToResolved(final Long id) throws Exception {
-        final var typo = repository.findById(id)
-                .map(t -> t.setTypoStatus(t.getTypoStatus().next(OPEN)))
-                .map(repository::save)
-                .orElseThrow();
-        final var updateTypo = new PatchTypo(typo.getReporterComment(), RESOLVE);
-        mockMvc.perform(patch(API_TYPOS + ID, id)
-                .content(objectMapper.writeValueAsString(updateTypo))
-                .contentType(APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(APPLICATION_JSON))
-                .andExpect(jsonPath("$.id").value(id))
-                .andExpect(jsonPath("$.reporterComment").value(typo.getReporterComment()))
-                .andExpect(jsonPath("$.typoStatus", is(RESOLVED + "")));
+        repository.findById(id)
+            .map(t -> t.setTypoStatus(t.getTypoStatus().next(OPEN)))
+            .map(repository::save)
+            .orElseThrow();
+        final var updateTypo = new UpdateTypoEvent(RESOLVE);
+        mockMvc.perform(patch(API_TYPOS + ID_STATUS, id)
+            .content(objectMapper.writeValueAsString(updateTypo))
+            .contentType(APPLICATION_JSON))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(jsonPath("$.id").value(id))
+            .andExpect(jsonPath("$.typoStatus", is(RESOLVED + "")));
     }
 
 
     @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.utils.EntitiesFactory#getTypoIdsExist")
     void patchTypoEventOpenToInProgress(final Long id) throws Exception {
-        final var typo = repository.findById(id).orElseThrow();
-        final var patchTypo = new PatchTypo(typo.getReporterComment(), OPEN);
-        mockMvc.perform(patch(API_TYPOS + ID, id)
-                .content(objectMapper.writeValueAsString(patchTypo))
-                .contentType(APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(APPLICATION_JSON))
-                .andExpect(jsonPath("$.id").value(id))
-                .andExpect(jsonPath("$.reporterComment").value(typo.getReporterComment()))
-                .andExpect(jsonPath("$.typoStatus", is(IN_PROGRESS + "")));
+        final var patchTypo = new UpdateTypoEvent(OPEN);
+        mockMvc.perform(patch(API_TYPOS + ID_STATUS, id)
+            .content(objectMapper.writeValueAsString(patchTypo))
+            .contentType(APPLICATION_JSON))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(jsonPath("$.id").value(id))
+            .andExpect(jsonPath("$.typoStatus", is(IN_PROGRESS + "")));
     }
 
 
     @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.utils.EntitiesFactory#getTypoIdsExist")
     void patchTypoEventCancelToCanceled(final Long id) throws Exception {
-        final var typo = repository.findById(id).orElseThrow();
-        final var patchTypo = new PatchTypo(typo.getReporterComment(), CANCEL);
-        mockMvc.perform(patch(API_TYPOS + ID, id)
-                .content(objectMapper.writeValueAsString(patchTypo))
-                .contentType(APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(APPLICATION_JSON))
-                .andExpect(jsonPath("$.id").value(id))
-                .andExpect(jsonPath("$.reporterComment").value(typo.getReporterComment()))
-                .andExpect(jsonPath("$.typoStatus", is(CANCELED + "")));
+        final var patchTypo = new UpdateTypoEvent(CANCEL);
+        mockMvc.perform(patch(API_TYPOS + ID_STATUS, id)
+            .content(objectMapper.writeValueAsString(patchTypo))
+            .contentType(APPLICATION_JSON))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(jsonPath("$.id").value(id))
+            .andExpect(jsonPath("$.typoStatus", is(CANCELED + "")));
     }
 
 
     @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.utils.EntitiesFactory#getTypoIdsExist")
     void patchTypoEventResolveNotValid(final Long id) throws Exception {
-        final var typo = repository.findById(id).orElseThrow();
-        final var patchTypo = new PatchTypo(typo.getReporterComment(), RESOLVE);
-        mockMvc.perform(patch(API_TYPOS + ID, id)
-                .content(objectMapper.writeValueAsString(patchTypo))
-                .contentType(APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isBadRequest())
-                .andExpect(content().contentType(APPLICATION_PROBLEM_JSON));
+        final var patchTypo = new UpdateTypoEvent(RESOLVE);
+        mockMvc.perform(patch(API_TYPOS + ID_STATUS, id)
+            .content(objectMapper.writeValueAsString(patchTypo))
+            .contentType(APPLICATION_JSON))
+            .andDo(print())
+            .andExpect(status().isBadRequest())
+            .andExpect(content().contentType(APPLICATION_PROBLEM_JSON));
     }
 
     @ParameterizedTest
@@ -362,8 +370,8 @@ class TypoControllerIT {
     void deleteTypoById(final Long id) throws Exception {
         Assertions.assertThat(repository.existsById(id)).isTrue();
         mockMvc.perform(delete(API_TYPOS + ID, id))
-                .andDo(print())
-                .andExpect(status().isOk());
+            .andDo(print())
+            .andExpect(status().isOk());
         Assertions.assertThat(repository.existsById(id)).isFalse();
     }
 
@@ -372,9 +380,9 @@ class TypoControllerIT {
     void deleteTypoByIdNotFound(final Long id) throws Exception {
         Assertions.assertThat(repository.existsById(id)).isFalse();
         mockMvc.perform(delete(API_TYPOS + ID, id))
-                .andDo(print())
-                .andExpect(status().isNotFound())
-                .andExpect(content().contentType(APPLICATION_PROBLEM_JSON));
+            .andDo(print())
+            .andExpect(status().isNotFound())
+            .andExpect(content().contentType(APPLICATION_PROBLEM_JSON));
         Assertions.assertThat(repository.existsById(id)).isFalse();
     }
 }

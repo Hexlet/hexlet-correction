@@ -13,5 +13,7 @@ public class Routers {
 
     public static final String API_TYPOS = API + TYPOS;
 
-    public static final String TYPO_SORT = "createdDate";
+    public static final String ID_STATUS = ID + "/status";
+
+    public static final String TYPO_SORT_FIELD = "createdDate";
 }

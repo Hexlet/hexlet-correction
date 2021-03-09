@@ -23,7 +23,7 @@ import static com.github.database.rider.core.api.configuration.Orthography.LOWER
 import static io.hexlet.typoreporter.TypoReporterApplicationIT.POSTGRES_IMAGE;
 import static io.hexlet.typoreporter.domain.typo.TypoEvent.*;
 import static io.hexlet.typoreporter.domain.typo.TypoStatus.*;
-import static io.hexlet.typoreporter.web.Routers.TYPO_SORT;
+import static io.hexlet.typoreporter.web.Routers.TYPO_SORT_FIELD;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
@@ -66,7 +66,7 @@ public class TypoServiceIT {
         final var totalSize = repository.count();
         final var page = 1;
         final var pageSize = 3;
-        final var pageReq = PageRequest.of(page, pageSize, Sort.by(TYPO_SORT));
+        final var pageReq = PageRequest.of(page, pageSize, Sort.by(TYPO_SORT_FIELD));
         final var pageTypo = service.getTypoPage(pageReq);
         assertThat(pageTypo.getTotalPages()).isEqualTo(totalSize / pageSize + page);
         assertThat(pageTypo.getTotalElements()).isEqualTo(totalSize);
@@ -92,62 +92,53 @@ public class TypoServiceIT {
     void patchTypoReporterComment(final Long id) {
         final var typo = repository.findById(id).orElseThrow();
         final var newComment = typo.getReporterComment() + " <- new comment";
-        final var patchTypo = new PatchTypo(newComment, null);
-        final var patchedTypo = service.patchTypoById(id, patchTypo).orElseThrow();
+        final var patchedTypo = service.patchTypoById(id, new PatchTypo(newComment)).orElseThrow();
 
-        assertThat(patchedTypo.getId()).isEqualTo(id);
         assertThat(patchedTypo.getReporterComment()).isEqualTo(newComment);
-        assertThat(patchedTypo.getTypoStatus()).isEqualTo(typo.getTypoStatus());
     }
 
     @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.utils.EntitiesFactory#getTypoIdsExist")
-    void patchTypoWithNullValues(final Long id) {
-        final var typo = repository.findById(id).orElseThrow();
-        final var patchTypo = new PatchTypo(null, null);
-        final var patchedTypo = service.patchTypoById(id, patchTypo).orElseThrow();
+    void patchTypoWithCommentNullValues(final Long id) {
+        final var patchedTypo = service.patchTypoById(id, new PatchTypo(null)).orElseThrow();
 
-        assertThat(patchedTypo.getId()).isEqualTo(id);
         assertThat(patchedTypo.getReporterComment()).isEqualTo(null);
-        assertThat(patchedTypo.getTypoStatus()).isEqualTo(typo.getTypoStatus());
+    }
+
+    @ParameterizedTest
+    @MethodSource("io.hexlet.typoreporter.test.utils.EntitiesFactory#getTypoIdsExist")
+    void patchTypoWithEventNullValues(final Long id) {
+        final var typoStatus = repository.findById(id).orElseThrow().getTypoStatus();
+        final var newTypoStatus = service.updateTypoStatusById(id, null).orElseThrow().getTypoStatus();
+
+        assertThat(newTypoStatus).isEqualTo(typoStatus);
     }
 
     @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.utils.EntitiesFactory#getTypoIdsExist")
     void patchTypoEventResolveToResolved(final Long id) {
-        final var typo = repository.findById(id)
+        repository.findById(id)
             .map(t -> t.setTypoStatus(t.getTypoStatus().next(OPEN)))
             .map(repository::save)
             .orElseThrow();
-        final var patchTypo = new PatchTypo(typo.getReporterComment(), RESOLVE);
-        final var patchedTypo = service.patchTypoById(id, patchTypo).orElseThrow();
+        final var patchedTypo = service.updateTypoStatusById(id, RESOLVE).orElseThrow();
 
-        assertThat(patchedTypo.getId()).isEqualTo(id);
-        assertThat(patchedTypo.getReporterComment()).isEqualTo(typo.getReporterComment());
         assertThat(patchedTypo.getTypoStatus()).isEqualTo(RESOLVED);
     }
 
     @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.utils.EntitiesFactory#getTypoIdsExist")
     void patchTypoEventOpenToInProgress(final Long id) {
-        final var typo = repository.findById(id).orElseThrow();
-        final var patchTypo = new PatchTypo(typo.getReporterComment(), OPEN);
-        final var patchedTypo = service.patchTypoById(id, patchTypo).orElseThrow();
+        final var patchedTypo = service.updateTypoStatusById(id, OPEN).orElseThrow();
 
-        assertThat(patchedTypo.getId()).isEqualTo(id);
-        assertThat(patchedTypo.getReporterComment()).isEqualTo(typo.getReporterComment());
         assertThat(patchedTypo.getTypoStatus()).isEqualTo(IN_PROGRESS);
     }
 
     @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.utils.EntitiesFactory#getTypoIdsExist")
     void patchTypoEventCancelToCanceled(final Long id) {
-        final var typo = repository.findById(id).orElseThrow();
-        final var patchTypo = new PatchTypo(typo.getReporterComment(), CANCEL);
-        final var patchedTypo = service.patchTypoById(id, patchTypo).orElseThrow();
+        final var patchedTypo = service.updateTypoStatusById(id, CANCEL).orElseThrow();
 
-        assertThat(patchedTypo.getId()).isEqualTo(id);
-        assertThat(patchedTypo.getReporterComment()).isEqualTo(typo.getReporterComment());
         assertThat(patchedTypo.getTypoStatus()).isEqualTo(CANCELED);
     }
 

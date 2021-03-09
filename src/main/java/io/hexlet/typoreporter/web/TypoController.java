@@ -1,6 +1,5 @@
 package io.hexlet.typoreporter.web;
 
-import io.hexlet.typoreporter.domain.typo.Typo;
 import io.hexlet.typoreporter.service.TypoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
@@ -27,7 +26,7 @@ public class TypoController {
     private final TypoService service;
 
     @GetMapping
-    String getPageTypo(Model model, @SortDefault(TYPO_SORT) Pageable pageable) {
+    String getPageTypo(Model model, @SortDefault(TYPO_SORT_FIELD) Pageable pageable) {
         final var size = Optional.ofNullable(pageSizes.floor(pageable.getPageSize())).orElseGet(pageSizes::first);
         final var pageRequest = PageRequest.of(pageable.getPageNumber(), size, pageable.getSort());
         final var typoPage = service.getTypoPage(pageRequest);
@@ -35,7 +34,7 @@ public class TypoController {
         final var sort = typoPage.getSort()
             .stream()
             .findFirst()
-            .orElseGet(() -> asc(TYPO_SORT));
+            .orElseGet(() -> asc(TYPO_SORT_FIELD));
         final var number = typoPage.getNumber() + 1;
         final var pageNumbers = IntStream.of(1, number - 1, number, number + 1, typoPage.getTotalPages())
             .filter(n -> n > 0)
