@@ -64,9 +64,19 @@ For updating existing `typo`:
     Content-Type: application/json
     
     {
-        "reporterComment": "new comment",
+        "reporterComment": "new comment"
+    }
+
+For updating `TypoStatus`:
+
+    PATCH http://localhost:8080/api/typos/{id}/status
+    Content-Type: application/json
+    
+    {
         "typoEvent": "OPEN"
     }
+
+Existing events  `OPEN, RESOLVE, CANCEL`
 
 For deleting `typo`:
 
