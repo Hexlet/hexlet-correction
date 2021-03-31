@@ -10,7 +10,7 @@ import org.testcontainers.junit.jupiter.*;
 @SpringBootTest
 public class TypoReporterApplicationIT {
 
-    public static final String POSTGRES_IMAGE = "postgres:12-alpine";
+    public static final String POSTGRES_IMAGE = "postgres:13.2";
 
     @Container
     public static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>(POSTGRES_IMAGE)
