@@ -16,7 +16,7 @@
     <description>Service for receiving typo</description>
 
     <properties>
-        <java.version>15</java.version>
+        <java.version>16</java.version>
         <!-- WebJars -->
         <webjars-locator.version>0.40</webjars-locator.version>
         <bootstrap.version>5.0.0-beta2</bootstrap.version>
@@ -25,6 +25,7 @@
         <!-- Test -->
         <testcontainers.version>1.15.2</testcontainers.version>
         <database-rider.version>1.23.0</database-rider.version>
+        <lombok.version>1.18.20</lombok.version>
     </properties>
 
     <dependencyManagement>
@@ -93,6 +94,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
@@ -148,7 +150,6 @@
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
-                    <compilerArgument>--enable-preview</compilerArgument>
                     <annotationProcessorPaths>
                         <path>
                             <groupId>org.projectlombok</groupId>
@@ -156,22 +157,15 @@
                             <version>${lombok.version}</version>
                         </path>
                     </annotationProcessorPaths>
-                    <compilerArgs>--enable-preview</compilerArgs>
                 </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <argLine>--enable-preview</argLine>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
-                <configuration>
-                    <argLine>--enable-preview</argLine>
-                </configuration>
             </plugin>
         </plugins>
     </build>
