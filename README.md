@@ -6,7 +6,7 @@ This application created for receive the typo errors from a site.
 
 Before you can build this project, you must install and configure the following dependencies on your machine:
 
-1. Java 15
+1. Java 16
 
 ## Building for development
 
@@ -34,7 +34,7 @@ For example, to start a postgresql database in a docker container, run:
 
 For creating new `typo`:
 
-    POST http://localhost:8080/api/typos
+    POST http://localhost:8080/api/workspaces/{your_workspace_name}/typos
     Content-Type: application/json
     
     {
@@ -45,39 +45,3 @@ For creating new `typo`:
         "textTypo": "textTypo",
         "textAfterTypo": "textAfterTypo"
     }
-
-For receiving `typo` by id:
-
-    GET http://localhost:8080/api/typos/{id}
-
-For receiving default page with `typo`:
-
-    GET http://localhost:8080/api/typos
-
-For receiving custom page with `typo`:
-
-    GET http://localhost:8080/api/typos?size=5&page=0&sort=typoStatus,desc
-
-For updating existing `typo`:
-
-    PATCH http://localhost:8080/api/typos/{id}
-    Content-Type: application/json
-    
-    {
-        "reporterComment": "new comment"
-    }
-
-For updating `TypoStatus`:
-
-    PATCH http://localhost:8080/api/typos/{id}/status
-    Content-Type: application/json
-    
-    {
-        "typoEvent": "OPEN"
-    }
-
-Existing events  `OPEN, RESOLVE, CANCEL`
-
-For deleting `typo`:
-
-    DELETE http://localhost:8080/api/typos/{id}
