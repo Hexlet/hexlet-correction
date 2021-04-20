@@ -2,6 +2,7 @@ package io.hexlet.typoreporter.domain;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.hexlet.typoreporter.domain.typo.Typo;
+import io.hexlet.typoreporter.domain.workspace.Workspace;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,7 @@ public class EntityTest {
     private ObjectMapper objectMapper;
 
     @ParameterizedTest
-    @ValueSource(classes = {Typo.class})
+    @ValueSource(classes = {Typo.class, Workspace.class})
     void equalsHashCodeVerifier(Class<Identifiable<Long>> clazz) throws Exception {
         final var entityOne = clazz.getConstructor().newInstance();
         final var entityTwo = clazz.getConstructor().newInstance();
@@ -31,7 +32,7 @@ public class EntityTest {
     }
 
     @ParameterizedTest
-    @ValueSource(classes = {Typo.class})
+    @ValueSource(classes = {Typo.class, Workspace.class})
     void isSerializeNewEntityToJson(Class<?> clazz) {
         assertDoesNotThrow(() -> objectMapper.writeValueAsString(clazz.getConstructor().newInstance()));
     }
@@ -43,7 +44,7 @@ public class EntityTest {
     }
 
     @ParameterizedTest
-    @ValueSource(classes = {Typo.class})
+    @ValueSource(classes = {Typo.class, Workspace.class})
     void isNotExceptionForToStringWithNewEntity(Class<?> clazz) throws Exception {
         assertDoesNotThrow(clazz.getConstructor().newInstance()::toString);
     }
@@ -55,7 +56,7 @@ public class EntityTest {
     }
 
     @ParameterizedTest
-    @ValueSource(classes = {Typo.class})
+    @ValueSource(classes = {Typo.class, Workspace.class})
     void isEqualsIfIdsEquals(Class<Identifiable<Long>> clazz) throws Exception {
         final var entityOne = clazz.getConstructor().newInstance().setId(1L);
         final var entityTwo = clazz.getConstructor().newInstance().setId(1L);
@@ -63,7 +64,7 @@ public class EntityTest {
     }
 
     @ParameterizedTest
-    @ValueSource(classes = {Typo.class})
+    @ValueSource(classes = {Typo.class, Workspace.class})
     void isNotEqualsIfIdsNotEquals(Class<Identifiable<Long>> clazz) throws Exception {
         final var entityOne = clazz.getConstructor().newInstance().setId(1L);
         final var entityTwo = clazz.getConstructor().newInstance().setId(2L);
@@ -71,7 +72,7 @@ public class EntityTest {
     }
 
     @ParameterizedTest
-    @ValueSource(classes = {Typo.class})
+    @ValueSource(classes = {Typo.class, Workspace.class})
     void isNotEqualsIfOneIdNull(Class<Identifiable<Long>> clazz) throws Exception {
         final var entityOne = clazz.getConstructor().newInstance().setId(1L);
         final var entityTwo = clazz.getConstructor().newInstance();

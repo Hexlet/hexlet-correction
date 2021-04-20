@@ -11,18 +11,18 @@ public class TypoReportToTypoConverter implements Converter<TypoReport, Typo> {
     /**
      * Convert the source object of type {@code TypoReport} to target type {@code Typo}.
      *
-     * @param typoReport the source object to convert, which must be an instance of {@code TypoReport} (never {@code null})
+     * @param source the source object to convert, which must be an instance of {@code TypoReport} (never {@code null})
      * @return the converted object, which must be an instance of {@code Typo} (potentially {@code null})
      * @throws IllegalArgumentException if the source cannot be converted to the desired target type
      */
     @Override
-    public Typo convert(TypoReport typoReport) {
+    public Typo convert(TypoReport source) {
         return new Typo()
-                .setPageUrl(typoReport.pageUrl())
-                .setReporterName(typoReport.reporterName())
-                .setReporterComment(typoReport.reporterComment())
-                .setTextBeforeTypo(typoReport.textBeforeTypo())
-                .setTextTypo(typoReport.textTypo())
-                .setTextAfterTypo(typoReport.textAfterTypo());
+                .setPageUrl(source.pageUrl())
+                .setReporterName(source.reporterName())
+                .setReporterComment(source.reporterComment())
+                .setTextBeforeTypo(source.textBeforeTypo())
+                .setTextTypo(source.textTypo())
+                .setTextAfterTypo(source.textAfterTypo());
     }
 }

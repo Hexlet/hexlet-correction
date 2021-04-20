@@ -18,7 +18,7 @@ build:
 	./mvnw -B -ntp -fae clean verify
 
 docker-db:
-	docker-compose -f ./src/main/docker/postgresql.yml up -d
+	docker-compose -f ./src/main/docker/postgresql.yml up -d --force-recreate
 
 update:
 	./mvnw versions:update-properties versions:display-plugin-updates

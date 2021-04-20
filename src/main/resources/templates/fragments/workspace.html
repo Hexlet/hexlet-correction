@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div class="col" th:fragment="wksProgressBar (sumTypoInWks, countTypoByStatus)">
+    <div class="progress">
+        <div aria-valuemax="100" aria-valuemin="0" class="progress-bar" role="progressbar"
+             th:aria-valuenow="(*{value} * 100 / ${sumTypoInWks})"
+             th:classappend="(*{key == 'REPORTED'} ? 'bg-danger' : '') +
+                             (*{key == 'IN PROGRESS'} ? 'bg-warning' : '') +
+                             (*{key == 'RESOLVED'} ? 'bg-success' : '') +
+                             (*{key == 'CANCELED'} ? 'bg-secondary' : '')"
+             th:each="entry : ${countTypoByStatus}"
+             th:object="${entry}"
+             th:style="'width: ' + (*{value * 100} / ${sumTypoInWks}) + '%'"
+             th:text="|*{value}|"></div>
+    </div>
+</div>
+<div class="col" th:fragment="wksLastTypoDate (lastTypoCreatedDateAgo, lastTypoCreatedDate)">
+    <p class="col-6"
+       th:text="|Last typo added ${lastTypoCreatedDateAgo.get()} at ${#temporals.format(lastTypoCreatedDate.get(), 'hh:mm:ss dd-MM-yyyy')}|">
+    </p>
+</div>
+</body>
+</html>

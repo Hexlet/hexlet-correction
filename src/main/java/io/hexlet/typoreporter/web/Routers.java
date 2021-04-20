@@ -5,15 +5,36 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Routers {
 
-    public static final String ID = "/{id}";
-
     public static final String API = "/api";
 
-    public static final String TYPOS = "/typos";
+    public static final String ID_PATH = "/{id}";
 
-    public static final String API_TYPOS = API + TYPOS;
+    public static final String UPDATE = "/update";
 
-    public static final String ID_STATUS = ID + "/status";
+    public static final String CREATE = "/create";
 
-    public static final String TYPO_SORT_FIELD = "createdDate";
+    public static final String REDIRECT = "redirect:";
+
+    public static final String REDIRECT_ROOT = REDIRECT + "/";
+
+    public static final String DEFAULT_SORT_FIELD = "createdDate";
+
+    public static class Workspace {
+
+        public static final String API_WORKSPACES = API + "/workspaces";
+
+        public static final String WORKSPACE = "/workspace";
+
+        public static final String WKS_NAME_PATH = "/{wksName}";
+
+        public static final String REDIRECT_WKS_ROOT = REDIRECT + WORKSPACE + "/";
+    }
+
+    public static class Typo {
+
+        public static final String TYPOS = "/typos";
+
+        public static final String TYPO_STATUS = "/status";
+
+    }
 }

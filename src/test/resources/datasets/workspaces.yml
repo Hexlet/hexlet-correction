@@ -1,0 +1,22 @@
+workspace:
+  - id: 101
+    name: wks-name
+    description: desc
+    created_by: 'system'
+    created_date: '2020-11-15 00:09:55.391179'
+    modified_by: 'system'
+    modified_date: '2020-11-15 00:09:55.391179'
+  - id: 102
+    name: wks-test
+    description: description
+    created_by: 'system'
+    created_date: '2020-11-15 00:09:55.391179'
+    modified_by: 'system'
+    modified_date: '2020-11-15 00:09:55.391179'
+  - id: 103
+    name: wks-empty
+    description: Empty workspace
+    created_by: 'system'
+    created_date: '2020-11-15 00:09:55.391179'
+    modified_by: 'system'
+    modified_date: '2020-11-15 00:09:55.391179'

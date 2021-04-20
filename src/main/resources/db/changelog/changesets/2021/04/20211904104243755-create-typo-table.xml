@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.10.xsd"
+    objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+
+    <changeSet id="20211904104243755-1" author="system">
+        <createSequence incrementBy="15" sequenceName="typo_id_seq" startValue="1" />
+    </changeSet>
+
+    <changeSet id="20211904104243755-2" author="system">
+        <sql dbms="postgresql">CREATE TYPE TYPO_STATUS AS ENUM ('REPORTED','IN_PROGRESS','RESOLVED','CANCELED')</sql>
+    </changeSet>
+
+    <changeSet id="20211904104243755-3" author="system">
+        <createTable tableName="typo">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_TYPO" />
+            </column>
+            <column name="created_by" type="VARCHAR(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="created_date" type="TIMESTAMP WITHOUT TIME ZONE">
+                <constraints nullable="false" />
+            </column>
+            <column name="modified_by" type="VARCHAR(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="modified_date" type="TIMESTAMP WITHOUT TIME ZONE">
+                <constraints nullable="false" />
+            </column>
+            <column name="page_url" type="VARCHAR(255)" />
+            <column name="reporter_name" type="VARCHAR(255)" />
+            <column name="reporter_comment" type="VARCHAR(255)" />
+            <column name="text_before_typo" type="VARCHAR(255)" />
+            <column name="text_typo" type="VARCHAR(255)" />
+            <column name="text_after_typo" type="VARCHAR(255)" />
+            <column name="typo_status" type="TYPO_STATUS" />
+            <column name="workspace_id" type="BIGINT" />
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20211904104243755-4" author="system">
+        <addForeignKeyConstraint baseColumnNames="workspace_id" baseTableName="typo"
+                                 constraintName="FK_TYPO_ON_WORKSPACE" referencedColumnNames="id"
+                                 referencedTableName="workspace" />
+    </changeSet>
+
+</databaseChangeLog>

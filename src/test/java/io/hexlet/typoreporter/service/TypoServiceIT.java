@@ -4,6 +4,7 @@ import com.github.database.rider.core.api.configuration.DBUnit;
 import com.github.database.rider.core.api.dataset.DataSet;
 import com.github.database.rider.spring.api.DBRider;
 import io.hexlet.typoreporter.domain.typo.Typo;
+import io.hexlet.typoreporter.domain.workspace.Workspace;
 import io.hexlet.typoreporter.repository.TypoRepository;
 import io.hexlet.typoreporter.service.dto.typo.*;
 import io.hexlet.typoreporter.test.DBUnitEnumPostgres;
@@ -23,7 +24,9 @@ import static com.github.database.rider.core.api.configuration.Orthography.LOWER
 import static io.hexlet.typoreporter.TypoReporterApplicationIT.POSTGRES_IMAGE;
 import static io.hexlet.typoreporter.domain.typo.TypoEvent.*;
 import static io.hexlet.typoreporter.domain.typo.TypoStatus.*;
-import static io.hexlet.typoreporter.web.Routers.TYPO_SORT_FIELD;
+import static io.hexlet.typoreporter.test.utils.EntitiesFactory.WORKSPACE_101_NAME;
+import static io.hexlet.typoreporter.web.Routers.DEFAULT_SORT_FIELD;
+import static java.util.function.Predicate.not;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
@@ -31,7 +34,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Transactional
 @DBRider
 @DBUnit(caseInsensitiveStrategy = LOWERCASE, dataTypeFactoryClass = DBUnitEnumPostgres.class, cacheConnection = false)
-@DataSet("typos.yml")
+@DataSet(value = {"workspaces.yml", "typos.yml"})
 public class TypoServiceIT {
 
     @Container
@@ -55,7 +58,7 @@ public class TypoServiceIT {
     @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.utils.EntitiesFactory#getTypoReport")
     void addTypoReport(final TypoReport report) {
-        final var reportedTypo = service.addTypoReport(report);
+        final var reportedTypo = service.addTypoReport(report, WORKSPACE_101_NAME);
 
         ReportedTypoAssert.assertThat(reportedTypo).isEqualsToTypoReport(report);
         assertThat(repository.existsById(reportedTypo.id())).isTrue();
@@ -63,11 +66,16 @@ public class TypoServiceIT {
 
     @Test
     void getPageTypo() {
-        final var totalSize = repository.count();
+        final var totalSize = repository.findAll()
+            .stream()
+            .map(Typo::getWorkspace)
+            .map(Workspace::getName)
+            .filter(WORKSPACE_101_NAME::equals)
+            .count();
         final var page = 1;
         final var pageSize = 3;
-        final var pageReq = PageRequest.of(page, pageSize, Sort.by(TYPO_SORT_FIELD));
-        final var pageTypo = service.getTypoPage(pageReq);
+        final var pageReq = PageRequest.of(page, pageSize, Sort.by(DEFAULT_SORT_FIELD));
+        final var pageTypo = service.getTypoPage(pageReq, WORKSPACE_101_NAME);
         assertThat(pageTypo.getTotalPages()).isEqualTo(totalSize / pageSize + page);
         assertThat(pageTypo.getTotalElements()).isEqualTo(totalSize);
         assertThat(pageTypo.getSize()).isEqualTo(pageSize);
@@ -75,71 +83,61 @@ public class TypoServiceIT {
         assertThat(pageTypo.getNumberOfElements()).isEqualTo(pageSize);
     }
 
-    @ParameterizedTest
-    @MethodSource("io.hexlet.typoreporter.test.utils.EntitiesFactory#getTypoIdsExist")
-    void getTypoById(final Long id) {
-        assertThat(service.getTypoById(id).map(Typo::getId)).isNotEmpty().hasValue(id);
-    }
-
-    @ParameterizedTest
-    @MethodSource("io.hexlet.typoreporter.test.utils.EntitiesFactory#getTypoIdsNotExist")
-    void getTypoByIdNotFound(final Long id) {
-        assertThat(service.getTypoById(id)).isEmpty();
-    }
-
-    @ParameterizedTest
-    @MethodSource("io.hexlet.typoreporter.test.utils.EntitiesFactory#getTypoIdsExist")
-    void patchTypoReporterComment(final Long id) {
-        final var typo = repository.findById(id).orElseThrow();
-        final var newComment = typo.getReporterComment() + " <- new comment";
-        final var patchedTypo = service.patchTypoById(id, new PatchTypo(newComment)).orElseThrow();
-
-        assertThat(patchedTypo.getReporterComment()).isEqualTo(newComment);
-    }
-
-    @ParameterizedTest
-    @MethodSource("io.hexlet.typoreporter.test.utils.EntitiesFactory#getTypoIdsExist")
-    void patchTypoWithCommentNullValues(final Long id) {
-        final var patchedTypo = service.patchTypoById(id, new PatchTypo(null)).orElseThrow();
-
-        assertThat(patchedTypo.getReporterComment()).isEqualTo(null);
-    }
 
     @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.utils.EntitiesFactory#getTypoIdsExist")
     void patchTypoWithEventNullValues(final Long id) {
         final var typoStatus = repository.findById(id).orElseThrow().getTypoStatus();
-        final var newTypoStatus = service.updateTypoStatusById(id, null).orElseThrow().getTypoStatus();
-
+        final var newTypoStatus = service.updateTypoStatus(id, null).orElseThrow().typoStatus();
         assertThat(newTypoStatus).isEqualTo(typoStatus);
     }
 
     @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.utils.EntitiesFactory#getTypoIdsExist")
     void patchTypoEventResolveToResolved(final Long id) {
-        repository.findById(id)
-            .map(t -> t.setTypoStatus(t.getTypoStatus().next(OPEN)))
-            .map(repository::save)
+        final var typoNotInProgress = repository.findById(id)
+            .map(Typo::getTypoStatus)
+            .filter(not(IN_PROGRESS::equals))
+            .isPresent();
+        if (typoNotInProgress) {
+            return;
+        }
+        final var patchedTypo = service.updateTypoStatus(id, RESOLVE).orElseThrow();
+
+        assertThat(patchedTypo.typoStatus()).isEqualTo(RESOLVED);
+    }
+
+    @ParameterizedTest
+    @MethodSource("io.hexlet.typoreporter.test.utils.EntitiesFactory#getTypoIdsExist")
+    void patchTypoEventOpenToReported(final Long id) {
+        final var typoNotReported = repository.findById(id)
+            .map(Typo::getTypoStatus)
+            .filter(not(REPORTED::equals))
+            .isPresent();
+        if (typoNotReported) {
+            return;
+        }
+        final var typoStatus = service.updateTypoStatus(id, OPEN)
+            .map(TypoInfo::typoStatus)
             .orElseThrow();
-        final var patchedTypo = service.updateTypoStatusById(id, RESOLVE).orElseThrow();
-
-        assertThat(patchedTypo.getTypoStatus()).isEqualTo(RESOLVED);
+        assertThat(typoStatus).isEqualTo(IN_PROGRESS);
     }
 
     @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.utils.EntitiesFactory#getTypoIdsExist")
-    void patchTypoEventOpenToInProgress(final Long id) {
-        final var patchedTypo = service.updateTypoStatusById(id, OPEN).orElseThrow();
+    void patchTypoEventReopenToCanceled(final Long id) {
+        final var typoNotCanceled = repository.findById(id)
+            .map(Typo::getTypoStatus)
+            .filter(not(CANCELED::equals))
+            .isPresent();
+        if (typoNotCanceled) {
+            return;
+        }
+        final var typoStatus = service.updateTypoStatus(id, REOPEN)
+            .map(TypoInfo::typoStatus)
+            .orElseThrow();
 
-        assertThat(patchedTypo.getTypoStatus()).isEqualTo(IN_PROGRESS);
-    }
-
-    @ParameterizedTest
-    @MethodSource("io.hexlet.typoreporter.test.utils.EntitiesFactory#getTypoIdsExist")
-    void patchTypoEventCancelToCanceled(final Long id) {
-        final var patchedTypo = service.updateTypoStatusById(id, CANCEL).orElseThrow();
-
-        assertThat(patchedTypo.getTypoStatus()).isEqualTo(CANCELED);
+        assertThat(typoStatus).isEqualTo(IN_PROGRESS);
     }
 
     @ParameterizedTest

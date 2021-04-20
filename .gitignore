@@ -430,3 +430,6 @@ fabric.properties
 
 .idea/
 /node/
+
+# JPA Buddy settings
+/.jpb/

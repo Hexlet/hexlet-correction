@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<nav aria-label="Main navbar" class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark" th:fragment="mainNavbarTop">
+    <div class="container-fluid">
+        <a class="navbar-brand" th:href="@{/}">Hexlet Typo Reporter</a>
+        <button aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler"
+                data-bs-target="#mainNavbar" data-bs-toggle="collapse" type="button">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="mainNavbar">
+            <ul class="navbar-nav me-auto mb-2 mb-md-0">
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/create/workspace}">Create Workspace</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<th:block th:fragment="workspaceSideBar (wksName, itemActive)">
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item" th:text="${wksName}"></li>
+    </ul>
+    <hr>
+    <div class="list-group list-group-flush">
+        <a class="list-group-item list-group-item-action"
+           th:aria-current="${itemActive} == 'info'"
+           th:classappend="${itemActive} == 'info' ? 'active' : ''"
+           th:href="@{'/workspace/' + ${wksName}}">Info</a>
+        <a class="list-group-item list-group-item-action"
+           th:aria-current="${itemActive} == 'typos'"
+           th:classappend="${itemActive} == 'typos' ? 'active' : ''"
+           th:href="@{'/workspace/' + ${wksName} + '/typos'}">Typos</a>
+        <a aria-disabled="true" class="list-group-item list-group-item-action disabled" href="#" tabindex="-1">Users</a>
+        <a aria-disabled="true" class="list-group-item list-group-item-action disabled" href="#" tabindex="-1">Integration</a>
+        <a aria-disabled="true" class="list-group-item list-group-item-action disabled" href="#"
+           tabindex="-1">Settings</a>
+    </div>
+</th:block>
+</body>
+</html>
