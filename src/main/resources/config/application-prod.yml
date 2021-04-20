@@ -2,9 +2,6 @@
 # Spring Boot configuration for the "prod" profile.
 #
 # This configuration overrides the application.yml file.
-#
-# More information on profiles: https://www.jhipster.tech/profiles/
-# More information on configuration properties: https://www.jhipster.tech/common-application-properties/
 # ===================================================================
 
 # ===================================================================
@@ -16,8 +13,6 @@
 logging:
   level:
     ROOT: INFO
-    io.github.jhipster: INFO
-    io.hexlet.hexletcorrection: INFO
 
 spring:
   devtools:
@@ -31,9 +26,10 @@ spring:
     password: ${JDBC_DATABASE_PASSWORD}
   jpa:
     show-sql: false
+    hibernate:
+      ddl-auto: none
   thymeleaf:
     cache: true
-
 server:
   port: 8080
   compression:

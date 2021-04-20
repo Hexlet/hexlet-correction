@@ -4,6 +4,10 @@ spring:
   jpa:
     open-in-view: false
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
   liquibase:
-    change-log: classpath:/db/changelog/db.changelog-master.xml
+    change-log: classpath:db/changelog/db.changelog-master.xml
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true

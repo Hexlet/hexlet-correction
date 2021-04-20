@@ -18,7 +18,7 @@ public class TypoAssert extends ObjectAssert<Typo> {
         isNotNull();
         assertThat(actual)
                 .usingRecursiveComparison()
-                .ignoringFields("id", "typoStatus", "createdDate", "createdBy", "modifiedDate", "modifiedBy")
+                .ignoringFields("id", "typoStatus", "createdDate", "createdBy", "modifiedDate", "modifiedBy", "workspace")
                 .isEqualTo(expected);
         return this;
     }

@@ -22,8 +22,9 @@
         <bootstrap.version>5.0.0-beta3</bootstrap.version>
         <!-- Utils -->
         <problem-spring-web-starter.version>0.26.2</problem-spring-web-starter.version>
+        <prettytime.version>5.0.0.Final</prettytime.version>
         <!-- Test -->
-        <testcontainers.version>1.15.2</testcontainers.version>
+        <testcontainers.version>1.15.3</testcontainers.version>
         <database-rider.version>1.23.0</database-rider.version>
     </properties>
 
@@ -101,6 +102,11 @@
                     <groupId>org.apiguardian</groupId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.ocpsoft.prettytime</groupId>
+            <artifactId>prettytime</artifactId>
+            <version>${prettytime.version}</version>
         </dependency>
         <!-- Test -->
         <dependency>

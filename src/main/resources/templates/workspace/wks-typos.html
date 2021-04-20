@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: head"></head>
+<body style="padding-top: 4.5rem">
+<nav th:replace="fragments/panels :: mainNavbarTop"></nav>
+<main class="container-fluid">
+    <div class="row">
+        <!-- Workspace Side Bar -->
+        <div class="col-2" th:include="fragments/panels :: workspaceSideBar (${wksName}, 'typos')"></div>
+        <div class="col">
+            <!-- Workspace progress typo bar -->
+            <div class="row my-3"
+                 th:if="${sumTypoInWks} > 0"
+                 th:insert="fragments/workspace :: wksProgressBar (${sumTypoInWks}, ${countTypoByStatus})"></div>
+            <!-- Workspace number of typo -->
+            <div class="row">
+                <p th:text="|Total number of typos in workspace ${wksName} : ${sumTypoInWks}|"></p>
+            </div>
+            <!-- Workspace last typo date -->
+            <div class="row"
+                 th:if="${lastTypoCreatedDateAgo.isPresent() && lastTypoCreatedDate.isPresent()}"
+                 th:insert="fragments/workspace :: wksLastTypoDate (${lastTypoCreatedDateAgo}, ${lastTypoCreatedDate})"></div>
+            <!-- Workspace typo page -->
+            <div class="row">
+                <main class="col">
+                    <div class="row">
+                        <!-- Page size dropdown -->
+                        <div class="col-2">
+                            <div class="dropdown">
+                                <button aria-expanded="false"
+                                        class="btn btn-secondary dropdown-toggle"
+                                        data-bs-toggle="dropdown"
+                                        id="dropdownSizePage"
+                                        th:text="|Page size ${typoPage.size}|"
+                                        type="button">
+                                </button>
+                                <ul aria-labelledby="dropdownSizePage" class="dropdown-menu">
+                                    <li th:each="avalibleSize : ${availableSizes}">
+                                        <a class="dropdown-item"
+                                           th:classappend="(${typoPage.size} == ${avalibleSize} ? 'disabled' : '')"
+                                           th:href="@{'/workspace/' + ${wksName} + '/typos'(page=0,size=${avalibleSize},sort=|${sortProp},${sortDir}|)}"
+                                           th:text="${avalibleSize}">
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <!-- Page pagination -->
+                        <nav class="col">
+                            <ul class="pagination">
+                                <li class="page-item" th:classappend="${typoPage.first}? 'disabled'">
+                                    <a aria-label="Previous" class="page-link"
+                                       th:aria-disabled="${typoPage.first}"
+                                       th:href="@{'/workspace/' + ${wksName} + '/typos'(page=${typoPage.number - 1},size=${typoPage.size},sort=|${sortProp},${sortDir}|)}"
+                                       th:tabindex="${typoPage.first}? -1">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
+                                <li class="page-item"
+                                    th:attrappend="aria-current=${isCurrent}?'page'"
+                                    th:classappend="${isCurrent}?'active'"
+                                    th:each="number, stat : ${pageNumbers}"
+                                    th:with="isCurrent = ${number == typoPage.number + 1}">
+                                    <a class="page-link"
+                                       th:href="@{'/workspace/' + ${wksName} + '/typos'(page=${number - 1},size=${typoPage.size},sort=|${sortProp},${sortDir}|)}"
+                                       th:text="${number}"
+                                       th:unless="${isCurrent || number == null }"></a>
+                                    <span class="page-link" th:if="${isCurrent && number != null}"
+                                          th:text="${number}"></span>
+                                    <span class="page-link" th:if="${number == null}">...</span>
+                                </li>
+                                <li class="page-item" th:classappend="${typoPage.last}? 'disabled'">
+                                    <a aria-label="Next" class="page-link"
+                                       th:aria-disabled="${typoPage.last}"
+                                       th:href="@{'/workspace/' + ${wksName} + '/typos'(page=${typoPage.number + 1},size=${typoPage.size},sort=|${sortProp},${sortDir}|)}"
+                                       th:tabindex="${typoPage.last}?-1">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                    <!-- Workspace typo table -->
+                    <div class="row">
+                        <div class="col">
+                            <table class="table">
+                                <!-- Workspace typo table head -->
+                                <thead th:object="${typoPage}">
+                                <tr>
+                                    <th scope="col">
+                                        <a class="btn btn-light"
+                                           th:href="@{'/workspace/' + ${wksName} + '/typos'(size=*{size},sort=|pageUrl,${sortProp == 'pageUrl' && sortDir.isAscending() ? DESC : ASC}|)}">
+                                            Page Url <span>[[${sortProp == 'pageUrl' && sortDir.isAscending() ? '&uArr;' : '&dArr;'}]]</span>
+                                        </a>
+                                    </th>
+                                    <th scope="col">
+                                        <a class="btn btn-light"
+                                           th:href="@{'/workspace/' + ${wksName} + '/typos'(size=*{size},sort=|reporterName,${sortProp == 'reporterName' && sortDir.isAscending() ? DESC : ASC}|)}">
+                                            Reporter Name <span>[[${sortProp == 'reporterName' && sortDir.isAscending() ? '&uArr;' : '&dArr;'}]]</span>
+                                        </a>
+                                    </th>
+                                    <th scope="col">
+                                        <a class="btn btn-light"
+                                           th:href="@{'/workspace/' + ${wksName} + '/typos'(size=*{size},sort=|createdDate,${sortProp == 'createdDate' && sortDir.isAscending() ? DESC : ASC}|)}">
+                                            Created Date <span>[[${sortProp == 'createdDate' && sortDir.isAscending() ? '&uArr;' : '&dArr;'}]]</span>
+                                        </a>
+                                    </th>
+                                    <th scope="col">
+                                        <a class="btn btn-light"
+                                           th:href="@{'/workspace/' + ${wksName} + '/typos'(size=*{size},sort=|modifiedDate,${sortProp == 'modifiedDate' && sortDir.isAscending() ? DESC : ASC}|)}">
+                                            Modified Date <span>[[${sortProp == 'modifiedDate' && sortDir.isAscending() ? '&uArr;' : '&dArr;'}]]</span>
+                                        </a>
+                                    </th>
+                                    <th scope="col">
+                                        <a class="btn btn-light"
+                                           th:href="@{'/workspace/' + ${wksName} + '/typos'(size=*{size},sort=|modifiedBy,${sortProp == 'modifiedBy' && sortDir.isAscending() ? DESC : ASC}|)}">
+                                            Modified By <span>[[${sortProp == 'modifiedBy' && sortDir.isAscending() ? '&uArr;' : '&dArr;'}]]</span>
+                                        </a>
+                                    </th>
+                                    <th scope="col">
+                                        <a class="btn btn-light"
+                                           th:href="@{'/workspace/' + ${wksName} + '/typos'(size=*{size},sort=|typoStatus,${sortProp == 'typoStatus' && sortDir.isAscending() ? DESC : ASC}|)}">
+                                            Typo Status <span>[[${sortProp == 'typoStatus' && sortDir.isAscending() ? '&uArr;' : '&dArr;'}]]</span>
+                                        </a>
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <th:block th:each="typoInfo : ${typoPage.content}" th:object="${typoInfo}">
+                                    <!-- Workspace typo table row -->
+                                    <tr aria-expanded="false" class="accordion collapsed" data-bs-toggle="collapse"
+                                        th:aria-controls="|collapseTypoRowId_*{id}|"
+                                        th:classappend="(*{typoStatus.toString() == 'REPORTED'} ? 'table-danger' : '') +
+                                                        (*{typoStatus.toString() == 'IN PROGRESS'} ? 'table-warning' : '') +
+                                                        (*{typoStatus.toString() == 'RESOLVED'} ? 'table-success' : '') +
+                                                        (*{typoStatus.toString() == 'CANCELED'} ? 'table-secondary' : '')"
+                                        th:data-bs-target="|#collapseTypoRowId_*{id}|">
+                                        <td th:text="*{pageUrl}"></td>
+                                        <td th:text="*{reporterName}"></td>
+                                        <td th:text="*{createdDateAgo}"></td>
+                                        <td th:text="*{modifiedDateAgo}"></td>
+                                        <td th:text="*{modifiedBy}"></td>
+                                        <td th:text="*{typoStatus}"></td>
+                                    </tr>
+                                    <!-- Workspace typo table row collapsed part -->
+                                    <tr>
+                                        <td class="p-0" colspan="7">
+                                            <div class="accordion-collapse collapse" th:id="|collapseTypoRowId_*{id}|">
+                                                <div class="p-4">
+                                                    <div class="row mb-2">
+                                                        <!-- Workspace typo table row change status buttons -->
+                                                        <div class="col-11">
+                                                            <div aria-label="Change typo status button group"
+                                                                 class="btn-group"
+                                                                 role="group">
+                                                                <form th:action="@{|/typos/*{id}/status?wksName=${wksName}&event=${event}|}"
+                                                                      th:each="event : *{typoStatus.getValidEvents()}"
+                                                                      th:method="patch">
+                                                                    <button class="btn"
+                                                                            th:classappend="(${event.toString() == 'OPEN'} ? 'btn-warning' : '') +
+                                                                                        (${event.toString() == 'REOPEN'} ? 'btn-warning' : '') +
+                                                                                        (${event.toString() == 'RESOLVE'} ? 'btn-success' : '') +
+                                                                                        (${event.toString() == 'CANCEL'} ? 'btn-secondary' : '')"
+                                                                            type="submit">[[${event}]]
+                                                                    </button>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                        <!-- Workspace typo table row delete buttons -->
+                                                        <div class="col-1">
+                                                            <form th:action="@{'/typos/' + *{id}(wksName=${wksName})}"
+                                                                  th:method="delete">
+                                                                <button class="btn btn-danger" type="submit">
+                                                                    Delete
+                                                                </button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <p th:text="|Created at *{#temporals.format(createdDate, 'dd/MM/yyyy hh:mm:ss')}|"></p>
+                                                            <p th:text="|Modified at *{#temporals.format(modifiedDate, 'dd/MM/yyyy hh:mm:ss')}|"></p>
+                                                            <hr>
+                                                            <p class="fst-italic"
+                                                               th:text="|Reported by *{reporterName}: *{reporterComment}|"></p>
+                                                            <hr>
+                                                            <p class="text-muted">
+                                                                [[*{textBeforeTypo}]]<span class="text-danger">[[*{textTypo}]]</span>[[*{textAfterTypo}]]
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </th:block>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
+    </div>
+</main>
+</body>
+</html>

@@ -11,6 +11,7 @@ typo:
     text_before_typo: 'textBeforeTypo'
     text_typo: 'textTypo'
     typo_status: REPORTED
+    workspace_id: 101
   - id: 202
     created_by: 'system'
     created_date: '2020-11-15 00:09:55.391179'
@@ -23,6 +24,7 @@ typo:
     text_before_typo: 'textBeforeTypo'
     text_typo: 'textTypo'
     typo_status: REPORTED
+    workspace_id: 101
   - id: 203
     created_by: 'system'
     created_date: '2020-11-15 00:09:55.391179'
@@ -34,7 +36,8 @@ typo:
     text_after_typo: 'textAfterTypo'
     text_before_typo: 'textBeforeTypo'
     text_typo: 'textTypo'
-    typo_status: REPORTED
+    typo_status: IN_PROGRESS
+    workspace_id: 101
   - id: 204
     created_by: 'system'
     created_date: '2020-11-15 00:09:55.391179'
@@ -46,7 +49,8 @@ typo:
     text_after_typo: 'textAfterTypo'
     text_before_typo: 'textBeforeTypo'
     text_typo: 'textTypo'
-    typo_status: REPORTED
+    typo_status: IN_PROGRESS
+    workspace_id: 101
   - id: 205
     created_by: 'system'
     created_date: '2020-11-15 00:09:55.391179'
@@ -58,7 +62,8 @@ typo:
     text_after_typo: 'textAfterTypo'
     text_before_typo: 'textBeforeTypo'
     text_typo: 'textTypo'
-    typo_status: REPORTED
+    typo_status: IN_PROGRESS
+    workspace_id: 101
   - id: 206
     created_by: 'system'
     created_date: '2020-11-15 00:09:55.391179'
@@ -70,7 +75,8 @@ typo:
     text_after_typo: 'textAfterTypo'
     text_before_typo: 'textBeforeTypo'
     text_typo: 'textTypo'
-    typo_status: REPORTED
+    typo_status: RESOLVED
+    workspace_id: 101
   - id: 207
     created_by: 'system'
     created_date: '2020-11-15 00:09:55.391179'
@@ -82,7 +88,8 @@ typo:
     text_after_typo: 'textAfterTypo'
     text_before_typo: 'textBeforeTypo'
     text_typo: 'textTypo'
-    typo_status: REPORTED
+    typo_status: RESOLVED
+    workspace_id: 101
   - id: 208
     created_by: 'system'
     created_date: '2020-11-15 00:09:55.391179'
@@ -94,7 +101,8 @@ typo:
     text_after_typo: 'textAfterTypo'
     text_before_typo: 'textBeforeTypo'
     text_typo: 'textTypo'
-    typo_status: REPORTED
+    typo_status: RESOLVED
+    workspace_id: 101
   - id: 209
     created_by: 'system'
     created_date: '2020-11-15 00:09:55.391179'
@@ -106,7 +114,8 @@ typo:
     text_after_typo: 'textAfterTypo'
     text_before_typo: 'textBeforeTypo'
     text_typo: 'textTypo'
-    typo_status: REPORTED
+    typo_status: RESOLVED
+    workspace_id: 101
   - id: 210
     created_by: 'system'
     created_date: '2020-11-15 00:09:55.391179'
@@ -118,4 +127,135 @@ typo:
     text_after_typo: 'textAfterTypo'
     text_before_typo: 'textBeforeTypo'
     text_typo: 'textTypo'
+    typo_status: CANCELED
+    workspace_id: 101
+  - id: 211
+    created_by: 'system'
+    created_date: '2020-11-15 00:09:55.391179'
+    modified_by: 'system'
+    modified_date: '2020-11-15 00:09:55.391179'
+    page_url: 'http://site.com/'
+    reporter_comment: 'reporterComment'
+    reporter_name: 'reporterName'
+    text_after_typo: 'textAfterTypo'
+    text_before_typo: 'textBeforeTypo'
+    text_typo: 'textTypo'
     typo_status: REPORTED
+    workspace_id: 102
+  - id: 212
+    created_by: 'system'
+    created_date: '2020-11-15 00:09:55.391179'
+    modified_by: 'system'
+    modified_date: '2020-11-15 00:09:55.391179'
+    page_url: 'http://site.com/'
+    reporter_comment: 'reporterComment'
+    reporter_name: 'reporterName'
+    text_after_typo: 'textAfterTypo'
+    text_before_typo: 'textBeforeTypo'
+    text_typo: 'textTypo'
+    typo_status: REPORTED
+    workspace_id: 102
+  - id: 213
+    created_by: 'system'
+    created_date: '2020-11-15 00:09:55.391179'
+    modified_by: 'system'
+    modified_date: '2020-11-15 00:09:55.391179'
+    page_url: 'http://site.com/'
+    reporter_comment: 'reporterComment'
+    reporter_name: 'reporterName'
+    text_after_typo: 'textAfterTypo'
+    text_before_typo: 'textBeforeTypo'
+    text_typo: 'textTypo'
+    typo_status: REPORTED
+    workspace_id: 102
+  - id: 214
+    created_by: 'system'
+    created_date: '2020-11-15 00:09:55.391179'
+    modified_by: 'system'
+    modified_date: '2020-11-15 00:09:55.391179'
+    page_url: 'http://site.com/'
+    reporter_comment: 'reporterComment'
+    reporter_name: 'reporterName'
+    text_after_typo: 'textAfterTypo'
+    text_before_typo: 'textBeforeTypo'
+    text_typo: 'textTypo'
+    typo_status: REPORTED
+    workspace_id: 102
+  - id: 215
+    created_by: 'system'
+    created_date: '2020-11-15 00:09:55.391179'
+    modified_by: 'system'
+    modified_date: '2020-11-15 00:09:55.391179'
+    page_url: 'http://site.com/'
+    reporter_comment: 'reporterComment'
+    reporter_name: 'reporterName'
+    text_after_typo: 'textAfterTypo'
+    text_before_typo: 'textBeforeTypo'
+    text_typo: 'textTypo'
+    typo_status: IN_PROGRESS
+    workspace_id: 102
+  - id: 216
+    created_by: 'system'
+    created_date: '2020-11-15 00:09:55.391179'
+    modified_by: 'system'
+    modified_date: '2020-11-15 00:09:55.391179'
+    page_url: 'http://site.com/'
+    reporter_comment: 'reporterComment'
+    reporter_name: 'reporterName'
+    text_after_typo: 'textAfterTypo'
+    text_before_typo: 'textBeforeTypo'
+    text_typo: 'textTypo'
+    typo_status: RESOLVED
+    workspace_id: 102
+  - id: 217
+    created_by: 'system'
+    created_date: '2020-11-15 00:09:55.391179'
+    modified_by: 'system'
+    modified_date: '2020-11-15 00:09:55.391179'
+    page_url: 'http://site.com/'
+    reporter_comment: 'reporterComment'
+    reporter_name: 'reporterName'
+    text_after_typo: 'textAfterTypo'
+    text_before_typo: 'textBeforeTypo'
+    text_typo: 'textTypo'
+    typo_status: RESOLVED
+    workspace_id: 102
+  - id: 218
+    created_by: 'system'
+    created_date: '2020-11-15 00:09:55.391179'
+    modified_by: 'system'
+    modified_date: '2020-11-15 00:09:55.391179'
+    page_url: 'http://site.com/'
+    reporter_comment: 'reporterComment'
+    reporter_name: 'reporterName'
+    text_after_typo: 'textAfterTypo'
+    text_before_typo: 'textBeforeTypo'
+    text_typo: 'textTypo'
+    typo_status: CANCELED
+    workspace_id: 102
+  - id: 219
+    created_by: 'system'
+    created_date: '2020-11-15 00:09:55.391179'
+    modified_by: 'system'
+    modified_date: '2020-11-15 00:09:55.391179'
+    page_url: 'http://site.com/'
+    reporter_comment: 'reporterComment'
+    reporter_name: 'reporterName'
+    text_after_typo: 'textAfterTypo'
+    text_before_typo: 'textBeforeTypo'
+    text_typo: 'textTypo'
+    typo_status: CANCELED
+    workspace_id: 102
+  - id: 220
+    created_by: 'system'
+    created_date: '2020-11-15 00:09:55.391179'
+    modified_by: 'system'
+    modified_date: '2020-11-15 00:09:55.391179'
+    page_url: 'http://site.com/'
+    reporter_comment: 'reporterComment'
+    reporter_name: 'reporterName'
+    text_after_typo: 'textAfterTypo'
+    text_before_typo: 'textBeforeTypo'
+    text_typo: 'textTypo'
+    typo_status: CANCELED
+    workspace_id: 102
