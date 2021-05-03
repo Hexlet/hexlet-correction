@@ -8,7 +8,8 @@
         <div class="col">
             <form method="post" th:action="@{/create/workspace}" th:object="${createWorkspace}">
                 <div class="form-floating mb-3">
-                    <input class="form-control" id="inputWksName" placeholder="p" th:classappend="${!#fields.hasErrors('name') && formModified ? 'is-valid' : ''}"
+                    <input class="form-control" id="inputWksName" placeholder="p"
+                           th:classappend="${!#fields.hasErrors('name') && formModified ? 'is-valid' : ''}"
                            th:errorclass="is-invalid" th:field="*{name}"
                            type="text">
                     <label for="inputWksName">Workspace Name</label>

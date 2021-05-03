@@ -6,7 +6,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.core.env.Environment;
 
 import java.net.*;
-import java.util.Optional;
 
 import static java.util.Optional.ofNullable;
 

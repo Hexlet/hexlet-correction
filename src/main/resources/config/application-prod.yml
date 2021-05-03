@@ -30,9 +30,13 @@ spring:
       ddl-auto: none
   thymeleaf:
     cache: true
+  liquibase:
+    contexts: prod
 server:
   port: 8080
   compression:
     enabled: true
     mime-types: text/html,text/xml,text/plain,text/css, application/javascript, application/json, application/problem+json
     min-response-size: 1024
+  error:
+    include-stacktrace: never

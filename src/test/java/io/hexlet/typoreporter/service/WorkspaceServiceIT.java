@@ -3,7 +3,7 @@ package io.hexlet.typoreporter.service;
 import com.github.database.rider.core.api.configuration.DBUnit;
 import com.github.database.rider.core.api.dataset.DataSet;
 import com.github.database.rider.spring.api.DBRider;
-import io.hexlet.typoreporter.repository.*;
+import io.hexlet.typoreporter.repository.WorkspaceRepository;
 import io.hexlet.typoreporter.test.DBUnitEnumPostgres;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,7 +13,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.*;
 
 import static com.github.database.rider.core.api.configuration.Orthography.LOWERCASE;
-import static io.hexlet.typoreporter.TypoReporterApplicationIT.POSTGRES_IMAGE;
+import static io.hexlet.typoreporter.test.Constraints.POSTGRES_IMAGE;
 
 @SpringBootTest
 @Testcontainers

@@ -2,21 +2,24 @@ workspace:
   - id: 101
     name: wks-name
     description: desc
-    created_by: 'system'
-    created_date: '2020-11-15 00:09:55.391179'
-    modified_by: 'system'
-    modified_date: '2020-11-15 00:09:55.391179'
+    api_access_token: abb4f3ab-1994-4264-bc6f-7cd1aa13dc0a
+    created_by: system
+    created_date: 2020-11-15 00:09:55.391179
+    modified_by: system
+    modified_date: 2020-11-15 00:09:55.391179
   - id: 102
     name: wks-test
     description: description
-    created_by: 'system'
-    created_date: '2020-11-15 00:09:55.391179'
-    modified_by: 'system'
-    modified_date: '2020-11-15 00:09:55.391179'
+    api_access_token: f884c5a6-d698-4f90-aa21-f182540039fc
+    created_by: system
+    created_date: 2020-11-15 00:09:55.391179
+    modified_by: system
+    modified_date: 2020-11-15 00:09:55.391179
   - id: 103
     name: wks-empty
     description: Empty workspace
-    created_by: 'system'
-    created_date: '2020-11-15 00:09:55.391179'
-    modified_by: 'system'
-    modified_date: '2020-11-15 00:09:55.391179'
+    api_access_token: 669016b9-6445-4bdc-b734-14fee2454b04
+    created_by: system
+    created_date: 2020-11-15 00:09:55.391179
+    modified_by: system
+    modified_date: 2020-11-15 00:09:55.391179

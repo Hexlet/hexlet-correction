@@ -8,6 +8,7 @@ import lombok.*;
 import lombok.experimental.Accessors;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.*;
 
 @Getter
@@ -31,6 +32,9 @@ public class Workspace extends AbstractAuditingEntity implements Identifiable<Lo
     @WorkspaceDescription
     private String description;
 
+    @NotNull
+    private UUID apiAccessToken;
+
     @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
     private Set<Typo> typos = new HashSet<>();
@@ -48,12 +52,12 @@ public class Workspace extends AbstractAuditingEntity implements Identifiable<Lo
     }
 
     @Override
-    public boolean equals(Object obj) {
-        return this == obj || id != null && obj instanceof Workspace other && id.equals(other.id);
+    public int hashCode() {
+        return 31;
     }
 
     @Override
-    public int hashCode() {
-        return 31;
+    public boolean equals(Object obj) {
+        return this == obj || id != null && obj instanceof Workspace other && id.equals(other.id);
     }
 }

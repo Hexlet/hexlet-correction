@@ -2,6 +2,11 @@
 <databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
-                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
-    <includeAll path="changesets/2021/04" relativeToChangelogFile="true" />
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+    <include file="changesets/2021/04/20211904104233167-create-workspace-table.xml"
+             relativeToChangelogFile="true" />
+    <include file="changesets/2021/04/20211904104243755-create-typo-table.xml"
+             relativeToChangelogFile="true" />
+    <include file="changesets/2021/04/20212304094515440-add-column-api-access-token-to-typo.xml"
+             relativeToChangelogFile="true" />
 </databaseChangeLog>

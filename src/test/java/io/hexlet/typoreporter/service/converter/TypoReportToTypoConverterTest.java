@@ -13,7 +13,7 @@ class TypoReportToTypoConverterTest {
     private final Converter<TypoReport, Typo> converter = new TypoReportToTypoConverter();
 
     @ParameterizedTest
-    @MethodSource("io.hexlet.typoreporter.test.utils.EntitiesFactory#getTypoReport")
+    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getTypoReport")
     void requestReportToTypo(final TypoReport report) {
         final var typo = converter.convert(report);
         assertThat(typo).isEqualsToTypoReport(report);

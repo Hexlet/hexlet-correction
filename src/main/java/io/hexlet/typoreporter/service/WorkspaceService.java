@@ -47,6 +47,7 @@ public class WorkspaceService {
             throw new WorkspaceAlreadyExistException(createWks.name());
         }
         final var wksToCreate = requireNonNull(conversionService.convert(createWks, Workspace.class));
+        wksToCreate.setApiAccessToken(UUID.randomUUID());
         final var createdWks = repository.save(wksToCreate);
         return conversionService.convert(createdWks, WorkspaceInfo.class);
     }
@@ -69,7 +70,20 @@ public class WorkspaceService {
     }
 
     @Transactional(readOnly = true)
-    Optional<Workspace> getWorkspaceByName(final String name) {
+    public Optional<UUID> getWorkspaceApiAccessTokenByName(String wksName) {
+        return repository.getWorkspaceByName(wksName)
+            .map(Workspace::getApiAccessToken);
+    }
+
+    @Transactional
+    public Optional<UUID> regenerateWorkspaceApiAccessTokenByName(String wksName) {
+        final var newToken = UUID.randomUUID();
+        final var numberRowAffected = repository.updateApiAccessTokenByWorkspaceName(wksName, newToken);
+        return numberRowAffected == 0 ? Optional.empty() : Optional.of(newToken);
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<Workspace> getWorkspaceByName(final String name) {
         return repository.getWorkspaceByName(name);
     }
 }

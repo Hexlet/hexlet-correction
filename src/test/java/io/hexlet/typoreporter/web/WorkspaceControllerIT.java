@@ -1,25 +1,5 @@
 package io.hexlet.typoreporter.web;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.database.rider.core.api.configuration.DBUnit;
-import com.github.database.rider.core.api.dataset.DataSet;
-import com.github.database.rider.spring.api.DBRider;
-import io.hexlet.typoreporter.repository.TypoRepository;
-import io.hexlet.typoreporter.test.DBUnitEnumPostgres;
-import org.junit.jupiter.api.BeforeEach;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.*;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.transaction.annotation.Transactional;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.*;
-
-import static com.github.database.rider.core.api.configuration.Orthography.LOWERCASE;
-import static io.hexlet.typoreporter.TypoReporterApplicationIT.POSTGRES_IMAGE;
-
 //@Testcontainers
 //@SpringBootTest
 //@AutoConfigureMockMvc
@@ -70,7 +50,7 @@ class WorkspaceControllerIT {
 //    }
 //
 //    @ParameterizedTest
-//    @MethodSource("io.hexlet.typoreporter.test.utils.EntitiesFactory#getTypoReport")
+//    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getTypoReport")
 //    void addTypoReport(final TypoReport typoReport) throws Exception {
 //        final var content = mockMvc
 //            .perform(post(API_TYPOS)
@@ -186,7 +166,7 @@ class WorkspaceControllerIT {
 //    }
 //
 //    @ParameterizedTest
-//    @MethodSource("io.hexlet.typoreporter.test.utils.EntitiesFactory#getTypoIdsExist")
+//    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getTypoIdsExist")
 //    void getTypoById(final Long id) throws Exception {
 //        mockMvc.perform(get(API_TYPOS + ID_PATH, id))
 //            .andDo(print())
@@ -196,7 +176,7 @@ class WorkspaceControllerIT {
 //    }
 //
 //    @ParameterizedTest
-//    @MethodSource("io.hexlet.typoreporter.test.utils.EntitiesFactory#getTypoIdsNotExist")
+//    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getTypoIdsNotExist")
 //    void getTypoByIdNoFound(final Long id) throws Exception {
 //        Assertions.assertThat(repository.existsById(id)).isFalse();
 //        mockMvc.perform(get(API_TYPOS + ID_PATH, id))
@@ -206,7 +186,7 @@ class WorkspaceControllerIT {
 //    }
 //
 //    @ParameterizedTest
-//    @MethodSource("io.hexlet.typoreporter.test.utils.EntitiesFactory#getTypoIdsExist")
+//    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getTypoIdsExist")
 //    void patchTypoReporterComment(final Long id) throws Exception {
 //        final var typo = repository.findById(id).orElseThrow();
 //        final var newComment = typo.getReporterComment() + " <- new comment";
@@ -222,7 +202,7 @@ class WorkspaceControllerIT {
 //    }
 //
 //    @ParameterizedTest
-//    @MethodSource("io.hexlet.typoreporter.test.utils.EntitiesFactory#getTypoIdsExist")
+//    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getTypoIdsExist")
 //    void patchTypoWithEmptyBody(final Long id) throws Exception {
 //        final var typo = repository.findById(id).orElseThrow();
 //        final var body = "{}";
@@ -237,7 +217,7 @@ class WorkspaceControllerIT {
 //    }
 //
 //    @ParameterizedTest
-//    @MethodSource("io.hexlet.typoreporter.test.utils.EntitiesFactory#getTypoIdsExist")
+//    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getTypoIdsExist")
 //    void patchTypoReporterCommentNull(final Long id) throws Exception {
 //        final var typo = repository.findById(id).orElseThrow();
 //        final var body = "{ \"reporterComment\" : null }";
@@ -253,7 +233,7 @@ class WorkspaceControllerIT {
 //
 //
 //    @ParameterizedTest
-//    @MethodSource("io.hexlet.typoreporter.test.utils.EntitiesFactory#getTypoIdsExist")
+//    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getTypoIdsExist")
 //    void patchTypoReporterCommentEmptyNotValid(final Long id) throws Exception {
 //        final var body = "{ \"reporterComment\" : \"\" }";
 //        mockMvc.perform(patch(API_TYPOS + ID_PATH, id)
@@ -271,7 +251,7 @@ class WorkspaceControllerIT {
 //    }
 //
 //    @ParameterizedTest
-//    @MethodSource("io.hexlet.typoreporter.test.utils.EntitiesFactory#getTypoIdsExist")
+//    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getTypoIdsExist")
 //    void patchTypoReporterCommentBlankNotValid(final Long id) throws Exception {
 //        final var body = "{ \"reporterComment\" : \"   \" }";
 //        mockMvc.perform(patch(API_TYPOS + ID_PATH, id)
@@ -290,7 +270,7 @@ class WorkspaceControllerIT {
 //
 //
 //    @ParameterizedTest
-//    @MethodSource("io.hexlet.typoreporter.test.utils.EntitiesFactory#getTypoIdsExist")
+//    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getTypoIdsExist")
 //    void patchTypoEventResolveToResolved(final Long id) throws Exception {
 //        repository.findById(id)
 //            .map(t -> t.setTypoStatus(t.getTypoStatus().next(OPEN)))
@@ -309,7 +289,7 @@ class WorkspaceControllerIT {
 //
 //
 //    @ParameterizedTest
-//    @MethodSource("io.hexlet.typoreporter.test.utils.EntitiesFactory#getTypoIdsExist")
+//    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getTypoIdsExist")
 //    void patchTypoEventOpenToInProgress(final Long id) throws Exception {
 //        final var patchTypo = new UpdateTypoEvent(id, OPEN);
 //        mockMvc.perform(patch(API_TYPOS + Typo.ID_PATH_TYPO_STATUS, id)
@@ -324,7 +304,7 @@ class WorkspaceControllerIT {
 //
 //
 //    @ParameterizedTest
-//    @MethodSource("io.hexlet.typoreporter.test.utils.EntitiesFactory#getTypoIdsExist")
+//    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getTypoIdsExist")
 //    void patchTypoEventCancelToCanceled(final Long id) throws Exception {
 //        final var patchTypo = new UpdateTypoEvent(id, CANCEL);
 //        mockMvc.perform(patch(API_TYPOS + Typo.ID_PATH_TYPO_STATUS, id)
@@ -339,7 +319,7 @@ class WorkspaceControllerIT {
 //
 //
 //    @ParameterizedTest
-//    @MethodSource("io.hexlet.typoreporter.test.utils.EntitiesFactory#getTypoIdsExist")
+//    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getTypoIdsExist")
 //    void patchTypoEventResolveNotValid(final Long id) throws Exception {
 //        final var patchTypo = new UpdateTypoEvent(id, RESOLVE);
 //        mockMvc.perform(patch(API_TYPOS + Typo.ID_PATH_TYPO_STATUS, id)
@@ -351,7 +331,7 @@ class WorkspaceControllerIT {
 //    }
 //
 //    @ParameterizedTest
-//    @MethodSource("io.hexlet.typoreporter.test.utils.EntitiesFactory#getTypoIdsExist")
+//    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getTypoIdsExist")
 //    void deleteTypoById(final Long id) throws Exception {
 //        Assertions.assertThat(repository.existsById(id)).isTrue();
 //        mockMvc.perform(delete(API_TYPOS + ID_PATH, id))
@@ -361,7 +341,7 @@ class WorkspaceControllerIT {
 //    }
 //
 //    @ParameterizedTest
-//    @MethodSource("io.hexlet.typoreporter.test.utils.EntitiesFactory#getTypoIdsNotExist")
+//    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getTypoIdsNotExist")
 //    void deleteTypoByIdNotFound(final Long id) throws Exception {
 //        Assertions.assertThat(repository.existsById(id)).isFalse();
 //        mockMvc.perform(delete(API_TYPOS + ID_PATH, id))

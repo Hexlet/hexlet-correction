@@ -23,9 +23,9 @@ public class ReportedTypoAssert extends ObjectAssert<ReportedTypo> {
     public ReportedTypoAssert isEqualsToTypoReport(TypoReport expected) {
         isNotNull();
         assertThat(actual)
-                .usingRecursiveComparison()
-                .ignoringFields("id", "createdDate", "createdBy")
-                .isEqualTo(expected);
+            .usingRecursiveComparison()
+            .ignoringFields("id", "createdDate", "createdBy")
+            .isEqualTo(expected);
         return this;
     }
 }

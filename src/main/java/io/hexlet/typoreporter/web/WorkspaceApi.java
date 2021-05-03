@@ -1,6 +1,6 @@
 package io.hexlet.typoreporter.web;
 
-import io.hexlet.typoreporter.service.*;
+import io.hexlet.typoreporter.service.TypoService;
 import io.hexlet.typoreporter.service.dto.typo.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,9 +21,9 @@ public class WorkspaceApi {
     private final TypoService service;
 
     @PostMapping(WKS_NAME_PATH + TYPOS)
-    ResponseEntity<ReportedTypo> addTypoReport(@PathVariable String wksName,
-                                               @Valid @RequestBody TypoReport typoReport,
-                                               UriComponentsBuilder builder) {
+    public ResponseEntity<ReportedTypo> addTypoReport(@PathVariable String wksName,
+                                                      @Valid @RequestBody TypoReport typoReport,
+                                                      UriComponentsBuilder builder) {
         final var uri = builder.path(WORKSPACE).pathSegment(wksName).path(TYPOS).build().toUri();
         return created(uri).body(service.addTypoReport(typoReport, wksName));
     }

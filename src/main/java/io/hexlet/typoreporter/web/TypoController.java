@@ -26,9 +26,9 @@ public class TypoController {
     private final WorkspaceService workspaceService;
 
     @PatchMapping(ID_PATH + TYPO_STATUS)
-    String updateTypoStatus(@PathVariable Long id,
-                            @RequestParam Optional<String> wksName,
-                            @RequestParam Optional<TypoEvent> event) {
+    public String updateTypoStatus(@PathVariable Long id,
+                                   @RequestParam Optional<String> wksName,
+                                   @RequestParam Optional<TypoEvent> event) {
         if (wksName.isEmpty() || !workspaceService.existsWorkspaceByName(wksName.get())) {
             //TODO send to error page
             final var e = new WorkspaceNotFoundException(wksName.orElse(""));
@@ -50,8 +50,8 @@ public class TypoController {
     }
 
     @DeleteMapping(ID_PATH)
-    String deleteTypoById(@PathVariable Long id,
-                          @RequestParam Optional<String> wksName) {
+    public String deleteTypoById(@PathVariable Long id,
+                                 @RequestParam Optional<String> wksName) {
         if (wksName.isEmpty() || !workspaceService.existsWorkspaceByName(wksName.get())) {
             //TODO send to error page
             final var e = new WorkspaceNotFoundException(wksName.orElse(""));

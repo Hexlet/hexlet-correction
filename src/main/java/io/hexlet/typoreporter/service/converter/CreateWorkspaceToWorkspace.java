@@ -12,7 +12,7 @@ public class CreateWorkspaceToWorkspace implements Converter<CreateWorkspace, Wo
      * Convert the source object of type {@code CreateWorkspace} to target type {@code Workspace}.
      *
      * @param source the source object to convert,
-     *                        which must be an instance of {@code CreateWorkspace} (never {@code null})
+     *               which must be an instance of {@code CreateWorkspace} (never {@code null})
      * @return the converted object, which must be an instance of {@code Workspace} (potentially {@code null})
      * @throws IllegalArgumentException if the source cannot be converted to the desired target type
      */
