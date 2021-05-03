@@ -153,14 +153,15 @@
                                                             <div aria-label="Change typo status button group"
                                                                  class="btn-group"
                                                                  role="group">
-                                                                <form th:action="@{|/typos/*{id}/status?wksName=${wksName}&event=${event}|}"
-                                                                      th:each="event : *{typoStatus.getValidEvents()}"
-                                                                      th:method="patch">
+                                                                <form
+                                                                    th:action="@{|/typos/*{id}/status?wksName=${wksName}&event=${event}|}"
+                                                                    th:each="event : *{typoStatus.getValidEvents()}"
+                                                                    th:method="patch">
                                                                     <button class="btn"
                                                                             th:classappend="(${event.toString() == 'OPEN'} ? 'btn-warning' : '') +
-                                                                                        (${event.toString() == 'REOPEN'} ? 'btn-warning' : '') +
-                                                                                        (${event.toString() == 'RESOLVE'} ? 'btn-success' : '') +
-                                                                                        (${event.toString() == 'CANCEL'} ? 'btn-secondary' : '')"
+                                                                                            (${event.toString() == 'REOPEN'} ? 'btn-warning' : '') +
+                                                                                            (${event.toString() == 'RESOLVE'} ? 'btn-success' : '') +
+                                                                                            (${event.toString() == 'CANCEL'} ? 'btn-secondary' : '')"
                                                                             type="submit">[[${event}]]
                                                                     </button>
                                                                 </form>

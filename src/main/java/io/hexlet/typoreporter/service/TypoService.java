@@ -1,7 +1,7 @@
 package io.hexlet.typoreporter.service;
 
 import io.hexlet.typoreporter.domain.typo.*;
-import io.hexlet.typoreporter.repository.*;
+import io.hexlet.typoreporter.repository.TypoRepository;
 import io.hexlet.typoreporter.service.dto.typo.*;
 import io.hexlet.typoreporter.web.exception.WorkspaceNotFoundException;
 import lombok.*;
@@ -28,7 +28,7 @@ public class TypoService {
 
     private final ConversionService conversionService;
 
-    @Setter(onMethod_={@Autowired})
+    @Setter(onMethod_ = {@Autowired})
     private WorkspaceService workspaceService;
 
     @Transactional

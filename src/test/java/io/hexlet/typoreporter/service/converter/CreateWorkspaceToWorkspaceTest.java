@@ -14,11 +14,11 @@ class CreateWorkspaceToWorkspaceTest {
     private final Converter<CreateWorkspace, Workspace> converter = new CreateWorkspaceToWorkspace();
 
     @ParameterizedTest
-    @MethodSource("io.hexlet.typoreporter.test.utils.EntitiesFactory#getCreateWorkspaces")
+    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getCreateWorkspaces")
     void requestReportToTypo(final CreateWorkspace createWorkspace) {
         final var workspace = converter.convert(createWorkspace);
         assertThat(workspace).usingRecursiveComparison()
-            .ignoringFields("id", "typos", "createdDate", "createdBy", "modifiedDate", "modifiedBy")
+            .ignoringFields("id", "apiAccessToken", "typos", "createdDate", "createdBy", "modifiedDate", "modifiedBy")
             .isEqualTo(createWorkspace);
     }
 }

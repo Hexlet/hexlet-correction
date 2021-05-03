@@ -42,7 +42,7 @@ public class WorkspaceController {
     private final WorkspaceService workspaceService;
 
     @GetMapping
-    private String getWorkspaceInfoPage(Model model, @PathVariable String wksName) {
+    public String getWorkspaceInfoPage(Model model, @PathVariable String wksName) {
         var wksOptional = workspaceService.getWorkspaceInfoByName(wksName);
         if (wksOptional.isEmpty()) {
             //TODO send to error page
@@ -57,10 +57,30 @@ public class WorkspaceController {
         return WKS_INFO_TEMPLATE;
     }
 
+    @GetMapping(SETTINGS)
+    public String getWorkspaceSettingsPage(Model model, @PathVariable String wksName) {
+        if (!workspaceService.existsWorkspaceByName(wksName)) {
+            //TODO send to error page
+            log.error("Workspace with name {} not found", wksName);
+            return REDIRECT_ROOT;
+        }
+        model.addAttribute("wksName", wksName);
+        final var wksToken = workspaceService.getWorkspaceApiAccessTokenByName(wksName)
+            .map(UUID::toString);
+        if (wksToken.isEmpty()) {
+            log.error("Workspace with name {} not found or token not generated", wksName);
+        }
+        model.addAttribute("wksToken", wksToken.orElse(""));
+
+        getStatisticDataToModel(model, wksName);
+        getLastTypoDataToModel(model, wksName);
+        return WKS_SETTINGS_TEMPLATE;
+    }
+
     @GetMapping(TYPOS)
-    private String getWorkspaceTyposPage(Model model,
-                                         @PathVariable String wksName,
-                                         @SortDefault(DEFAULT_SORT_FIELD) Pageable pageable) {
+    public String getWorkspaceTyposPage(Model model,
+                                        @PathVariable String wksName,
+                                        @SortDefault(DEFAULT_SORT_FIELD) Pageable pageable) {
         var wksOptional = workspaceService.getWorkspaceInfoByName(wksName);
         if (wksOptional.isEmpty()) {
             //TODO send error page
@@ -108,7 +128,7 @@ public class WorkspaceController {
     }
 
     @GetMapping(UPDATE)
-    private String getWorkspaceUpdatePage(Model model, @PathVariable String wksName) {
+    public String getWorkspaceUpdatePage(Model model, @PathVariable String wksName) {
         var wksOptional = workspaceService.getWorkspaceInfoByName(wksName);
         if (wksOptional.isEmpty()) {
             //TODO send to error page
@@ -127,10 +147,10 @@ public class WorkspaceController {
     }
 
     @PutMapping(UPDATE)
-    private String putWorkspaceUpdate(Model model,
-                                      @PathVariable String wksName,
-                                      @Valid @ModelAttribute CreateWorkspace wksUpdate,
-                                      BindingResult bindingResult) {
+    public String putWorkspaceUpdate(Model model,
+                                     @PathVariable String wksName,
+                                     @Valid @ModelAttribute CreateWorkspace wksUpdate,
+                                     BindingResult bindingResult) {
         model.addAttribute("wksName", wksName);
         model.addAttribute("formModified", true);
         getStatisticDataToModel(model, wksName);
@@ -156,8 +176,19 @@ public class WorkspaceController {
         return REDIRECT_WKS_ROOT + wksUpdate.name();
     }
 
+    @PatchMapping("/token/regenerate")
+    public String patchWorkspaceToken(@PathVariable String wksName) {
+        if (!workspaceService.existsWorkspaceByName(wksName)) {
+            //TODO send to error page
+            log.error("Workspace with name {} not found", wksName);
+            return REDIRECT_ROOT;
+        }
+        workspaceService.regenerateWorkspaceApiAccessTokenByName(wksName);
+        return REDIRECT_WKS_ROOT + wksName + SETTINGS;
+    }
+
     @DeleteMapping
-    private String deleteWorkspaceByName(@PathVariable String wksName) {
+    public String deleteWorkspaceByName(@PathVariable String wksName) {
         if (workspaceService.deleteWorkspaceByName(wksName) == 0) {
             //TODO send to error page
             final var e = new WorkspaceNotFoundException(wksName);

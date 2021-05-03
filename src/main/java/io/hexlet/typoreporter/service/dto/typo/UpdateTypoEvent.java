@@ -1,6 +1,6 @@
 package io.hexlet.typoreporter.service.dto.typo;
 
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import io.hexlet.typoreporter.domain.typo.TypoEvent;
 
 import javax.validation.constraints.NotNull;

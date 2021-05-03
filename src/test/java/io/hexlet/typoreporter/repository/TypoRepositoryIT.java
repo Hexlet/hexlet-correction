@@ -20,7 +20,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.*;
 
 import static com.github.database.rider.core.api.configuration.Orthography.LOWERCASE;
-import static io.hexlet.typoreporter.TypoReporterApplicationIT.POSTGRES_IMAGE;
+import static io.hexlet.typoreporter.test.Constraints.POSTGRES_IMAGE;
 import static io.hexlet.typoreporter.web.Routers.DEFAULT_SORT_FIELD;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -54,7 +54,7 @@ class TypoRepositoryIT {
     }
 
     @ParameterizedTest
-    @MethodSource("io.hexlet.typoreporter.test.utils.EntitiesFactory#getTypos")
+    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getTypos")
     void notSaveTypoEntityWithInvalidWorkspaceId(final Typo typo) {
         final var newTypo = typo.setId(null);
         newTypo.getWorkspace().setId(999_999_999L);
@@ -62,7 +62,7 @@ class TypoRepositoryIT {
     }
 
     @ParameterizedTest
-    @MethodSource("io.hexlet.typoreporter.test.utils.EntitiesFactory#getTypos")
+    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getTypos")
     void notSaveTypoEntityWithNullWorkspaceId(final Typo typo) {
         final var newTypo = typo.setId(null);
         newTypo.getWorkspace().setId(null);
@@ -70,7 +70,7 @@ class TypoRepositoryIT {
     }
 
     @ParameterizedTest
-    @MethodSource("io.hexlet.typoreporter.test.utils.EntitiesFactory#getWorkspaceIdsExist")
+    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspaceIdsExist")
     void findPageTypoByWorkspaceName(final Long wksId) {
         final var wks = workspaceRepository.findById(wksId).orElseThrow();
         final var pageReq = PageRequest.of(0, 10, Sort.by(DEFAULT_SORT_FIELD));
@@ -88,7 +88,7 @@ class TypoRepositoryIT {
     }
 
     @ParameterizedTest
-    @MethodSource("io.hexlet.typoreporter.test.utils.EntitiesFactory#getTypoIdsExist")
+    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getTypoIdsExist")
     void deleteTypoById(final Long id) {
         assertThat(typoRepository.existsById(id)).isTrue();
         assertThat(typoRepository.deleteTypoById(id)).isNotZero();
@@ -96,7 +96,7 @@ class TypoRepositoryIT {
     }
 
     @ParameterizedTest
-    @MethodSource("io.hexlet.typoreporter.test.utils.EntitiesFactory#getTypoIdsNotExist")
+    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getTypoIdsNotExist")
     void deleteTypoByIdNotFound(final Long id) {
         assertThat(typoRepository.existsById(id)).isFalse();
         assertThat(typoRepository.deleteTypoById(id)).isZero();

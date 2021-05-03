@@ -21,10 +21,10 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.*;
 
 import static com.github.database.rider.core.api.configuration.Orthography.LOWERCASE;
-import static io.hexlet.typoreporter.TypoReporterApplicationIT.POSTGRES_IMAGE;
 import static io.hexlet.typoreporter.domain.typo.TypoEvent.*;
 import static io.hexlet.typoreporter.domain.typo.TypoStatus.*;
-import static io.hexlet.typoreporter.test.utils.EntitiesFactory.WORKSPACE_101_NAME;
+import static io.hexlet.typoreporter.test.Constraints.POSTGRES_IMAGE;
+import static io.hexlet.typoreporter.test.factory.EntitiesFactory.WORKSPACE_101_NAME;
 import static io.hexlet.typoreporter.web.Routers.DEFAULT_SORT_FIELD;
 import static java.util.function.Predicate.not;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -35,7 +35,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DBRider
 @DBUnit(caseInsensitiveStrategy = LOWERCASE, dataTypeFactoryClass = DBUnitEnumPostgres.class, cacheConnection = false)
 @DataSet(value = {"workspaces.yml", "typos.yml"})
-public class TypoServiceIT {
+class TypoServiceIT {
 
     @Container
     public static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>(POSTGRES_IMAGE)
@@ -56,7 +56,7 @@ public class TypoServiceIT {
     }
 
     @ParameterizedTest
-    @MethodSource("io.hexlet.typoreporter.test.utils.EntitiesFactory#getTypoReport")
+    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getTypoReport")
     void addTypoReport(final TypoReport report) {
         final var reportedTypo = service.addTypoReport(report, WORKSPACE_101_NAME);
 
@@ -85,7 +85,7 @@ public class TypoServiceIT {
 
 
     @ParameterizedTest
-    @MethodSource("io.hexlet.typoreporter.test.utils.EntitiesFactory#getTypoIdsExist")
+    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getTypoIdsExist")
     void patchTypoWithEventNullValues(final Long id) {
         final var typoStatus = repository.findById(id).orElseThrow().getTypoStatus();
         final var newTypoStatus = service.updateTypoStatus(id, null).orElseThrow().typoStatus();
@@ -93,7 +93,7 @@ public class TypoServiceIT {
     }
 
     @ParameterizedTest
-    @MethodSource("io.hexlet.typoreporter.test.utils.EntitiesFactory#getTypoIdsExist")
+    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getTypoIdsExist")
     void patchTypoEventResolveToResolved(final Long id) {
         final var typoNotInProgress = repository.findById(id)
             .map(Typo::getTypoStatus)
@@ -108,7 +108,7 @@ public class TypoServiceIT {
     }
 
     @ParameterizedTest
-    @MethodSource("io.hexlet.typoreporter.test.utils.EntitiesFactory#getTypoIdsExist")
+    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getTypoIdsExist")
     void patchTypoEventOpenToReported(final Long id) {
         final var typoNotReported = repository.findById(id)
             .map(Typo::getTypoStatus)
@@ -124,7 +124,7 @@ public class TypoServiceIT {
     }
 
     @ParameterizedTest
-    @MethodSource("io.hexlet.typoreporter.test.utils.EntitiesFactory#getTypoIdsExist")
+    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getTypoIdsExist")
     void patchTypoEventReopenToCanceled(final Long id) {
         final var typoNotCanceled = repository.findById(id)
             .map(Typo::getTypoStatus)
@@ -141,7 +141,7 @@ public class TypoServiceIT {
     }
 
     @ParameterizedTest
-    @MethodSource("io.hexlet.typoreporter.test.utils.EntitiesFactory#getTypoIdsExist")
+    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getTypoIdsExist")
     void deleteTypoById(final Long id) {
         assertThat(repository.existsById(id)).isTrue();
         assertThat(service.deleteTypoById(id)).isNotZero();
@@ -149,7 +149,7 @@ public class TypoServiceIT {
     }
 
     @ParameterizedTest
-    @MethodSource("io.hexlet.typoreporter.test.utils.EntitiesFactory#getTypoIdsNotExist")
+    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getTypoIdsNotExist")
     void deleteTypoByIdNotFound(final Long id) {
         assertThat(repository.existsById(id)).isFalse();
         assertThat(service.deleteTypoById(id)).isZero();

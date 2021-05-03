@@ -5,18 +5,18 @@ import io.hexlet.typoreporter.domain.typo.constraint.*;
 
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public record TypoReport(
-        @TypoPageUrl
-        String pageUrl,
-        @ReporterName
-        String reporterName,
-        @ReporterComment
-        String reporterComment,
-        @TextBeforeTypo
-        String textBeforeTypo,
-        @TextTypo
-        String textTypo,
-        @TextAfterTypo
-        String textAfterTypo
+    @TypoPageUrl
+    String pageUrl,
+    @ReporterName
+    String reporterName,
+    @ReporterComment
+    String reporterComment,
+    @TextBeforeTypo
+    String textBeforeTypo,
+    @TextTypo
+    String textTypo,
+    @TextAfterTypo
+    String textAfterTypo
 ) {
 
 }

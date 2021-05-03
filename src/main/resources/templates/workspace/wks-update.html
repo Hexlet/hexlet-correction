@@ -8,8 +8,8 @@
         <div class="col-2" th:insert="fragments/panels :: workspaceSideBar (${wksName}, 'info')"></div>
         <div class="col">
             <div class="row my-3"
-                              th:if="${sumTypoInWks} > 0"
-                              th:insert="fragments/workspace :: wksProgressBar (${sumTypoInWks}, ${countTypoByStatus})"></div>
+                 th:if="${sumTypoInWks} > 0"
+                 th:insert="fragments/workspace :: wksProgressBar (${sumTypoInWks}, ${countTypoByStatus})"></div>
             <div class="row">
                 <p th:text="|Total number of typos in workspace ${wksName} : ${sumTypoInWks}|"></p>
             </div>

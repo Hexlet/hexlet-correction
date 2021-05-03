@@ -1,8 +1,8 @@
 package io.hexlet.typoreporter.domain;
 
-public interface Identifiable<ID> {
+public interface Identifiable<I> {
 
-    ID getId();
+    I getId();
 
-    <T extends Identifiable<ID>> T setId(ID id);
+    <T extends Identifiable<I>> T setId(I id);
 }

@@ -18,7 +18,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.*;
 
 import static com.github.database.rider.core.api.configuration.Orthography.LOWERCASE;
-import static io.hexlet.typoreporter.TypoReporterApplicationIT.POSTGRES_IMAGE;
+import static io.hexlet.typoreporter.test.Constraints.POSTGRES_IMAGE;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
@@ -47,7 +47,7 @@ class WorkspaceRepositoryIT {
     }
 
     @ParameterizedTest
-    @MethodSource("io.hexlet.typoreporter.test.utils.EntitiesFactory#getWorkspaceNamesExist")
+    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspaceNamesExist")
     void getWorkspaceByName(final String wksName) {
         final var wks = workspaceRepository.getWorkspaceByName(wksName);
         assertThat(wks).isNotEmpty();
@@ -62,7 +62,7 @@ class WorkspaceRepositoryIT {
     }
 
     @ParameterizedTest
-    @MethodSource("io.hexlet.typoreporter.test.utils.EntitiesFactory#getWorkspaceNamesExist")
+    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspaceNamesExist")
     void existsWorkspaceByName(final String wksName) {
         assertThat(workspaceRepository.existsWorkspaceByName(wksName)).isTrue();
     }

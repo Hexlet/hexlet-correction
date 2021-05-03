@@ -6,8 +6,6 @@ import org.springframework.data.domain.*;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.Tuple;
-import java.time.LocalDateTime;
 import java.util.*;
 
 @Repository

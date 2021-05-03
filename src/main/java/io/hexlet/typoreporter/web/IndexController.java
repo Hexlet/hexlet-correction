@@ -6,13 +6,14 @@ import io.hexlet.typoreporter.web.exception.WorkspaceAlreadyExistException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.*;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
 import static io.hexlet.typoreporter.web.Routers.*;
 import static io.hexlet.typoreporter.web.Routers.Workspace.WORKSPACE;
+import static io.hexlet.typoreporter.web.Templates.*;
 import static io.hexlet.typoreporter.web.exception.WorkspaceAlreadyExistException.fieldNameError;
 
 @Controller
@@ -23,36 +24,36 @@ public class IndexController {
     private final WorkspaceService workspaceService;
 
     @GetMapping
-    String index(final Model model) {
+    public String index(final Model model) {
         final var wksInfoList = workspaceService.getAllWorkspacesInfo();
         model.addAttribute("wksInfoList", wksInfoList);
-        return "index";
+        return INDEX;
     }
 
     @GetMapping(CREATE + WORKSPACE)
-    String getCreateWorkspacePage(final Model model) {
+    public String getCreateWorkspacePage(final Model model) {
         model.addAttribute("createWorkspace", new CreateWorkspace("", ""));
         model.addAttribute("formModified", false);
-        return "create-workspace";
+        return CREATE_WKS;
     }
 
     @PostMapping(CREATE + WORKSPACE)
-    String postCreateWorkspacePage(final Model model,
-                                   @Valid @ModelAttribute CreateWorkspace createWorkspace,
-                                   BindingResult bindingResult) {
+    public String postCreateWorkspacePage(final Model model,
+                                          @Valid @ModelAttribute CreateWorkspace createWorkspace,
+                                          BindingResult bindingResult) {
         model.addAttribute("formModified", true);
         if (workspaceService.existsWorkspaceByName(createWorkspace.name())) {
             bindingResult.addError(fieldNameError(createWorkspace));
         }
         if (bindingResult.hasErrors()) {
             model.addAttribute("createWorkspace", createWorkspace);
-            return "create-workspace";
+            return CREATE_WKS;
         }
         try {
             workspaceService.createWorkspace(createWorkspace);
         } catch (WorkspaceAlreadyExistException e) {
             bindingResult.addError(fieldNameError(createWorkspace));
-            return "create-workspace";
+            return CREATE_WKS;
         }
         return REDIRECT_ROOT;
     }

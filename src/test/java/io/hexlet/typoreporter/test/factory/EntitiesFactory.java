@@ -1,4 +1,4 @@
-package io.hexlet.typoreporter.test.utils;
+package io.hexlet.typoreporter.test.factory;
 
 import io.hexlet.typoreporter.domain.Identifiable;
 import io.hexlet.typoreporter.domain.typo.Typo;
@@ -14,6 +14,8 @@ import static org.springframework.test.util.ReflectionTestUtils.setField;
 public class EntitiesFactory {
 
     public static final String WORKSPACE_101_NAME = "wks-name";
+
+    public static final String WORKSPACE_101_TOKEN = "abb4f3ab-1994-4264-bc6f-7cd1aa13dc0a";
 
     public static final String WORKSPACE_102_NAME = "wks-test";
 

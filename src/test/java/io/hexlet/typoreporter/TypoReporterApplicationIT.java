@@ -1,5 +1,6 @@
 package io.hexlet.typoreporter;
 
+import io.hexlet.typoreporter.test.Constraints;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.*;
@@ -8,14 +9,12 @@ import org.testcontainers.junit.jupiter.*;
 
 @Testcontainers
 @SpringBootTest
-public class TypoReporterApplicationIT {
-
-    public static final String POSTGRES_IMAGE = "postgres:13.2";
+class TypoReporterApplicationIT {
 
     @Container
-    public static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>(POSTGRES_IMAGE)
-            .withPassword("inmemory")
-            .withUsername("inmemory");
+    public static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>(Constraints.POSTGRES_IMAGE)
+        .withPassword("inmemory")
+        .withUsername("inmemory");
 
     @DynamicPropertySource
     static void datasourceProperties(DynamicPropertyRegistry registry) {

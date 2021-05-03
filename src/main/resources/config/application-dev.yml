@@ -5,6 +5,8 @@ spring:
     password: password
   jpa:
     show-sql: true
+    hibernate:
+      ddl-auto: update
     properties:
       hibernate:
         generate_statistics: true
@@ -12,10 +14,15 @@ spring:
         format_sql: true
   thymeleaf:
     cache: false
-
+  liquibase:
+    contexts: dev
 logging:
   level:
     root: INFO
     web: DEBUG
     org.hibernate.type.descriptor.sql: TRACE
+    org.springframework.security: TRACE
     io.hexlet.typoreporter: DEBUG
+server:
+  error:
+    include-stacktrace: on_trace_param

@@ -12,10 +12,10 @@ public class InvalidTypoEventException extends AbstractThrowableProblem {
 
     public InvalidTypoEventException(final TypoStatus status, final TypoEvent event) {
         super(
-                null,
-                "Invalid event",
-                BAD_REQUEST,
-                MessageFormat.format(MESSAGE, event, status, status.getValidEvents())
+            null,
+            "Invalid event",
+            BAD_REQUEST,
+            MessageFormat.format(MESSAGE, event, status, status.getValidEvents())
         );
     }
 }

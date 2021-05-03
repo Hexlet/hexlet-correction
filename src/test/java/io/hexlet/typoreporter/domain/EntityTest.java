@@ -12,7 +12,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 @JsonTest
-public class EntityTest {
+class EntityTest {
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -24,11 +24,11 @@ public class EntityTest {
         final var entityTwo = clazz.getConstructor().newInstance();
 
         assertThat(entityOne).isEqualTo(entityOne)
-                .hasSameHashCodeAs(entityOne)
-                .isNotEqualTo(new Object())
-                .isNotEqualTo(null)
-                .isNotEqualTo(entityTwo)
-                .hasSameHashCodeAs(entityTwo);
+            .hasSameHashCodeAs(entityOne)
+            .isNotEqualTo(new Object())
+            .isNotEqualTo(null)
+            .isNotEqualTo(entityTwo)
+            .hasSameHashCodeAs(entityTwo);
     }
 
     @ParameterizedTest
@@ -38,7 +38,7 @@ public class EntityTest {
     }
 
     @ParameterizedTest
-    @MethodSource("io.hexlet.typoreporter.test.utils.EntitiesFactory#getEntities")
+    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getEntities")
     void isSerializeEntityToJson(final Identifiable<Long> entity) {
         assertDoesNotThrow(() -> objectMapper.writeValueAsString(entity));
     }
@@ -50,7 +50,7 @@ public class EntityTest {
     }
 
     @ParameterizedTest
-    @MethodSource("io.hexlet.typoreporter.test.utils.EntitiesFactory#getEntities")
+    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getEntities")
     void isNotExceptionForToStringWithEntity(final Identifiable<Long> entity) {
         assertDoesNotThrow(entity::toString);
     }

@@ -9,7 +9,7 @@ import io.hexlet.typoreporter.service.dto.typo.*;
 import io.hexlet.typoreporter.test.DBUnitEnumPostgres;
 import io.hexlet.typoreporter.test.asserts.ReportedTypoAssert;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +23,8 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.*;
 
 import static com.github.database.rider.core.api.configuration.Orthography.LOWERCASE;
-import static io.hexlet.typoreporter.TypoReporterApplicationIT.POSTGRES_IMAGE;
-import static io.hexlet.typoreporter.test.utils.EntitiesFactory.WORKSPACE_101_NAME;
+import static io.hexlet.typoreporter.test.Constraints.POSTGRES_IMAGE;
+import static io.hexlet.typoreporter.test.factory.EntitiesFactory.*;
 import static io.hexlet.typoreporter.web.Routers.Typo.TYPOS;
 import static io.hexlet.typoreporter.web.Routers.Workspace.API_WORKSPACES;
 import static java.time.LocalDateTime.now;
@@ -68,11 +68,12 @@ class WorkspaceApiIT {
     }
 
     @ParameterizedTest
-    @MethodSource("io.hexlet.typoreporter.test.utils.EntitiesFactory#getTypoReport")
+    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getTypoReport")
     void addTypoReport(final TypoReport typoReport) throws Exception {
         final var content = mockMvc
             .perform(post(API_WORKSPACES + "/" + WORKSPACE_101_NAME + TYPOS)
                 .content(objectMapper.writeValueAsString(typoReport))
+                .header("Authorization", "Token " + WORKSPACE_101_TOKEN)
                 .contentType(APPLICATION_JSON)
             )
             .andDo(print())
@@ -99,6 +100,7 @@ class WorkspaceApiIT {
 
         mockMvc.perform(post(API_WORKSPACES + "/" + WORKSPACE_101_NAME + TYPOS)
             .content(typoJson)
+            .header("Authorization", "Token " + WORKSPACE_101_TOKEN)
             .contentType(APPLICATION_JSON))
             .andExpect(status().isBadRequest())
             .andExpect(content().contentType(APPLICATION_PROBLEM_JSON))
@@ -120,6 +122,7 @@ class WorkspaceApiIT {
 
         mockMvc.perform(post(API_WORKSPACES + "/" + WORKSPACE_101_NAME + TYPOS)
             .content(typoJson)
+            .header("Authorization", "Token " + WORKSPACE_101_TOKEN)
             .contentType(APPLICATION_JSON))
             .andExpect(status().isBadRequest())
             .andExpect(content().contentType(APPLICATION_PROBLEM_JSON))
@@ -143,6 +146,7 @@ class WorkspaceApiIT {
 
         mockMvc.perform(post(API_WORKSPACES + "/" + WORKSPACE_101_NAME + TYPOS)
             .content(typoJson)
+            .header("Authorization", "Token " + WORKSPACE_101_TOKEN)
             .contentType(APPLICATION_JSON))
             .andExpect(status().isBadRequest())
             .andExpect(content().contentType(APPLICATION_PROBLEM_JSON))

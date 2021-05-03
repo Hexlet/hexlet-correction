@@ -18,11 +18,11 @@ public class TypoReportToTypoConverter implements Converter<TypoReport, Typo> {
     @Override
     public Typo convert(TypoReport source) {
         return new Typo()
-                .setPageUrl(source.pageUrl())
-                .setReporterName(source.reporterName())
-                .setReporterComment(source.reporterComment())
-                .setTextBeforeTypo(source.textBeforeTypo())
-                .setTextTypo(source.textTypo())
-                .setTextAfterTypo(source.textAfterTypo());
+            .setPageUrl(source.pageUrl())
+            .setReporterName(source.reporterName())
+            .setReporterComment(source.reporterComment())
+            .setTextBeforeTypo(source.textBeforeTypo())
+            .setTextTypo(source.textTypo())
+            .setTextAfterTypo(source.textAfterTypo());
     }
 }

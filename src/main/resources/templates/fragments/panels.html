@@ -31,10 +31,12 @@
            th:aria-current="${itemActive} == 'typos'"
            th:classappend="${itemActive} == 'typos' ? 'active' : ''"
            th:href="@{'/workspace/' + ${wksName} + '/typos'}">Typos</a>
+        <a class="list-group-item list-group-item-action"
+           th:aria-current="${itemActive} == 'settings'"
+           th:classappend="${itemActive} == 'settings' ? 'active' : ''"
+           th:href="@{'/workspace/' + ${wksName} + '/settings'}">Settings</a>
         <a aria-disabled="true" class="list-group-item list-group-item-action disabled" href="#" tabindex="-1">Users</a>
         <a aria-disabled="true" class="list-group-item list-group-item-action disabled" href="#" tabindex="-1">Integration</a>
-        <a aria-disabled="true" class="list-group-item list-group-item-action disabled" href="#"
-           tabindex="-1">Settings</a>
     </div>
 </th:block>
 </body>
