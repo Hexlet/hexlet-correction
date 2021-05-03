@@ -130,10 +130,7 @@
                                     <!-- Workspace typo table row -->
                                     <tr aria-expanded="false" class="accordion collapsed" data-bs-toggle="collapse"
                                         th:aria-controls="|collapseTypoRowId_*{id}|"
-                                        th:classappend="(*{typoStatus.toString() == 'REPORTED'} ? 'table-danger' : '') +
-                                                        (*{typoStatus.toString() == 'IN PROGRESS'} ? 'table-warning' : '') +
-                                                        (*{typoStatus.toString() == 'RESOLVED'} ? 'table-success' : '') +
-                                                        (*{typoStatus.toString() == 'CANCELED'} ? 'table-secondary' : '')"
+                                        th:classappend="|table-*{typoStatus.getStyle}|"
                                         th:data-bs-target="|#collapseTypoRowId_*{id}|">
                                         <td th:text="*{pageUrl}"></td>
                                         <td th:text="*{reporterName}"></td>
@@ -158,10 +155,7 @@
                                                                     th:each="event : *{typoStatus.getValidEvents()}"
                                                                     th:method="patch">
                                                                     <button class="btn"
-                                                                            th:classappend="(${event.toString() == 'OPEN'} ? 'btn-warning' : '') +
-                                                                                            (${event.toString() == 'REOPEN'} ? 'btn-warning' : '') +
-                                                                                            (${event.toString() == 'RESOLVE'} ? 'btn-success' : '') +
-                                                                                            (${event.toString() == 'CANCEL'} ? 'btn-secondary' : '')"
+                                                                            th:classappend="|btn-${event.getStyle()}|"
                                                                             type="submit">[[${event}]]
                                                                     </button>
                                                                 </form>
