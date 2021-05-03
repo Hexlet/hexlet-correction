@@ -73,6 +73,15 @@ public enum TypoStatus {
         }
     };
 
+    public String getStyle() {
+        return switch (this) {
+            case REPORTED -> "danger";
+            case IN_PROGRESS -> "warning";
+            case RESOLVED -> "success";
+            case CANCELED -> "secondary";
+        };
+    }
+
     public abstract TypoStatus next(final TypoEvent event);
 
     public abstract Collection<TypoEvent> getValidEvents();

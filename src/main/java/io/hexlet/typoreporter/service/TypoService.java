@@ -51,7 +51,7 @@ public class TypoService {
 
     //TODO add tests
     @Transactional(readOnly = true)
-    public List<Pair<String, Long>> getCountTypoByStatusForWorkspaceName(final String wksName) {
+    public List<Pair<TypoStatus, Long>> getCountTypoByStatusForWorkspaceName(final String wksName) {
         final var countTypoByStatus = repository.getCountTypoStatusForWorkspaceName(wksName)
             .stream()
             .collect(toMap(Pair::getKey, Pair::getValue));
@@ -60,7 +60,7 @@ public class TypoService {
         return countTypoByStatus.entrySet()
             .stream()
             .sorted(comparingByKey())
-            .map(entry -> Pair.of(entry.getKey().toString(), entry.getValue()))
+            .map(Pair::of)
             .toList();
     }
 

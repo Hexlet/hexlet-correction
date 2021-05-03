@@ -38,20 +38,11 @@
                 <div class="col">
                     <ul class="list-group list-group-flush col-6">
                         <li class="list-group-item d-flex justify-content-between align-items-center fw-bold bg-gradient"
-                            th:classappend="(*{key == 'REPORTED'} ? 'text-danger' : '') +
-                                            (*{key == 'IN PROGRESS'} ? 'text-warning' : '') +
-                                            (*{key == 'RESOLVED'} ? 'text-success' : '') +
-                                            (*{key == 'CANCELED'} ? 'text-secondary' : '')"
+                            th:classappend="|text-*{key.getStyle()}|"
                             th:each="pair : ${countTypoByStatus}"
                             th:object="${pair}">
-                            [[*{key}]]
-                            <span class="badge rounded-pill"
-                                  th:classappend="(*{key == 'REPORTED'} ? 'bg-danger' : '') +
-                                                  (*{key == 'IN PROGRESS'} ? 'bg-warning' : '') +
-                                                  (*{key == 'RESOLVED'} ? 'bg-success' : '') +
-                                                  (*{key == 'CANCELED'} ? 'bg-secondary' : '')"
-                                  th:text="*{value}">
-                            </span>
+                            [[*{key.toString()}]]<span class="badge rounded-pill"
+                                                       th:classappend="|bg-*{key.getStyle()}|">[[*{value}]]</span>
                         </li>
                         <li class="list-group-item d-flex justify-content-between align-items-center fw-bolder text-primary">
                             TOTAL<span class="badge rounded-pill bg-primary" th:text="${sumTypoInWks}"></span>

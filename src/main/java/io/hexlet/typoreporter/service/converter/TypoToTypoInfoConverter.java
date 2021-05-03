@@ -8,13 +8,13 @@ import org.springframework.stereotype.Component;
 
 //TODO add tests
 @Component
-public class TypoToTypoRowConverter implements Converter<Typo, TypoInfo> {
+public class TypoToTypoInfoConverter implements Converter<Typo, TypoInfo> {
 
     /**
-     * Convert the source object of type {@code Typo} to target type {@code TypoRow}.
+     * Convert the source object of type {@code Typo} to target type {@code TypoInfo}.
      *
      * @param source the source object to convert, which must be an instance of {@code Typo} (never {@code null})
-     * @return the converted object, which must be an instance of {@code TypoRow} (potentially {@code null})
+     * @return the converted object, which must be an instance of {@code TypoInfo} (potentially {@code null})
      * @throws IllegalArgumentException if the source cannot be converted to the desired target type
      */
     @Override
