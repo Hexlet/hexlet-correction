@@ -25,4 +25,4 @@ logging:
     io.hexlet.typoreporter: DEBUG
 server:
   error:
-    include-stacktrace: on_trace_param
+    include-stacktrace: on_param

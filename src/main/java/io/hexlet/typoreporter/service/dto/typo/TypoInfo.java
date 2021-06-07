@@ -1,11 +1,9 @@
 package io.hexlet.typoreporter.service.dto.typo;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import io.hexlet.typoreporter.domain.typo.TypoStatus;
 
 import java.time.LocalDateTime;
 
-@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public record TypoInfo(
     Long id,
     String pageUrl,

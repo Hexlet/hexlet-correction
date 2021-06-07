@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.4.5</version>
+        <version>2.5.0</version>
         <relativePath /> <!-- lookup parent from repository -->
     </parent>
     <groupId>io.hexlet.typoreporter</groupId>
@@ -18,14 +18,14 @@
     <properties>
         <java.version>16</java.version>
         <!-- WebJars -->
-        <webjars-locator.version>0.40</webjars-locator.version>
-        <bootstrap.version>5.0.0-beta3</bootstrap.version>
+        <webjars-locator.version>0.41</webjars-locator.version>
+        <bootstrap.version>5.0.1</bootstrap.version>
         <!-- Utils -->
         <problem-spring-web-starter.version>0.26.2</problem-spring-web-starter.version>
-        <prettytime.version>5.0.0.Final</prettytime.version>
+        <prettytime.version>5.0.1.Final</prettytime.version>
         <!-- Test -->
         <testcontainers.version>1.15.3</testcontainers.version>
-        <database-rider.version>1.23.0</database-rider.version>
+        <database-rider.version>1.23.1</database-rider.version>
     </properties>
 
     <dependencyManagement>
