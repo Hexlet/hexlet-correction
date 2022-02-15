@@ -5,7 +5,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.core.env.Environment;
 
-import java.net.*;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 import static java.util.Optional.ofNullable;
 
@@ -30,7 +31,7 @@ public class HexletTypoReporter {
         } catch (UnknownHostException e) {
             log.warn("The host name could not be determined, using `localhost` as fallback");
         }
-        final var format = """
+        final var msg = """
 
             ----------------------------------------------------------
                 Application '{}' is running! Access URLs:
@@ -40,6 +41,6 @@ public class HexletTypoReporter {
             ----------------------------------------------------------
             """;
         final var appName = env.getProperty("spring.application.name");
-        log.info(format, appName, protocol, port, contextPath, protocol, hostAddress, port, contextPath, env.getActiveProfiles());
+        log.info(msg, appName, protocol, port, contextPath, protocol, hostAddress, port, contextPath, env.getActiveProfiles());
     }
 }

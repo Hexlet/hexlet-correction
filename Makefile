@@ -1,7 +1,7 @@
 .DEFAULT_GOAL := build-run
 
 run-dev: docker-db
-	java -jar -Dspring.profiles.active=default,dev --enable-preview ./target/hexlet-typo-reporter-*.jar
+	java -jar -Dspring.profiles.active=default,dev ./target/hexlet-typo-reporter-*.jar
 
 build-run: build run-dev
 

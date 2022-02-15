@@ -6,17 +6,13 @@ This application created for receive the typo errors from a site.
 
 Before you can build this project, you must install and configure the following dependencies on your machine:
 
-1. Java 16
-
-## Building for development
+1. Java 17
 
 ### Packaging as uber-jar
 
-To build the final jar and optimize the hexletTypoReporter application for development, run:
+To build the final jar:
 
     make build
-
-Then navigate to [http://localhost:8080](http://localhost:8080) in your browser.
 
 ## Testing
 
@@ -30,13 +26,22 @@ For example, to start a postgresql database in a docker container, run:
 
     make docker-db
 
+## Run application with database in docker
+
+    make run-dev
+
+## Build and run application with database in docker
+
+    make build-run
+
 ## typo API calls
 
 For creating new `typo`:
 
-    POST http://localhost:8080/api/workspaces/{your_workspace_name}/typos
+    POST http://localhost:8080/api/workspaces/{workspace-name}/typos
     Content-Type: application/json
-
+    Authorization: Token workspace-token
+    
     {
         "pageUrl": "http://site.com/",
         "reporterName": "reporterName",

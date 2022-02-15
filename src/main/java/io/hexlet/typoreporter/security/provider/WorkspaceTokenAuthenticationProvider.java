@@ -2,25 +2,24 @@ package io.hexlet.typoreporter.security.provider;
 
 import io.hexlet.typoreporter.security.authentication.WorkspaceAuthenticationToken;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.security.authentication.*;
-import org.springframework.security.core.*;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
 public class WorkspaceTokenAuthenticationProvider implements AuthenticationProvider {
 
+    private final PasswordEncoder passwordEncoder = NoOpPasswordEncoder.getInstance();
+
     private final UserDetailsService service;
 
-    private final PasswordEncoder passwordEncoder;
-
-    public WorkspaceTokenAuthenticationProvider(
-        @Qualifier("securedWorkspaceService") UserDetailsService service,
-        @Qualifier("noOpPasswordEncoder") PasswordEncoder passwordEncoder
-    ) {
+    public WorkspaceTokenAuthenticationProvider(@Qualifier("securedWorkspaceService") UserDetailsService service) {
         this.service = service;
-        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
