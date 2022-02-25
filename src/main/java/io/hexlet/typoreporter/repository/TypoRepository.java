@@ -15,7 +15,6 @@ public interface TypoRepository extends JpaRepository<Typo, Long> {
 
     Integer deleteTypoById(Long id);
 
-    //TODO add tests
     @Query("""
         select new org.apache.commons.lang3.tuple.ImmutablePair(t.typoStatus, count(t))
         from Typo t
@@ -24,6 +23,5 @@ public interface TypoRepository extends JpaRepository<Typo, Long> {
         """)
     List<Pair<TypoStatus, Long>> getCountTypoStatusForWorkspaceName(String wksName);
 
-    //TODO add tests
     Optional<Typo> getTopByWorkspaceNameOrderByCreatedDate(String wksName);
 }

@@ -49,7 +49,7 @@ public class TypoService {
             .map(typo -> conversionService.convert(typo, TypoInfo.class));
     }
 
-    //TODO add tests
+
     @Transactional(readOnly = true)
     public List<Pair<TypoStatus, Long>> getCountTypoByStatusForWorkspaceName(final String wksName) {
         final var countTypoByStatus = repository.getCountTypoStatusForWorkspaceName(wksName)
@@ -64,7 +64,6 @@ public class TypoService {
             .toList();
     }
 
-    //TODO add tests
     @Transactional(readOnly = true)
     public Optional<TypoInfo> getLastTypoByWorkspaceName(final String wksName) {
         return repository.getTopByWorkspaceNameOrderByCreatedDate(wksName)
