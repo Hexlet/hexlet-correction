@@ -14,6 +14,19 @@ To build the final jar:
 
     make build
 
+### Development with vagrant
+
+Install Vagrant and VM provider (Virtualbox).
+
+Run commands:
+
+```bash
+make vagrant build
+make vagrant-run
+```
+
+or just `vagrant ssh`, then `cd /vagrant` to run commands inside vm
+
 ## Testing
 
 To launch your application's tests, run:
