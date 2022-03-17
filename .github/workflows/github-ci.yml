@@ -18,5 +18,7 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 17
-      - name: Run tests
-        run: make test
+      - name: Run unit tests
+        run: mvn -B -ntp -fae clean test
+      - name: Run integration tests
+        run: mvn -B -ntp -Dtest=noTest -DfailIfNoTests=false verify
