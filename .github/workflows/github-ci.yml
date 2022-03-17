@@ -19,6 +19,6 @@ jobs:
         with:
           java-version: 17
       - name: Run unit tests
-        run: mvn -B -ntp -fae clean test
+        run: make test-unit-only
       - name: Run integration tests
-        run: mvn -B -ntp -Dtest=noTest -DfailIfNoTests=false verify
+        run: make test-integration-only
