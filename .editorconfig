@@ -19,7 +19,7 @@ indent_size = 4
 [Vagrantfile]
 indent_size = 2
 
-[*.{ts, tsx, js, jsx, json, css, scss, yml}]
+[*.{ts,tsx,js,jsx,json,css,scss,yml,yaml}]
 indent_size = 2
 
 [Makefile]
