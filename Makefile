@@ -3,6 +3,10 @@
 build:
 	./mvnw -B -ntp -fae clean verify
 
+clear:
+	./mvnw -B -ntp -fae clean
+	docker-compose -f src/main/docker/postgresql.yml down -v
+
 setup: build
 
 test:

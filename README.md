@@ -13,7 +13,9 @@ Before you can build this project, you must install and configure the following 
 
 To build the final jar:
 
-    make build
+```bash
+make build
+```
 
 ### Development with vagrant
 
@@ -32,38 +34,54 @@ or just `vagrant ssh`, then `cd /vagrant` to run commands inside vm
 
 To launch your application's tests, run:
 
-    make test
+```bash
+make test
+```
 
 ## Using Docker to simplify development (optional)
 
 For example, to start a postgresql database in a docker container, run:
 
-    make docker-db
+```bash
+make docker-db
+```
 
 ## Run application with database in docker
 
-    make run-dev
+```bash
+make run-dev
+```
 
 ## Build and run application with database in docker
 
-    make run-dev-docker-db
+```bash
+make run-dev-docker-db # make start
+```
 
-## typo API calls
+## Clear config (database, app build)
+
+```bash
+make clear
+```
+
+## Typo API calls
 
 For creating new `typo`:
 
-    POST http://localhost:8080/api/workspaces/{workspace-name}/typos
-    Content-Type: application/json
-    Authorization: Token workspace-token
+```plaintext
+POST http://localhost:8080/api/workspaces/{workspace-name}/typos
+Content-Type: application/json
+Authorization: Token workspace-token
 
-    {
-        "pageUrl": "http://site.com/",
-        "reporterName": "reporterName",
-        "reporterComment": "reporterComment",
-        "textBeforeTypo": "textBeforeTypo",
-        "textTypo": "textTypo",
-        "textAfterTypo": "textAfterTypo"
-    }
+{
+    "pageUrl": "http://site.com/",
+    "reporterName": "reporterName",
+    "reporterComment": "reporterComment",
+    "textBeforeTypo": "textBeforeTypo",
+    "textTypo": "textTypo",
+    "textAfterTypo": "textAfterTypo"
+}
+```
 
 ---
 
@@ -71,4 +89,4 @@ For creating new `typo`:
 
 This repository is created and maintained by the team and the community of Hexlet, an educational project. [Read more about Hexlet (in Russian)](https://ru.hexlet.io/pages/about?utm_source=github&utm_medium=link&utm_campaign=hexlet-comparator).
 
-See most active contributers on [hexlet-friends](https://friends.hexlet.io/).
+See most active contributors on [hexlet-friends](https://friends.hexlet.io/).
