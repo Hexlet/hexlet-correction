@@ -3,6 +3,8 @@
 build:
 	./mvnw -B -ntp -fae clean verify
 
+setup: build
+
 test:
 	./mvnw -B -ntp -fae test verify
 
@@ -15,8 +17,9 @@ test-integration-only:
 run-dev:
 	java -jar -Dspring.profiles.active=dev ./target/hexlet-typo-reporter-*.jar
 
-run-dev-docker-db: docker-db
-	java -jar -Dspring.profiles.active=dev ./target/hexlet-typo-reporter-*.jar
+run-dev-docker-db: docker-db run-dev
+
+start: run-dev-docker-db
 
 docker-db:
 	docker-compose -f ./src/main/docker/postgresql.yml up -d --force-recreate

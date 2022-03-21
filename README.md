@@ -7,6 +7,7 @@ This application created for receive the typo errors from a site.
 Before you can build this project, you must install and configure the following dependencies on your machine:
 
 1. Java 17
+2. Docker, Docker Compose
 
 ### Packaging as uber-jar
 
