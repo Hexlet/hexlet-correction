@@ -32,7 +32,7 @@ For example, to start a postgresql database in a docker container, run:
 
 ## Build and run application with database in docker
 
-    make build-run
+    make run-dev-docker-db
 
 ## typo API calls
 
@@ -41,7 +41,7 @@ For creating new `typo`:
     POST http://localhost:8080/api/workspaces/{workspace-name}/typos
     Content-Type: application/json
     Authorization: Token workspace-token
-    
+
     {
         "pageUrl": "http://site.com/",
         "reporterName": "reporterName",
