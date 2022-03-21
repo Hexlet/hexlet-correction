@@ -29,4 +29,4 @@ vagrant-build:
 	vagrant ssh -c "cd /vagrant && make build"
 
 vagrant-run:
-	vagrant ssh -c "cd /vagrant && make run-dev"
+	vagrant ssh -c "cd /vagrant && make run-dev-docker-db"
