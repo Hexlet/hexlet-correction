@@ -23,3 +23,10 @@ docker-db:
 
 update-versions:
 	./mvnw versions:update-properties versions:display-plugin-updates
+
+vagrant-build:
+	vagrant up
+	vagrant ssh -c "cd /vagrant && make build"
+
+vagrant-run:
+	vagrant ssh -c "cd /vagrant && make run-dev-docker-db"

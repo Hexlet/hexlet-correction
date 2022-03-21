@@ -16,8 +16,14 @@ insert_final_newline = true
 indent_style = space
 indent_size = 4
 
+[Vagrantfile]
+indent_size = 2
+
 [*.{ts, tsx, js, jsx, json, css, scss, yml}]
 indent_size = 2
+
+[Makefile]
+indent_style = tab
 
 [*.md]
 trim_trailing_whitespace = false
