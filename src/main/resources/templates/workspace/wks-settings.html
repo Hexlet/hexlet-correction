@@ -31,21 +31,20 @@
             </div>
             <div class="row my-4">
                 <div class="col">
-                    <p class="fw-bold">Example for your workspace:</p>
+                    <p class="fw-bold">Example with <code>curl</code> for your workspace:</p>
                     <pre><code
                         th:with="rootUrl=${#httpServletRequest.requestURL.toString().replace(#httpServletRequest.requestURI, '')}">
-POST [[${rootUrl}]]/api/workspaces/[[${wksName}]]/typos
-Content-Type: application/json
-Authorization: Token [[${wksToken}]]
-
-{
-  "pageUrl": "https://site.com/",
-  "reporterName": "reporterName",
-  "reporterComment": "reporterComment",
-  "textBeforeTypo": "textBeforeTypo",
-  "textTypo": "textTypo",
-  "textAfterTypo": "textAfterTypo"
-}
+curl -X POST --location "[[${rootUrl}]]/api/workspaces/[[${wksName}]]/typos" \
+-H "Content-Type: application/json" \
+-H "Authorization: Token [[${wksToken}]]" \
+-d "{
+        \"pageUrl\": \"https://site.com/\",
+        \"reporterName\": \"reporterName\",
+        \"reporterComment\": \"reporterComment\",
+        \"textBeforeTypo\": \"textBeforeTypo\",
+        \"textTypo\": \"textTypo\",
+        \"textAfterTypo\": \"textAfterTypo\"
+    }"
                     </code></pre>
                 </div>
             </div>

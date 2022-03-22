@@ -3,6 +3,9 @@
 build:
 	./mvnw -B -ntp -fae clean verify
 
+package:
+	./mvnw -B -ntp -fae clean package -Dmaven.test.skip=true
+
 clear:
 	./mvnw -B -ntp -fae clean
 	docker-compose -f src/main/docker/postgresql.yml down -v
