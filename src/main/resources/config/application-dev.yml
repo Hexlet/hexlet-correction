@@ -2,6 +2,7 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/typo-reporter
     username: developer
+    password: password
     driver-class-name: org.postgresql.Driver
   jpa:
     show-sql: true

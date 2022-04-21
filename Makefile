@@ -8,7 +8,7 @@ package:
 
 clear:
 	./mvnw -B -ntp -fae clean
-	docker-compose -f src/main/docker/postgresql.yml down -v
+	docker compose -f src/main/docker/postgresql.yml down -v
 
 setup: build
 
@@ -29,7 +29,7 @@ run-dev-docker-db: docker-db run-dev
 start: run-dev-docker-db
 
 docker-db:
-	docker-compose -f ./src/main/docker/postgresql.yml up -d --force-recreate
+	docker compose -f ./src/main/docker/postgresql.yml up -d --force-recreate
 
 update-versions:
 	./mvnw versions:update-properties versions:display-plugin-updates
@@ -40,3 +40,6 @@ vagrant-build:
 
 vagrant-run:
 	vagrant ssh -c "cd /vagrant && make run-dev-docker-db"
+
+lint:
+	./mvnw checkstyle:checkstyle

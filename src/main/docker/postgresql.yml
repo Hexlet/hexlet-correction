@@ -5,6 +5,7 @@ services:
     environment:
       - POSTGRES_DB=typo-reporter
       - POSTGRES_USER=developer
+      - POSTGRES_PASSWORD=password
       - POSTGRES_HOST_AUTH_METHOD=trust
     ports:
       - "5432:5432"
