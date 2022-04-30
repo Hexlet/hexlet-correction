@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import io.hexlet.typoreporter.domain.AbstractAuditingEntity;
 import io.hexlet.typoreporter.domain.Identifiable;
+import io.hexlet.typoreporter.domain.account.Account;
 import io.hexlet.typoreporter.domain.typo.constraint.ReporterComment;
 import io.hexlet.typoreporter.domain.typo.constraint.ReporterName;
 import io.hexlet.typoreporter.domain.typo.constraint.TextAfterTypo;
@@ -75,6 +76,10 @@ public class Typo extends AbstractAuditingEntity implements Identifiable<Long> {
     @ToString.Exclude
     private Workspace workspace;
 
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY)
+    @ToString.Exclude
+    private Account accounts;
     @Override
     public int hashCode() {
         return 31;
