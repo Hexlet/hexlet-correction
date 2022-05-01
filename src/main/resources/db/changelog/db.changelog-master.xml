@@ -9,4 +9,6 @@
              relativeToChangelogFile="true" />
     <include file="changesets/2021/04/20212304094515440-add-column-api-access-token-to-typo.xml"
              relativeToChangelogFile="true" />
+    <include file="changesets/2022/04/20220428163604-create-account-table.xml"
+             relativeToChangelogFile="true" />
 </databaseChangeLog>
