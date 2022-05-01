@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.10.xsd"
+    objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+
+    <changeSet id="20220428163604-01" author="Saymon Serdyukov">
+        <sql dbms="postgresql">CREATE TYPE AUTH_PROVIDER AS ENUM ('EMAIL','GITHUB','GOOGLE')</sql>
+    </changeSet>
+
+    <changeSet id="20220428163604-1" author="Saymon Serdyukov">
+        <createTable tableName="account">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="accountPK"/>
+            </column>
+            <column name="external_open_id" type="VARCHAR(20)"/>
+            <column name="auth_provider" type="AUTH_PROVIDER"/>
+            <column name="email" type="VARCHAR(255)"/>
+            <column name="first_name" type="VARCHAR(50)"/>
+            <column name="last_name" type="VARCHAR(50)"/>
+            <column name="password" type="VARCHAR(255)"/>
+            <column name="username" type="VARCHAR(20)"/>
+            <column name="workspace_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20220428163604-2" author="Saymon Serdyukov">
+        <createTable tableName="account_typos">
+            <column name="account_id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="typos_id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="Saymon Serdyukov" id="120220428163604-3">
+        <addUniqueConstraint columnNames="email" constraintName="UC_ACCOUNTEMAIL_COL" tableName="account"/>
+    </changeSet>
+    <changeSet author="Saymon Serdyukov" id="20220428163604-4">
+        <addUniqueConstraint columnNames="username" constraintName="UC_ACCOUNTUSERNAME_COL" tableName="account"/>
+    </changeSet>
+    <changeSet author="Saymon Serdyukov" id="20220428163604-5">
+        <addUniqueConstraint columnNames="typos_id" constraintName="UK_1ch7df4of9sj9svt0mjfm3n9w"
+                             tableName="account_typos"/>
+    </changeSet>
+
+    <changeSet author="Saymon Serdyukov" id="20220428163604-6">
+        <addForeignKeyConstraint baseColumnNames="accounts_id" baseTableName="typo"
+                                 constraintName="FK_TYPO_ON_ACCOUNT" referencedColumnNames="id"
+                                 referencedTableName="account"
+                                 validate="true"/>
+    </changeSet>
+    <changeSet author="Saymon Serdyukov" id="20220428163604-7">
+        <addForeignKeyConstraint baseColumnNames="typos_id" baseTableName="account_typos"
+                                 constraintName="FK458hpdrgta6b9pqs9qbqinimk" deferrable="false"
+                                 initiallyDeferred="false" referencedColumnNames="id" referencedTableName="typo"
+                                 validate="true"/>
+    </changeSet>
+    <changeSet author="Saymon Serdyukov" id="20220428163604-8">
+        <addForeignKeyConstraint baseColumnNames="workspace_id" baseTableName="account"
+                                 constraintName="FKbllqvamvndd96f8vg1no7fb3n" deferrable="false"
+                                 initiallyDeferred="false" referencedColumnNames="id" referencedTableName="workspace"
+                                 validate="true"/>
+    </changeSet>
+    <changeSet author="Saymon Serdyukov" id="20220428163604-9">
+        <addForeignKeyConstraint baseColumnNames="account_id" baseTableName="account_typos"
+                                 constraintName="FKkuytk1r18hk5d1pa8nnshyn12" deferrable="false"
+                                 initiallyDeferred="false" referencedColumnNames="id" referencedTableName="account"
+                                 validate="true"/>
+    </changeSet>
+</databaseChangeLog>

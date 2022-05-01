@@ -2,6 +2,7 @@ package io.hexlet.typoreporter.domain.workspace;
 
 import com.fasterxml.jackson.annotation.*;
 import io.hexlet.typoreporter.domain.*;
+import io.hexlet.typoreporter.domain.account.Account;
 import io.hexlet.typoreporter.domain.typo.Typo;
 import io.hexlet.typoreporter.domain.workspace.constraint.*;
 import lombok.*;
@@ -38,6 +39,10 @@ public class Workspace extends AbstractAuditingEntity implements Identifiable<Lo
     @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
     private Set<Typo> typos = new HashSet<>();
+
+    @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
+    private Set<Account> accounts = new HashSet<>();
 
     public Workspace addTypo(final Typo typo) {
         typos.add(typo);
