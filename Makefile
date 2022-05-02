@@ -29,7 +29,16 @@ run-dev-docker-db: docker-db run-dev
 start: run-dev-docker-db
 
 docker-db:
-	docker-compose -f ./src/main/docker/postgresql.yml up -d --force-recreate
+	docker compose -f ./src/main/docker/postgresql.yml up -d --force-recreate
+
+sonar: sonar-conf
+	docker compose -f ./src/main/docker/sonar.yml up -d --force-recreate
+
+sonar-conf:
+	sudo sysctl -w vm.max_map_count=524288 || echo 1 \
+	&& sudo sysctl -w fs.file-max=131072 || echo 1 \
+	&& ulimit -n 131072 || echo 1 \
+	&& ulimit -u 8192 || echo 1
 
 update-versions:
 	./mvnw versions:update-properties versions:display-plugin-updates
