@@ -16,7 +16,9 @@
                 <constraints nullable="false" primaryKey="true" primaryKeyName="accountPK"/>
             </column>
             <column name="external_open_id" type="VARCHAR(20)"/>
-            <column name="auth_provider" type="AUTH_PROVIDER"/>
+            <column name="auth_provider" type="AUTH_PROVIDER">
+                <constraints nullable="false"/>
+            </column>
             <column name="email" type="VARCHAR(255)"/>
             <column name="first_name" type="VARCHAR(50)"/>
             <column name="last_name" type="VARCHAR(50)"/>

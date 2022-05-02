@@ -1,4 +1,4 @@
-package io.hexlet.typoreporter.security.model;
+package io.hexlet.typoreporter.domain.account;
 
 import org.hibernate.HibernateException;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;

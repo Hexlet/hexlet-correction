@@ -1,4 +1,4 @@
-package io.hexlet.typoreporter.security.model;
+package io.hexlet.typoreporter.domain.account;
 
 public enum AuthProvider {
 

@@ -2,15 +2,12 @@ package io.hexlet.typoreporter.domain.account;
 
 import io.hexlet.typoreporter.domain.typo.Typo;
 import io.hexlet.typoreporter.domain.workspace.Workspace;
-import io.hexlet.typoreporter.security.model.AuthProviderPgEnum;
 import lombok.*;
-import lombok.experimental.Accessors;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
-import java.security.AuthProvider;
 import java.util.ArrayList;
 import java.util.List;
 
