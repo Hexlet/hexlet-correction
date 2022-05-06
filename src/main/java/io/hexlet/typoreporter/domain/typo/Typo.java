@@ -79,7 +79,7 @@ public class Typo extends AbstractAuditingEntity implements Identifiable<Long> {
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @ToString.Exclude
-    private Account accounts;
+    private Account account;
 
     @Override
     public int hashCode() {

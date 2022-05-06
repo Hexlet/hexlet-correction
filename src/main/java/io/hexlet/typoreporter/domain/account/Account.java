@@ -1,8 +1,15 @@
 package io.hexlet.typoreporter.domain.account;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import io.hexlet.typoreporter.domain.Identifiable;
 import io.hexlet.typoreporter.domain.typo.Typo;
 import io.hexlet.typoreporter.domain.workspace.Workspace;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import lombok.experimental.Accessors;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
@@ -11,17 +18,19 @@ import javax.validation.constraints.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
-@AllArgsConstructor
+@Accessors(chain = true)
+@Entity
 @TypeDef(name = "pgsql_auth_provider_enum", typeClass = AuthProviderPgEnum.class)
-public class Account {
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+public class Account implements Identifiable<Long> {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "account_id_seq")
+    @SequenceGenerator(name = "account_id_seq", allocationSize = 15)
     private Long id;
 
     @NotBlank
@@ -54,17 +63,28 @@ public class Account {
     private String lastName;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @ToString.Exclude
     private Workspace workspace;
 
-    @OneToMany(mappedBy = "accounts", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
     private List<Typo> typos = new ArrayList<>();
+
+    public Account addTypo(final Typo typo) {
+        typos.add(typo);
+        typo.setAccount(this);
+        return this;
+    }
+
+    public Account removeTypo(final Typo typo) {
+        typos.remove(typo);
+        typo.setAccount(null);
+        return this;
+    }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Account account = (Account) o;
-        return id.equals(account.id);
+        return this == o || id != null && o instanceof Account other && id.equals(other.id);
     }
 
     @Override
