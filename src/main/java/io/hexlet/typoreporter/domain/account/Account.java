@@ -2,7 +2,9 @@ package io.hexlet.typoreporter.domain.account;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import io.hexlet.typoreporter.domain.AbstractAuditingEntity;
 import io.hexlet.typoreporter.domain.Identifiable;
+import io.hexlet.typoreporter.domain.account.constraint.AccountUsername;
 import io.hexlet.typoreporter.domain.typo.Typo;
 import io.hexlet.typoreporter.domain.workspace.Workspace;
 import lombok.Getter;
@@ -26,7 +28,7 @@ import java.util.List;
 @Entity
 @TypeDef(name = "pgsql_auth_provider_enum", typeClass = AuthProviderPgEnum.class)
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-public class Account implements Identifiable<Long> {
+public class Account extends AbstractAuditingEntity implements Identifiable<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "account_id_seq")
@@ -46,9 +48,7 @@ public class Account implements Identifiable<Long> {
     @Column(unique = true)
     private String email;
 
-    @NotBlank
-    @Size(min = 2, max = 20)
-    @Pattern(regexp = "A-Za-z0-9_-")
+    @AccountUsername
     @Column(unique = true)
     private String username;
 
