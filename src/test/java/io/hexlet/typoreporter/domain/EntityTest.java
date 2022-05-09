@@ -1,10 +1,12 @@
 package io.hexlet.typoreporter.domain;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.hexlet.typoreporter.domain.account.Account;
 import io.hexlet.typoreporter.domain.typo.Typo;
 import io.hexlet.typoreporter.domain.workspace.Workspace;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.*;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.JsonTest;
 
@@ -18,7 +20,7 @@ class EntityTest {
     private ObjectMapper objectMapper;
 
     @ParameterizedTest
-    @ValueSource(classes = {Typo.class, Workspace.class})
+    @ValueSource(classes = {Typo.class, Workspace.class, Account.class})
     void equalsHashCodeVerifier(Class<Identifiable<Long>> clazz) throws Exception {
         final var entityOne = clazz.getConstructor().newInstance();
         final var entityTwo = clazz.getConstructor().newInstance();
@@ -32,7 +34,7 @@ class EntityTest {
     }
 
     @ParameterizedTest
-    @ValueSource(classes = {Typo.class, Workspace.class})
+    @ValueSource(classes = {Typo.class, Workspace.class, Account.class})
     void isSerializeNewEntityToJson(Class<?> clazz) {
         assertDoesNotThrow(() -> objectMapper.writeValueAsString(clazz.getConstructor().newInstance()));
     }
@@ -44,7 +46,7 @@ class EntityTest {
     }
 
     @ParameterizedTest
-    @ValueSource(classes = {Typo.class, Workspace.class})
+    @ValueSource(classes = {Typo.class, Workspace.class, Account.class})
     void isNotExceptionForToStringWithNewEntity(Class<?> clazz) throws Exception {
         assertDoesNotThrow(clazz.getConstructor().newInstance()::toString);
     }
@@ -56,7 +58,7 @@ class EntityTest {
     }
 
     @ParameterizedTest
-    @ValueSource(classes = {Typo.class, Workspace.class})
+    @ValueSource(classes = {Typo.class, Workspace.class, Account.class})
     void isEqualsIfIdsEquals(Class<Identifiable<Long>> clazz) throws Exception {
         final var entityOne = clazz.getConstructor().newInstance().setId(1L);
         final var entityTwo = clazz.getConstructor().newInstance().setId(1L);
@@ -64,7 +66,7 @@ class EntityTest {
     }
 
     @ParameterizedTest
-    @ValueSource(classes = {Typo.class, Workspace.class})
+    @ValueSource(classes = {Typo.class, Workspace.class, Account.class})
     void isNotEqualsIfIdsNotEquals(Class<Identifiable<Long>> clazz) throws Exception {
         final var entityOne = clazz.getConstructor().newInstance().setId(1L);
         final var entityTwo = clazz.getConstructor().newInstance().setId(2L);
@@ -72,7 +74,7 @@ class EntityTest {
     }
 
     @ParameterizedTest
-    @ValueSource(classes = {Typo.class, Workspace.class})
+    @ValueSource(classes = {Typo.class, Workspace.class, Account.class})
     void isNotEqualsIfOneIdNull(Class<Identifiable<Long>> clazz) throws Exception {
         final var entityOne = clazz.getConstructor().newInstance().setId(1L);
         final var entityTwo = clazz.getConstructor().newInstance();

@@ -76,7 +76,6 @@ public class Typo extends AbstractAuditingEntity implements Identifiable<Long> {
     @ToString.Exclude
     private Workspace workspace;
 
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @ToString.Exclude
     private Account account;
