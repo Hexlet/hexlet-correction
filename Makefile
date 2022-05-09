@@ -29,7 +29,7 @@ run-dev-docker-db: docker-db run-dev
 start: run-dev-docker-db
 
 docker-db:
-	docker-compose -f ./src/main/docker/postgresql.yml up -d --force-recreate
+	docker-compose -f ./src/main/docker/postgresql.yml up -d -V --remove-orphans
 
 update-versions:
 	./mvnw versions:update-properties versions:display-plugin-updates
