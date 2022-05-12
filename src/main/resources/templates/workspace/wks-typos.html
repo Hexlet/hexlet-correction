@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sd="http://www.w3.org/1999/xhtml">
 <head th:replace="fragments/header :: head"></head>
 <body style="padding-top: 4.5rem">
 <nav th:replace="fragments/panels :: mainNavbarTop"></nav>
@@ -46,39 +46,9 @@
                             </div>
                         </div>
                         <!-- Page pagination -->
-                        <nav class="col">
-                            <ul class="pagination">
-                                <li class="page-item" th:classappend="${typoPage.first}? 'disabled'">
-                                    <a aria-label="Previous" class="page-link"
-                                       th:aria-disabled="${typoPage.first}"
-                                       th:href="@{'/workspace/' + ${wksName} + '/typos'(page=${typoPage.number - 1},size=${typoPage.size},sort=|${sortProp},${sortDir}|)}"
-                                       th:tabindex="${typoPage.first}? -1">
-                                        <span aria-hidden="true">&laquo;</span>
-                                    </a>
-                                </li>
-                                <li class="page-item"
-                                    th:attrappend="aria-current=${isCurrent}?'page'"
-                                    th:classappend="${isCurrent}?'active'"
-                                    th:each="number, stat : ${pageNumbers}"
-                                    th:with="isCurrent = ${number == typoPage.number + 1}">
-                                    <a class="page-link"
-                                       th:href="@{'/workspace/' + ${wksName} + '/typos'(page=${number - 1},size=${typoPage.size},sort=|${sortProp},${sortDir}|)}"
-                                       th:text="${number}"
-                                       th:unless="${isCurrent || number == null }"></a>
-                                    <span class="page-link" th:if="${isCurrent && number != null}"
-                                          th:text="${number}"></span>
-                                    <span class="page-link" th:if="${number == null}">...</span>
-                                </li>
-                                <li class="page-item" th:classappend="${typoPage.last}? 'disabled'">
-                                    <a aria-label="Next" class="page-link"
-                                       th:aria-disabled="${typoPage.last}"
-                                       th:href="@{'/workspace/' + ${wksName} + '/typos'(page=${typoPage.number + 1},size=${typoPage.size},sort=|${sortProp},${sortDir}|)}"
-                                       th:tabindex="${typoPage.last}?-1">
-                                        <span aria-hidden="true">&raquo;</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </nav>
+                        <div class="col-sm-6">
+                            <ul class="pagination" sd:pagination="full"></ul>
+                        </div>
                     </div>
                     <!-- Workspace typo table -->
                     <div class="row">

@@ -100,24 +100,7 @@ public class WorkspaceController {
             .stream()
             .findFirst()
             .orElseGet(() -> asc(DEFAULT_SORT_FIELD));
-        var pageNumber = typoPage.getNumber() + 1;
-        var pageNumbers = IntStream.of(1, pageNumber - 1, pageNumber, pageNumber + 1, typoPage.getTotalPages())
-            .filter(n -> n > 0)
-            .filter(n -> n <= typoPage.getTotalPages())
-            .distinct()
-            .boxed()
-            .collect(toList());
 
-        if (pageNumbers.size() > 1) {
-            if (pageNumbers.get(0) != pageNumbers.get(1) - 1) {
-                pageNumbers.add(1, null);
-            }
-            if (pageNumbers.get(pageNumbers.size() - 2) != pageNumbers.get(pageNumbers.size() - 1) - 1) {
-                pageNumbers.add(pageNumbers.size() - 1, null);
-            }
-        }
-
-        model.addAttribute("pageNumbers", pageNumbers);
         model.addAttribute("typoPage", typoPage);
         model.addAttribute("availableSizes", availableSizes);
         model.addAttribute("sortProp", sort.getProperty());
