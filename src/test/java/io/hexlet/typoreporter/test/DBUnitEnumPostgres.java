@@ -16,6 +16,6 @@ public class DBUnitEnumPostgres extends PostgresqlDataTypeFactory {
 
     @Override
     public boolean isEnumType(String sqlTypeName) {
-        return "typo_status".equalsIgnoreCase(sqlTypeName);
+        return "typo_status".equalsIgnoreCase(sqlTypeName) || "auth_provider".equalsIgnoreCase(sqlTypeName);
     }
 }
