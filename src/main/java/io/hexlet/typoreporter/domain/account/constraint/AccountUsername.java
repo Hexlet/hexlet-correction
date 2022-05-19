@@ -12,7 +12,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @NotBlank(message = "Account username must not be blank")
-@Size(min = 2, max = 20)
+@Size(min = 2, max = 20, message = "Username size must be between 2 and 20 characters")
 @Pattern(regexp = "^[-_A-Za-z0-9]*$", message = "Account username must contain A-Z a-z 0-9 _ - characters")
 @Constraint(validatedBy = {})
 @Target({ElementType.FIELD, ElementType.PARAMETER})

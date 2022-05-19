@@ -20,15 +20,18 @@
         <!-- WebJars -->
         <webjars-locator.version>0.45</webjars-locator.version>
         <bootstrap.version>5.1.3</bootstrap.version>
+        <font-awesome.version>6.1.0</font-awesome.version>
         <!-- Utils -->
         <problem-spring-web-starter.version>0.28.0-RC.0</problem-spring-web-starter.version>
         <prettytime.version>5.0.2.Final</prettytime.version>
+        <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
         <!-- Test -->
         <testcontainers.version>1.16.3</testcontainers.version>
         <database-rider.version>1.32.3</database-rider.version>
         <!-- Plugins -->
         <maven-failsafe-plugin.version>2.22.2</maven-failsafe-plugin.version>
         <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
+        <org.mapstruct.version>1.4.2.Final</org.mapstruct.version>
     </properties>
 
     <dependencyManagement>
@@ -69,6 +72,11 @@
             <groupId>org.webjars</groupId>
             <artifactId>bootstrap</artifactId>
             <version>${bootstrap.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>font-awesome</artifactId>
+            <version>${font-awesome.version}</version>
         </dependency>
         <!-- DB -->
         <dependency>
@@ -120,6 +128,11 @@
             <groupId>io.github.jpenren</groupId>
             <artifactId>thymeleaf-spring-data-dialect</artifactId>
             <version>3.5.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>${org.mapstruct.version}</version>
         </dependency>
         <!-- Test -->
         <dependency>
@@ -173,6 +186,16 @@
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok</artifactId>
                             <version>${lombok.version}</version>
+                        </path>
+                        <path>
+                            <groupId>org.mapstruct</groupId>
+                            <artifactId>mapstruct-processor</artifactId>
+                            <version>${org.mapstruct.version}</version>
+                        </path>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok-mapstruct-binding</artifactId>
+                            <version>${lombok-mapstruct-binding.version}</version>
                         </path>
                     </annotationProcessorPaths>
                 </configuration>

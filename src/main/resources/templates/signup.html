@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: head">
+</head>
+<body style="padding-top: 3.5rem">
+<nav th:replace="fragments/panels :: mainNavbarTop"></nav>
+<section class="vh-100">
+    <div class="container w-50 h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-lg-12 col-xl-11">
+                <div class="card text-black border-dark" style="border-radius: 25px; border-width: 2px">
+                    <div class="card-body p-md-5">
+                        <div class="form-container">
+                            <form action="#" th:object="${accountRegistration}"
+                                  th:action="@{/signup}" method="post">
+                                <h3 style="text-align: center">Create Account</h3>
+                                <div class="form-row text-center mb-2">
+                                    <div class="col-12">
+                                        <a href="#" class="social"><i class="fab fa-github fa-2x"
+                                                                      style="color: #333333"></i></a>
+                                    </div>
+                                    <span>or use email registration:</span>
+                                </div>
+                                <div class="row g-3">
+                                    <input type="text" id="firstName" th:field="*{firstName}"
+                                           class="form-control" th:errorclass="is-invalid"
+                                           placeholder="First name" aria-describedby="firstNameBlock"/>
+                                    <span id="firstNameBlock"
+                                          class="form-text text-warning" th:if="${#fields.hasErrors('firstName')}"
+                                          th:errors="*{firstName}"></span>
+                                    <span class="form-text" th:unless="${#fields.hasErrors('firstName')}">First name longer than 1 character</span>
+                                    <input type="text" id="lastName" th:field="*{lastName}"
+                                           class="form-control" th:errorclass="is-invalid"
+                                           placeholder="Last Name" aria-describedby="lastNameBlock"/>
+                                    <span id="lastNameBlock" class="form-text text-warning" th:if="${#fields.hasErrors('lastName')}"
+                                          th:errors="*{lastName}"></span>
+                                    <span class="form-text" th:unless="${#fields.hasErrors('lastName')}">Last name longer than 1 character</span>
+                                    <input type="text" id="username" th:field="*{username}"
+                                           class="form-control" th:errorclass="is-invalid"
+                                           placeholder="Username" aria-describedby="usernameBlock"/>
+                                    <span id="usernameBlock" class="form-text text-warning" th:if="${#fields.hasErrors('username')}"
+                                          th:errors="*{username}"></span>
+                                    <span class="form-text" th:unless="${#fields.hasErrors('username')}">Size must be between 2 and 20 characters, and must contain A-Z a-z 0-9 _ - characters</span>
+                                    <input type="email" id="accountEmail" th:field="*{email}"
+                                           class="form-control" th:errorclass="is-invalid"
+                                           placeholder="E-mail" aria-describedby="emailBlock"/>
+                                    <span id="emailBlock" class="form-text text-warning" th:if="${#fields.hasErrors('email')}"
+                                          th:errors="*{email}"></span>
+                                    <span class="form-text" th:unless="${#fields.hasErrors('email')}">Email should be valid</span>
+                                    <input type="password" id="accountPassword" th:field="*{password}"
+                                           class="form-control" th:errorclass="is-invalid"
+                                           placeholder="Password" aria-describedby="passwordBlock"/>
+                                    <span id="passwordBlock" class="form-text text-warning" th:if="${#fields.hasErrors('password')}"
+                                          th:errors="*{password}"></span>
+                                    <span class="form-text" th:unless="${#fields.hasErrors('password')}">Size must be between 8 and 30 characters</span>
+                                    <button class="btn btn-outline-dark" type="submit">Sign Up</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>
