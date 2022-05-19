@@ -21,6 +21,10 @@ public class Routers {
 
     public static final String DEFAULT_SORT_FIELD = "createdDate";
 
+    public static final String LOGIN_PATH = "/login";
+
+    public static final String ACCOUNT_PATH = "/account";
+
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class Workspace {
 
