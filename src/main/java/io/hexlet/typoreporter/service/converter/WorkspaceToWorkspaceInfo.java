@@ -6,7 +6,6 @@ import org.ocpsoft.prettytime.PrettyTime;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
-//TODO add tests
 @Component
 public class WorkspaceToWorkspaceInfo implements Converter<Workspace, WorkspaceInfo> {
 
