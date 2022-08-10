@@ -8,10 +8,10 @@ import io.hexlet.typoreporter.repository.WorkspaceRepository;
 import io.hexlet.typoreporter.service.dto.workspace.CreateWorkspace;
 import io.hexlet.typoreporter.service.dto.workspace.WorkspaceInfo;
 import io.hexlet.typoreporter.test.DBUnitEnumPostgres;
+import io.hexlet.typoreporter.web.exception.WorkspaceAlreadyExistException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,15 +20,15 @@ import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.*;
 
-import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.UUID;
 
 import static com.github.database.rider.core.api.configuration.Orthography.LOWERCASE;
 import static io.hexlet.typoreporter.test.Constraints.POSTGRES_IMAGE;
 import static io.hexlet.typoreporter.test.factory.EntitiesFactory.WORKSPACE_101_NAME;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 @Testcontainers
@@ -84,6 +84,15 @@ public class WorkspaceServiceIT {
         final var newWks = new CreateWorkspace("wks-name-1", "wks desc");
         WorkspaceInfo workspaceInfo = service.createWorkspace(newWks);
         assertThat(workspaceInfo.name()).isNotEmpty();
+    }
+
+    @ParameterizedTest
+    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getCreateWorkspaces")
+    void createWorkspaceWithWorkspaceAlreadyExistException(CreateWorkspace createWks) {
+        Throwable thrown = assertThrows(WorkspaceAlreadyExistException.class, () -> {
+            service.createWorkspace(createWks);
+        });
+        assertNotNull(thrown.getMessage());
     }
 
     @ParameterizedTest
