@@ -1,6 +1,8 @@
 # Hexlet Typo Reporter
 
-This application created for receive the typo errors from a site.
+A service to notify site owners of errors and typos. After integrating with the site, visitors are able to highlight an error or typo and report it to the administrator. The project works in Java.
+
+Tasks can be discussed in the #hexlet-volunteers channel in the [Slack community](https://slack-ru.hexlet.io/).
 
 ## Development
 
