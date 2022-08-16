@@ -97,7 +97,7 @@ public class TypoControllerIT {
     @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspaceNamesExist")
     void updateTypoStatusWithUpdatedTypoIsEmpty(final String wksName) throws Exception {
-        Long NOT_EXIST_TYPO_ID = 11L;
+        final Long NOT_EXIST_TYPO_ID = 11L;
         mockMvc.perform(patch(TYPOS + ID_PATH + TYPO_STATUS, NOT_EXIST_TYPO_ID)
                 .param("wksName", wksName)
                 .param("event", CANCEL.name())
