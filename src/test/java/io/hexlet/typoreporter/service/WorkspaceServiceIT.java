@@ -67,14 +67,14 @@ public class WorkspaceServiceIT {
     }
 
     @ParameterizedTest
-    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspaces")
-    void getWorkspaceInfoByNameIsSuccessful() {
-        WorkspaceInfo workspaceInfo = service.getWorkspaceInfoByName(WORKSPACE_101_NAME).orElse(null);
+    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspaceNamesExist")
+    void getWorkspaceInfoByNameIsSuccessful(final String wksName) {
+        WorkspaceInfo workspaceInfo = service.getWorkspaceInfoByName(wksName).orElse(null);
         assertThat(workspaceInfo != null).isTrue();
     }
 
     @ParameterizedTest
-    @ValueSource(strings = "wks-test")
+    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspaceNamesExist")
     void existsWorkspaceByNameIsSuccessful(final String wksName) {
         assertThat(service.existsWorkspaceByName(wksName)).isTrue();
     }
@@ -96,15 +96,15 @@ public class WorkspaceServiceIT {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = "wks-test")
-    void updateWorkspaceIsSuccessful() {
+    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspaceNamesExist")
+    void updateWorkspaceIsSuccessful(final String wksName) {
         final var newWks = new CreateWorkspace("wks-name-1", "wks desc");
         WorkspaceInfo workspaceInfo = service.updateWorkspace(newWks, "wks-test").orElse(null);
         assertThat(Objects.requireNonNull(workspaceInfo).name()).isEqualTo(newWks.name());
     }
 
     @ParameterizedTest
-    @ValueSource(strings = "wks-test")
+    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspaceNamesExist")
     void deleteWorkspaceByNameIsSuccessful(final String wksName) {
         final Integer successfulCode = 1;
         assertThat(service.deleteWorkspaceByName(wksName)).isEqualTo(successfulCode);
@@ -112,14 +112,14 @@ public class WorkspaceServiceIT {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = "wks-test")
+    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspaceNamesExist")
     void getWorkspaceApiAccessTokenByNameIsSuccessful(final String wksName) {
         UUID uuid = service.getWorkspaceApiAccessTokenByName(wksName).orElse(null);
         assertThat(uuid != null).isTrue();
     }
 
     @ParameterizedTest
-    @ValueSource(strings = "wks-test")
+    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspaceNamesExist")
     void regenerateWorkspaceApiAccessTokenByNameIsSuccessful(final String wksName) {
         UUID previousUuid = service.getWorkspaceApiAccessTokenByName(wksName).orElse(null);
         UUID newUuid = service.regenerateWorkspaceApiAccessTokenByName(wksName).orElse(null);
@@ -127,7 +127,7 @@ public class WorkspaceServiceIT {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = "wks-test")
+    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspaceNamesExist")
     void getWorkspaceByNameIsSuccessful(final String wksName) {
         Workspace workspace = service.getWorkspaceByName(wksName).orElse(null);
         assertThat(workspace != null).isTrue();

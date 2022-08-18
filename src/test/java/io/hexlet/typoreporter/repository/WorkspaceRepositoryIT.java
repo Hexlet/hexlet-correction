@@ -80,24 +80,24 @@ class WorkspaceRepositoryIT {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = "wks-test")
+    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspaceNamesExist")
     void deleteWorkspaceByNameIsSuccessful(final String wksName) {
         assertThat(workspaceRepository.deleteWorkspaceByName(wksName)).isEqualTo(SUCCESSFUL_CODE);
         assertThat(workspaceRepository.existsWorkspaceByName(wksName)).isFalse();
     }
 
     @ParameterizedTest
-    @ValueSource(strings = "wks-test")
+    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspaceNamesExist")
     void getSecuredWorkspaceByNameIsSuccessful(final String wksName) {
         Optional<SecuredWorkspace> securedWorkspace = workspaceRepository.getSecuredWorkspaceByName(wksName);
         String name = securedWorkspace.map(SecuredWorkspace::getUsername).orElse(null);
 
-        assertThat(name).isEqualTo("wks-test");
+        assertThat(name).isEqualTo(wksName);
         assertThat(workspaceRepository.existsWorkspaceByName(wksName)).isTrue();
     }
 
     @ParameterizedTest
-    @ValueSource(strings = "wks-test")
+    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspaceNamesExist")
     void updateApiAccessTokenByWorkspaceNameIsSuccessful(final String wksName) {
         final UUID newToken = UUID.randomUUID();
         assertThat(workspaceRepository.updateApiAccessTokenByWorkspaceName(wksName, newToken)).isEqualTo(SUCCESSFUL_CODE);
