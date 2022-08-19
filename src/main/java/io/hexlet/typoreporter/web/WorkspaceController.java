@@ -28,7 +28,6 @@ import static java.util.stream.Collectors.toList;
 import static org.springframework.data.domain.Sort.Direction.*;
 import static org.springframework.data.domain.Sort.Order.asc;
 
-//TODO add tests
 @Slf4j
 @Controller
 @RequestMapping(WORKSPACE + WKS_NAME_PATH)
@@ -129,6 +128,7 @@ public class WorkspaceController {
         return WKS_UPDATE_TEMPLATE;
     }
 
+    //TODO add tests
     @PutMapping(UPDATE)
     public String putWorkspaceUpdate(Model model,
                                      @PathVariable String wksName,

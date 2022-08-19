@@ -13,7 +13,6 @@ import java.util.*;
 
 import static java.util.Objects.requireNonNull;
 
-//TODO add tests
 @Service
 @RequiredArgsConstructor
 public class WorkspaceService {
