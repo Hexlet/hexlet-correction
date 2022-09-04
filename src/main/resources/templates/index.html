@@ -12,6 +12,7 @@
                     <p class="card-text" th:text="*{description}"></p>
                     <a class="card-link" th:href="@{'/workspace/' + *{name}}">Info</a>
                     <a class="card-link" th:href="@{'/workspace/' + *{name} + '/typos'}">Typos</a>
+                    <a class="card-link" th:href="@{'/workspace/' + *{name} + '/users'}">Users</a>
                 </div>
             </div>
         </div>
