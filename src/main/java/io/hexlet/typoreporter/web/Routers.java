@@ -21,6 +21,8 @@ public class Routers {
 
     public static final String DEFAULT_SORT_FIELD = "createdDate";
 
+    public static final String USERS = "/users";
+
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class Workspace {
 

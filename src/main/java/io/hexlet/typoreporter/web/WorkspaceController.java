@@ -4,6 +4,7 @@ import io.hexlet.typoreporter.service.*;
 import io.hexlet.typoreporter.service.dto.typo.TypoInfo;
 import io.hexlet.typoreporter.service.dto.workspace.CreateWorkspace;
 import io.hexlet.typoreporter.web.exception.*;
+import io.hexlet.typoreporter.repository.AccountRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
@@ -39,6 +40,8 @@ public class WorkspaceController {
     private final TypoService typoService;
 
     private final WorkspaceService workspaceService;
+
+    private final AccountRepository accountRepository;
 
     @GetMapping
     public String getWorkspaceInfoPage(Model model, @PathVariable String wksName) {
@@ -191,4 +194,39 @@ public class WorkspaceController {
         model.addAttribute("lastTypoCreatedDate", createdDate);
         model.addAttribute("lastTypoCreatedDateAgo", createdDate.map(new PrettyTime()::format));
     }
+
+    @GetMapping(USERS)
+    public String getWorkspaceUsersPage(Model model,
+                                        @PathVariable String wksName,
+                                        @SortDefault(DEFAULT_SORT_FIELD) Pageable pageable) {
+        var wksOptional = workspaceService.getWorkspaceInfoByName(wksName);
+        if (wksOptional.isEmpty()) {
+            //TODO send error page
+            log.error("Workspace with name {} not found", wksName);
+            return REDIRECT_ROOT;
+        }
+        model.addAttribute("wksName", wksName);
+        model.addAttribute("wksInfo", wksOptional.get());
+        getStatisticDataToModel(model, wksName);
+        getLastTypoDataToModel(model, wksName);
+
+        var size = Optional.ofNullable(availableSizes.floor(pageable.getPageSize())).orElseGet(availableSizes::first);
+        var pageRequest = PageRequest.of(pageable.getPageNumber(), size, pageable.getSort());
+        var userPage = accountRepository.findPageAccountByWorkspaceName(pageable, wksName);
+
+
+        var sort = userPage.getSort()
+            .stream()
+            .findFirst()
+            .orElseGet(() -> asc(DEFAULT_SORT_FIELD));
+
+        model.addAttribute("userPage", userPage);
+        model.addAttribute("availableSizes", availableSizes);
+        model.addAttribute("sortProp", sort.getProperty());
+        model.addAttribute("sortDir", sort.getDirection());
+        model.addAttribute("DESC", DESC);
+        model.addAttribute("ASC", ASC);
+        return WKS_USERS_TEMPLATE;
+    }
+
 }
