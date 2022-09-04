@@ -5,8 +5,10 @@ import com.github.database.rider.core.api.dataset.DataSet;
 import com.github.database.rider.spring.api.DBRider;
 import io.hexlet.typoreporter.domain.AbstractAuditingEntity;
 import io.hexlet.typoreporter.domain.typo.Typo;
+import io.hexlet.typoreporter.domain.account.Account;
 import io.hexlet.typoreporter.domain.workspace.Workspace;
 import io.hexlet.typoreporter.repository.WorkspaceRepository;
+import io.hexlet.typoreporter.repository.AccountRepository;
 import io.hexlet.typoreporter.service.WorkspaceService;
 import io.hexlet.typoreporter.service.dto.workspace.CreateWorkspace;
 import io.hexlet.typoreporter.test.DBUnitEnumPostgres;
@@ -25,11 +27,14 @@ import org.testcontainers.junit.jupiter.*;
 
 import java.time.LocalDateTime;
 import java.util.Comparator;
+import java.util.stream.Collectors;
+import java.util.Set;
 
 import static com.github.database.rider.core.api.configuration.Orthography.LOWERCASE;
 import static io.hexlet.typoreporter.test.Constraints.POSTGRES_IMAGE;
 import static io.hexlet.typoreporter.web.Routers.SETTINGS;
 import static io.hexlet.typoreporter.web.Routers.UPDATE;
+import static io.hexlet.typoreporter.web.Routers.USERS;
 import static io.hexlet.typoreporter.web.Routers.Typo.TYPOS;
 import static io.hexlet.typoreporter.web.Routers.Workspace.WKS_NAME_PATH;
 import static io.hexlet.typoreporter.web.Routers.Workspace.WORKSPACE;
@@ -68,6 +73,9 @@ class WorkspaceControllerIT {
 
     @Autowired
     private WorkspaceService service;
+
+    @Autowired
+    private AccountRepository accountRepository;
 
     @Autowired
     private MockMvc mockMvc;
@@ -132,6 +140,27 @@ class WorkspaceControllerIT {
     void getWorkspaceSettingsPageWithoutWksInfo() throws Exception {
         mockMvc.perform(get(WORKSPACE + WKS_NAME_PATH + TYPOS, "notExistsWksName"))
             .andExpect(redirectedUrl("/"));
+    }
+
+    @ParameterizedTest
+    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspaceNamesExist")
+    void getWorkspaceUsersPage(final String wksName) throws Exception {
+        Workspace workspace = repository.getWorkspaceByName(wksName).orElse(null);
+        Set<Account> accounts = accountRepository.findAll().stream().collect(Collectors.toSet());
+        accounts.forEach(account -> workspace.addAccount(account));
+
+        MockHttpServletResponse response = mockMvc.perform(get(WORKSPACE + WKS_NAME_PATH + USERS, wksName))
+            .andExpect(model().attributeExists("wksInfo", "wksName", "userPage", "availableSizes", "sortProp", "sortDir", "DESC", "ASC"))
+            .andReturn().getResponse();
+
+        for (Account account : workspace.getAccounts()) {
+            assertThat(response.getContentAsString()).contains(
+                account.getId().toString(),
+                account.getFirstName(),
+                account.getLastName(),
+                account.getEmail()
+            );
+        }
     }
 
 
