@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sd="http://www.w3.org/1999/xhtml">
+<head th:replace="fragments/header :: head"></head>
+<body style="padding-top: 4.5rem">
+<nav th:replace="fragments/panels :: mainNavbarTop"></nav>
+<main class="container-fluid">
+    <div class="row">
+        <!-- Workspace Side Bar -->
+        <div class="col-2" th:include="fragments/panels :: workspaceSideBar (${wksName}, 'users')"></div>
+        <div class="col">
+            <!-- Workspace progress typo bar -->
+            <div class="row my-3"
+                 th:if="${sumTypoInWks} > 0"
+                 th:insert="fragments/workspace :: wksProgressBar (${sumTypoInWks}, ${countTypoByStatus})"></div>
+            <!-- Workspace number of typo -->
+            <div class="row">
+                <p th:text="|Total number of typos in workspace ${wksName} : ${sumTypoInWks}|"></p>
+            </div>
+            <!-- Workspace last typo date -->
+            <div class="row"
+                 th:if="${lastTypoCreatedDateAgo.isPresent() && lastTypoCreatedDate.isPresent()}"
+                 th:insert="fragments/workspace :: wksLastTypoDate (${lastTypoCreatedDateAgo}, ${lastTypoCreatedDate})"></div>
+            <!-- Workspace typo page -->
+            <div class="row">
+                <main class="col">
+                    <div class="row">
+                        <!-- Page size dropdown -->
+                        <div class="col-2">
+                            <div class="dropdown">
+                                <button aria-expanded="false"
+                                        class="btn btn-secondary dropdown-toggle"
+                                        data-bs-toggle="dropdown"
+                                        id="dropdownSizePage"
+                                        th:text="|Page size ${userPage.size}|"
+                                        type="button">
+                                </button>
+                                <ul aria-labelledby="dropdownSizePage" class="dropdown-menu">
+                                    <li th:each="avalibleSize : ${availableSizes}">
+                                        <a class="dropdown-item"
+                                           th:classappend="(${userPage.size} == ${avalibleSize} ? 'disabled' : '')"
+                                           th:href="@{'/workspace/' + ${wksName} + '/users'(page=0,size=${avalibleSize},sort=|${sortProp},${sortDir}|)}"
+                                           th:text="${avalibleSize}">
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <!-- Page pagination -->
+                        <div class="col-sm-6">
+                            <ul class="pagination" sd:pagination="full"></ul>
+                        </div>
+                    </div>
+                    <!-- Workspace user table -->
+                    <div class="row">
+                        <div class="col">
+                            <table class="table">
+                                <!-- Workspace user table head -->
+                                <thead th:object="${userPage}">
+                                <tr>
+                                    <th scope="col">
+                                        <a class="btn btn-light"
+                                           th:href="@{'/workspace/' + ${wksName} + '/users'(size=*{size},sort=|id,${sortProp == 'id' && sortDir.isAscending() ? DESC : ASC}|)}">
+                                            Id <span>[[${sortProp == 'id' && sortDir.isAscending() ? '&uArr;' : '&dArr;'}]]</span>
+                                        </a>
+                                    </th>
+                                    <th scope="col">
+                                        <a class="btn btn-light"
+                                           th:href="@{'/workspace/' + ${wksName} + '/users'(size=*{size},sort=|firstName,${sortProp == 'firstName' && sortDir.isAscending() ? DESC : ASC}|)}">
+                                            First Name <span>[[${sortProp == 'firstName' && sortDir.isAscending() ? '&uArr;' : '&dArr;'}]]</span>
+                                        </a>
+                                    </th>
+                                    <th scope="col">
+                                        <a class="btn btn-light"
+                                           th:href="@{'/workspace/' + ${wksName} + '/users'(size=*{size},sort=|lastName,${sortProp == 'lastName' && sortDir.isAscending() ? DESC : ASC}|)}">
+                                           Last Name <span>[[${sortProp == 'lastName' && sortDir.isAscending() ? '&uArr;' : '&dArr;'}]]</span>
+                                        </a>
+                                    </th>
+                                    <th scope="col">
+                                        <a class="btn btn-light"
+                                           th:href="@{'/workspace/' + ${wksName} + '/users'(size=*{size},sort=|email,${sortProp == 'email' && sortDir.isAscending() ? DESC : ASC}|)}">
+                                            Email <span>[[${sortProp == 'email' && sortDir.isAscending() ? '&uArr;' : '&dArr;'}]]</span>
+                                        </a>
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <th:block th:each="userInfo : ${userPage.content}" th:object="${userInfo}">
+                                    <!-- Workspace user table row -->
+                                    <tr aria-expanded="false" class="accordion collapsed" data-bs-toggle="collapse"
+                                        th:aria-controls="|collapseUserRowId_*{id}|"
+                                        th:classappend="|table-*{userStatus.getStyle}|"
+                                        th:data-bs-target="|#collapseUserRowId_*{id}|">
+                                        <td th:text="*{id}"></td>
+                                        <td th:text="*{firstName}"></td>
+                                        <td th:text="*{lastName}"></td>
+                                        <td th:text="*{email}"></td>
+                                    </tr>
+                                    <!-- Workspace user table row collapsed part -->
+                                    <tr>
+                                        <td class="p-0" colspan="7">
+                                            <div class="accordion-collapse collapse" th:id="|collapseUserRowId_*{id}|">
+                                                <div class="p-4">
+                                                    <div class="row mb-2">
+                                                        <!-- Workspace user table row delete buttons -->
+                                                        <div class="col-1">
+                                                            <form th:action="@{'/users/' + *{id}(wksName=${wksName})}"
+                                                                  th:method="delete">
+                                                                <button class="btn btn-danger" type="submit">
+                                                                    Delete
+                                                                </button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </th:block>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
+    </div>
+</main>
+</body>
+</html>

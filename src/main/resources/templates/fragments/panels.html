@@ -35,7 +35,10 @@
            th:aria-current="${itemActive} == 'settings'"
            th:classappend="${itemActive} == 'settings' ? 'active' : ''"
            th:href="@{'/workspace/' + ${wksName} + '/settings'}">Settings</a>
-        <a aria-disabled="true" class="list-group-item list-group-item-action disabled" href="#" tabindex="-1">Users</a>
+        <a class="list-group-item list-group-item-action"
+           th:aria-current="${itemActive} == 'users'"
+           th:classappend="${itemActive} == 'users' ? 'active' : ''"
+           th:href="@{'/workspace/' + ${wksName} + '/users'}">Users</a>
         <a aria-disabled="true" class="list-group-item list-group-item-action disabled" href="#" tabindex="-1">Integration</a>
     </div>
 </th:block>

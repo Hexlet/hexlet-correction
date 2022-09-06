@@ -8,6 +8,7 @@ import io.hexlet.typoreporter.domain.account.Account;
 import io.hexlet.typoreporter.domain.typo.Typo;
 import io.hexlet.typoreporter.domain.workspace.Workspace;
 import io.hexlet.typoreporter.test.DBUnitEnumPostgres;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
@@ -17,6 +18,10 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,7 +40,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @Transactional
 @DBRider
 @DBUnit(caseInsensitiveStrategy = LOWERCASE, dataTypeFactoryClass = DBUnitEnumPostgres.class, cacheConnection = false)
-@DataSet(value = {"accounts.yml"})
+@DataSet(value = {"accounts.yml", "workspaces.yml"})
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class AccountRepositoryIT {
 
@@ -46,6 +51,9 @@ public class AccountRepositoryIT {
 
     @Autowired
     private AccountRepository accountRepository;
+
+    @Autowired
+    private WorkspaceRepository workspaceRepository;
 
     @DynamicPropertySource
     static void datasourceProperties(DynamicPropertyRegistry registry) {
@@ -67,5 +75,16 @@ public class AccountRepositoryIT {
     @ValueSource(strings = "invalid-email")
     void getAccountByEmailNotExist(final String email) {
         assertThat(accountRepository.findAccountByEmail(email)).isEmpty();
+    }
+
+    @Test
+    void getPageAccountByWorkspaceName() {
+        Workspace wks = workspaceRepository.findAll().stream().findFirst().get();
+        accountRepository.findAll().forEach(account -> account.setWorkspace(wks));
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("id"));
+        Page<Account> page = accountRepository.findPageAccountByWorkspaceName(pageable, wks.getName());
+        assertThat(page).isNotEmpty();
+        assertThat(page.getTotalElements()).isEqualTo(accountRepository.count());
+        assertThat(page.getTotalPages()).isEqualTo(1);
     }
 }

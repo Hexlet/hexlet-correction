@@ -17,5 +17,8 @@ public class Templates {
 
     static final String WKS_TYPOS_TEMPLATE = WKS_TEMPLATE_DIR + "/wks-typos";
 
+    static final String WKS_USERS_TEMPLATE = WKS_TEMPLATE_DIR + "/wks-users";
+
     static final String WKS_UPDATE_TEMPLATE = WKS_TEMPLATE_DIR + "/wks-update";
+
 }
