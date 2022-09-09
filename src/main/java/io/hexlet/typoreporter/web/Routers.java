@@ -23,6 +23,8 @@ public class Routers {
 
     public static final String LOGIN = "/login";
 
+    public static final String SIGNUP = "/signup";
+
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class Workspace {
 
