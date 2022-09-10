@@ -12,10 +12,10 @@ public class CreateAccountToAccount implements Converter<CreateAccount, Account>
     @Override
     public Account convert(CreateAccount source) {
         return new Account()
-            .setUsername(source.username())
-            .setEmail(source.email())
-            .setFirstName(source.firstName())
-            .setLastName(source.lastName())
-            .setPassword(source.password());
+            .setUsername(source.getUsername())
+            .setEmail(source.getEmail())
+            .setFirstName(source.getFirstName())
+            .setLastName(source.getLastName())
+            .setPassword(source.getPassword());
     }
 }

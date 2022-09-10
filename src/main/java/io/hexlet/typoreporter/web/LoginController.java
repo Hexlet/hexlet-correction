@@ -1,5 +1,6 @@
 package io.hexlet.typoreporter.web;
 
+import io.hexlet.typoreporter.domain.account.Account;
 import io.hexlet.typoreporter.service.UserDetailServiceImpl;
 import io.hexlet.typoreporter.service.dto.account.CreateAccount;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +35,7 @@ public class LoginController {
 
     @GetMapping(SIGNUP)
     public String getSignUpPage(final Model model) {
-        model.addAttribute("accountForm"); // Account or DTO ???
+        model.addAttribute("accountForm", new CreateAccount()); // Account or DTO ???
 
         return SIGNUP_TEMPLATE;
     }

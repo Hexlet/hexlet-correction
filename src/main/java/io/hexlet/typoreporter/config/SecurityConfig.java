@@ -2,6 +2,7 @@ package io.hexlet.typoreporter.config;
 
 import io.hexlet.typoreporter.security.filter.WorkspaceAuthTokenFilter;
 import io.hexlet.typoreporter.security.provider.WorkspaceTokenAuthenticationProvider;
+import io.hexlet.typoreporter.web.Routers;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -20,8 +21,10 @@ import org.zalando.problem.spring.web.advice.security.SecurityProblemSupport;
 
 import static io.hexlet.typoreporter.web.Routers.Typo.TYPOS;
 import static io.hexlet.typoreporter.web.Routers.Workspace.API_WORKSPACES;
+import static io.hexlet.typoreporter.web.Routers.LOGIN;
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
+
 
 @Configuration
 @Setter(onMethod_ = @Autowired)
@@ -62,8 +65,18 @@ public class SecurityConfig {
             .mvcMatchers(POST, API_WORKSPACES + "/*" + TYPOS).authenticated()
             .anyRequest().permitAll() // TODO remove when login added
             .and()
+                .formLogin()
+                .loginPage(LOGIN)
+                .defaultSuccessUrl("/")
+                .permitAll()
+            .and()
+                .logout()
+                .permitAll()
+                .logoutSuccessUrl("/")
+            .and()
             .csrf()
-            .ignoringRequestMatchers(new AntPathRequestMatcher(API_WORKSPACES + "/*" + TYPOS, POST.name()));
+            .ignoringRequestMatchers(new AntPathRequestMatcher(API_WORKSPACES + "/*" + TYPOS, POST.name()))
+            .ignoringRequestMatchers(new AntPathRequestMatcher("/*", POST.name())); // TODO ???
 
         http.addFilterBefore(workspaceAuthTokenFilter(authManager), BasicAuthenticationFilter.class);
 
