@@ -4,6 +4,7 @@ import io.hexlet.typoreporter.service.AccountDetailService;
 import io.hexlet.typoreporter.service.dto.account.CreateAccount;
 import io.hexlet.typoreporter.service.dto.account.LoginAccount;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -25,6 +26,7 @@ import static io.hexlet.typoreporter.web.Templates.*;
 @RequiredArgsConstructor
 public class LoginController {
 
+    @Autowired
     private AccountDetailService accountDetailService;
 
     @GetMapping(LOGIN)
@@ -80,4 +82,10 @@ public class LoginController {
 
         return REDIRECT_ROOT;
     }
+
+    @GetMapping("/debug")
+    public String debugLogin() {
+        return "<div>Logged in</div>";
+    }
+
 }

@@ -9,7 +9,7 @@
         <form method="post" th:action="@{/login}" th:object="${loginAccount}">
             <div class="form-floating mb-3">
                 <input class="form-control" id="inputUsername" placeholder="p"
-                type="text">
+                       type="text" th:field="*{username}">
                 <label for="inputUsername">Username</label>
                 <div class="alert alert-danger" th:if="${#fields.hasErrors('username')}">
                     <p th:each="err : ${#fields.errors('username')}" th:text="${err}"></p>
@@ -18,7 +18,7 @@
 
             <div class="form-floating mb-3">
                 <input class="form-control" id="inputPassword" placeholder="p"
-                       type="password">
+                       type="password" th:field="*{password}">
                 <label for="inputPassword">Password</label>
                 <div class="alert alert-danger" th:if="${#fields.hasErrors('password')}">
                     <p th:each="err : ${#fields.errors('password')}" th:text="${err}"></p>
