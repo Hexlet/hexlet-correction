@@ -6,41 +6,55 @@
 <main class="container">
     <div class="row">
         <div class="col">
-            <!--what is th:action-->
-            <form method="post" th:action="@{/signup}" th:object="${accountForm}">
+            <form method="post" th:action="@{/signup}" th:object="${createAccount}">
                 <div class="form-floating mb-3">
                     <input class="form-control" id="inputUsername" placeholder="p"
+                           th:classappend="${!#fields.hasErrors('username') && formModified ? 'is-valid' : ''}"
                            type="text" th:field="*{username}">
                     <label for="inputUsername">Username</label>
-                    <!--                <div class="invalid-feedback" th:each="err : ${#fields.errors('username')}" th:text="${err}"></div>-->
+                    <div class="alert alert-danger" th:if="${#fields.hasErrors('username')}">
+                        <p th:each="err : ${#fields.errors('username')}" th:text="${err}"></p>
+                    </div>
                 </div>
 
                 <div class="form-floating mb-3">
                     <input class="form-control" id="inputEmail" placeholder="p"
+                           th:classappend="${!#fields.hasErrors('email') && formModified ? 'is-valid' : ''}"
                            type="email" th:field="*{email}">
-                    <label for="inputUsername">Email</label>
-                    <!--                <div class="invalid-feedback" th:each="err : ${#fields.errors('username')}" th:text="${err}"></div>-->
+                    <label for="inputEmail">Email</label>
+                    <div class="alert alert-danger" th:if="${#fields.hasErrors('email')}">
+                        <p th:each="err : ${#fields.errors('email')}" th:text="${err}"></p>
+                    </div>
                 </div>
 
                 <div class="form-floating mb-3">
                     <input class="form-control" id="inputFirstName" placeholder="p"
+                           th:classappend="${!#fields.hasErrors('firstName') && formModified ? 'is-valid' : ''}"
                            type="text" th:field="*{firstName}">
                     <label for="inputFirstName">First Name</label>
-                    <!--                <div class="invalid-feedback" th:each="err : ${#fields.errors('username')}" th:text="${err}"></div>-->
+                    <div class="alert alert-danger" th:if="${#fields.hasErrors('firstName')}">
+                        <p th:each="err : ${#fields.errors('firstName')}" th:text="${err}"></p>
+                    </div>
                 </div>
 
                 <div class="form-floating mb-3">
                     <input class="form-control" id="inputLastName" placeholder="p"
+                           th:classappend="${!#fields.hasErrors('lastName') && formModified ? 'is-valid' : ''}"
                            type="text" th:field="*{lastName}">
                     <label for="inputLastName">Last Name</label>
-                    <!--                <div class="invalid-feedback" th:each="err : ${#fields.errors('username')}" th:text="${err}"></div>-->
+                    <div class="alert alert-danger" th:if="${#fields.hasErrors('lastName')}">
+                        <p th:each="err : ${#fields.errors('lastName')}" th:text="${err}"></p>
+                    </div>
                 </div>
 
                 <div class="form-floating mb-3">
                     <input class="form-control" id="inputPassword" placeholder="p"
+                           th:classappend="${!#fields.hasErrors('password') && formModified ? 'is-valid' : ''}"
                            type="password" th:field="*{password}">
                     <label for="inputPassword">Password</label>
-                    <!--                <div class="invalid-feedback" th:each="err : ${#fields.errors('password')}" th:text="${err}"></div>-->
+                    <div class="alert alert-danger" th:if="${#fields.hasErrors('password')}">
+                        <p th:each="err : ${#fields.errors('password')}" th:text="${err}"></p>
+                    </div>
                 </div>
 
                 <button class="btn btn-primary" type="submit">Create Account</button>

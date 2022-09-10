@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import io.hexlet.typoreporter.domain.AbstractAuditingEntity;
 import io.hexlet.typoreporter.domain.Identifiable;
+import io.hexlet.typoreporter.domain.account.constraint.AccountPassword;
 import io.hexlet.typoreporter.domain.account.constraint.AccountUsername;
 import io.hexlet.typoreporter.domain.typo.Typo;
 import io.hexlet.typoreporter.domain.workspace.Workspace;
@@ -30,6 +31,8 @@ import java.util.List;
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Account extends AbstractAuditingEntity implements Identifiable<Long> {
 
+    public static final int PASSWORD_MAX_LENGTH = 30;
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "account_id_seq")
     @SequenceGenerator(name = "account_id_seq", allocationSize = 15)
@@ -52,6 +55,7 @@ public class Account extends AbstractAuditingEntity implements Identifiable<Long
     @Column(unique = true)
     private String username;
 
+    @AccountPassword
     private String password;
 
     @NotBlank

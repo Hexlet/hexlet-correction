@@ -6,20 +6,23 @@
 <main class="container">
 <div class="row">
     <div class="col">
-        <!--what is th:action-->
-        <form method="post"> <!--th:action="@{/login/account}" th:object="${loginAccount}">-->
+        <form method="post" th:action="@{/login}" th:object="${loginAccount}">
             <div class="form-floating mb-3">
                 <input class="form-control" id="inputUsername" placeholder="p"
                 type="text">
                 <label for="inputUsername">Username</label>
-<!--                <div class="invalid-feedback" th:each="err : ${#fields.errors('username')}" th:text="${err}"></div>-->
+                <div class="alert alert-danger" th:if="${#fields.hasErrors('username')}">
+                    <p th:each="err : ${#fields.errors('username')}" th:text="${err}"></p>
+                </div>
             </div>
 
             <div class="form-floating mb-3">
                 <input class="form-control" id="inputPassword" placeholder="p"
                        type="password">
                 <label for="inputPassword">Password</label>
-<!--                <div class="invalid-feedback" th:each="err : ${#fields.errors('password')}" th:text="${err}"></div>-->
+                <div class="alert alert-danger" th:if="${#fields.hasErrors('password')}">
+                    <p th:each="err : ${#fields.errors('password')}" th:text="${err}"></p>
+                </div>
             </div>
 
             <button class="btn btn-primary" type="submit">Login</button>

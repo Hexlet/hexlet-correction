@@ -1,10 +1,10 @@
 package io.hexlet.typoreporter.web;
 
-import io.hexlet.typoreporter.domain.account.Account;
-import io.hexlet.typoreporter.service.UserDetailServiceImpl;
+import io.hexlet.typoreporter.service.AccountDetailService;
 import io.hexlet.typoreporter.service.dto.account.CreateAccount;
+import io.hexlet.typoreporter.service.dto.account.LoginAccount;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,27 +25,45 @@ import static io.hexlet.typoreporter.web.Templates.*;
 @RequiredArgsConstructor
 public class LoginController {
 
-    @Autowired
-    private UserDetailServiceImpl userDetailService;
+    private AccountDetailService accountDetailService;
 
     @GetMapping(LOGIN)
-    public String getLoginPage() {
+    public String getLoginPage(final Model model) {
+        model.addAttribute("loginAccount", new LoginAccount());
         return LOGIN_TEMPLATE;
+    }
+
+    @PostMapping(LOGIN)
+    public String login(@ModelAttribute("loginAccount") @Valid LoginAccount loginAccount,
+                        BindingResult bindingResult,
+                        Model model) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("loginAccount", loginAccount);
+            return LOGIN_TEMPLATE;
+        }
+
+        UserDetails account = accountDetailService.loadUserByUsername(loginAccount.getUsername());
+        if (account == null) {
+            return LOGIN_TEMPLATE;
+        }
+
+        return REDIRECT_ROOT;
     }
 
     @GetMapping(SIGNUP)
     public String getSignUpPage(final Model model) {
-        model.addAttribute("accountForm", new CreateAccount()); // Account or DTO ???
-
+        model.addAttribute("createAccount", new CreateAccount());
+        model.addAttribute("formModified", false);
         return SIGNUP_TEMPLATE;
     }
 
     @PostMapping(SIGNUP)
-    public String createAccount(@ModelAttribute("accountForm") @Valid CreateAccount accountForm,
+    public String createAccount(@ModelAttribute("createAccount") @Valid CreateAccount createAccount,
                                 BindingResult bindingResult,
                                 Model model) {
-
+        model.addAttribute("formModified", true);
         if (bindingResult.hasErrors()) {
+            model.addAttribute("createAccount", createAccount);
             return SIGNUP_TEMPLATE;
         }
         // TODO more checks ???
@@ -55,7 +73,7 @@ public class LoginController {
         //     return "registration";
         // }
 
-        if (!userDetailService.saveAccount(accountForm)){
+        if (!accountDetailService.saveAccount(createAccount)){
             model.addAttribute("usernameError", "Account already exists");
             return SIGNUP_TEMPLATE;
         }
