@@ -1,11 +1,10 @@
 package io.hexlet.typoreporter.web;
 
-import io.hexlet.typoreporter.service.AccountDetailService;
+import io.hexlet.typoreporter.service.AccountService;
 import io.hexlet.typoreporter.service.dto.account.CreateAccount;
 import io.hexlet.typoreporter.service.dto.account.LoginAccount;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,29 +26,12 @@ import static io.hexlet.typoreporter.web.Templates.*;
 public class LoginController {
 
     @Autowired
-    private AccountDetailService accountDetailService;
+    private AccountService accountService;
 
     @GetMapping(LOGIN)
     public String getLoginPage(final Model model) {
         model.addAttribute("loginAccount", new LoginAccount());
         return LOGIN_TEMPLATE;
-    }
-
-    @PostMapping(LOGIN)
-    public String login(@ModelAttribute("loginAccount") @Valid LoginAccount loginAccount,
-                        BindingResult bindingResult,
-                        Model model) {
-        if (bindingResult.hasErrors()) {
-            model.addAttribute("loginAccount", loginAccount);
-            return LOGIN_TEMPLATE;
-        }
-
-        UserDetails account = accountDetailService.loadUserByUsername(loginAccount.getUsername());
-        if (account == null) {
-            return LOGIN_TEMPLATE;
-        }
-
-        return REDIRECT_ROOT;
     }
 
     @GetMapping(SIGNUP)
@@ -75,7 +57,7 @@ public class LoginController {
         //     return "registration";
         // }
 
-        if (!accountDetailService.saveAccount(createAccount)){
+        if (!accountService.saveAccount(createAccount)){
             model.addAttribute("usernameError", "Account already exists");
             return SIGNUP_TEMPLATE;
         }
@@ -85,7 +67,7 @@ public class LoginController {
 
     @GetMapping("/debug")
     public String debugLogin() {
-        return "<div>Logged in</div>";
+        return "account/debug";
     }
 
 }

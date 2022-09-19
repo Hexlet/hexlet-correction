@@ -1,8 +1,8 @@
 package io.hexlet.typoreporter.config;
 
 import io.hexlet.typoreporter.security.filter.WorkspaceAuthTokenFilter;
+import io.hexlet.typoreporter.security.provider.AccountAuthenticationProvider;
 import io.hexlet.typoreporter.security.provider.WorkspaceTokenAuthenticationProvider;
-import io.hexlet.typoreporter.web.Routers;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -33,6 +33,8 @@ public class SecurityConfig {
     private SecurityProblemSupport problemSupport;
 
     private WorkspaceTokenAuthenticationProvider workspaceTokenAuthenticationProvider;
+    private AccountAuthenticationProvider accountAuthenticationProvider;
+
 
     @Bean
     public PasswordEncoder noOpPasswordEncoder() {
@@ -59,10 +61,12 @@ public class SecurityConfig {
             .accessDeniedHandler(problemSupport);
 
         http.authenticationProvider(workspaceTokenAuthenticationProvider);
+        http.authenticationProvider(accountAuthenticationProvider);
 
         http.authorizeRequests()
             .antMatchers(GET, "/", "/webjars/**", "/static/**").permitAll()
             .mvcMatchers(POST, API_WORKSPACES + "/*" + TYPOS).authenticated()
+            .antMatchers(GET, "/debug").authenticated()
             .anyRequest().permitAll() // TODO remove when login added
             .and()
                 .formLogin()
