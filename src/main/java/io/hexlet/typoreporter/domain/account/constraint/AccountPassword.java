@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
 import static io.hexlet.typoreporter.domain.account.Account.PASSWORD_MAX_LENGTH;
 
 @NotBlank(message = "Account password must not be blank")
-@Size(min = 8, max = PASSWORD_MAX_LENGTH)
+@Size(min = 8, message = "Password must be larger than 8 symbols")
 @Constraint(validatedBy = {})
 @Target({ElementType.FIELD, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)

@@ -15,6 +15,9 @@
                     <div class="alert alert-danger" th:if="${#fields.hasErrors('username')}">
                         <p th:each="err : ${#fields.errors('username')}" th:text="${err}"></p>
                     </div>
+                    <div class="alert alert-danger" th:if="${usernameError != null}">
+                        <p th:text="${usernameError}"></p>
+                    </div>
                 </div>
 
                 <div class="form-floating mb-3">
@@ -57,6 +60,18 @@
                     </div>
                 </div>
 
+                <div class="form-floating mb-3">
+                    <input class="form-control" id="inputConfirmPassword" placeholder="p"
+                           th:classappend="${!#fields.hasErrors('confirmPassword') && formModified ? 'is-valid' : ''}"
+                           type="password" th:field="*{confirmPassword}">
+                    <label for="inputConfirmPassword">Confirm Password</label>
+                    <div class="alert alert-danger" th:if="${#fields.hasErrors('confirmPassword')}">
+                        <p th:each="err : ${#fields.errors('confirmPassword')}" th:text="${err}"></p>
+                    </div>
+                    <div class="alert alert-danger" th:if="${passwordError != null}">
+                        <p th:text="${passwordError}"></p>
+                    </div>
+                </div>
                 <button class="btn btn-primary" type="submit">Create Account</button>
             </form>
         </div>

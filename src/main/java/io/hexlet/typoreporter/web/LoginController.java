@@ -50,12 +50,11 @@ public class LoginController {
             model.addAttribute("createAccount", createAccount);
             return SIGNUP_TEMPLATE;
         }
-        // TODO more checks ???
 
-        // if (!accountForm.getPassword().equals(accountForm.getPasswordConfirm())){
-        //     model.addAttribute("passwordError", "Passwords doesn't match");
-        //     return "registration";
-        // }
+        if (!createAccount.getPassword().equals(createAccount.getConfirmPassword())){
+            model.addAttribute("passwordError", "Passwords doesn't match");
+            return SIGNUP_TEMPLATE;
+        }
 
         if (!accountService.saveAccount(createAccount)){
             model.addAttribute("usernameError", "Account already exists");

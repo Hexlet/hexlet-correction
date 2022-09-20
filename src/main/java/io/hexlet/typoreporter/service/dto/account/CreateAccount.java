@@ -20,6 +20,8 @@ public class CreateAccount {
     @AccountPassword
     private String password;
 
+    private String confirmPassword;
+
     @NotBlank @Size(min = 1, max = 50)
     private String firstName;
 
