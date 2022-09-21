@@ -5,6 +5,8 @@ import io.hexlet.typoreporter.service.dto.account.CreateAccount;
 import io.hexlet.typoreporter.service.dto.account.LoginAccount;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.ui.Model;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import static io.hexlet.typoreporter.web.Routers.REDIRECT_ROOT;
@@ -67,6 +70,15 @@ public class LoginController {
     @GetMapping("/debug")
     public String debugLogin() {
         return "account/debug";
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest request) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null) {
+            request.getSession().invalidate();
+        }
+        return "redirect:/";
     }
 
 }

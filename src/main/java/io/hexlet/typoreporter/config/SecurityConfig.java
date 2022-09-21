@@ -67,7 +67,8 @@ public class SecurityConfig {
             .antMatchers(GET, "/", "/webjars/**", "/static/**").permitAll()
             .mvcMatchers(POST, API_WORKSPACES + "/*" + TYPOS).authenticated()
             .antMatchers(GET, "/debug").authenticated()
-            .anyRequest().permitAll() // TODO remove when login added
+            .antMatchers("/workspace/**", "/create/workspace").authenticated()
+            // .anyRequest().permitAll() // TODO remove when login added
             .and()
                 .formLogin()
                 .loginPage(LOGIN)
@@ -75,8 +76,6 @@ public class SecurityConfig {
                 .permitAll()
             .and()
                 .logout()
-                .permitAll()
-                .logoutSuccessUrl("/")
             .and()
             .csrf()
             .ignoringRequestMatchers(new AntPathRequestMatcher(API_WORKSPACES + "/*" + TYPOS, POST.name()))
