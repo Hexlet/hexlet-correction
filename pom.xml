@@ -158,7 +158,7 @@
 
     <build>
         <plugins>
-            <plugin>
+            <!-- <plugin>
                 <groupId>com.github.eirslett</groupId>
                 <artifactId>frontend-maven-plugin</artifactId>
                 <version>1.12.1</version>
@@ -183,7 +183,6 @@
                         <goals>
                         <goal>npm</goal>
                         </goals>
-                        <!-- Optional configuration which provides for running any npm command -->
                         <configuration>
                         <arguments>install</arguments>
                         </configuration>
@@ -199,8 +198,8 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
+            </plugin> -->
+            <!-- <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
                 <executions>
                     <execution>
@@ -219,7 +218,7 @@
                     </configuration>
                     </execution>
                 </executions>
-                </plugin>
+            </plugin> -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
