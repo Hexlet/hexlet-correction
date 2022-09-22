@@ -205,17 +205,26 @@
                     </execution>
                 </executions>
             </plugin>
-            <!-- <plugin>
+            <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
-                <version>3.3.0</version>
-                <configuration>
-                    <resources>
+                <executions>
+                    <execution>
+                    <id>copy-resources</id>
+                    <phase>validate</phase>
+                    <goals>
+                        <goal>copy-resources</goal>
+                    </goals>
+                    <configuration>
+                        <outputDirectory>${basedir}/target/classes/static/</outputDirectory>
+                        <resources>
                         <resource>
-                            <directory>frontend/build</directory>
+                            <directory>${basedir}/../frontend/build</directory>
                         </resource>
-                    </resources>
-                </configuration>
-            </plugin> -->
+                        </resources>
+                    </configuration>
+                    </execution>
+                </executions>
+                </plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
