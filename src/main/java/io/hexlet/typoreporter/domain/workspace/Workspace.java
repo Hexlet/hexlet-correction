@@ -56,6 +56,18 @@ public class Workspace extends AbstractAuditingEntity implements Identifiable<Lo
         return this;
     }
 
+    public Workspace addAccount(final Account account) {
+        accounts.add(account);
+        account.setWorkspace(this);
+        return this;
+    }
+
+    public Workspace removeAccount(final Account account) {
+        accounts.remove(account);
+        account.setWorkspace(null);
+        return this;
+    }
+
     @Override
     public int hashCode() {
         return 31;

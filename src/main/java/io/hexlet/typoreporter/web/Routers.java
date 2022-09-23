@@ -25,6 +25,9 @@ public class Routers {
 
     public static final String SIGNUP = "/signup";
 
+    public static final String USERS = "/users";
+    
+
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class Workspace {
 
