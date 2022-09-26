@@ -8,7 +8,7 @@ account:
     auth_provider: EMAIL
     email: test101@gmail.com
     username: test1
-    password: test
+    password: testtest
     first_name: Test1
     last_name: Testing
 
@@ -21,7 +21,7 @@ account:
     auth_provider: EMAIL
     email: test102@gmail.com
     username: test2
-    password: test
+    password: testtest
     first_name: Test2
     last_name: Testing
 
@@ -34,6 +34,6 @@ account:
     auth_provider: EMAIL
     email: test103@gmail.com
     username: test3
-    password: test
+    password: testtest
     first_name: Test3
     last_name: Testing
