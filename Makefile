@@ -26,10 +26,7 @@ run-dev:
 
 run-dev-docker-db: docker-db run-dev
 
-start-frontend:
-	make -C frontend start
-
-start: run-dev-docker-db & make start-frontend
+start: run-dev-docker-db
 
 docker-db:
 	docker-compose -f ./src/main/docker/postgresql.yml up -d -V --remove-orphans
