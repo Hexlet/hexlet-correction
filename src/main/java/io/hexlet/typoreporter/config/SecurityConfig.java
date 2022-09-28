@@ -66,7 +66,6 @@ public class SecurityConfig {
         http.authorizeRequests()
             .antMatchers(GET, "/", "/webjars/**", "/static/**").permitAll()
             .mvcMatchers(POST, API_WORKSPACES + "/*" + TYPOS).authenticated()
-            .antMatchers(GET, "/debug").authenticated()
             .antMatchers("/workspace/**", "/create/workspace").authenticated()
             // .anyRequest().permitAll() // TODO remove when login added
             .and()

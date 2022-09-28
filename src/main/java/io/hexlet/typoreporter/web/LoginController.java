@@ -67,11 +67,6 @@ public class LoginController {
         return REDIRECT_ROOT;
     }
 
-    @GetMapping("/debug")
-    public String debugLogin() {
-        return "account/debug";
-    }
-
     @GetMapping("/logout")
     public String logout(HttpServletRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
