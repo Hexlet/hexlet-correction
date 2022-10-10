@@ -38,7 +38,7 @@ public class AccountAuthenticationProvider extends AbstractUserDetailsAuthentica
 
       final String password = auth.getCredentials().toString();
       if (!encoder.matches(password, userDetails.getPassword())) {
-          throw new BadCredentialsException("Failed to authenticate. Password is wrong.");
+          throw new BadCredentialsException("Failed to authenticate. Login and/or password are wrong.");
       }
     }
 
