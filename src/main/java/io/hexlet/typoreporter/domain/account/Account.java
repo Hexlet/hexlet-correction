@@ -38,7 +38,7 @@ public class Account extends AbstractAuditingEntity implements Identifiable<Long
     @SequenceGenerator(name = "account_id_seq", allocationSize = 15)
     private Long id;
 
-    @NotBlank
+    // @NotBlank
     private String externalOpenId;
 
     @NotNull

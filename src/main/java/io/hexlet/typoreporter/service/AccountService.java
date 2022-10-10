@@ -38,7 +38,6 @@ public class AccountService {
             return false;
         }
         sourceAccount.setAuthProvider(AuthProvider.EMAIL); // TODO remove hard-coded stuff
-        sourceAccount.setExternalOpenId("1L");
 
         return saveAccount(sourceAccount);
     }
