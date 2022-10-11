@@ -3,14 +3,14 @@ package io.hexlet.typoreporter.config;
 import io.hexlet.typoreporter.security.filter.WorkspaceAuthTokenFilter;
 import io.hexlet.typoreporter.security.provider.AccountAuthenticationProvider;
 import io.hexlet.typoreporter.security.provider.WorkspaceTokenAuthenticationProvider;
-import lombok.Setter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -27,18 +27,30 @@ import static org.springframework.http.HttpMethod.POST;
 
 
 @Configuration
-@Setter(onMethod_ = @Autowired)
 public class SecurityConfig {
 
-    private SecurityProblemSupport problemSupport;
+    private final SecurityProblemSupport problemSupport;
 
-    private WorkspaceTokenAuthenticationProvider workspaceTokenAuthenticationProvider;
+    private final WorkspaceTokenAuthenticationProvider workspaceTokenAuthenticationProvider;
     private AccountAuthenticationProvider accountAuthenticationProvider;
 
+
+    public SecurityConfig(SecurityProblemSupport problemSupport,
+                          WorkspaceTokenAuthenticationProvider workspaceTokenAuthenticationProvider,
+                          @Lazy AccountAuthenticationProvider accountAuthenticationProvider) {
+        this.problemSupport = problemSupport;
+        this.workspaceTokenAuthenticationProvider = workspaceTokenAuthenticationProvider;
+        this.accountAuthenticationProvider = accountAuthenticationProvider;
+    }
 
     @Bean
     public PasswordEncoder noOpPasswordEncoder() {
         return NoOpPasswordEncoder.getInstance();
+    }
+
+    @Bean
+    public PasswordEncoder bCryptPasswordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
     @Bean
