@@ -22,7 +22,7 @@ public class AccountAuthenticationProvider extends AbstractUserDetailsAuthentica
     private volatile String userNotFoundEncodedPassword;
 
     public AccountAuthenticationProvider(@Qualifier("accountDetailService") UserDetailsService service,
-                                         @Qualifier("bCryptPasswordEncoder") PasswordEncoder encoder) {
+                                         PasswordEncoder encoder) {
         this.encoder = encoder;
         this.service = service;
     }

@@ -6,7 +6,7 @@ import io.hexlet.typoreporter.repository.AccountRepository;
 import io.hexlet.typoreporter.service.converter.CreateAccountToAccount;
 import io.hexlet.typoreporter.service.dto.account.CreateAccount;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -16,7 +16,7 @@ public class AccountService {
     private final AccountRepository accountRepository;
     private final CreateAccountToAccount converter;
 
-    private final BCryptPasswordEncoder encoder;
+    private final PasswordEncoder encoder;
 
     public boolean saveAccount(Account account) {
         Account accountFromDB = accountRepository.findAccountByUsername(account.getUsername())
