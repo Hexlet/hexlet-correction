@@ -3,9 +3,9 @@ package io.hexlet.typoreporter.service;
 import io.hexlet.typoreporter.domain.account.Account;
 import io.hexlet.typoreporter.domain.account.AuthProvider;
 import io.hexlet.typoreporter.repository.AccountRepository;
-import io.hexlet.typoreporter.service.converter.CreateAccountToAccount;
 import io.hexlet.typoreporter.service.dto.account.CreateAccount;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -16,8 +16,7 @@ import java.util.Optional;
 public class AccountService {
 
     private final AccountRepository accountRepository;
-    private final CreateAccountToAccount converter;
-
+    private final ConversionService conversionService;
     private final PasswordEncoder encoder;
 
     public boolean saveAccount(Account account) {
@@ -33,7 +32,7 @@ public class AccountService {
     }
 
     public boolean saveAccount(CreateAccount source) {
-        Account sourceAccount = converter.convert(source);
+        Account sourceAccount = conversionService.convert(source, Account.class);
         if (sourceAccount == null) {
             return false;
         }
