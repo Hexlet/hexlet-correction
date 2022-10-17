@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class AccountService {
@@ -19,10 +21,8 @@ public class AccountService {
     private final PasswordEncoder encoder;
 
     public boolean saveAccount(Account account) {
-        Account accountFromDB = accountRepository.findAccountByUsername(account.getUsername())
-            .orElse(null);
-
-        if (accountFromDB != null) {
+        Optional<Account> accountFromDB = accountRepository.findAccountByUsername(account.getUsername());
+        if (accountFromDB.isPresent()) {
             return false;
         }
 
