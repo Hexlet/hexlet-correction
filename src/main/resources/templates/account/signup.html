@@ -28,6 +28,9 @@
                     <div class="alert alert-danger" th:if="${#fields.hasErrors('email')}">
                         <p th:each="err : ${#fields.errors('email')}" th:text="${err}"></p>
                     </div>
+                    <div class="alert alert-danger" th:if="${emailError != null}">
+                        <p th:text="${emailError}"></p>
+                    </div>
                 </div>
 
                 <div class="form-floating mb-3">

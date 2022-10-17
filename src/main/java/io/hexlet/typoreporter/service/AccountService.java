@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -19,9 +20,11 @@ public class AccountService {
     private final ConversionService conversionService;
     private final PasswordEncoder encoder;
 
+    @Transactional
     public boolean saveAccount(Account account) {
-        Optional<Account> accountFromDB = accountRepository.findAccountByUsername(account.getUsername());
-        if (accountFromDB.isPresent()) {
+        boolean existsByUsername = existsByUsername(account.getUsername());
+        boolean existsByEmail = existsByEmail(account.getEmail());
+        if (existsByUsername || existsByEmail) {
             return false;
         }
 
@@ -41,5 +44,12 @@ public class AccountService {
         return saveAccount(sourceAccount);
     }
 
+    public boolean existsByUsername(String username) {
+        return accountRepository.existsByUsername(username);
+    }
+
+    public boolean existsByEmail(String email) {
+        return accountRepository.existsByEmail(email);
+    }
     // TODO implement allAccounts, deleteAccount, findAccountById, updateAccount
 }

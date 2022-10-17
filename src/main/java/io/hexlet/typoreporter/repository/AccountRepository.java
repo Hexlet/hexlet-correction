@@ -23,7 +23,9 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     Optional<Account> findAccountByUsername(String username);
 
     Optional<SecuredAccount> findSecuredAccountByUsername(String username);
-    
+
     Page<Account> findPageAccountByWorkspaceName(Pageable pageable, String name);
-    
+
+    boolean existsByUsername(String username);
+    boolean existsByEmail(String email);
 }

@@ -48,19 +48,34 @@ public class LoginController {
     public String createAccount(@ModelAttribute("createAccount") @Valid CreateAccount createAccount,
                                 BindingResult bindingResult,
                                 Model model) {
+        boolean hasErrors = false;
+
         model.addAttribute("formModified", true);
         if (bindingResult.hasErrors()) {
             model.addAttribute("createAccount", createAccount);
-            return SIGNUP_TEMPLATE;
+            hasErrors = true;
+        }
+
+        if (accountService.existsByUsername(createAccount.getUsername())) {
+            model.addAttribute("usernameError", "Account with such username already exists");
+            hasErrors = true;
+        }
+
+        if (accountService.existsByEmail(createAccount.getEmail())) {
+            model.addAttribute("emailError", "Account with such email already exists");
+            hasErrors = true;
         }
 
         if (!createAccount.getPassword().equals(createAccount.getConfirmPassword())){
             model.addAttribute("passwordError", "Passwords doesn't match");
+            hasErrors = true;
+        }
+
+        if (hasErrors) {
             return SIGNUP_TEMPLATE;
         }
 
         if (!accountService.saveAccount(createAccount)){
-            model.addAttribute("usernameError", "Account already exists");
             return SIGNUP_TEMPLATE;
         }
 
