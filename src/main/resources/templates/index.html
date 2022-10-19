@@ -3,6 +3,7 @@
 <head th:replace="fragments/header :: head"></head>
 <body style="padding-top: 4.5rem">
 <nav th:replace="fragments/panels :: mainNavbarTop"></nav>
+<iframe name="typoReport" id="typoReport" style="display: none" src="modal.html" width="100%"></iframe>
 <main class="container">
     <div class="row row-cols-1 row-cols-md-3 g-4">
         <div class="col" th:each="wksInfo : ${wksInfoList}" th:object="${wksInfo}">
@@ -18,31 +19,6 @@
         </div>
     </div>
 </main>
-<!-- Modal -->
-<div class="modal fade" id="typoModal" tabindex="-1" aria-labelledby="typoModalLabel" aria-hidden="true" data-bs-backdrop="false">
-  <form>
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Сообщите об ошибке на странице</h5>
-          <button type="button" id="closeBtn" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <h6 class="fw-normal mb-3">Ошибка содержится в следующем тексте:</h6>
-          <div class="p-4 mb-3 bg-light text-dark"><span id="typoText" class="bg-warning p-2">...</span></div>
-          <textarea class="form-control mb-3" id="correctedText" rows="3" required placeholder="Введите исправленный текст"></textarea>
-          <h6 class="fw-normal mb-3">Комментарий:</h6>
-          <textarea class="form-control mb-3" id="commentText" rows="2" required placeholder="Оставить дополнительный комментарий"></textarea>
-          <h6 class="fw-normal">Отправить сообщение об ошибке редактору сайта?</h6>
-        </div>
-        <div class="modal-footer">
-          <button type="button" id="cancelBtn" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
-          <button type="submit" id="sendTypoBtn" class="btn btn-primary" disabled>Отправить</button>
-        </div>
-      </div>
-    </div>
-  </form>
-</div>
 <script src="js/reportTypo.js"></script>
 </body>
 </html>
