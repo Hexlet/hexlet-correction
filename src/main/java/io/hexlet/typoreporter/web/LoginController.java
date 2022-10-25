@@ -17,10 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.validation.Valid;
 import java.util.List;
 
-import static io.hexlet.typoreporter.web.Routers.LOGIN;
 import static io.hexlet.typoreporter.web.Routers.REDIRECT_ROOT;
 import static io.hexlet.typoreporter.web.Routers.SIGNUP;
-import static io.hexlet.typoreporter.web.Templates.LOGIN_TEMPLATE;
 import static io.hexlet.typoreporter.web.Templates.SIGNUP_TEMPLATE;
 
 @Controller
@@ -31,11 +29,6 @@ public class LoginController {
     private final SignUpAccount signUpAccount;
 
     private final QueryAccount queryAccount;
-
-    @GetMapping(LOGIN)
-    public String getLoginPage() {
-        return LOGIN_TEMPLATE;
-    }
 
     @GetMapping(SIGNUP)
     public String getSignUpPage(final Model model) {
@@ -56,11 +49,13 @@ public class LoginController {
             hasErrors = true;
         }
 
+        //TODO move into SignUpAccount service in the same transaction
         if (queryAccount.existsByUsername(signupAccount.getUsername())) {
             model.addAttribute("usernameError", "Account with such username already exists");
             hasErrors = true;
         }
 
+        //TODO move into SignUpAccount service in the same transaction
         if (queryAccount.existsByEmail(signupAccount.getEmail())) {
             model.addAttribute("emailError", "Account with such email already exists");
             hasErrors = true;
