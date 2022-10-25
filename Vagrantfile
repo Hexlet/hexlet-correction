@@ -29,7 +29,7 @@ Vagrant.configure("2") do |config|
 
     # Java
     add-apt-repository ppa:openjdk-r/ppa
-    apt install -y openjdk-19-jdk
+    apt install -y openjdk-17-jdk
 
     # Сборщик проектов
     add-apt-repository ppa:cwchien/gradle
