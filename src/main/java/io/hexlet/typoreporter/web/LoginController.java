@@ -39,20 +39,20 @@ public class LoginController {
 
     @GetMapping(SIGNUP)
     public String getSignUpPage(final Model model) {
-        model.addAttribute("createAccount", new SignupAccount());
+        model.addAttribute("signupAccount", new SignupAccount());
         model.addAttribute("formModified", false);
         return SIGNUP_TEMPLATE;
     }
 
     @PostMapping(SIGNUP)
-    public String createAccount(@ModelAttribute("createAccount") @Valid SignupAccount signupAccount,
+    public String createAccount(@ModelAttribute("signupAccount") @Valid SignupAccount signupAccount,
                                 BindingResult bindingResult,
                                 Model model) {
         boolean hasErrors = false;
 
         model.addAttribute("formModified", true);
         if (bindingResult.hasErrors()) {
-            model.addAttribute("createAccount", signupAccount);
+            model.addAttribute("signupAccount", signupAccount);
             hasErrors = true;
         }
 
