@@ -22,4 +22,23 @@ public interface SecuredAccount extends UserDetails {
     @Value("#{target.username}")
     String getUsername();
 
+    @Override
+    default boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    default boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    default boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    default boolean isEnabled() {
+        return true;
+    }
 }

@@ -6,7 +6,7 @@
 <main class="container">
     <div class="row">
         <div class="col">
-            <form method="post" th:action="@{/signup}" th:object="${createAccount}">
+            <form method="post" th:action="@{/signup}" th:object="${signupAccount}">
                 <div class="form-floating mb-3">
                     <input class="form-control" id="inputUsername" placeholder="p"
                            th:classappend="${!#fields.hasErrors('username') && formModified ? 'is-valid' : ''}"

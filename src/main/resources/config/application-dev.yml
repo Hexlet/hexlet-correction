@@ -16,6 +16,10 @@ spring:
     cache: false
   liquibase:
     contexts: dev
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
 logging:
   level:
     root: INFO

@@ -3,9 +3,11 @@ package io.hexlet.typoreporter;
 import io.hexlet.typoreporter.test.Constraints;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.*;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.*;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 @Testcontainers
 @SpringBootTest
@@ -23,7 +25,7 @@ class TypoReporterApplicationIT {
         registry.add("spring.datasource.username", postgreSQLContainer::getUsername);
     }
 
-    // @Test
-    // void contextLoads() {
-    // }
+    @Test
+    void contextLoads() {
+    }
 }

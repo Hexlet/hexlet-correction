@@ -1,16 +1,16 @@
 package io.hexlet.typoreporter.service.converter;
 
 import io.hexlet.typoreporter.domain.account.Account;
-import io.hexlet.typoreporter.service.dto.account.CreateAccount;
-import org.springframework.stereotype.Component;
+import io.hexlet.typoreporter.service.dto.account.SignupAccount;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.stereotype.Component;
 
 @Component
-public class CreateAccountToAccount implements Converter<CreateAccount, Account> {
+public class CreateAccountToAccount implements Converter<SignupAccount, Account> {
 
     // TODO docs
     @Override
-    public Account convert(CreateAccount source) {
+    public Account convert(SignupAccount source) {
         return new Account()
             .setUsername(source.getUsername())
             .setEmail(source.getEmail())

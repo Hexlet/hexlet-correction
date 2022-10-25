@@ -6,25 +6,23 @@
 <main class="container">
 <div class="row">
     <div class="col">
-        <form method="post" th:action="@{/login}" th:object="${loginAccount}">
+        <div class="alert alert-danger" role="alert" th:if="${param.error}">
+            Bad credential
+        </div>
+        <div class="alert alert-warning" role="alert" th:if="${param.logout}">
+            You have been logged out.
+        </div>
+        <form method="post" th:action="@{/login}">
             <div class="form-floating mb-3">
-                <input class="form-control" id="inputUsername" placeholder="p"
-                       type="text" th:field="*{username}">
+                <input autofocus class="form-control" id="inputUsername"
+                       name="username" placeholder="Username" required type="text">
                 <label for="inputUsername">Username</label>
-                <div class="alert alert-danger" th:if="${#fields.hasErrors('username')}">
-                    <p th:each="err : ${#fields.errors('username')}" th:text="${err}"></p>
-                </div>
             </div>
-
             <div class="form-floating mb-3">
-                <input class="form-control" id="inputPassword" placeholder="p"
-                       type="password" th:field="*{password}">
+                <input class="form-control" id="inputPassword" name="password"
+                       placeholder="Password" required type="password">
                 <label for="inputPassword">Password</label>
-                <div class="alert alert-danger" th:if="${#fields.hasErrors('password')}">
-                    <p th:each="err : ${#fields.errors('password')}" th:text="${err}"></p>
-                </div>
             </div>
-
             <button class="btn btn-primary" type="submit">Login</button>
         </form>
     </div>

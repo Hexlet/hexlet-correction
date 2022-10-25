@@ -1,72 +1,72 @@
 package io.hexlet.typoreporter.web;
 
-import io.hexlet.typoreporter.service.AccountService;
-import io.hexlet.typoreporter.service.dto.account.CreateAccount;
-import io.hexlet.typoreporter.service.dto.account.LoginAccount;
+import io.hexlet.typoreporter.service.QueryAccount;
+import io.hexlet.typoreporter.service.SignUpAccount;
+import io.hexlet.typoreporter.service.dto.account.SignupAccount;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.ui.Model;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.List;
 
+import static io.hexlet.typoreporter.web.Routers.LOGIN;
 import static io.hexlet.typoreporter.web.Routers.REDIRECT_ROOT;
 import static io.hexlet.typoreporter.web.Routers.SIGNUP;
-import static io.hexlet.typoreporter.web.Routers.LOGIN;
-import static io.hexlet.typoreporter.web.Templates.*;
+import static io.hexlet.typoreporter.web.Templates.LOGIN_TEMPLATE;
+import static io.hexlet.typoreporter.web.Templates.SIGNUP_TEMPLATE;
 
-@Controller()
+@Controller
 @RequestMapping
 @RequiredArgsConstructor
 public class LoginController {
 
-    @Autowired
-    private AccountService accountService;
+    private final SignUpAccount signUpAccount;
+
+    private final QueryAccount queryAccount;
 
     @GetMapping(LOGIN)
-    public String getLoginPage(final Model model) {
-        model.addAttribute("loginAccount", new LoginAccount());
+    public String getLoginPage() {
         return LOGIN_TEMPLATE;
     }
 
     @GetMapping(SIGNUP)
     public String getSignUpPage(final Model model) {
-        model.addAttribute("createAccount", new CreateAccount());
+        model.addAttribute("createAccount", new SignupAccount());
         model.addAttribute("formModified", false);
         return SIGNUP_TEMPLATE;
     }
 
     @PostMapping(SIGNUP)
-    public String createAccount(@ModelAttribute("createAccount") @Valid CreateAccount createAccount,
+    public String createAccount(@ModelAttribute("createAccount") @Valid SignupAccount signupAccount,
                                 BindingResult bindingResult,
                                 Model model) {
         boolean hasErrors = false;
 
         model.addAttribute("formModified", true);
         if (bindingResult.hasErrors()) {
-            model.addAttribute("createAccount", createAccount);
+            model.addAttribute("createAccount", signupAccount);
             hasErrors = true;
         }
 
-        if (accountService.existsByUsername(createAccount.getUsername())) {
+        if (queryAccount.existsByUsername(signupAccount.getUsername())) {
             model.addAttribute("usernameError", "Account with such username already exists");
             hasErrors = true;
         }
 
-        if (accountService.existsByEmail(createAccount.getEmail())) {
+        if (queryAccount.existsByEmail(signupAccount.getEmail())) {
             model.addAttribute("emailError", "Account with such email already exists");
             hasErrors = true;
         }
 
-        if (!createAccount.getPassword().equals(createAccount.getConfirmPassword())){
+        if (!signupAccount.getPassword().equals(signupAccount.getConfirmPassword())) {
             model.addAttribute("passwordError", "Passwords doesn't match");
             hasErrors = true;
         }
@@ -75,20 +75,14 @@ public class LoginController {
             return SIGNUP_TEMPLATE;
         }
 
-        if (!accountService.saveAccount(createAccount)){
+        final var newAccount = signUpAccount.signup(signupAccount);
+        if (newAccount == null) {
             return SIGNUP_TEMPLATE;
         }
 
+        final var authenticated = UsernamePasswordAuthenticationToken.authenticated(newAccount.getUsername(), newAccount.getPassword(), List.of(() -> "ROLE_USER"));
+        SecurityContextHolder.getContext().setAuthentication(authenticated);
+
         return REDIRECT_ROOT;
     }
-
-    @GetMapping("/logout")
-    public String logout(HttpServletRequest request) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null) {
-            request.getSession().invalidate();
-        }
-        return "redirect:/";
-    }
-
 }

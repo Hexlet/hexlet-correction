@@ -1,15 +1,17 @@
 package io.hexlet.typoreporter.service.dto.account;
 
-import javax.validation.constraints.*;
-
 import io.hexlet.typoreporter.domain.account.constraint.AccountPassword;
 import io.hexlet.typoreporter.domain.account.constraint.AccountUsername;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+
 @Getter
 @Setter
-public class CreateAccount {
+public class SignupAccount {
 
     @AccountUsername
     private String username;

@@ -13,7 +13,7 @@ public class ThymeleafAutoConfiguration {
         return new SpringDataDialect();
     }
 
-    // Used for logout\signin button disappear
+    // Make available Thymeleaf Spring Security Dialect on the templates
     @Bean
     public SpringSecurityDialect springSecurityDialect() {
         return new SpringSecurityDialect();
