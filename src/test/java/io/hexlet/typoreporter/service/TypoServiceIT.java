@@ -32,8 +32,13 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.github.database.rider.core.api.configuration.Orthography.LOWERCASE;
-import static io.hexlet.typoreporter.domain.typo.TypoEvent.*;
-import static io.hexlet.typoreporter.domain.typo.TypoStatus.*;
+import static io.hexlet.typoreporter.domain.typo.TypoEvent.OPEN;
+import static io.hexlet.typoreporter.domain.typo.TypoEvent.REOPEN;
+import static io.hexlet.typoreporter.domain.typo.TypoEvent.RESOLVE;
+import static io.hexlet.typoreporter.domain.typo.TypoStatus.CANCELED;
+import static io.hexlet.typoreporter.domain.typo.TypoStatus.IN_PROGRESS;
+import static io.hexlet.typoreporter.domain.typo.TypoStatus.REPORTED;
+import static io.hexlet.typoreporter.domain.typo.TypoStatus.RESOLVED;
 import static io.hexlet.typoreporter.test.Constraints.POSTGRES_IMAGE;
 import static io.hexlet.typoreporter.test.factory.EntitiesFactory.WORKSPACE_101_NAME;
 import static io.hexlet.typoreporter.test.factory.EntitiesFactory.WORKSPACE_103_NAME;

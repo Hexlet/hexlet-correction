@@ -23,14 +23,14 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import static com.github.database.rider.core.api.configuration.Orthography.LOWERCASE;
 import static io.hexlet.typoreporter.domain.typo.TypoEvent.CANCEL;
 import static io.hexlet.typoreporter.test.Constraints.POSTGRES_IMAGE;
-
 import static io.hexlet.typoreporter.web.Routers.ID_PATH;
 import static io.hexlet.typoreporter.web.Routers.Typo.TYPOS;
 import static io.hexlet.typoreporter.web.Routers.Typo.TYPO_STATUS;
 import static io.hexlet.typoreporter.web.Routers.Workspace.WORKSPACE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 
 @Testcontainers

@@ -1,16 +1,16 @@
 package io.hexlet.typoreporter.config;
 
 import io.hexlet.typoreporter.security.filter.WorkspaceAuthTokenFilter;
+import io.hexlet.typoreporter.security.provider.AccountAuthenticationProvider;
 import io.hexlet.typoreporter.security.provider.WorkspaceTokenAuthenticationProvider;
-import lombok.Setter;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
@@ -23,17 +23,16 @@ import static io.hexlet.typoreporter.web.Routers.Workspace.API_WORKSPACES;
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
 
+
 @Configuration
-@Setter(onMethod_ = @Autowired)
+@RequiredArgsConstructor
 public class SecurityConfig {
 
-    private SecurityProblemSupport problemSupport;
-
-    private WorkspaceTokenAuthenticationProvider workspaceTokenAuthenticationProvider;
+    private final SecurityProblemSupport problemSupport;
 
     @Bean
-    public PasswordEncoder noOpPasswordEncoder() {
-        return NoOpPasswordEncoder.getInstance();
+    public PasswordEncoder bCryptPasswordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
     @Bean
@@ -43,8 +42,9 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
-        return authConfig.getAuthenticationManager();
+    public AuthenticationManager authenticationManager(WorkspaceTokenAuthenticationProvider wksProvider,
+                                                       AccountAuthenticationProvider accProvider) {
+        return new ProviderManager(wksProvider, accProvider);
     }
 
     @Bean
@@ -55,22 +55,18 @@ public class SecurityConfig {
             .authenticationEntryPoint(problemSupport)
             .accessDeniedHandler(problemSupport);
 
-        http.authenticationProvider(workspaceTokenAuthenticationProvider);
-
         http.authorizeRequests()
             .antMatchers(GET, "/", "/webjars/**", "/static/**").permitAll()
             .mvcMatchers(POST, API_WORKSPACES + "/*" + TYPOS).authenticated()
-            .anyRequest().permitAll() // TODO remove when login added
+            .antMatchers("/workspace/**", "/create/workspace").authenticated()
+            .and()
+            .formLogin().permitAll()
             .and()
             .csrf()
             .ignoringRequestMatchers(new AntPathRequestMatcher(API_WORKSPACES + "/*" + TYPOS, POST.name()));
 
-        http.addFilterBefore(workspaceAuthTokenFilter(authManager), BasicAuthenticationFilter.class);
+        http.addFilterBefore(new WorkspaceAuthTokenFilter(authManager), BasicAuthenticationFilter.class);
 
         return http.build();
-    }
-
-    private WorkspaceAuthTokenFilter workspaceAuthTokenFilter(AuthenticationManager authManager) {
-        return new WorkspaceAuthTokenFilter(authManager);
     }
 }

@@ -21,4 +21,10 @@ public class Templates {
 
     static final String WKS_UPDATE_TEMPLATE = WKS_TEMPLATE_DIR + "/wks-update";
 
+    static final String ACC_TEMPLATE_DIR = "account";
+
+    static final String LOGIN_TEMPLATE = ACC_TEMPLATE_DIR + "/login";
+
+    static final String SIGNUP_TEMPLATE = ACC_TEMPLATE_DIR + "/signup";
+
 }

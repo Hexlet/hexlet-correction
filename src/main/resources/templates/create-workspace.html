@@ -13,7 +13,7 @@
                            th:errorclass="is-invalid" th:field="*{name}"
                            type="text">
                     <label for="inputWksName">Workspace Name</label>
-                    <div class="invalid-feedback" th:each="err : ${#fields.errors('name')}" th:text="${err}"></div>
+                <div class="invalid-feedback" th:each="err : ${#fields.errors('name')}" th:text="${err}"></div>
                 </div>
                 <div class="form-floating mb-3">
                     <textarea class="form-control" id="inWksDesc" placeholder="p" style="height: 100px"
