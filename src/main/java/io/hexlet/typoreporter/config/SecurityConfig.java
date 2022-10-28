@@ -20,8 +20,7 @@ import org.zalando.problem.spring.web.advice.security.SecurityProblemSupport;
 
 import static io.hexlet.typoreporter.web.Routers.Typo.TYPOS;
 import static io.hexlet.typoreporter.web.Routers.Workspace.API_WORKSPACES;
-import static org.springframework.http.HttpMethod.GET;
-import static org.springframework.http.HttpMethod.POST;
+import static org.springframework.http.HttpMethod.*;
 
 
 @Configuration
@@ -59,6 +58,7 @@ public class SecurityConfig {
             .antMatchers(GET, "/", "/workspaces", "/webjars/**", "/static/**").permitAll()
             .mvcMatchers(POST, API_WORKSPACES + "/*" + TYPOS).authenticated()
             .antMatchers("/workspace/**", "/create/workspace").authenticated()
+            .antMatchers("/account/**").authenticated()
             .and()
             .formLogin()
             .defaultSuccessUrl("/workspaces")

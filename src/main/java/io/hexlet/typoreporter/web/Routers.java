@@ -45,4 +45,16 @@ public class Routers {
 
         public static final String TYPO_STATUS = "/status";
     }
+
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class Account {
+
+        public static final String ACCOUNT = "/account";
+
+        public static final String REDIRECT_ACC_ROOT = REDIRECT + ACCOUNT + "/";
+
+        public static final String PROFILE = "/profile";
+
+        public static final String PASSWORD = "/password";
+    }
 }
