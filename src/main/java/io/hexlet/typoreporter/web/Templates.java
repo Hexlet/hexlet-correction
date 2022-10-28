@@ -26,4 +26,9 @@ public class Templates {
 
     static final String SIGNUP_TEMPLATE = ACC_TEMPLATE_DIR + "/signup";
 
+    static final String ACC_INFO_TEMPLATE = ACC_TEMPLATE_DIR + "/acc-info";
+
+    static final String PROF_UPDATE_TEMPLATE = ACC_TEMPLATE_DIR + "/prof-update";
+
+    static final String PASS_UPDATE_TEMPLATE = ACC_TEMPLATE_DIR + "/pass-update";
 }

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: head"></head>
+<body style="padding-top: 4.5rem">
+<nav th:replace="fragments/panels :: mainNavbarTop"></nav>
+<main class="container" th:object="${accInfo}">
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title mb-1">General</h5>
+            <div class="row mb-1">
+                <div class="col">FirstName</div>
+                <div class="col" th:text="*{firstName}"></div>
+            </div>
+            <div class="row mb-1">
+                <div class="col">LastName</div>
+                <div class="col" th:text="*{lastName}"></div>
+            </div>
+            <div class="row mb-1">
+                <div class="col">Username</div>
+                <div class="col" th:text="*{username}"></div>
+            </div>
+            <div class="row mb-3">
+                <div class="col">Email</div>
+                <div class="col" th:text="*{email}"></div>
+            </div>
+            <a class="btn btn-primary" th:href="@{/account/profile}">Edit</a>
+        </div>
+    </div>
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title mb-3">Password</h5>
+            <a class="btn btn-primary" th:href="@{/account/password}">Edit</a>
+        </div>
+    </div>
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title mb-1">Workspace</h5>
+        </div>
+    </div>
+</main>
+</body>
+</html>
