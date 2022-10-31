@@ -19,7 +19,7 @@
         <java.version>17</java.version>
         <!-- WebJars -->
         <webjars-locator.version>0.45</webjars-locator.version>
-        <bootstrap.version>5.1.3</bootstrap.version>
+        <bootstrap.version>5.2.2</bootstrap.version>
         <!-- Utils -->
         <problem-spring-web-starter.version>0.28.0-RC.0</problem-spring-web-starter.version>
         <prettytime.version>5.0.3.Final</prettytime.version>
@@ -154,15 +154,10 @@
             <version>${database-rider.version}</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.webjars</groupId>
-            <artifactId>bootstrap</artifactId>
-            <version>5.2.2</version>
-        </dependency>
     </dependencies>
 
     <build>
-        <plugins>            
+        <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>

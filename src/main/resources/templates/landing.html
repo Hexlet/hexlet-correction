@@ -1,13 +1,7 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-<head>
-  <link rel="stylesheet" href="/webjars/bootstrap/5.2.2/css/bootstrap.min.css" />
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hexlet Correction</title>
-</head>
+<head th:replace="../templates/fragments/header.html :: head"></head>
 
 <body>
   <div class="container-fluid d-flex flex-column p-0 m-0">
@@ -21,9 +15,8 @@
         <div class="row">
           <div class="d-flex justify-content-evenly m-3 border">
             <img class="w-70" src="./assets/hexlet-correction screen2 (edited).png" alt="modal window example" />
-            <p class="fs-4 m-2 p-2">Добавьте на страницу <b>виджет</b>, через который пользователи смогут сообщать
-              об
-              опечатках
+            <p class="fs-4 m-2 p-2">
+              Добавьте на страницу <b>виджет</b>, через который пользователи смогут сообщать об опечатках
             </p>
           </div>
           <div class="d-flex justify-content-evenly m-3 border">
@@ -93,7 +86,6 @@
       </div>
     </footer>
   </div>
-  <script src="/webjars/bootstrap/js/bootstrap.min.js"></script>
 </body>
 
 </html>
