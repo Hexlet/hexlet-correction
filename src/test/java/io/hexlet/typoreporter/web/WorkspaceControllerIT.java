@@ -4,11 +4,11 @@ import com.github.database.rider.core.api.configuration.DBUnit;
 import com.github.database.rider.core.api.dataset.DataSet;
 import com.github.database.rider.spring.api.DBRider;
 import io.hexlet.typoreporter.domain.AbstractAuditingEntity;
-import io.hexlet.typoreporter.domain.typo.Typo;
 import io.hexlet.typoreporter.domain.account.Account;
+import io.hexlet.typoreporter.domain.typo.Typo;
 import io.hexlet.typoreporter.domain.workspace.Workspace;
-import io.hexlet.typoreporter.repository.WorkspaceRepository;
 import io.hexlet.typoreporter.repository.AccountRepository;
+import io.hexlet.typoreporter.repository.WorkspaceRepository;
 import io.hexlet.typoreporter.service.WorkspaceService;
 import io.hexlet.typoreporter.service.dto.workspace.CreateWorkspace;
 import io.hexlet.typoreporter.test.DBUnitEnumPostgres;
@@ -19,25 +19,29 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.test.context.*;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.*;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.time.LocalDateTime;
 import java.util.Comparator;
-import java.util.stream.Collectors;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static com.github.database.rider.core.api.configuration.Orthography.LOWERCASE;
 import static io.hexlet.typoreporter.test.Constraints.POSTGRES_IMAGE;
 import static io.hexlet.typoreporter.web.Routers.SETTINGS;
+import static io.hexlet.typoreporter.web.Routers.Typo.TYPOS;
 import static io.hexlet.typoreporter.web.Routers.UPDATE;
 import static io.hexlet.typoreporter.web.Routers.USERS;
-import static io.hexlet.typoreporter.web.Routers.Typo.TYPOS;
 import static io.hexlet.typoreporter.web.Routers.Workspace.WKS_NAME_PATH;
 import static io.hexlet.typoreporter.web.Routers.Workspace.WORKSPACE;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -45,10 +49,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
-import static org.assertj.core.api.Assertions.assertThat;
 
 @Testcontainers
 @SpringBootTest
+@WithMockUser
 @AutoConfigureMockMvc
 @Transactional
 @DBRider
@@ -61,13 +65,6 @@ class WorkspaceControllerIT {
         .withPassword("inmemory")
         .withUsername("inmemory");
 
-    @DynamicPropertySource
-    static void datasourceProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", postgreSQLContainer::getJdbcUrl);
-        registry.add("spring.datasource.password", postgreSQLContainer::getPassword);
-        registry.add("spring.datasource.username", postgreSQLContainer::getUsername);
-    }
-
     @Autowired
     private WorkspaceRepository repository;
 
@@ -75,10 +72,17 @@ class WorkspaceControllerIT {
     private WorkspaceService service;
 
     @Autowired
-    private AccountRepository accountRepository;
+    private MockMvc mockMvc;
 
     @Autowired
-    private MockMvc mockMvc;
+    private AccountRepository accountRepository;
+
+    @DynamicPropertySource
+    static void datasourceProperties(DynamicPropertyRegistry registry) {
+        registry.add("spring.datasource.url", postgreSQLContainer::getJdbcUrl);
+        registry.add("spring.datasource.password", postgreSQLContainer::getPassword);
+        registry.add("spring.datasource.username", postgreSQLContainer::getUsername);
+    }
 
     @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspaceNamesExist")
@@ -97,7 +101,6 @@ class WorkspaceControllerIT {
             .andExpect(redirectedUrl("/"));
     }
 
-
     @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspaceNamesExist")
     void getWorkspaceSettingsPageIsSuccessful(final String wksName) throws Exception {
@@ -114,7 +117,6 @@ class WorkspaceControllerIT {
         mockMvc.perform(get(WORKSPACE + WKS_NAME_PATH + SETTINGS, "notExistsWksName"))
             .andExpect(redirectedUrl("/"));
     }
-
 
     @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspaceNamesExist")
@@ -144,28 +146,6 @@ class WorkspaceControllerIT {
 
     @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspaceNamesExist")
-    void getWorkspaceUsersPage(final String wksName) throws Exception {
-        Workspace workspace = repository.getWorkspaceByName(wksName).orElse(null);
-        Set<Account> accounts = accountRepository.findAll().stream().collect(Collectors.toSet());
-        accounts.forEach(account -> workspace.addAccount(account));
-
-        MockHttpServletResponse response = mockMvc.perform(get(WORKSPACE + WKS_NAME_PATH + USERS, wksName))
-            .andExpect(model().attributeExists("wksInfo", "wksName", "userPage", "availableSizes", "sortProp", "sortDir", "DESC", "ASC"))
-            .andReturn().getResponse();
-
-        for (Account account : workspace.getAccounts()) {
-            assertThat(response.getContentAsString()).contains(
-                account.getId().toString(),
-                account.getFirstName(),
-                account.getLastName(),
-                account.getEmail()
-            );
-        }
-    }
-
-
-    @ParameterizedTest
-    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspaceNamesExist")
     void getWorkspaceUpdatePageIsSuccessful(final String wksName) throws Exception {
         Workspace workspace = repository.getWorkspaceByName(wksName).orElse(null);
 
@@ -180,7 +160,6 @@ class WorkspaceControllerIT {
         mockMvc.perform(get(WORKSPACE + WKS_NAME_PATH + UPDATE, "notExistsWksName"))
             .andExpect(redirectedUrl("/"));
     }
-
 
     @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspaceNamesExist")
@@ -263,4 +242,26 @@ class WorkspaceControllerIT {
         mockMvc.perform(delete(WORKSPACE + WKS_NAME_PATH, "notExistsWksName").with(csrf()))
             .andExpect(redirectedUrl("/"));
     }
+
+    @ParameterizedTest
+    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspaceNamesExist")
+    void getWorkspaceUsersPage(final String wksName) throws Exception {
+        Workspace workspace = repository.getWorkspaceByName(wksName).orElse(null);
+        Set<Account> accounts = accountRepository.findAll().stream().collect(Collectors.toSet());
+        accounts.forEach(account -> workspace.addAccount(account));
+
+        MockHttpServletResponse response = mockMvc.perform(get(WORKSPACE + WKS_NAME_PATH + USERS, wksName))
+            .andExpect(model().attributeExists("wksInfo", "wksName", "userPage", "availableSizes", "sortProp", "sortDir", "DESC", "ASC"))
+            .andReturn().getResponse();
+
+        for (Account account : workspace.getAccounts()) {
+            assertThat(response.getContentAsString()).contains(
+                account.getId().toString(),
+                account.getFirstName(),
+                account.getLastName(),
+                account.getEmail()
+            );
+        }
+    }
+
 }

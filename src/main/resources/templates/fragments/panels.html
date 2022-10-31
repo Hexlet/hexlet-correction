@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
 <body>
 <nav aria-label="Main navbar" class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark" th:fragment="mainNavbarTop">
     <div class="container-fluid">
@@ -14,6 +16,30 @@
                     <a class="nav-link" th:href="@{/create/workspace}">Create Workspace</a>
                 </li>
             </ul>
+            <div sec:authorize="isAuthenticated()">
+                <ul class="navbar-nav mr-2">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/" th:text="${#authentication.getName()}"></a>
+                    </li>
+                    <li class="nav-item">
+                        <form th:action="@{/logout}" th:method="post">
+                            <button class="btn btn-link nav-link" type="submit">Logout</button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+            <div sec:authorize="isAnonymous()">
+                <ul class="navbar-nav mr-2">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/login}">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/signup}">Sign Up</a>
+                    </li>
+                </ul>
+            </div>
+
+
         </div>
     </div>
 </nav>

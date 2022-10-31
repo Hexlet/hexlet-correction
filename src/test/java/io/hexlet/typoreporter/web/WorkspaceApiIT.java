@@ -5,7 +5,8 @@ import com.github.database.rider.core.api.configuration.DBUnit;
 import com.github.database.rider.core.api.dataset.DataSet;
 import com.github.database.rider.spring.api.DBRider;
 import io.hexlet.typoreporter.repository.TypoRepository;
-import io.hexlet.typoreporter.service.dto.typo.*;
+import io.hexlet.typoreporter.service.dto.typo.ReportedTypo;
+import io.hexlet.typoreporter.service.dto.typo.TypoReport;
 import io.hexlet.typoreporter.test.DBUnitEnumPostgres;
 import io.hexlet.typoreporter.test.asserts.ReportedTypoAssert;
 import org.assertj.core.api.Assertions;
@@ -16,23 +17,31 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.*;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.*;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import static com.github.database.rider.core.api.configuration.Orthography.LOWERCASE;
 import static io.hexlet.typoreporter.test.Constraints.POSTGRES_IMAGE;
-import static io.hexlet.typoreporter.test.factory.EntitiesFactory.*;
+import static io.hexlet.typoreporter.test.factory.EntitiesFactory.WORKSPACE_101_NAME;
+import static io.hexlet.typoreporter.test.factory.EntitiesFactory.WORKSPACE_101_TOKEN;
 import static io.hexlet.typoreporter.web.Routers.Typo.TYPOS;
 import static io.hexlet.typoreporter.web.Routers.Workspace.API_WORKSPACES;
 import static java.time.LocalDateTime.now;
-import static org.hamcrest.Matchers.*;
-import static org.springframework.http.MediaType.*;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.hasSize;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Testcontainers
 @SpringBootTest
@@ -99,9 +108,9 @@ class WorkspaceApiIT {
             """;
 
         mockMvc.perform(post(API_WORKSPACES + "/" + WORKSPACE_101_NAME + TYPOS)
-            .content(typoJson)
-            .header("Authorization", "Token " + WORKSPACE_101_TOKEN)
-            .contentType(APPLICATION_JSON))
+                .content(typoJson)
+                .header("Authorization", "Token " + WORKSPACE_101_TOKEN)
+                .contentType(APPLICATION_JSON))
             .andExpect(status().isBadRequest())
             .andExpect(content().contentType(APPLICATION_PROBLEM_JSON))
             .andExpect(jsonPath("$.title").value("Constraint Violation"))
@@ -121,9 +130,9 @@ class WorkspaceApiIT {
             """;
 
         mockMvc.perform(post(API_WORKSPACES + "/" + WORKSPACE_101_NAME + TYPOS)
-            .content(typoJson)
-            .header("Authorization", "Token " + WORKSPACE_101_TOKEN)
-            .contentType(APPLICATION_JSON))
+                .content(typoJson)
+                .header("Authorization", "Token " + WORKSPACE_101_TOKEN)
+                .contentType(APPLICATION_JSON))
             .andExpect(status().isBadRequest())
             .andExpect(content().contentType(APPLICATION_PROBLEM_JSON))
             .andExpect(jsonPath("$.title").value("Constraint Violation"))
@@ -145,9 +154,9 @@ class WorkspaceApiIT {
             """;
 
         mockMvc.perform(post(API_WORKSPACES + "/" + WORKSPACE_101_NAME + TYPOS)
-            .content(typoJson)
-            .header("Authorization", "Token " + WORKSPACE_101_TOKEN)
-            .contentType(APPLICATION_JSON))
+                .content(typoJson)
+                .header("Authorization", "Token " + WORKSPACE_101_TOKEN)
+                .contentType(APPLICATION_JSON))
             .andExpect(status().isBadRequest())
             .andExpect(content().contentType(APPLICATION_PROBLEM_JSON))
             .andExpect(jsonPath("$.title").value("Constraint Violation"))

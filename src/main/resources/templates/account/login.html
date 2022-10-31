@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: head"></head>
+<body style="padding-top: 4.5rem">
+<nav th:replace="fragments/panels :: mainNavbarTop"></nav>
+<main class="container">
+<div class="row">
+    <div class="col">
+        <div class="alert alert-danger" role="alert" th:if="${param.error}">
+            Bad credential
+        </div>
+        <div class="alert alert-warning" role="alert" th:if="${param.logout}">
+            You have been logged out.
+        </div>
+        <form method="post" th:action="@{/login}">
+            <div class="form-floating mb-3">
+                <input autofocus class="form-control" id="inputUsername"
+                       name="username" placeholder="Username" required type="text">
+                <label for="inputUsername">Username</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input class="form-control" id="inputPassword" name="password"
+                       placeholder="Password" required type="password">
+                <label for="inputPassword">Password</label>
+            </div>
+            <button class="btn btn-primary" type="submit">Login</button>
+        </form>
+    </div>
+</div>
+</main>
+
+</body>
+</html>
