@@ -170,6 +170,7 @@ class WorkspaceControllerIT {
 
         mockMvc.perform(put(WORKSPACE + WKS_NAME_PATH + UPDATE, wksName)
                 .param("name", newWksName)
+                .param("url", "https://other.com")
                 .param("description", "Wks description 01")
                 .with(csrf()))
             .andExpect(redirectedUrl(WORKSPACE + "/" + newWksName));
@@ -183,10 +184,11 @@ class WorkspaceControllerIT {
     void putWorkspaceUpdateWithExistingWksUpdateName(final String wksName) throws Exception {
         String newWksName = "createWksName01";
         String wksDescription = "Wks description";
+        String wksUrl = "https://other.com";
 
         LocalDateTime previosModifiedDate = repository.getWorkspaceByName(wksName).orElse(null).getModifiedDate();
 
-        service.createWorkspace(new CreateWorkspace(newWksName, wksDescription));
+        service.createWorkspace(new CreateWorkspace(newWksName, wksDescription, wksUrl));
         assertThat(repository.existsWorkspaceByName(newWksName)).isTrue();
 
         mockMvc.perform(put(WORKSPACE + WKS_NAME_PATH + UPDATE, wksName)

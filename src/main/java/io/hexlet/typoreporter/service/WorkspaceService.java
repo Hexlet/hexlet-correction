@@ -2,14 +2,17 @@ package io.hexlet.typoreporter.service;
 
 import io.hexlet.typoreporter.domain.workspace.Workspace;
 import io.hexlet.typoreporter.repository.WorkspaceRepository;
-import io.hexlet.typoreporter.service.dto.workspace.*;
+import io.hexlet.typoreporter.service.dto.workspace.CreateWorkspace;
+import io.hexlet.typoreporter.service.dto.workspace.WorkspaceInfo;
 import io.hexlet.typoreporter.web.exception.WorkspaceAlreadyExistException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 import static java.util.Objects.requireNonNull;
 
@@ -40,10 +43,18 @@ public class WorkspaceService {
         return repository.existsWorkspaceByName(wksName);
     }
 
+    @Transactional(readOnly = true)
+    public boolean existsWorkspaceByUrl(final String wksUrl) {
+        return repository.existsWorkspaceByName(wksUrl);
+    }
+
     @Transactional
     public WorkspaceInfo createWorkspace(final CreateWorkspace createWks) {
         if (repository.existsWorkspaceByName(createWks.name())) {
-            throw new WorkspaceAlreadyExistException(createWks.name());
+            throw new WorkspaceAlreadyExistException("name", createWks.name());
+        }
+        if (repository.existsWorkspaceByUrl(createWks.url())) {
+            throw new WorkspaceAlreadyExistException("url", createWks.url());
         }
         final var wksToCreate = requireNonNull(conversionService.convert(createWks, Workspace.class));
         wksToCreate.setApiAccessToken(UUID.randomUUID());
@@ -54,8 +65,9 @@ public class WorkspaceService {
     @Transactional
     public Optional<WorkspaceInfo> updateWorkspace(final CreateWorkspace updateWks, final String oldWksName) {
         if (!oldWksName.equals(updateWks.name()) && repository.existsWorkspaceByName(updateWks.name())) {
-            throw new WorkspaceAlreadyExistException(updateWks.name());
+            throw new WorkspaceAlreadyExistException("name", updateWks.name());
         }
+        //TODO add update wks url, need check if it's not the same url and if it doesn't exist
         return repository.getWorkspaceByName(oldWksName)
             .map(oldWks -> oldWks.setName(updateWks.name()))
             .map(oldWks -> oldWks.setDescription(updateWks.description()))

@@ -2,10 +2,13 @@ package io.hexlet.typoreporter.repository;
 
 import io.hexlet.typoreporter.domain.workspace.Workspace;
 import io.hexlet.typoreporter.security.model.SecuredWorkspace;
-import org.springframework.data.jpa.repository.*;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import java.util.*;
+import java.util.Optional;
+import java.util.UUID;
 
 @Repository
 public interface WorkspaceRepository extends JpaRepository<Workspace, Long> {
@@ -15,6 +18,8 @@ public interface WorkspaceRepository extends JpaRepository<Workspace, Long> {
     Optional<SecuredWorkspace> getSecuredWorkspaceByName(String name);
 
     boolean existsWorkspaceByName(String name);
+
+    boolean existsWorkspaceByUrl(String url);
 
     Integer deleteWorkspaceByName(String name);
 

@@ -6,7 +6,8 @@ import io.hexlet.typoreporter.domain.workspace.Workspace;
 import io.hexlet.typoreporter.service.dto.typo.TypoReport;
 import io.hexlet.typoreporter.service.dto.workspace.CreateWorkspace;
 
-import java.util.stream.*;
+import java.util.stream.LongStream;
+import java.util.stream.Stream;
 
 import static java.time.LocalDateTime.now;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
@@ -62,11 +63,13 @@ public class EntitiesFactory {
     public static Stream<CreateWorkspace> getCreateWorkspaces() {
         final var wks1 = new CreateWorkspace(
             "wks-name",
-            "wks desc"
+            "wks desc",
+            "https://mysite.com"
         );
         final var wks2 = new CreateWorkspace(
             "wks-name",
-            null
+            null,
+            "https://mysite.com"
         );
         return Stream.of(wks1, wks2);
     }
