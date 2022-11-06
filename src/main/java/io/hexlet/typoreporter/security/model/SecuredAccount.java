@@ -1,18 +1,22 @@
 package io.hexlet.typoreporter.security.model;
 
+import io.hexlet.typoreporter.domain.role.Role;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.List;
+import java.util.Set;
 
 public interface SecuredAccount extends UserDetails {
 
     @Override
     default Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(() -> "ROLE_USER");
+       return getRoles();
     }
+
+    @Value("#{target.roles}")
+    Set<Role> getRoles();
 
     @Override
     @Value("#{target.password}")

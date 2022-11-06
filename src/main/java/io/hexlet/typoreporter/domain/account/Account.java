@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import io.hexlet.typoreporter.domain.AbstractAuditingEntity;
 import io.hexlet.typoreporter.domain.Identifiable;
 import io.hexlet.typoreporter.domain.account.constraint.AccountUsername;
+import io.hexlet.typoreporter.domain.role.Role;
 import io.hexlet.typoreporter.domain.typo.Typo;
 import io.hexlet.typoreporter.domain.workspace.Workspace;
 import lombok.Getter;
@@ -17,6 +18,7 @@ import org.hibernate.annotations.TypeDef;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -24,6 +26,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
@@ -32,7 +36,11 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
+import static io.hexlet.typoreporter.domain.role.Role.WATCHER;
 
 @Getter
 @Setter
@@ -86,6 +94,20 @@ public class Account extends AbstractAuditingEntity implements Identifiable<Long
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
     private List<Typo> typos = new ArrayList<>();
+
+    @Column(name = "roles")
+    @ElementCollection(targetClass = Role.class)
+    @Enumerated(EnumType.STRING)
+    @JoinTable(name = "account_roles", joinColumns = @JoinColumn(name = "id"))
+    private Set<Role> roles = new HashSet<>(List.of(WATCHER));
+
+    public void addRole(Role role) {
+        this.roles.add(role);
+    }
+
+    public void removeRole(Role role) {
+        this.roles.remove(role);
+    }
 
     public Account addTypo(final Typo typo) {
         typos.add(typo);

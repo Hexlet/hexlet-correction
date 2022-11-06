@@ -1,10 +1,12 @@
 package io.hexlet.typoreporter.web;
 
-import io.hexlet.typoreporter.service.*;
+import io.hexlet.typoreporter.service.TypoService;
+import io.hexlet.typoreporter.service.WorkspaceService;
 import io.hexlet.typoreporter.service.dto.typo.TypoInfo;
 import io.hexlet.typoreporter.service.dto.workspace.CreateWorkspace;
-import io.hexlet.typoreporter.web.exception.*;
 import io.hexlet.typoreporter.repository.AccountRepository;
+import io.hexlet.typoreporter.web.exception.WorkspaceAlreadyExistException;
+import io.hexlet.typoreporter.web.exception.WorkspaceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
@@ -14,19 +16,37 @@ import org.springframework.data.web.SortDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
-import java.util.*;
-import java.util.stream.IntStream;
+import java.util.List;
+import java.util.Optional;
+import java.util.TreeSet;
+import java.util.UUID;
 
-import static io.hexlet.typoreporter.web.Routers.*;
+import static io.hexlet.typoreporter.web.Routers.DEFAULT_SORT_FIELD;
+import static io.hexlet.typoreporter.web.Routers.REDIRECT_ROOT;
+import static io.hexlet.typoreporter.web.Routers.SETTINGS;
 import static io.hexlet.typoreporter.web.Routers.Typo.TYPOS;
-import static io.hexlet.typoreporter.web.Routers.Workspace.*;
-import static io.hexlet.typoreporter.web.Templates.*;
+import static io.hexlet.typoreporter.web.Routers.UPDATE;
+import static io.hexlet.typoreporter.web.Routers.USERS;
+import static io.hexlet.typoreporter.web.Routers.Workspace.REDIRECT_WKS_ROOT;
+import static io.hexlet.typoreporter.web.Routers.Workspace.WKS_NAME_PATH;
+import static io.hexlet.typoreporter.web.Routers.Workspace.WORKSPACE;
+import static io.hexlet.typoreporter.web.Templates.WKS_INFO_TEMPLATE;
+import static io.hexlet.typoreporter.web.Templates.WKS_SETTINGS_TEMPLATE;
+import static io.hexlet.typoreporter.web.Templates.WKS_TYPOS_TEMPLATE;
+import static io.hexlet.typoreporter.web.Templates.WKS_UPDATE_TEMPLATE;
+import static io.hexlet.typoreporter.web.Templates.WKS_USERS_TEMPLATE;
 import static io.hexlet.typoreporter.web.exception.WorkspaceAlreadyExistException.fieldNameError;
-import static java.util.stream.Collectors.toList;
-import static org.springframework.data.domain.Sort.Direction.*;
+import static org.springframework.data.domain.Sort.Direction.ASC;
+import static org.springframework.data.domain.Sort.Direction.DESC;
 import static org.springframework.data.domain.Sort.Order.asc;
 
 @Slf4j
