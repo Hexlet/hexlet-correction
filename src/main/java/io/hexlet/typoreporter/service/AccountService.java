@@ -7,9 +7,8 @@ import io.hexlet.typoreporter.service.dto.account.InfoAccount;
 import io.hexlet.typoreporter.service.dto.account.SignupAccount;
 import io.hexlet.typoreporter.service.dto.account.UpdatePassword;
 import io.hexlet.typoreporter.service.dto.account.UpdateProfile;
-import io.hexlet.typoreporter.web.exception.EmailAlreadyExistException;
 import io.hexlet.typoreporter.web.exception.OldPasswordWrongException;
-import io.hexlet.typoreporter.web.exception.UsernameAlreadyExistException;
+import io.hexlet.typoreporter.web.exception.AccountAlreadyExistException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -80,11 +79,11 @@ public class AccountService implements SignUpAccount, QueryAccount {
 
         final String username = sourceAccount.get().getUsername();
         if (!username.equals(updateProfile.getUsername()) && existsByUsername(updateProfile.getUsername())) {
-            throw new UsernameAlreadyExistException(updateProfile.getUsername());
+            throw new AccountAlreadyExistException("username", updateProfile.getUsername());
         }
         final String email = sourceAccount.get().getEmail();
         if (!email.equals(updateProfile.getEmail()) && existsByEmail(updateProfile.getEmail())) {
-            throw new EmailAlreadyExistException(updateProfile.getEmail());
+            throw new AccountAlreadyExistException("email", updateProfile.getEmail());
         }
 
         return sourceAccount
