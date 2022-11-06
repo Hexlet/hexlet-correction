@@ -7,11 +7,14 @@ import io.hexlet.typoreporter.domain.typo.Typo;
 import io.hexlet.typoreporter.domain.typo.TypoStatus;
 import io.hexlet.typoreporter.repository.TypoRepository;
 import io.hexlet.typoreporter.test.DBUnitEnumPostgres;
+import io.hexlet.typoreporter.test.factory.EntitiesFactory;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
@@ -37,6 +40,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
+@WithMockUser(authorities = "EDITOR")
 @DBRider
 @DBUnit(caseInsensitiveStrategy = LOWERCASE, dataTypeFactoryClass = DBUnitEnumPostgres.class, cacheConnection = false)
 @DataSet(value = {"workspaces.yml", "typos.yml"})
@@ -140,5 +144,23 @@ public class TypoControllerIT {
             .andExpect(redirectedUrl("/"));
 
         assertThat(typoRepository.existsById(typoId)).isTrue();
+    }
+
+    @Test
+    @WithMockUser(authorities = "WATCHER")
+    void editTyposWithoutRightAuthoritiesFail() throws Exception {
+        Long typoId = EntitiesFactory.getTypoIdsExist().findFirst().get();
+        Typo typo = typoRepository.findById(typoId).orElse(null);
+        String wksName = typo.getWorkspace().getName();
+
+        mockMvc.perform(patch(TYPOS + ID_PATH + TYPO_STATUS, typoId)
+                .param("wksName", wksName)
+                .param("event", CANCEL.name())
+                .with(csrf()))
+            .andExpect(redirectedUrl(null));
+        mockMvc.perform(delete(TYPOS + ID_PATH, typoId)
+                .param("wksName", wksName)
+                .with(csrf()))
+            .andExpect(redirectedUrl(null));
     }
 }

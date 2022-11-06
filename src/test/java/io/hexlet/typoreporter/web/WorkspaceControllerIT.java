@@ -12,6 +12,7 @@ import io.hexlet.typoreporter.repository.WorkspaceRepository;
 import io.hexlet.typoreporter.service.WorkspaceService;
 import io.hexlet.typoreporter.service.dto.workspace.CreateWorkspace;
 import io.hexlet.typoreporter.test.DBUnitEnumPostgres;
+import io.hexlet.typoreporter.test.factory.EntitiesFactory;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -35,6 +36,7 @@ import java.util.stream.Collectors;
 
 import static com.github.database.rider.core.api.configuration.Orthography.LOWERCASE;
 import static io.hexlet.typoreporter.test.Constraints.POSTGRES_IMAGE;
+import static io.hexlet.typoreporter.web.Routers.CREATE;
 import static io.hexlet.typoreporter.web.Routers.SETTINGS;
 import static io.hexlet.typoreporter.web.Routers.Typo.TYPOS;
 import static io.hexlet.typoreporter.web.Routers.UPDATE;
@@ -46,13 +48,14 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 
 @Testcontainers
 @SpringBootTest
-@WithMockUser
+@WithMockUser(authorities = "CREATOR")
 @AutoConfigureMockMvc
 @Transactional
 @DBRider
@@ -262,6 +265,28 @@ class WorkspaceControllerIT {
                 account.getEmail()
             );
         }
+    }
+
+    @WithMockUser(authorities = {"WATCHER", "EDITOR"})
+    @Test
+    void checkWksSecurityConfig() throws Exception {
+        String wksName = EntitiesFactory.getWorkspaceNamesExist().findFirst().get();
+        mockMvc.perform(
+                get(CREATE + WORKSPACE))
+            .andExpect(redirectedUrl(null));
+        mockMvc.perform(
+                post(CREATE + WORKSPACE))
+            .andExpect(redirectedUrl(null));
+        mockMvc.perform(
+                delete(WORKSPACE + WKS_NAME_PATH, wksName))
+            .andExpect(redirectedUrl(null));
+        mockMvc.perform(
+                get(WORKSPACE + WKS_NAME_PATH + SETTINGS, wksName))
+            .andExpect(redirectedUrl(null));
+        mockMvc.perform(
+                patch(WORKSPACE + WKS_NAME_PATH + "/token/regenerate", wksName))
+            .andExpect(redirectedUrl(null));
+
     }
 
 }

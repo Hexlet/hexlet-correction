@@ -9,6 +9,7 @@ import io.hexlet.typoreporter.service.dto.typo.ReportedTypo;
 import io.hexlet.typoreporter.service.dto.typo.TypoReport;
 import io.hexlet.typoreporter.test.DBUnitEnumPostgres;
 import io.hexlet.typoreporter.test.asserts.ReportedTypoAssert;
+import io.hexlet.typoreporter.test.factory.EntitiesFactory;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -41,6 +42,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Testcontainers
@@ -164,6 +166,16 @@ class WorkspaceApiIT {
             .andExpect(jsonPath("$.violations", hasSize(1)))
             .andExpect(jsonPath("$.violations[*].field", hasItem("pageUrl")))
             .andExpect(jsonPath("$.violations[*].message", hasItem("must be a valid URL")));
+    }
+
+    @Test
+    void addTypoReportWithoutAuthorizationFail() throws Exception {
+        mockMvc
+            .perform(post(API_WORKSPACES + "/" + WORKSPACE_101_NAME + TYPOS)
+                .content(objectMapper.writeValueAsString(EntitiesFactory.getTypoReport().findFirst().get()))
+                .contentType(APPLICATION_JSON)
+            )
+            .andExpect(redirectedUrl(null));
     }
 }
 
