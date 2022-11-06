@@ -114,9 +114,6 @@ public class AccountService implements SignUpAccount, QueryAccount {
         if (!passwordEncoder.matches(updatePassword.getOldPassword(), password)) {
            throw new OldPasswordWrongException();
         }
-        if (!updatePassword.getNewPassword().equals(updatePassword.getConfirmPassword())) {
-            throw new PasswordsNotMatchException();
-        }
 
         return sourceAccount
             .map(oldAcc -> oldAcc.setPassword(passwordEncoder.encode(updatePassword.getNewPassword())))

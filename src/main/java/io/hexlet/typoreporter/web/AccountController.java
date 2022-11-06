@@ -141,9 +141,6 @@ public class AccountController {
         if (!passwordEncoder.matches(updatePassword.getOldPassword(), password)) {
             bindingResult.addError(OldPasswordWrongException.fieldNameError());
         }
-        if (!updatePassword.getNewPassword().equals(updatePassword.getConfirmPassword())) {
-            bindingResult.addError(PasswordsNotMatchException.fieldNameError());
-        }
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("updatePassword", updatePassword);

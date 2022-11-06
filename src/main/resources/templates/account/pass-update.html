@@ -28,6 +28,9 @@
                     <label for="inputConfirmPassword">Confirm Password</label>
                     <div class="invalid-feedback" th:each="err : ${#fields.errors('confirmPassword')}" th:text="${err}"></div>
                 </div>
+                <div th:if="${#fields.hasGlobalErrors()}">
+                    <div class="alert alert-danger" th:each="err : ${#fields.globalErrors()}" th:text="${err}"></div>
+                </div>
                 <button class="btn btn-primary" type="submit">Save</button>
                 <a class="btn btn-secondary" th:href="@{/account}">Close</a>
             </form>
