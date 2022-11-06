@@ -7,11 +7,12 @@ import io.hexlet.typoreporter.service.dto.account.UpdatePassword;
 import io.hexlet.typoreporter.service.dto.account.UpdateProfile;
 import io.hexlet.typoreporter.web.exception.EmailAlreadyExistException;
 import io.hexlet.typoreporter.web.exception.OldPasswordWrongException;
-import io.hexlet.typoreporter.web.exception.PasswordsNotMatchException;
 import io.hexlet.typoreporter.web.exception.UsernameAlreadyExistException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -19,11 +20,9 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.zalando.problem.AbstractThrowableProblem;
-
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
-
 import static io.hexlet.typoreporter.web.Routers.*;
 import static io.hexlet.typoreporter.web.Routers.Account.*;
 import static io.hexlet.typoreporter.web.Templates.*;
@@ -40,9 +39,12 @@ public class AccountController {
 
     private final PasswordEncoder passwordEncoder;
 
+    private final Authentication authentication;
+
     @GetMapping
     public String getAccountInfoPage(final Model model) {
-        final var accountInfo = accountService.getInfoAccount();
+        final String name = authentication.getName();
+        final var accountInfo = accountService.getInfoAccount(name);
         if (accountInfo.isEmpty()) {
             //TODO send to error page
             log.error("Account not found");
@@ -56,7 +58,8 @@ public class AccountController {
 
     @GetMapping(PROFILE)
     public String getProfilePage(final Model model) {
-        final var updateProfile = accountService.getUpdateProfile();
+        final String name = authentication.getName();
+        final var updateProfile = accountService.getUpdateProfile(name);
         if (updateProfile.isEmpty()) {
             //TODO send to error page
             log.error("Account not found");
@@ -76,7 +79,8 @@ public class AccountController {
 
         model.addAttribute("formModified", true);
 
-        final var sourceAccount = accountService.getAccount();
+        final String name = authentication.getName();
+        final var sourceAccount = accountService.getAccount(name);
         if (sourceAccount.isEmpty()) {
             //TODO send to error page
             log.error("Account not found");
@@ -99,7 +103,7 @@ public class AccountController {
 
         Optional<Account> updatedAccount;
         try {
-            updatedAccount = accountService.updateProfile(updateProfile);
+            updatedAccount = accountService.updateProfile(updateProfile, name);
             if (updatedAccount.isEmpty()) {
                 //TODO send to error page
                 log.error("Account not found");
@@ -132,12 +136,11 @@ public class AccountController {
                                    final @Valid @ModelAttribute("updatePassword") UpdatePassword updatePassword,
                                    final BindingResult bindingResult) {
 
+
         model.addAttribute("formModified", true);
 
-        final String password = SecurityContextHolder.getContext()
-            .getAuthentication()
-            .getCredentials()
-            .toString();
+        final String name = authentication.getName();
+        final String password = authentication.getCredentials().toString();
         if (!passwordEncoder.matches(updatePassword.getOldPassword(), password)) {
             bindingResult.addError(OldPasswordWrongException.fieldNameError());
         }
@@ -149,7 +152,7 @@ public class AccountController {
 
         Optional<Account> updatedAccount;
         try {
-            updatedAccount = accountService.updatePassword(updatePassword);
+            updatedAccount = accountService.updatePassword(updatePassword, name);
             if (updatedAccount.isEmpty()) {
                 //TODO send to error page
                 log.error("Account not found");

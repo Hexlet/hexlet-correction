@@ -9,11 +9,9 @@ import io.hexlet.typoreporter.service.dto.account.UpdatePassword;
 import io.hexlet.typoreporter.service.dto.account.UpdateProfile;
 import io.hexlet.typoreporter.web.exception.EmailAlreadyExistException;
 import io.hexlet.typoreporter.web.exception.OldPasswordWrongException;
-import io.hexlet.typoreporter.web.exception.PasswordsNotMatchException;
 import io.hexlet.typoreporter.web.exception.UsernameAlreadyExistException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.convert.ConversionService;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -60,34 +58,25 @@ public class AccountService implements SignUpAccount, QueryAccount {
     }
 
     @Transactional(readOnly = true)
-    public Optional<InfoAccount> getInfoAccount() {
-        final var authentication = SecurityContextHolder.getContext().getAuthentication();
-        final String name = authentication.getName();
-
+    public Optional<InfoAccount> getInfoAccount(final String name) {
         return accountRepository.findAccountByUsername(name)
             .map(account -> conversionService.convert(account, InfoAccount.class));
     }
 
     @Transactional(readOnly = true)
-    public Optional<UpdateProfile> getUpdateProfile() {
-        final var authentication = SecurityContextHolder.getContext().getAuthentication();
-        final String name = authentication.getName();
-
+    public Optional<UpdateProfile> getUpdateProfile(final String name) {
         return accountRepository.findAccountByUsername(name)
             .map(account -> conversionService.convert(account, UpdateProfile.class));
     }
 
     @Transactional(readOnly = true)
-    public Optional<Account> getAccount() {
-        final var authentication = SecurityContextHolder.getContext().getAuthentication();
-        final String name = authentication.getName();
-
+    public Optional<Account> getAccount(final String name) {
         return accountRepository.findAccountByUsername(name);
     }
 
     @Transactional
-    public Optional<Account> updateProfile(final UpdateProfile updateProfile) {
-        final var sourceAccount = getAccount();
+    public Optional<Account> updateProfile(final UpdateProfile updateProfile, final String name) {
+        final var sourceAccount = getAccount(name);
 
         final String username = sourceAccount.get().getUsername();
         if (!username.equals(updateProfile.getUsername()) && existsByUsername(updateProfile.getUsername())) {
@@ -107,8 +96,8 @@ public class AccountService implements SignUpAccount, QueryAccount {
     }
 
     @Transactional
-    public Optional<Account> updatePassword(final UpdatePassword updatePassword) {
-        final var sourceAccount = getAccount();
+    public Optional<Account> updatePassword(final UpdatePassword updatePassword, final String name) {
+        final var sourceAccount = getAccount(name);
         final String password = sourceAccount.get().getPassword();
 
         if (!passwordEncoder.matches(updatePassword.getOldPassword(), password)) {
