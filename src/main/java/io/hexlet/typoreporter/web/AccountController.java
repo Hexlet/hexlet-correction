@@ -30,10 +30,9 @@ public class AccountController {
 
     private final AccountService accountService;
 
-    private final Authentication authentication;
-
     @GetMapping
-    public String getAccountInfoPage(final Model model) {
+    public String getAccountInfoPage(final Model model,
+                                     final Authentication authentication) {
         final String name = authentication.getName();
         final var accountInfo = accountService.getInfoAccount(name);
         if (accountInfo.isEmpty()) {
@@ -48,7 +47,8 @@ public class AccountController {
     }
 
     @GetMapping(PROFILE)
-    public String getProfilePage(final Model model) {
+    public String getProfilePage(final Model model,
+                                 final Authentication authentication) {
         final String name = authentication.getName();
         final var updateProfile = accountService.getUpdateProfile(name);
         if (updateProfile.isEmpty()) {
@@ -66,7 +66,8 @@ public class AccountController {
     @PutMapping(PROFILE + UPDATE)
     public String putProfileUpdate(final Model model,
                                    final @Valid @ModelAttribute("updateProfile") UpdateProfile updateProfile,
-                                   final BindingResult bindingResult) {
+                                   final BindingResult bindingResult,
+                                   final Authentication authentication) {
 
         model.addAttribute("formModified", true);
 
@@ -107,7 +108,8 @@ public class AccountController {
     @PutMapping(PASSWORD + UPDATE)
     public String putPasswordUpdate(final Model model,
                                    final @Valid @ModelAttribute("updatePassword") UpdatePassword updatePassword,
-                                   final BindingResult bindingResult) {
+                                   final BindingResult bindingResult,
+                                    final Authentication authentication) {
 
         model.addAttribute("formModified", true);
 
