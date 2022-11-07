@@ -19,6 +19,7 @@ public class CreateWorkspaceToWorkspace implements Converter<CreateWorkspace, Wo
     @Override
     public Workspace convert(CreateWorkspace source) {
         return new Workspace()
+            .setUrl(source.url())
             .setName(source.name())
             .setDescription(source.description());
     }

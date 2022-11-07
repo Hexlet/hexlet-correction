@@ -1,17 +1,19 @@
 package io.hexlet.typoreporter.web;
 
+
+import io.hexlet.typoreporter.repository.AccountRepository;
 import io.hexlet.typoreporter.service.TypoService;
 import io.hexlet.typoreporter.service.WorkspaceService;
 import io.hexlet.typoreporter.service.dto.typo.TypoInfo;
 import io.hexlet.typoreporter.service.dto.workspace.CreateWorkspace;
-import io.hexlet.typoreporter.repository.AccountRepository;
 import io.hexlet.typoreporter.web.exception.WorkspaceAlreadyExistException;
 import io.hexlet.typoreporter.web.exception.WorkspaceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
 import org.ocpsoft.prettytime.PrettyTime;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.SortDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -44,7 +46,6 @@ import static io.hexlet.typoreporter.web.Templates.WKS_SETTINGS_TEMPLATE;
 import static io.hexlet.typoreporter.web.Templates.WKS_TYPOS_TEMPLATE;
 import static io.hexlet.typoreporter.web.Templates.WKS_UPDATE_TEMPLATE;
 import static io.hexlet.typoreporter.web.Templates.WKS_USERS_TEMPLATE;
-import static io.hexlet.typoreporter.web.exception.WorkspaceAlreadyExistException.fieldNameError;
 import static org.springframework.data.domain.Sort.Direction.ASC;
 import static org.springframework.data.domain.Sort.Direction.DESC;
 import static org.springframework.data.domain.Sort.Order.asc;
@@ -141,7 +142,7 @@ public class WorkspaceController {
             return REDIRECT_ROOT;
         }
         final var wksUpdate = wksOptional
-            .map(wksInfo -> new CreateWorkspace(wksInfo.name(), wksInfo.description()))
+            .map(wksInfo -> new CreateWorkspace(wksInfo.name(), wksInfo.description(), wksInfo.url()))
             .get();
         model.addAttribute("createWorkspace", wksUpdate);
         model.addAttribute("wksName", wksName);
@@ -162,9 +163,6 @@ public class WorkspaceController {
         getStatisticDataToModel(model, wksName);
         getLastTypoDataToModel(model, wksName);
 
-        if (!wksName.equals(wksUpdate.name()) && workspaceService.existsWorkspaceByName(wksUpdate.name())) {
-            bindingResult.addError(fieldNameError(wksUpdate));
-        }
         if (bindingResult.hasErrors()) {
             model.addAttribute("createWorkspace", wksUpdate);
             return WKS_UPDATE_TEMPLATE;
@@ -176,7 +174,7 @@ public class WorkspaceController {
                 return REDIRECT_ROOT;
             }
         } catch (WorkspaceAlreadyExistException e) {
-            bindingResult.addError(fieldNameError(wksUpdate));
+            bindingResult.addError(e.toFieldError("createWorkspace"));
             return WKS_UPDATE_TEMPLATE;
         }
         return REDIRECT_WKS_ROOT + wksUpdate.name();

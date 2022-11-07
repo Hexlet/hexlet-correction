@@ -82,7 +82,7 @@ public class WorkspaceServiceIT {
 
     @Test
     void createWorkspaceIsSuccessful() {
-        final var newWks = new CreateWorkspace("wks-name-1", "wks desc");
+        final var newWks = new CreateWorkspace("wks-name-1", "wks desc", "https://other.com");
         WorkspaceInfo workspaceInfo = service.createWorkspace(newWks);
         assertThat(workspaceInfo.name()).isNotEmpty();
     }
@@ -99,7 +99,7 @@ public class WorkspaceServiceIT {
     @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspaceNamesExist")
     void updateWorkspaceIsSuccessful(final String wksName) {
-        final var newWks = new CreateWorkspace("wks-name-1", "wks desc");
+        final var newWks = new CreateWorkspace("wks-name-1", "wks desc", "https://mysite.com");
         WorkspaceInfo workspaceInfo = service.updateWorkspace(newWks, "wks-test").orElse(null);
         assertThat(Objects.requireNonNull(workspaceInfo).name()).isEqualTo(newWks.name());
     }

@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 public record WorkspaceInfo(
     Long id,
     String name,
+    String url,
     String description,
     String createdBy,
     LocalDateTime createdDate,
