@@ -22,6 +22,7 @@ public class WorkspaceToWorkspaceInfo implements Converter<Workspace, WorkspaceI
         return new WorkspaceInfo(
             source.getId(),
             source.getName(),
+            source.getUrl(),
             source.getDescription(),
             source.getCreatedBy(),
             source.getCreatedDate(),

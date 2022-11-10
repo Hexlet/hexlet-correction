@@ -1,16 +1,34 @@
 package io.hexlet.typoreporter.domain.workspace;
 
-import com.fasterxml.jackson.annotation.*;
-import io.hexlet.typoreporter.domain.*;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import io.hexlet.typoreporter.domain.AbstractAuditingEntity;
+import io.hexlet.typoreporter.domain.Identifiable;
 import io.hexlet.typoreporter.domain.account.Account;
 import io.hexlet.typoreporter.domain.typo.Typo;
-import io.hexlet.typoreporter.domain.workspace.constraint.*;
-import lombok.*;
+import io.hexlet.typoreporter.domain.workspace.constraint.WorkspaceDescription;
+import io.hexlet.typoreporter.domain.workspace.constraint.WorkspaceName;
+import io.hexlet.typoreporter.domain.workspace.constraint.WorkspaceUrl;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.Accessors;
+import org.hibernate.Hibernate;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.validation.constraints.NotNull;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -29,6 +47,10 @@ public class Workspace extends AbstractAuditingEntity implements Identifiable<Lo
     @WorkspaceName
     @Column(unique = true)
     private String name;
+
+    @WorkspaceUrl
+    @Column(unique = true)
+    private String url;
 
     @WorkspaceDescription
     private String description;
@@ -70,11 +92,18 @@ public class Workspace extends AbstractAuditingEntity implements Identifiable<Lo
 
     @Override
     public int hashCode() {
-        return 31;
+        return getClass().hashCode();
     }
 
     @Override
     public boolean equals(Object obj) {
-        return this == obj || id != null && obj instanceof Workspace other && id.equals(other.id);
+        if (obj == this) {
+            return true;
+        }
+        if (obj == null || Hibernate.getClass(obj) != Hibernate.getClass(this)) {
+            return false;
+        }
+        Workspace workspace = (Workspace) obj;
+        return id != null && Objects.equals(id, workspace.id);
     }
 }

@@ -7,14 +7,18 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
 
-import static io.hexlet.typoreporter.web.Routers.*;
+import static io.hexlet.typoreporter.web.Routers.CREATE;
+import static io.hexlet.typoreporter.web.Routers.REDIRECT_ROOT;
 import static io.hexlet.typoreporter.web.Routers.Workspace.WORKSPACE;
-import static io.hexlet.typoreporter.web.Templates.*;
-import static io.hexlet.typoreporter.web.exception.WorkspaceAlreadyExistException.fieldNameError;
+import static io.hexlet.typoreporter.web.Templates.CREATE_WKS;
+import static io.hexlet.typoreporter.web.Templates.INDEX;
 
 @Controller
 @RequestMapping
@@ -32,7 +36,7 @@ public class IndexController {
 
     @GetMapping(CREATE + WORKSPACE)
     public String getCreateWorkspacePage(final Model model) {
-        model.addAttribute("createWorkspace", new CreateWorkspace("", ""));
+        model.addAttribute("createWorkspace", new CreateWorkspace("", "", ""));
         model.addAttribute("formModified", false);
         return CREATE_WKS;
     }
@@ -42,9 +46,6 @@ public class IndexController {
                                           @Valid @ModelAttribute CreateWorkspace createWorkspace,
                                           BindingResult bindingResult) {
         model.addAttribute("formModified", true);
-        if (workspaceService.existsWorkspaceByName(createWorkspace.name())) {
-            bindingResult.addError(fieldNameError(createWorkspace));
-        }
         if (bindingResult.hasErrors()) {
             model.addAttribute("createWorkspace", createWorkspace);
             return CREATE_WKS;
@@ -52,7 +53,7 @@ public class IndexController {
         try {
             workspaceService.createWorkspace(createWorkspace);
         } catch (WorkspaceAlreadyExistException e) {
-            bindingResult.addError(fieldNameError(createWorkspace));
+            bindingResult.addError(e.toFieldError("createWorkspace"));
             return CREATE_WKS;
         }
         return REDIRECT_ROOT;
