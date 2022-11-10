@@ -1,5 +1,5 @@
 workspace:
-  -   id: 101
+  - id: 101
     name: wks-name
     url: https://mysite.com
     description: desc
@@ -8,18 +8,18 @@ workspace:
     created_date: 2020-11-15 00:09:55.391179
     modified_by: system
     modified_date: 2020-11-15 00:09:55.391179
-  -   id: 102
+  - id: 102
     name: wks-test
-      url: https://mysite.net
+    url: https://mysite.net
     description: description
     api_access_token: f884c5a6-d698-4f90-aa21-f182540039fc
     created_by: system
     created_date: 2020-11-15 00:09:55.391179
     modified_by: system
     modified_date: 2020-11-15 00:09:55.391179
-  -   id: 103
+  - id: 103
     name: wks-empty
-      url: https://mysite.in
+    url: https://mysite.in
     description: Empty workspace
     api_access_token: 669016b9-6445-4bdc-b734-14fee2454b04
     created_by: system
