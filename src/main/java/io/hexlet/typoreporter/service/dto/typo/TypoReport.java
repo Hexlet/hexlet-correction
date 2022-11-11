@@ -1,6 +1,11 @@
 package io.hexlet.typoreporter.service.dto.typo;
 
-import io.hexlet.typoreporter.domain.typo.constraint.*;
+import io.hexlet.typoreporter.domain.typo.constraint.ReporterComment;
+import io.hexlet.typoreporter.domain.typo.constraint.ReporterName;
+import io.hexlet.typoreporter.domain.typo.constraint.TextAfterTypo;
+import io.hexlet.typoreporter.domain.typo.constraint.TextBeforeTypo;
+import io.hexlet.typoreporter.domain.typo.constraint.TextTypo;
+import io.hexlet.typoreporter.domain.typo.constraint.TypoPageUrl;
 
 public record TypoReport(
     @TypoPageUrl
@@ -17,4 +22,7 @@ public record TypoReport(
     String textAfterTypo
 ) {
 
+    public static TypoReport empty() {
+        return new TypoReport("", "", "", "", "", "");
+    }
 }
