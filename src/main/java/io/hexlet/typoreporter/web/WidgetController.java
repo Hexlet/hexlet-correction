@@ -48,16 +48,19 @@ public class WidgetController {
     }
 
     @PostMapping("/typo/form/{wksName}")
-    String postWidgetTypoForm(final Model model,
+    String postWidgetTypoForm(HttpServletResponse response,
+                              Model model,
                               @Valid @ModelAttribute TypoReport typoReport,
                               BindingResult bindingResult,
                               @PathVariable String wksName) {
-        final var wksExists = workspaceService.existsWorkspaceByName(wksName);
+        final var wks = workspaceService.getWorkspaceByName(wksName);
 
-        if (!wksExists) {
+        if (wks.isEmpty()) {
             log.error("Error during saving typo from widget. Workspace not found");
             return "widget/report-typo-error";
         }
+
+        response.addHeader("Content-Security-Policy", "frame-ancestors " + wks.get().getUrl());
 
         if (bindingResult.hasFieldErrors("reporterComment")) {
             log.warn("Validation error during saving typo from widget. Typo not valid. Errors: {}", bindingResult.getAllErrors());

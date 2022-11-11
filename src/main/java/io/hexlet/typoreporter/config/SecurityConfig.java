@@ -67,6 +67,7 @@ public class SecurityConfig {
 
         http.addFilterBefore(new WorkspaceAuthTokenFilter(authManager), BasicAuthenticationFilter.class);
 
+        http.headers().frameOptions().disable();
         return http.build();
     }
 }
