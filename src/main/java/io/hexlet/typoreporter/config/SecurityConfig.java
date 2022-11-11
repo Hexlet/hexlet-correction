@@ -63,7 +63,10 @@ public class SecurityConfig {
             .formLogin().permitAll()
             .and()
             .csrf()
-            .ignoringRequestMatchers(new AntPathRequestMatcher(API_WORKSPACES + "/*" + TYPOS, POST.name()));
+            .ignoringRequestMatchers(
+                new AntPathRequestMatcher(API_WORKSPACES + "/*" + TYPOS, POST.name()),
+                new AntPathRequestMatcher("/typo/form/*", POST.name())
+            );
 
         http.addFilterBefore(new WorkspaceAuthTokenFilter(authManager), BasicAuthenticationFilter.class);
 
