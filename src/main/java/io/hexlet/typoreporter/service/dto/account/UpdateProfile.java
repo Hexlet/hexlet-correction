@@ -1,9 +1,11 @@
 package io.hexlet.typoreporter.service.dto.account;
 
 import io.hexlet.typoreporter.domain.account.constraint.AccountUsername;
+import io.hexlet.typoreporter.service.dto.FieldMatch;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
@@ -11,6 +13,7 @@ import javax.validation.constraints.Size;
 @Getter
 @Setter
 @Accessors(chain = true)
+@FieldMatch(first = "email", second = "confirmEmail", message = "The email '{first}' and it confirmation '{second}' must match")
 public class UpdateProfile {
 
     @AccountUsername
@@ -18,6 +21,9 @@ public class UpdateProfile {
 
     @Email
     private String email;
+
+    @Email
+    private String confirmEmail;
 
     @NotBlank
     @Size(min = 1, max = 50)
