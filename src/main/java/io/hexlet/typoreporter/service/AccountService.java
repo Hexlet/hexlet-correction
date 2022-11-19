@@ -7,6 +7,7 @@ import io.hexlet.typoreporter.service.dto.account.InfoAccount;
 import io.hexlet.typoreporter.service.dto.account.SignupAccount;
 import io.hexlet.typoreporter.service.dto.account.UpdatePassword;
 import io.hexlet.typoreporter.service.dto.account.UpdateProfile;
+import io.hexlet.typoreporter.web.exception.NewPasswordTheSameException;
 import io.hexlet.typoreporter.web.exception.OldPasswordWrongException;
 import io.hexlet.typoreporter.web.exception.AccountAlreadyExistException;
 import lombok.RequiredArgsConstructor;
@@ -99,6 +100,10 @@ public class AccountService implements SignUpAccount, QueryAccount {
 
         if (!passwordEncoder.matches(updatePassword.getOldPassword(), password)) {
            throw new OldPasswordWrongException();
+        }
+
+        if (passwordEncoder.matches(updatePassword.getNewPassword(), password)) {
+            throw new NewPasswordTheSameException();
         }
 
         return sourceAccount
