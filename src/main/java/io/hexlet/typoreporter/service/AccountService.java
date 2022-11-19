@@ -73,7 +73,6 @@ public class AccountService implements SignUpAccount, QueryAccount {
         return accountRepository.findAccountByUsername(name);
     }
 
-    @Transactional
     public Optional<Account> updateProfile(final UpdateProfile updateProfile, final String name) {
         final var sourceAccount = getAccount(name);
 
@@ -94,7 +93,6 @@ public class AccountService implements SignUpAccount, QueryAccount {
             .map(accountRepository::save);
     }
 
-    @Transactional
     public Optional<Account> updatePassword(final UpdatePassword updatePassword, final String name) {
         final var sourceAccount = getAccount(name);
         final String password = sourceAccount.get().getPassword();
