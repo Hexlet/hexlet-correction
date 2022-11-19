@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: head"></head>
+<body>
+<form method="POST" th:action="@{/typo/form/{name}(name=${wksName})}" th:object="${typoReport}">
+    <input hidden id="pageUrl" name="pageUrl" type="text" />
+    <input hidden id="reporterName" name="reporterName" type="text" />
+    <input hidden id="textBeforeTypo" name="textBeforeTypo" type="text" />
+    <input hidden id="textTypo" name="textTypo" type="text" />
+    <input hidden id="textAfterTypo" name="textAfterTypo" type="text" />
+    <div class="form-floating mb-3">
+        <textarea class="form-control"
+                  id="commentTextarea"
+                  rows="3"
+                  th:classappend="${!#fields.hasErrors('reporterComment') && formModified ? 'is-valid' : ''}"
+                  th:field="*{reporterComment}"
+                  type="text"
+        ></textarea>
+        <label class="form-label" for="commentTextarea">Оставить дополнительный комментарий:</label>
+        <div class="alert alert-danger" th:if="${#fields.hasErrors('reporterComment')}">
+            <p th:each="err : ${#fields.errors('reporterComment')}" th:text="${err}"></p>
+        </div>
+    </div>
+    <button class="btn btn-primary" type="submit">Отправить</button>
+</form>
+<script th:inline="javascript">
+    window.onload = () => {
+        const successMsg = {
+            health: {
+                code: 0,
+                message: 'Loading Complete',
+            },
+        };
+        const trustedOrigin = [[${trustedOrigin}]];
+
+        try {
+            const parent = window.top;
+            if (parent != null && !parent.closed) {
+                parent.postMessage(JSON.stringify(successMsg), trustedOrigin);
+            } else {
+                console.log('Could not message parent. Parent not found');
+            }
+        } catch (e) {
+            console.log('Could not message parent. Error', e);
+        }
+    };
+</script>
+</body>
+</html>
