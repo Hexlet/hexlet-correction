@@ -36,10 +36,10 @@ public class AccountController {
                                      final Authentication authentication) {
         final String name = authentication.getName();
         final var accountInfo = accountService.getInfoAccount(name);
+
         if (accountInfo.isEmpty()) {
-            //TODO send to error page
-            log.error("Account not found");
-            return REDIRECT_ROOT;
+            log.error("Error during getting account info page. Account info not found");
+            return ERROR_GENERAL_TEMPLATE;
         }
 
         model.addAttribute("accInfo", accountInfo.get());
@@ -52,10 +52,10 @@ public class AccountController {
                                  final Authentication authentication) {
         final String name = authentication.getName();
         final var updateProfile = accountService.getUpdateProfile(name);
+
         if (updateProfile.isEmpty()) {
-            //TODO send to error page
-            log.error("Account not found");
-            return REDIRECT_ROOT;
+            log.error("Error during getting profile for update. UpdateProfile not found");
+            return ERROR_GENERAL_TEMPLATE;
         }
 
         model.addAttribute("formModified", false);
@@ -81,10 +81,10 @@ public class AccountController {
         try {
             final String name = authentication.getName();
             updatedAccount = accountService.updateProfile(updateProfile, name);
+
             if (updatedAccount.isEmpty()) {
-                //TODO send to error page
-                log.error("Account not found");
-                return REDIRECT_ROOT;
+                log.error("Error during getting updated account. Updated account not found");
+                return ERROR_GENERAL_TEMPLATE;
             }
         } catch (AccountAlreadyExistException e) {
             bindingResult.addError(e.toFieldError("updateProfile"));
@@ -123,10 +123,10 @@ public class AccountController {
         try {
             final String name = authentication.getName();
             updatedAccount = accountService.updatePassword(updatePassword, name);
+
             if (updatedAccount.isEmpty()) {
-                //TODO send to error page
-                log.error("Account not found");
-                return REDIRECT_ROOT;
+                log.error("Error during getting updated account with new password. Updated account not found");
+                return ERROR_GENERAL_TEMPLATE;
             }
         } catch (OldPasswordWrongException | NewPasswordTheSameException e) {
             bindingResult.addError(e.toFieldError("updatePassword"));
