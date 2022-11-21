@@ -34,6 +34,16 @@
                 </div>
 
                 <div class="form-floating mb-3">
+                    <input class="form-control" id="inputConfirmEmail" placeholder="p"
+                           th:classappend="${!#fields.hasErrors('confirmEmail') && formModified ? 'is-valid' : ''}"
+                           type="email" th:field="*{confirmEmail}">
+                    <label for="inputConfirmEmail">Confirm Email</label>
+                    <div class="alert alert-danger" th:if="${#fields.hasErrors('confirmEmail')}">
+                        <p th:each="err : ${#fields.errors('confirmEmail')}" th:text="${err}"></p>
+                    </div>
+                </div>
+
+                <div class="form-floating mb-3">
                     <input class="form-control" id="inputFirstName" placeholder="p"
                            th:classappend="${!#fields.hasErrors('firstName') && formModified ? 'is-valid' : ''}"
                            type="text" th:field="*{firstName}">
@@ -70,9 +80,6 @@
                     <label for="inputConfirmPassword">Confirm Password</label>
                     <div class="alert alert-danger" th:if="${#fields.hasErrors('confirmPassword')}">
                         <p th:each="err : ${#fields.errors('confirmPassword')}" th:text="${err}"></p>
-                    </div>
-                    <div class="alert alert-danger" th:if="${passwordError != null}">
-                        <p th:text="${passwordError}"></p>
                     </div>
                 </div>
                 <button class="btn btn-primary" type="submit">Create Account</button>

@@ -61,11 +61,6 @@ public class LoginController {
             hasErrors = true;
         }
 
-        if (!signupAccount.getPassword().equals(signupAccount.getConfirmPassword())) {
-            model.addAttribute("passwordError", "Passwords doesn't match");
-            hasErrors = true;
-        }
-
         if (hasErrors) {
             return SIGNUP_TEMPLATE;
         }
