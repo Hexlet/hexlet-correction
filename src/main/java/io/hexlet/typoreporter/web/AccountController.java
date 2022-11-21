@@ -73,7 +73,6 @@ public class AccountController {
         model.addAttribute("formModified", true);
 
         if (bindingResult.hasErrors()) {
-            model.addAttribute("updateProfile", updateProfile);
             return PROF_UPDATE_TEMPLATE;
         }
 
@@ -115,7 +114,6 @@ public class AccountController {
         model.addAttribute("formModified", true);
 
         if (bindingResult.hasErrors()) {
-            model.addAttribute("updatePassword", updatePassword);
             return PASS_UPDATE_TEMPLATE;
         }
 
