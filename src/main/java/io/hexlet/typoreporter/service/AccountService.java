@@ -2,11 +2,13 @@ package io.hexlet.typoreporter.service;
 
 import io.hexlet.typoreporter.domain.account.Account;
 import io.hexlet.typoreporter.domain.account.AuthProvider;
+import io.hexlet.typoreporter.domain.workspace.Workspace;
 import io.hexlet.typoreporter.repository.AccountRepository;
 import io.hexlet.typoreporter.service.dto.account.InfoAccount;
 import io.hexlet.typoreporter.service.dto.account.SignupAccount;
 import io.hexlet.typoreporter.service.dto.account.UpdatePassword;
 import io.hexlet.typoreporter.service.dto.account.UpdateProfile;
+import io.hexlet.typoreporter.service.dto.workspace.WorkspaceInfo;
 import io.hexlet.typoreporter.web.exception.NewPasswordTheSameException;
 import io.hexlet.typoreporter.web.exception.OldPasswordWrongException;
 import io.hexlet.typoreporter.web.exception.AccountAlreadyExistException;
@@ -61,6 +63,18 @@ public class AccountService implements SignUpAccount, QueryAccount {
     public Optional<InfoAccount> getInfoAccount(final String name) {
         return accountRepository.findAccountByUsername(name)
             .map(account -> conversionService.convert(account, InfoAccount.class));
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<WorkspaceInfo> getWorkspaceInfoByUsername(final String name) {
+        final var sourceAccount = accountRepository.findAccountByUsername(name);
+
+        Optional<Workspace> sourceWorkspace = Optional.empty();
+        if (sourceAccount.isPresent()) {
+            sourceWorkspace = Optional.ofNullable(sourceAccount.get().getWorkspace());
+        }
+
+        return sourceWorkspace.map(workspace -> conversionService.convert(workspace, WorkspaceInfo.class));
     }
 
     @Transactional(readOnly = true)
