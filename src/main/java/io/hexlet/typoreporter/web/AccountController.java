@@ -5,6 +5,7 @@ import io.hexlet.typoreporter.service.AccountService;
 import io.hexlet.typoreporter.service.dto.account.UpdatePassword;
 import io.hexlet.typoreporter.service.dto.account.UpdateProfile;
 import io.hexlet.typoreporter.web.exception.AccountAlreadyExistException;
+import io.hexlet.typoreporter.web.exception.NewPasswordTheSameException;
 import io.hexlet.typoreporter.web.exception.OldPasswordWrongException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -127,8 +128,8 @@ public class AccountController {
                 log.error("Account not found");
                 return REDIRECT_ROOT;
             }
-        } catch (OldPasswordWrongException e) {
-            bindingResult.addError(e.toFieldError());
+        } catch (OldPasswordWrongException | NewPasswordTheSameException e) {
+            bindingResult.addError(e.toFieldError("updatePassword"));
             return PASS_UPDATE_TEMPLATE;
         }
 

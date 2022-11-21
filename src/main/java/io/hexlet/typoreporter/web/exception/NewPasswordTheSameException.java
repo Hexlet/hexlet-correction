@@ -4,7 +4,7 @@ import org.springframework.validation.FieldError;
 import org.zalando.problem.AbstractThrowableProblem;
 import static org.zalando.problem.Status.CONFLICT;
 
-public class NewPasswordTheSameException extends AbstractThrowableProblem {
+public class NewPasswordTheSameException extends AbstractThrowableProblem implements ConvertibleToFieldError {
 
     private static final String MESSAGE_TEMPLATE = "New password is the same as the old one";
 
@@ -12,9 +12,10 @@ public class NewPasswordTheSameException extends AbstractThrowableProblem {
         super(null, "The same new password", CONFLICT, MESSAGE_TEMPLATE);
     }
 
-    public FieldError toFieldError() {
+    @Override
+    public FieldError toFieldError(final String objectName) {
         return new FieldError(
-            "updatePassword",
+            objectName,
             "newPassword",
             null,
             false,

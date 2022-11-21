@@ -4,7 +4,7 @@ import org.springframework.validation.FieldError;
 import org.zalando.problem.AbstractThrowableProblem;
 import static org.zalando.problem.Status.CONFLICT;
 
-public class OldPasswordWrongException extends AbstractThrowableProblem {
+public class OldPasswordWrongException extends AbstractThrowableProblem implements ConvertibleToFieldError {
 
     private static final String MESSAGE_TEMPLATE = "Wrong old password";
 
@@ -12,9 +12,10 @@ public class OldPasswordWrongException extends AbstractThrowableProblem {
         super(null, "Wrong old password", CONFLICT, MESSAGE_TEMPLATE);
     }
 
-    public FieldError toFieldError() {
+    @Override
+    public FieldError toFieldError(final String objectName) {
         return new FieldError(
-            "updatePassword",
+            objectName,
             "oldPassword",
             null,
             false,

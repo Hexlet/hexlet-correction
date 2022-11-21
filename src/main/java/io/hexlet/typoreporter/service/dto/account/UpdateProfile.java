@@ -13,7 +13,7 @@ import javax.validation.constraints.Size;
 @Getter
 @Setter
 @Accessors(chain = true)
-@FieldMatch(first = "email", second = "confirmEmail", message = "The email '{first}' and it confirmation '{second}' must match")
+@FieldMatch(first = "email", second = "confirmEmail", message = "The email \"{0}\" and it confirmation \"{1}\" must match")
 public class UpdateProfile {
 
     @AccountUsername

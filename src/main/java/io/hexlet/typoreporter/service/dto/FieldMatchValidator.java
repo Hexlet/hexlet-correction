@@ -5,6 +5,7 @@ import org.springframework.beans.PropertyAccessorFactory;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.Objects;
+import static java.text.MessageFormat.format;
 
 public class FieldMatchValidator implements ConstraintValidator<FieldMatch, Object> {
 
@@ -12,10 +13,13 @@ public class FieldMatchValidator implements ConstraintValidator<FieldMatch, Obje
 
     private String secondFieldName;
 
+    private String message;
+
     @Override
     public void initialize(final FieldMatch constraintAnnotation) {
         firstFieldName = constraintAnnotation.first();
         secondFieldName = constraintAnnotation.second();
+        message = constraintAnnotation.message();
     }
 
     @Override
@@ -26,7 +30,7 @@ public class FieldMatchValidator implements ConstraintValidator<FieldMatch, Obje
         final var isValid = Objects.equals(firstObj, secondObj);
         if (!isValid) {
             context.disableDefaultConstraintViolation();
-            context.buildConstraintViolationWithTemplate(context.getDefaultConstraintMessageTemplate())
+            context.buildConstraintViolationWithTemplate(format(message, firstObj, secondObj))
                 .addPropertyNode(firstFieldName)
                 .addConstraintViolation();
         }
