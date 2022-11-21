@@ -35,6 +35,17 @@
     <div class="card mb-3">
         <div class="card-body">
             <h5 class="card-title mb-1">Workspace</h5>
+            <div th:if="${workspaceInfo}" th:object="${workspaceInfo}">
+                <p class="card-title" th:text="*{name}"></p>
+                <p class="card-text" th:text="*{url}"></p>
+                <p class="card-text" th:text="*{description}"></p>
+            </div>
+        </div>
+        <div class="card-footer text-muted fst-italic" th:if="${workspaceInfo}" th:object="${workspaceInfo}">
+            <h6 class="card-subtitle m-2"
+                th:text="|Modified by *{modifiedBy} *{modifiedDateAgo} at *{#temporals.format(modifiedDate, 'hh:mm:ss dd-MM-yyyy')}|"></h6>
+            <h6 class="card-subtitle m-2"
+                th:text="|Created by *{createdBy} *{createdDateAgo} at *{#temporals.format(createdDate, 'hh:mm:ss dd-MM-yyyy')}|"></h6>
         </div>
     </div>
 </main>
