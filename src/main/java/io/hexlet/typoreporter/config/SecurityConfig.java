@@ -56,11 +56,13 @@ public class SecurityConfig {
             .accessDeniedHandler(problemSupport);
 
         http.authorizeRequests()
-            .antMatchers(GET, "/", "/webjars/**", "/static/**").permitAll()
+            .antMatchers(GET, "/", "/workspaces", "/webjars/**", "/static/**").permitAll()
             .mvcMatchers(POST, API_WORKSPACES + "/*" + TYPOS).authenticated()
             .antMatchers("/workspace/**", "/create/workspace").authenticated()
             .and()
-            .formLogin().permitAll()
+            .formLogin()
+            .defaultSuccessUrl("/workspaces")
+            .permitAll()
             .and()
             .csrf()
             .ignoringRequestMatchers(

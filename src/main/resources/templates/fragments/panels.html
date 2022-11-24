@@ -16,30 +16,24 @@
                     <a class="nav-link" th:href="@{/create/workspace}">Create Workspace</a>
                 </li>
             </ul>
-            <div sec:authorize="isAuthenticated()">
-                <ul class="navbar-nav mr-2">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/" th:text="${#authentication.getName()}"></a>
-                    </li>
-                    <li class="nav-item">
-                        <form th:action="@{/logout}" th:method="post">
-                            <button class="btn btn-link nav-link" type="submit">Logout</button>
-                        </form>
-                    </li>
-                </ul>
-            </div>
-            <div sec:authorize="isAnonymous()">
-                <ul class="navbar-nav mr-2">
-                    <li class="nav-item">
-                        <a class="nav-link" th:href="@{/login}">Login</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" th:href="@{/signup}">Sign Up</a>
-                    </li>
-                </ul>
-            </div>
-
-
+            <ul class="navbar-nav mr-2 ms-auto" sec:authorize="isAuthenticated()">
+                <li class="nav-item">
+                    <a class="nav-link" href="/" th:text="${#authentication.getName()}"></a>
+                </li>
+                <li class="nav-item">
+                    <form th:action="@{/logout}" th:method="post">
+                        <button class="btn btn-link nav-link" type="submit">Logout</button>
+                    </form>
+                </li>
+            </ul>
+            <ul class="navbar-nav mr-2 ms-auto" sec:authorize="isAnonymous()">
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/login}">Login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/signup}">Sign Up</a>
+                </li>
+            </ul>
         </div>
     </div>
 </nav>

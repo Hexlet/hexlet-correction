@@ -18,7 +18,7 @@ public class Routers {
 
     public static final String REDIRECT = "redirect:";
 
-    public static final String REDIRECT_ROOT = REDIRECT + "/";
+    public static final String REDIRECT_ROOT = REDIRECT + "/workspaces";
 
     public static final String DEFAULT_SORT_FIELD = "createdDate";
 

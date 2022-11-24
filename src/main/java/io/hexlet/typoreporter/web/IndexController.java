@@ -18,7 +18,6 @@ import static io.hexlet.typoreporter.web.Routers.CREATE;
 import static io.hexlet.typoreporter.web.Routers.REDIRECT_ROOT;
 import static io.hexlet.typoreporter.web.Routers.Workspace.WORKSPACE;
 import static io.hexlet.typoreporter.web.Templates.CREATE_WKS;
-import static io.hexlet.typoreporter.web.Templates.INDEX;
 
 @Controller
 @RequestMapping
@@ -27,11 +26,11 @@ public class IndexController {
 
     private final WorkspaceService workspaceService;
 
-    @GetMapping
+    @GetMapping("/workspaces")
     public String index(final Model model) {
         final var wksInfoList = workspaceService.getAllWorkspacesInfo();
         model.addAttribute("wksInfoList", wksInfoList);
-        return INDEX;
+        return "workspaces";
     }
 
     @GetMapping(CREATE + WORKSPACE)
