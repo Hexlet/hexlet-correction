@@ -98,7 +98,7 @@ class WorkspaceControllerIT {
     @Test
     void getWorkspaceInfoPageWithoutWks() throws Exception {
         mockMvc.perform(get(WORKSPACE + WKS_NAME_PATH, "notExistsWksName"))
-            .andExpect(redirectedUrl("/"));
+            .andExpect(redirectedUrl("/workspaces"));
     }
 
     @ParameterizedTest
@@ -115,7 +115,7 @@ class WorkspaceControllerIT {
     @Test
     void getWorkspaceSettingsPageWithoutWks() throws Exception {
         mockMvc.perform(get(WORKSPACE + WKS_NAME_PATH + SETTINGS, "notExistsWksName"))
-            .andExpect(redirectedUrl("/"));
+            .andExpect(redirectedUrl("/workspaces"));
     }
 
     @ParameterizedTest
@@ -141,7 +141,7 @@ class WorkspaceControllerIT {
     @Test
     void getWorkspaceSettingsPageWithoutWksInfo() throws Exception {
         mockMvc.perform(get(WORKSPACE + WKS_NAME_PATH + TYPOS, "notExistsWksName"))
-            .andExpect(redirectedUrl("/"));
+            .andExpect(redirectedUrl("/workspaces"));
     }
 
     @ParameterizedTest
@@ -158,7 +158,7 @@ class WorkspaceControllerIT {
     @Test
     void getWorkspaceUpdatePageWithoutWks() throws Exception {
         mockMvc.perform(get(WORKSPACE + WKS_NAME_PATH + UPDATE, "notExistsWksName"))
-            .andExpect(redirectedUrl("/"));
+            .andExpect(redirectedUrl("/workspaces"));
     }
 
     @ParameterizedTest
@@ -222,7 +222,7 @@ class WorkspaceControllerIT {
     void patchWorkspaceTokenWithoutWks() throws Exception {
         mockMvc.perform(patch(WORKSPACE + WKS_NAME_PATH + "/token/regenerate", "notExistsWksName")
                 .with(csrf()))
-            .andExpect(redirectedUrl("/"));
+            .andExpect(redirectedUrl("/workspaces"));
     }
 
 
@@ -235,14 +235,14 @@ class WorkspaceControllerIT {
                 .with(csrf()))
             .andReturn().getResponse();
 
-        assertThat(response.getRedirectedUrl()).isEqualTo("/");
+        assertThat(response.getRedirectedUrl()).isEqualTo("/workspaces");
         assertThat(repository.existsWorkspaceByName(wksName)).isFalse();
     }
 
     @Test
     void deleteWorkspaceByNameIsNotSuccessful() throws Exception {
         mockMvc.perform(delete(WORKSPACE + WKS_NAME_PATH, "notExistsWksName").with(csrf()))
-            .andExpect(redirectedUrl("/"));
+            .andExpect(redirectedUrl("/workspaces"));
     }
 
     @ParameterizedTest

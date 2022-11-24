@@ -131,13 +131,13 @@ public class TypoControllerIT {
         mockMvc.perform(delete(TYPOS + ID_PATH, typoId)
                 .param("wksName", emptyWksName)
                 .with(csrf()))
-            .andExpect(redirectedUrl("/"));
+            .andExpect(redirectedUrl("/workspaces"));
 
         String notExistsWksName = "noExistsWks";
         mockMvc.perform(delete(TYPOS + ID_PATH, typoId)
                 .param("wksName", notExistsWksName)
                 .with(csrf()))
-            .andExpect(redirectedUrl("/"));
+            .andExpect(redirectedUrl("/workspaces"));
 
         assertThat(typoRepository.existsById(typoId)).isTrue();
     }
