@@ -13,6 +13,7 @@ import io.hexlet.typoreporter.web.exception.NewPasswordTheSameException;
 import io.hexlet.typoreporter.web.exception.OldPasswordWrongException;
 import io.hexlet.typoreporter.web.exception.AccountAlreadyExistException;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -101,10 +102,7 @@ public class AccountService implements SignUpAccount, QueryAccount {
         }
 
         return sourceAccount
-            .map(oldAcc -> oldAcc.setFirstName(updateProfile.getFirstName()))
-            .map(oldAcc -> oldAcc.setLastName(updateProfile.getLastName()))
-            .map(oldAcc -> oldAcc.setUsername(updateProfile.getUsername()))
-            .map(oldAcc -> oldAcc.setEmail(updateProfile.getEmail()))
+            .map(oldAcc -> conversionService.convert(Pair.of(oldAcc, updateProfile), Account.class))
             .map(accountRepository::save);
     }
 
