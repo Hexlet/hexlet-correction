@@ -84,21 +84,19 @@ public class AccountService implements SignUpAccount, QueryAccount {
             .map(account -> conversionService.convert(account, UpdateProfile.class));
     }
 
-    @Transactional(readOnly = true)
-    public Optional<Account> getAccount(final String name) {
-        return accountRepository.findAccountByUsername(name);
-    }
-
     public Optional<Account> updateProfile(final UpdateProfile updateProfile, final String name) {
-        final var sourceAccount = getAccount(name);
+        final var sourceAccount = accountRepository.findAccountByUsername(name);
 
-        final String username = sourceAccount.get().getUsername();
-        if (!username.equals(updateProfile.getUsername()) && existsByUsername(updateProfile.getUsername())) {
-            throw new AccountAlreadyExistException("username", updateProfile.getUsername());
-        }
-        final String email = sourceAccount.get().getEmail();
-        if (!email.equals(updateProfile.getEmail()) && existsByEmail(updateProfile.getEmail())) {
-            throw new AccountAlreadyExistException("email", updateProfile.getEmail());
+        if (sourceAccount.isPresent()) {
+            final String username = sourceAccount.get().getUsername();
+            if (!username.equals(updateProfile.getUsername()) && existsByUsername(updateProfile.getUsername())) {
+                throw new AccountAlreadyExistException("username", updateProfile.getUsername());
+            }
+
+            final String email = sourceAccount.get().getEmail();
+            if (!email.equals(updateProfile.getEmail()) && existsByEmail(updateProfile.getEmail())) {
+                throw new AccountAlreadyExistException("email", updateProfile.getEmail());
+            }
         }
 
         return sourceAccount
@@ -107,15 +105,18 @@ public class AccountService implements SignUpAccount, QueryAccount {
     }
 
     public Optional<Account> updatePassword(final UpdatePassword updatePassword, final String name) {
-        final var sourceAccount = getAccount(name);
-        final String password = sourceAccount.get().getPassword();
+        final var sourceAccount = accountRepository.findAccountByUsername(name);
 
-        if (!passwordEncoder.matches(updatePassword.getOldPassword(), password)) {
-           throw new OldPasswordWrongException();
-        }
+        if (sourceAccount.isPresent()) {
+            final String password = sourceAccount.get().getPassword();
 
-        if (passwordEncoder.matches(updatePassword.getNewPassword(), password)) {
-            throw new NewPasswordTheSameException();
+            if (!passwordEncoder.matches(updatePassword.getOldPassword(), password)) {
+                throw new OldPasswordWrongException();
+            }
+
+            if (passwordEncoder.matches(updatePassword.getNewPassword(), password)) {
+                throw new NewPasswordTheSameException();
+            }
         }
 
         return sourceAccount
