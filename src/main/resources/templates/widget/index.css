@@ -1,0 +1,121 @@
+/*------------total---------------*/
+.shadow {
+  border: 1px solid rgba(0, 0, 0, .07);
+  box-shadow: 0 2px 2px rgba(0, 0, 0, .075);
+}
+
+/*------------popup---------------*/
+.popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0,0,0,0.6);
+  font-family: sans-serif;
+  color: #212529;
+  overflow-x: hidden;
+  overflow-y: auto;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.8s ease 0s;
+}
+
+.popup.shown{
+  opacity: 1;
+  visibility: visible;
+}
+
+.popup__body {
+  min-height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 30px 10px;
+}
+
+.popup__content {
+  position: relative;
+  max-width: 80vw;
+  padding: 30px;
+  background-color: #fff;
+  border-radius: 2px;
+  /*transition: all 0.8s ease 0s;*/
+}
+
+.popup__close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.popup__title {
+  font-size: 24px;
+  margin: 0 0 16px 0;
+}
+
+.popup__form {
+  display: flex;
+  justify-content: center;
+  transition: all 0.8s ease 0s;
+  opacity: 0;
+  transform: translate(0, -30%);
+}
+
+.popup.shown .popup__form{
+  opacity: 1;
+  visibility: visible;
+  transform: translate(0, 0);
+}
+
+/*------------form---------------*/
+.total-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.total-form__input {
+  min-width: 100%;
+  border: none;
+}
+.total-form__input:focus {
+  border: 1px solid rgba(0, 0, 0, .07);
+}
+
+.total-form__btns {
+  display: flex;
+  justify-content: space-around;
+}
+
+.btn {
+  padding: 10px 20px;
+  font-size: 20px;
+  border: none;
+  border-radius: 2px;
+}
+
+.btn-primary {
+  background: #0d6efd;
+  color: #ffffff;
+}
+
+.btn-primary:hover {
+  background: transparent;
+  color: #0d6efd;
+  outline: 1px solid #0d6efd;
+}
+
+.btn-secondary {
+  background: #adb5bd;
+  color: #212529;
+}
+
+.btn-secondary:hover {
+  background: transparent;
+  outline: 1px solid #adb5bd;
+}
+
+
