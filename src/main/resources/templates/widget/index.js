@@ -5,13 +5,25 @@ document.addEventListener('DOMContentLoaded', function () {
   const popupContent = document.querySelector('.popup__content');
   const btnClose = document.querySelector('.btn-secondary');
   const form = document.querySelector('.total-form');
+  const textBeforeTypo = document.getElementById('textBeforeTypo');
+  const textTypo = document.getElementById('textTypo');
+  const textAfterTypo = document.getElementById('textAfterTypo');
 
-  document.addEventListener('keydown', function(e) {
-    if ((e.keyCode === 13 && e.ctrlKey) && popup) {
+  function getSelectedText() {
+    if (window.getSelection()) {
+      const select = window.getSelection();
+      return select.toString();
+    }
+  }
+
+  document.addEventListener('keydown', function (e) {
+    const text = getSelectedText();
+    if ((e.keyCode === 13 && e.ctrlKey) && text) {
       e.preventDefault();
       popup.classList.add('shown');
     }
-});
+
+  });
   const closePopup = () => {
     popup.classList.remove('shown');
     form.reset();
