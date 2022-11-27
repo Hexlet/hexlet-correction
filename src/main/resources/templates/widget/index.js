@@ -7,8 +7,8 @@ document.addEventListener('DOMContentLoaded', function () {
   const form = document.querySelector('.total-form');
 
   document.addEventListener('keydown', function(e) {
-    e.preventDefault();
     if ((e.keyCode === 13 && e.ctrlKey) && popup) {
+      e.preventDefault();
       popup.classList.add('shown');
     }
 });

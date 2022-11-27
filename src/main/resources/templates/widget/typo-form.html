@@ -5,12 +5,14 @@
     <link rel="stylesheet" href="index.css">
 </head>
 <body>
-<div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium, corporis.
-    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium, corporis.
-    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium, corporis.
-    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium, corporis.
-    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium, corporis.
-    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium, corporis.
+<div>
+    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Culpa, delectus dolore explicabo in ipsam laboriosam
+    magnam, maxime molestiae molestias nesciunt optio quam rem reprehenderit sed tempora, ullam velit. Alias debitis
+    eius eos eveniet fugiat laborum nam, obcaecati placeat provident temporibus ut vel voluptas voluptates? Amet aut,
+    deserunt earum enim magni natus, necessitatibus nulla odit perferendis perspiciatis quas quia quis rerum sequi ut.
+    At beatae doloribus eum fuga illo sapiente temporibus ut. Alias, commodi, deserunt esse et eum, in iure minima nisi
+    nostrum obcaecati recusandae sapiente vel voluptatum? Corporis deleniti dolore doloremque error laudantium, magni
+    minus numquam perferendis quod suscipit vero.
 </div>
 <div id="popup" class="popup">
     <div class="popup__body">
@@ -32,9 +34,14 @@
                       th:object="${typoReport}">
                     <input class="total-form__input" hidden id="pageUrl" name="pageUrl" type="text"/>
                     <input class="total-form__input" hidden id="reporterName" name="reporterName" type="text"/>
-                    <input class="total-form__input" id="textBeforeTypo" name="textBeforeTypo" type="text"/>
-                    <input class="total-form__input" id="textTypo" name="textTypo" type="text"/>
-                    <input class="total-form__input" id="textAfterTypo" name="textAfterTypo" type="text"/>
+                    <label for="textBeforeTypo">Ошибка содержится в следующем тексте:
+                    <input class="total-form__input" id="textBeforeTypo" name="textBeforeTypo" type="text"/></label>
+                    <label for="textTypo">Выделенный текст:
+                        <input class="total-form__input" id="textTypo" name="textTypo" type="text"/>
+                    </label>
+                    <label for="textAfterTypo">Текст после исправления:
+                        <input class="total-form__input" id="textAfterTypo" name="textAfterTypo" type="text"/>
+                    </label>
                     <div class="form-floating mb-3">
                         <label class="form-label" for="commentTextarea">Оставить дополнительный комментарий:
                             <textarea class="total-form__input shadow form-control"
