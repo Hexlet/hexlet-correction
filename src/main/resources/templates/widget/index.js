@@ -6,13 +6,14 @@ document.addEventListener('DOMContentLoaded', function () {
   const btnClose = document.querySelector('.btn-secondary');
   const form = document.querySelector('.total-form');
   const pageUrl = document.getElementById('pageUrl');
-  // const reporterName = document.getElementById('reporterName');
   const textBeforeTypo = document.getElementById('textBeforeTypo');
   const textTypo = document.getElementById('textTypo');
   const textAfterTypo = document.getElementById('textAfterTypo');
 
   const state = {
     text: '',
+    before: '',
+    comment: '',
   }
   document.addEventListener('keydown', function (e) {
     if (e.keyCode === 13 && e.ctrlKey) {
@@ -22,7 +23,17 @@ document.addEventListener('DOMContentLoaded', function () {
         popup.classList.add('shown');
         const range = new Range();
         pageUrl.value = range.startContainer.baseURI;
-        textBeforeTypo.value = state.text;
+        // state.before = `${window
+        //   .getSelection()
+        //   .focusNode.textContent
+        //   .split(state.text)[0]
+        //   .slice(-50)}${state.text}${window
+        //   .getSelection()
+        //   .focusNode.textContent
+        //   .split(state.text)[1]
+        //   .slice(50)}`;
+        state.before = window.getSelection().focusNode.textContent;
+        textBeforeTypo.value = state.before;
         textBeforeTypo.disabled = 'disabled';
         textTypo.value = state.text;
         textTypo.disabled = 'disabled';
@@ -35,7 +46,6 @@ document.addEventListener('DOMContentLoaded', function () {
           } else {
             textAfterTypo.classList.add('outline-red');
           }
-
         })
       }
     }
