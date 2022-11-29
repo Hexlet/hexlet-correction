@@ -1,6 +1,9 @@
 package io.hexlet.typoreporter.web;
 
+import io.hexlet.typoreporter.domain.account.Account;
+import io.hexlet.typoreporter.domain.workspace.Workspace;
 import io.hexlet.typoreporter.repository.AccountRepository;
+import io.hexlet.typoreporter.repository.WorkspaceRepository;
 import io.hexlet.typoreporter.service.TypoService;
 import io.hexlet.typoreporter.service.WorkspaceService;
 import io.hexlet.typoreporter.service.dto.typo.TypoInfo;
@@ -45,9 +48,13 @@ import static io.hexlet.typoreporter.web.Templates.WKS_SETTINGS_TEMPLATE;
 import static io.hexlet.typoreporter.web.Templates.WKS_TYPOS_TEMPLATE;
 import static io.hexlet.typoreporter.web.Templates.WKS_UPDATE_TEMPLATE;
 import static io.hexlet.typoreporter.web.Templates.WKS_USERS_TEMPLATE;
+import java.util.Set;
 import static org.springframework.data.domain.Sort.Direction.ASC;
 import static org.springframework.data.domain.Sort.Direction.DESC;
 import static org.springframework.data.domain.Sort.Order.asc;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import static io.hexlet.typoreporter.web.Routers.Workspace.REDIRECT_WKS_USER;
 
 @Slf4j
 @Controller
@@ -62,6 +69,8 @@ public class WorkspaceController {
     private final WorkspaceService workspaceService;
 
     private final AccountRepository accountRepository;
+
+    private final WorkspaceRepository workspaceRepository;
 
     @GetMapping
     public String getWorkspaceInfoPage(Model model, @PathVariable String wksName) {
@@ -88,7 +97,7 @@ public class WorkspaceController {
         }
         model.addAttribute("wksName", wksName);
         final var wksToken = workspaceService.getWorkspaceApiAccessTokenByName(wksName)
-            .map(UUID::toString);
+                .map(UUID::toString);
         if (wksToken.isEmpty()) {
             log.error("Workspace with name {} not found or token not generated", wksName);
         }
@@ -101,8 +110,8 @@ public class WorkspaceController {
 
     @GetMapping(TYPOS)
     public String getWorkspaceTyposPage(Model model,
-                                        @PathVariable String wksName,
-                                        @SortDefault(DEFAULT_SORT_FIELD) Pageable pageable) {
+            @PathVariable String wksName,
+            @SortDefault(DEFAULT_SORT_FIELD) Pageable pageable) {
         var wksOptional = workspaceService.getWorkspaceInfoByName(wksName);
         if (wksOptional.isEmpty()) {
             //TODO send error page
@@ -119,9 +128,9 @@ public class WorkspaceController {
         var typoPage = typoService.getTypoPage(pageRequest, wksName);
 
         var sort = typoPage.getSort()
-            .stream()
-            .findFirst()
-            .orElseGet(() -> asc(DEFAULT_SORT_FIELD));
+                .stream()
+                .findFirst()
+                .orElseGet(() -> asc(DEFAULT_SORT_FIELD));
 
         model.addAttribute("typoPage", typoPage);
         model.addAttribute("availableSizes", availableSizes);
@@ -141,8 +150,8 @@ public class WorkspaceController {
             return REDIRECT_ROOT;
         }
         final var wksUpdate = wksOptional
-            .map(wksInfo -> new CreateWorkspace(wksInfo.name(), wksInfo.description(), wksInfo.url()))
-            .get();
+                .map(wksInfo -> new CreateWorkspace(wksInfo.name(), wksInfo.description(), wksInfo.url()))
+                .get();
         model.addAttribute("createWorkspace", wksUpdate);
         model.addAttribute("wksName", wksName);
         model.addAttribute("formModified", false);
@@ -154,9 +163,9 @@ public class WorkspaceController {
     //TODO add tests
     @PutMapping(UPDATE)
     public String putWorkspaceUpdate(Model model,
-                                     @PathVariable String wksName,
-                                     @Valid @ModelAttribute CreateWorkspace wksUpdate,
-                                     BindingResult bindingResult) {
+            @PathVariable String wksName,
+            @Valid @ModelAttribute CreateWorkspace wksUpdate,
+            BindingResult bindingResult) {
         model.addAttribute("wksName", wksName);
         model.addAttribute("formModified", true);
         getStatisticDataToModel(model, wksName);
@@ -214,8 +223,8 @@ public class WorkspaceController {
 
     @GetMapping(USERS)
     public String getWorkspaceUsersPage(Model model,
-                                        @PathVariable String wksName,
-                                        @SortDefault(DEFAULT_SORT_FIELD) Pageable pageable) {
+            @PathVariable String wksName,
+            @SortDefault(DEFAULT_SORT_FIELD) Pageable pageable) {
         var wksOptional = workspaceService.getWorkspaceInfoByName(wksName);
         if (wksOptional.isEmpty()) {
             //TODO send error page
@@ -231,13 +240,17 @@ public class WorkspaceController {
         var pageRequest = PageRequest.of(pageable.getPageNumber(), size, pageable.getSort());
         var userPage = accountRepository.findPageAccountByWorkspacesName(pageable, wksName);
 
-
         var sort = userPage.getSort()
-            .stream()
-            .findFirst()
-            .orElseGet(() -> asc(DEFAULT_SORT_FIELD));
+                .stream()
+                .findFirst()
+                .orElseGet(() -> asc(DEFAULT_SORT_FIELD));
+
+        List<Account> accounts = accountRepository.findAll();
+        Set<Account> connectedAccounts = workspaceRepository.getWorkspaceByName(wksName).get().getAccounts();
+        accounts.removeAll(connectedAccounts);
 
         model.addAttribute("userPage", userPage);
+        model.addAttribute("accounts", accounts);
         model.addAttribute("availableSizes", availableSizes);
         model.addAttribute("sortProp", sort.getProperty());
         model.addAttribute("sortDir", sort.getDirection());
@@ -246,4 +259,28 @@ public class WorkspaceController {
         return WKS_USERS_TEMPLATE;
     }
 
+    @PostMapping(USERS)
+    public String addUser(
+            @RequestParam("email") String email,
+            @RequestParam("wksName") String wksName
+    ) {
+
+        Optional<Account> accountOptional = accountRepository.findAccountByEmail(email);
+        if (accountOptional.isEmpty()) {
+            // flash?
+            return REDIRECT_WKS_USER;
+        }
+
+        Optional<Workspace> wksOptional = workspaceRepository.getWorkspaceByName(wksName);
+        if (wksOptional.isEmpty()) {
+            //TODO send error page
+            log.error("Workspace with name {} not found", wksName);
+            return REDIRECT_ROOT;
+        }
+
+        Workspace newWks = wksOptional.get().addAccount(accountOptional.get());
+        workspaceRepository.save(newWks);
+
+        return REDIRECT_WKS_USER;
+    }
 }

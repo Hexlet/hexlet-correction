@@ -16,6 +16,22 @@
             <div class="row">
                 <p th:text="|Total number of typos in workspace ${wksName} : ${sumTypoInWks}|"></p>
             </div>
+            <!-- Adding a user to a workspace -->
+            <div class="row my-3">
+                <p>Adding a user to a workspace</p>
+                <form th:action="@{'/workspace/' + ${wksName} + '/users'}" method="POST">  <!-- "@{'/workspace/' + ${wksName} + '/users'" -->
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Email address</label>
+                        <select name="email" class="form-control">
+                            <option> --- </option>
+                            <option th:each="account : ${accounts}" th:object="${account}" th:text="*{email}"></option>
+                        </select>
+                        <input type="hidden" name="wksName" th:value=${wksName}></input>
+                        <small id="emailHelp" class="form-text text-muted">Choose a user from the list</small>
+                    </div>
+                    <button type="submit" class="btn btn-secondary">Add to workspace</button>
+                </form>
+            </div>
             <!-- Workspace last typo date -->
             <div class="row"
                  th:if="${lastTypoCreatedDateAgo.isPresent() && lastTypoCreatedDate.isPresent()}"
@@ -86,10 +102,7 @@
                                 <tbody>
                                 <th:block th:each="userInfo : ${userPage.content}" th:object="${userInfo}">
                                     <!-- Workspace user table row -->
-                                    <tr aria-expanded="false" class="accordion collapsed" data-bs-toggle="collapse"
-                                        th:aria-controls="|collapseUserRowId_*{id}|"
-                                        th:classappend="|table-*{userStatus.getStyle}|"
-                                        th:data-bs-target="|#collapseUserRowId_*{id}|">
+                                    <tr aria-expanded="false" class="accordion collapsed" data-bs-toggle="collapse">
                                         <td th:text="*{id}"></td>
                                         <td th:text="*{firstName}"></td>
                                         <td th:text="*{lastName}"></td>
