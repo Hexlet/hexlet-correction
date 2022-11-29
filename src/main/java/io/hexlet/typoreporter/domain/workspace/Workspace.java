@@ -29,6 +29,10 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 
 @Getter
 @Setter
@@ -62,7 +66,12 @@ public class Workspace extends AbstractAuditingEntity implements Identifiable<Lo
     @ToString.Exclude
     private Set<Typo> typos = new HashSet<>();
 
-    @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "workspace_account",
+            joinColumns = @JoinColumn(name = "workspace_id"),
+            inverseJoinColumns = @JoinColumn(name = "account_id")
+    )
     @ToString.Exclude
     private Set<Account> accounts = new HashSet<>();
 
@@ -80,13 +89,15 @@ public class Workspace extends AbstractAuditingEntity implements Identifiable<Lo
 
     public Workspace addAccount(final Account account) {
         accounts.add(account);
-        account.setWorkspace(this);
+        Set<Workspace> workspaces = new HashSet<>();
+        workspaces.add(this);
+        account.setWorkspaces(workspaces);
         return this;
     }
 
     public Workspace removeAccount(final Account account) {
         accounts.remove(account);
-        account.setWorkspace(null);
+        account.setWorkspaces(null);
         return this;
     }
 

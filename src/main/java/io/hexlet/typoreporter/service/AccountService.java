@@ -19,6 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @Transactional
@@ -72,10 +73,10 @@ public class AccountService implements SignUpAccount, QueryAccount {
 
         Optional<Workspace> sourceWorkspace = Optional.empty();
         if (sourceAccount.isPresent()) {
-            sourceWorkspace = Optional.ofNullable(sourceAccount.get().getWorkspace());
+            Set<Workspace> workspaces = sourceAccount.get().getWorkspaces();
         }
 
-        return sourceWorkspace.map(workspace -> conversionService.convert(workspace, WorkspaceInfo.class));
+        return sourceWorkspace.map(workspaces -> conversionService.convert(workspaces, WorkspaceInfo.class));
     }
 
     @Transactional(readOnly = true)

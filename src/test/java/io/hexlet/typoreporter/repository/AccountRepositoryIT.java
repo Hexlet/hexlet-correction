@@ -31,6 +31,8 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import static com.github.database.rider.core.api.configuration.Orthography.LOWERCASE;
 import static io.hexlet.typoreporter.test.Constraints.POSTGRES_IMAGE;
+import java.util.HashSet;
+import java.util.Set;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -77,12 +79,17 @@ public class AccountRepositoryIT {
         assertThat(accountRepository.findAccountByEmail(email)).isEmpty();
     }
 
-    @Test
+        @Test
     void getPageAccountByWorkspaceName() {
         Workspace wks = workspaceRepository.findAll().stream().findFirst().get();
-        accountRepository.findAll().forEach(account -> account.setWorkspace(wks));
+
+        Set<Workspace> wkses = new HashSet<>();
+        wkses.add(wks);
+
+        accountRepository.findAll().forEach(account -> account.setWorkspaces(wkses));
         Pageable pageable = PageRequest.of(0, 10, Sort.by("id"));
-        Page<Account> page = accountRepository.findPageAccountByWorkspaceName(pageable, wks.getName());
+        Page<Account> page = accountRepository.findPageAccountByWorkspacesName(pageable, wks.getName());
+
         assertThat(page).isNotEmpty();
         assertThat(page.getTotalElements()).isEqualTo(accountRepository.count());
         assertThat(page.getTotalPages()).isEqualTo(1);

@@ -229,7 +229,7 @@ public class WorkspaceController {
 
         var size = Optional.ofNullable(availableSizes.floor(pageable.getPageSize())).orElseGet(availableSizes::first);
         var pageRequest = PageRequest.of(pageable.getPageNumber(), size, pageable.getSort());
-        var userPage = accountRepository.findPageAccountByWorkspaceName(pageable, wksName);
+        var userPage = accountRepository.findPageAccountByWorkspacesName(pageable, wksName);
 
 
         var sort = userPage.getSort()

@@ -32,7 +32,12 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 
 @Getter
 @Setter
@@ -79,9 +84,14 @@ public class Account extends AbstractAuditingEntity implements Identifiable<Long
     @Size(min = 1, max = 50)
     private String lastName;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToMany()
+    @JoinTable(
+            name = "workspace_account",
+            joinColumns = @JoinColumn(name = "account_id"),
+            inverseJoinColumns = @JoinColumn(name = "workspace_id")
+    )
     @ToString.Exclude
-    private Workspace workspace;
+    private Set<Workspace> workspaces = new HashSet<>();
 
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
