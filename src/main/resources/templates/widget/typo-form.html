@@ -5,59 +5,40 @@
     <link rel="stylesheet" href="index.css">
 </head>
 <body>
-<div id="popup" class="popup">
-    <div class="popup__body">
-        <div class="popup__content shadow">
-            <div data-name="popup-close" class="popup__close">
-                <svg width="20px" height="20px" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                    <g data-name="Layer 2">
-                        <g data-name="close">
-                            <rect width="20" height="20" transform="rotate(180 12 12)" opacity="0"/>
-                            <path fill="#212529"
-                                  d="M13.41 12l4.3-4.29a1 1 0 1 0-1.42-1.42L12 10.59l-4.29-4.3a1 1 0 0 0-1.42 1.42l4.3 4.29-4.3 4.29a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l4.29-4.3 4.29 4.3a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42z"/>
-                        </g>
-                    </g>
-                </svg>
-            </div>
-            <div class="popup__title">Отправить сообщение об ошибке?</div>
-            <div class="popup__form">
-                <form class="total-form" method="POST" th:action="@{/typo/form/{name}(name=${wksName})}"
-                      th:object="${typoReport}">
-                    <input class="total-form__input" hidden id="pageUrl" name="pageUrl" type="text"/>
-                    <input class="total-form__input" hidden id="reporterName" name="reporterName" type="text"/>
-                    <label for="textBeforeTypo">Ошибка содержится в следующем тексте:
-                        <textarea rows="3" class="total-form__input" id="textBeforeTypo" name="textBeforeTypo"
-                                  type="text"></textarea></label>
-                    <label for="textTypo">Выделенный текст:
-                        <input class="total-form__input" id="textTypo" name="textTypo" type="text"/>
-                    </label>
-                    <label for="textAfterTypo">Текст после исправления:
-                        <input class="total-form__input" id="textAfterTypo" name="textAfterTypo" type="text"/>
-                    </label>
-                    <div class="form-floating mb-3">
-                        <label class="form-label" for="commentTextarea">Оставить дополнительный комментарий:
-                            <textarea class="total-form__input shadow form-control"
-                                      id="commentTextarea"
-                                      rows="3"
-                                      th:classappend="${!#fields.hasErrors('reporterComment') && formModified ? 'is-valid' : ''}"
-                                      th:field="*{reporterComment}"
-                                      type="text"
-                            ></textarea></label>
-
-                        <div class="alert alert-danger" th:if="${#fields.hasErrors('reporterComment')}">
-                            <p th:each="err : ${#fields.errors('reporterComment')}" th:text="${err}"></p>
-                        </div>
-                    </div>
-                    <div class="total-form__btns">
-                        <button class="btn btn-primary" type="submit">Отправить</button>
-                        <button class="btn btn-secondary">Отмена</button>
-                    </div>
-                </form>
-            </div>
+<form class="hc-total-form" method="POST" th:action="@{/typo/form/{name}(name=${wksName})}"
+      th:object="${typoReport}">
+    <input class="hc-total-form__input" hidden id="pageUrl" name="pageUrl" type="text"/>
+    <input class="hc-total-form__input" hidden id="reporterName" name="reporterName" type="text"/>
+    <input class="hc-total-form__input" hidden id="textBeforeTypo" name="textBeforeTypo"
+    type="text">
+    <div class="hc-total-form__res">
+        Ошибка содержится в следующем тексте:
+        <div class="hc-total-form__text"><span class="text-before-typo">fff </span><span class="text-typo">fff </span><span class="text-after-typo">fff </span></div>
+    </div>
+    <label for="textTypo">Выделенный текст:
+        <input class="hc-total-form__input" id="textTypo" name="textTypo" type="text"/>
+    </label>
+    <label for="textAfterTypo">Текст после исправления:
+        <input class="hc-total-form__input" id="textAfterTypo" name="textAfterTypo" type="text"/>
+    </label>
+    <div class="form-floating mb-3">
+        <label class="form-label" for="commentTextarea">Оставить дополнительный комментарий:
+            <textarea class="hc-total-form__input shadow form-control"
+                      id="commentTextarea"
+                      rows="3"
+                      th:classappend="${!#fields.hasErrors('reporterComment') && formModified ? 'is-valid' : ''}"
+                      th:field="*{reporterComment}"
+                      type="text"
+            ></textarea></label>
+        <div class="alert alert-danger" th:if="${#fields.hasErrors('reporterComment')}">
+            <p th:each="err : ${#fields.errors('reporterComment')}" th:text="${err}"></p>
         </div>
     </div>
-</div>
-<script src="index.js"></script>
+    <div class="hc-total-form__btns">
+        <button class="hc-btn hc-btn-primary" type="submit">Отправить</button>
+        <button class="hc-btn hc-btn-secondary">Отмена</button>
+    </div>
+</form>
 <script th:inline="javascript">
     window.onload = () => {
         const successMsg = {
