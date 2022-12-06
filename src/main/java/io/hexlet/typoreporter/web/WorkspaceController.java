@@ -57,6 +57,8 @@ import org.springframework.data.domain.PageImpl;
 import static org.springframework.data.domain.Sort.Direction.ASC;
 import static org.springframework.data.domain.Sort.Direction.DESC;
 import static org.springframework.data.domain.Sort.Order.asc;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Slf4j
 @Controller
@@ -262,6 +264,10 @@ public class WorkspaceController {
             .findFirst()
             .orElseGet(() -> asc(DEFAULT_SORT_FIELD));
 
+        List<Account> allAccounts = accountRepository.findAll();
+        allAccounts.removeAll(accounts);
+
+        model.addAttribute("accounts", allAccounts);
         model.addAttribute("userPage", userPage);
         model.addAttribute("availableSizes", availableSizes);
         model.addAttribute("sortProp", sort.getProperty());
@@ -271,4 +277,11 @@ public class WorkspaceController {
         return WKS_USERS_TEMPLATE;
     }
 
+    @PostMapping(USERS)
+    public String addUser(
+            @RequestParam("email") String email,
+            @RequestParam("wksName") String wksName
+    ) {
+        return WKS_USERS_TEMPLATE;
+    }
 }
