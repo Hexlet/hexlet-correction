@@ -86,10 +86,7 @@
                                 <tbody>
                                 <th:block th:each="userInfo : ${userPage.content}" th:object="${userInfo}">
                                     <!-- Workspace user table row -->
-                                    <tr aria-expanded="false" class="accordion collapsed" data-bs-toggle="collapse"
-                                        th:aria-controls="|collapseUserRowId_*{id}|"
-                                        th:classappend="|table-*{userStatus.getStyle}|"
-                                        th:data-bs-target="|#collapseUserRowId_*{id}|">
+                                    <tr aria-expanded="false" class="accordion collapsed" data-bs-toggle="collapse">
                                         <td th:text="*{id}"></td>
                                         <td th:text="*{firstName}"></td>
                                         <td th:text="*{lastName}"></td>

@@ -1,6 +1,7 @@
 package io.hexlet.typoreporter.domain.workspace;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import io.hexlet.typoreporter.domain.AbstractAuditingEntity;
 import io.hexlet.typoreporter.domain.Identifiable;
@@ -29,6 +30,7 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
+import javax.persistence.FetchType;
 
 @Getter
 @Setter
@@ -62,9 +64,9 @@ public class Workspace extends AbstractAuditingEntity implements Identifiable<Lo
     @ToString.Exclude
     private Set<Typo> typos = new HashSet<>();
 
-    @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "workspace", fetch = FetchType.EAGER)
     @ToString.Exclude
-    private Set<Account> accounts = new HashSet<>();
+    private Set<WorkspaceRole> workspaceRoles = new HashSet<>();
 
     public Workspace addTypo(final Typo typo) {
         typos.add(typo);
@@ -78,15 +80,15 @@ public class Workspace extends AbstractAuditingEntity implements Identifiable<Lo
         return this;
     }
 
-    public Workspace addAccount(final Account account) {
-        accounts.add(account);
-        account.setWorkspace(this);
+    public Workspace addWorkspaceRole(final WorkspaceRole workspaceRole) {
+        workspaceRoles.add(workspaceRole);
+        workspaceRole.setWorkspace(this);
         return this;
     }
 
-    public Workspace removeAccount(final Account account) {
-        accounts.remove(account);
-        account.setWorkspace(null);
+    public Workspace removeAccount(final WorkspaceRole workspaceRole) {
+        workspaceRoles.remove(workspaceRole);
+        workspaceRole.setWorkspace(null);
         return this;
     }
 

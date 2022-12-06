@@ -15,4 +15,6 @@
              relativeToChangelogFile="true" />
     <include file="changesets/2022/11/2022-11-04-add-column-url-to-workspace.xml"
              relativeToChangelogFile="true" />
+    <include file="changesets/2022/12/2022-12-01-add-workspace_role-table.xml"
+             relativeToChangelogFile="true" />
 </databaseChangeLog>
