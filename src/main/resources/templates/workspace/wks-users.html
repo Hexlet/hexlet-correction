@@ -16,6 +16,22 @@
             <div class="row">
                 <p th:text="|Total number of typos in workspace ${wksName} : ${sumTypoInWks}|"></p>
             </div>
+            <!-- Adding a user to a workspace -->
+            <div class="row my-3">
+                <p>Adding a user to a workspace</p>
+                <form th:action="@{'/workspace/' + ${wksName} + '/users'}" method="POST">  <!-- "@{'/workspace/' + ${wksName} + '/users'" -->
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Email address</label>
+                        <select name="email" class="form-control">
+                            <option> --- </option>
+                            <option th:each="account : ${accounts}" th:object="${account}" th:text="*{email}"></option>
+                        </select>
+                        <input type="hidden" name="wksName" th:value=${wksName}></input>
+                        <small id="emailHelp" class="form-text text-muted">Choose a user from the list</small>
+                    </div>
+                    <button type="submit" class="btn btn-secondary">Add to workspace</button>
+                </form>
+            </div>
             <!-- Workspace last typo date -->
             <div class="row"
                  th:if="${lastTypoCreatedDateAgo.isPresent() && lastTypoCreatedDate.isPresent()}"
