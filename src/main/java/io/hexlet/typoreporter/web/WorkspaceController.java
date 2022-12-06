@@ -1,6 +1,10 @@
 package io.hexlet.typoreporter.web;
 
+import io.hexlet.typoreporter.domain.account.Account;
+import io.hexlet.typoreporter.domain.workspace.Workspace;
+import io.hexlet.typoreporter.domain.workspace.WorkspaceRole;
 import io.hexlet.typoreporter.repository.AccountRepository;
+import io.hexlet.typoreporter.repository.WorkspaceRepository;
 import io.hexlet.typoreporter.service.TypoService;
 import io.hexlet.typoreporter.service.WorkspaceService;
 import io.hexlet.typoreporter.service.dto.typo.TypoInfo;
@@ -45,6 +49,11 @@ import static io.hexlet.typoreporter.web.Templates.WKS_SETTINGS_TEMPLATE;
 import static io.hexlet.typoreporter.web.Templates.WKS_TYPOS_TEMPLATE;
 import static io.hexlet.typoreporter.web.Templates.WKS_UPDATE_TEMPLATE;
 import static io.hexlet.typoreporter.web.Templates.WKS_USERS_TEMPLATE;
+import java.util.ArrayList;
+import java.util.Set;
+import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import static org.springframework.data.domain.Sort.Direction.ASC;
 import static org.springframework.data.domain.Sort.Direction.DESC;
 import static org.springframework.data.domain.Sort.Order.asc;
@@ -62,6 +71,8 @@ public class WorkspaceController {
     private final WorkspaceService workspaceService;
 
     private final AccountRepository accountRepository;
+
+    private final WorkspaceRepository workspaceRepository;
 
     @GetMapping
     public String getWorkspaceInfoPage(Model model, @PathVariable String wksName) {
@@ -227,10 +238,24 @@ public class WorkspaceController {
         getStatisticDataToModel(model, wksName);
         getLastTypoDataToModel(model, wksName);
 
+        Optional<Workspace> workspaceOptional = workspaceRepository.getWorkspaceByName(wksName);
+        if (workspaceOptional.isEmpty()) {
+            //TODO send error page
+            log.error("Workspace with name {} not found", wksName);
+            return REDIRECT_ROOT;
+        }
+
+        Set<WorkspaceRole> workspaces = workspaceOptional.get().getWorkspaceRoles();
+        List<Account> accounts = new ArrayList<>();
+        if (!workspaces.isEmpty()) {
+            accounts = workspaces.stream()
+                    .map(a -> a.getAccount())
+                    .collect(Collectors.toList());
+        }
+
         var size = Optional.ofNullable(availableSizes.floor(pageable.getPageSize())).orElseGet(availableSizes::first);
         var pageRequest = PageRequest.of(pageable.getPageNumber(), size, pageable.getSort());
-        var userPage = accountRepository.findPageAccountByWorkspaceName(pageable, wksName);
-
+        Page<Account> userPage =  new PageImpl<>(accounts, pageable, accounts.size());
 
         var sort = userPage.getSort()
             .stream()
