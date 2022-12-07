@@ -9,6 +9,7 @@ import io.hexlet.typoreporter.domain.typo.Typo;
 import io.hexlet.typoreporter.domain.workspace.constraint.WorkspaceDescription;
 import io.hexlet.typoreporter.domain.workspace.constraint.WorkspaceName;
 import io.hexlet.typoreporter.domain.workspace.constraint.WorkspaceUrl;
+import io.hexlet.typoreporter.domain.workspacesettings.WorkspaceSettings;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,6 +17,7 @@ import lombok.ToString;
 import lombok.experimental.Accessors;
 import org.hibernate.Hibernate;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -64,7 +66,12 @@ public class Workspace extends AbstractAuditingEntity implements Identifiable<Lo
     private Set<Typo> typos = new HashSet<>();
 
     @OneToMany(mappedBy = "workspace", cascade = ALL, orphanRemoval = true)
+    @ToString.Exclude
     private Set<WorkspaceRole> workspaceRoles = new HashSet<>();
+
+    @OneToOne(mappedBy = "workspace", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
+    private WorkspaceSettings workspaceSettings;
 
     public Workspace addTypo(final Typo typo) {
         typos.add(typo);
@@ -81,6 +88,18 @@ public class Workspace extends AbstractAuditingEntity implements Identifiable<Lo
     public Workspace addWorkspaceRole(WorkspaceRole workspaceRole) {
         workspaceRole.setWorkspace(this);
         workspaceRoles.add(workspaceRole);
+        return this;
+    }
+
+    public Workspace addWorkspaceSettings(final WorkspaceSettings workspaceSettings) {
+        this.workspaceSettings = workspaceSettings;
+        workspaceSettings.setWorkspace(this);
+        return this;
+    }
+
+    public Workspace removeWorkspaceSettings(final WorkspaceSettings workspaceSettings) {
+        if (workspaceSettings != null) workspaceSettings.setWorkspace(null);
+        this.workspaceSettings = null;
         return this;
     }
 
