@@ -36,6 +36,8 @@ public class Routers {
         public static final String WKS_NAME_PATH = "/{wksName}";
 
         public static final String REDIRECT_WKS_ROOT = REDIRECT + WORKSPACE + "/";
+
+        public static final String REDIRECT_WKS_USER = REDIRECT + WORKSPACE + WKS_NAME_PATH + USERS + "/";
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
