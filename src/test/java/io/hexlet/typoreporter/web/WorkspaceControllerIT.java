@@ -34,6 +34,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.github.database.rider.core.api.configuration.Orthography.LOWERCASE;
+import io.hexlet.typoreporter.domain.workspace.WorkspaceRole;
+import io.hexlet.typoreporter.service.WorkspaceRoleService;
 import static io.hexlet.typoreporter.test.Constraints.POSTGRES_IMAGE;
 import static io.hexlet.typoreporter.web.Routers.SETTINGS;
 import static io.hexlet.typoreporter.web.Routers.Typo.TYPOS;
@@ -76,6 +78,9 @@ class WorkspaceControllerIT {
 
     @Autowired
     private AccountRepository accountRepository;
+
+    @Autowired
+    private WorkspaceRoleService workspaceRoleService;
 
     @DynamicPropertySource
     static void datasourceProperties(DynamicPropertyRegistry registry) {
@@ -250,20 +255,21 @@ class WorkspaceControllerIT {
     void getWorkspaceUsersPage(final String wksName) throws Exception {
         Workspace workspace = repository.getWorkspaceByName(wksName).orElse(null);
         Set<Account> accounts = accountRepository.findAll().stream().collect(Collectors.toSet());
-//        accounts.forEach(account -> workspace.addAccount(account));
+
+        accounts.forEach(account -> {
+            WorkspaceRole workspaceRole = workspaceRoleService.create(workspace.getId(), account.getId());
+            workspace.addWorkspaceRole(workspaceRole);
+        });
 
         MockHttpServletResponse response = mockMvc.perform(get(WORKSPACE + WKS_NAME_PATH + USERS, wksName))
-            .andExpect(model().attributeExists("wksInfo", "wksName", "userPage", "availableSizes", "sortProp", "sortDir", "DESC", "ASC"))
-            .andReturn().getResponse();
+                .andExpect(model().attributeExists("wksInfo", "wksName", "userPage", "availableSizes", "sortProp", "sortDir", "DESC", "ASC"))
+                .andReturn().getResponse();
 
-//        for (Account account : workspace.getAccounts()) {
-//            assertThat(response.getContentAsString()).contains(
-//                account.getId().toString(),
-//                account.getFirstName(),
-//                account.getLastName(),
-//                account.getEmail()
-//            );
-//        }
+        for (WorkspaceRole workspaceRole : workspace.getWorkspaceRoles()) {
+            assertThat(response.getContentAsString()).contains(
+                    workspaceRole.getId().toString()
+            );
+        }
     }
 
 }

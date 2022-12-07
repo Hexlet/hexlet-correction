@@ -6,6 +6,7 @@ import io.hexlet.typoreporter.domain.workspace.WorkspaceRole;
 import io.hexlet.typoreporter.repository.AccountRepository;
 import io.hexlet.typoreporter.repository.WorkspaceRepository;
 import io.hexlet.typoreporter.service.TypoService;
+import io.hexlet.typoreporter.service.WorkspaceRoleService;
 import io.hexlet.typoreporter.service.WorkspaceService;
 import io.hexlet.typoreporter.service.dto.typo.TypoInfo;
 import io.hexlet.typoreporter.service.dto.workspace.CreateWorkspace;
@@ -59,6 +60,7 @@ import static org.springframework.data.domain.Sort.Direction.DESC;
 import static org.springframework.data.domain.Sort.Order.asc;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import static io.hexlet.typoreporter.web.Routers.Workspace.REDIRECT_WKS_USER;
 
 @Slf4j
 @Controller
@@ -75,6 +77,8 @@ public class WorkspaceController {
     private final AccountRepository accountRepository;
 
     private final WorkspaceRepository workspaceRepository;
+
+    private final WorkspaceRoleService workspaceRoleService;
 
     @GetMapping
     public String getWorkspaceInfoPage(Model model, @PathVariable String wksName) {
@@ -280,8 +284,26 @@ public class WorkspaceController {
     @PostMapping(USERS)
     public String addUser(
             @RequestParam("email") String email,
-            @RequestParam("wksName") String wksName
+            @RequestParam("wksName") String workspaceName
     ) {
-        return WKS_USERS_TEMPLATE;
+        Optional<Account> accountOptional = accountRepository.findAccountByEmail(email);
+        if (accountOptional.isEmpty()) {
+            // flash?
+            return REDIRECT_WKS_USER;
+        }
+
+        Optional<Workspace> workspaceOptional = workspaceRepository.getWorkspaceByName(workspaceName);
+        if (workspaceOptional.isEmpty()) {
+            //TODO send error page
+            log.error("Workspace with name {} not found", workspaceName);
+            return REDIRECT_ROOT;
+        }
+
+        Long workspaceId = workspaceOptional.get().getId();
+        Long accountId = accountOptional.get().getId();
+        WorkspaceRole workspaceRole = workspaceRoleService.create(workspaceId, accountId);
+
+        workspaceOptional.get().addWorkspaceRole(workspaceRole);
+        return REDIRECT_WKS_USER;
     }
 }
