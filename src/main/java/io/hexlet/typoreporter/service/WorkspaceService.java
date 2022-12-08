@@ -97,18 +97,6 @@ public class WorkspaceService {
     }
 
     @Transactional(readOnly = true)
-    public Optional<UUID> getWorkspaceApiAccessTokenByName(String wksName) {
-        return repository.getApiAccessTokenByWorkspaceName(wksName);
-    }
-
-    @Transactional
-    public Optional<UUID> regenerateWorkspaceApiAccessTokenByName(String wksName) {
-        final var newToken = UUID.randomUUID();
-        final var numberRowAffected = repository.updateApiAccessTokenByWorkspaceName(wksName, newToken);
-        return numberRowAffected == 0 ? Optional.empty() : Optional.of(newToken);
-    }
-
-    @Transactional(readOnly = true)
     public Optional<Workspace> getWorkspaceByName(final String name) {
         return repository.getWorkspaceByName(name);
     }

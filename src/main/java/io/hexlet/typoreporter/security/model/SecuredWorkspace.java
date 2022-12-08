@@ -14,7 +14,7 @@ public interface SecuredWorkspace extends UserDetails {
     }
 
     @Override
-    @Value("#{target.apiAccessToken}")
+    @Value("#{target.workspaceSettings.apiAccessToken}")
     String getPassword();
 
     @Override

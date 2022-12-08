@@ -26,20 +26,15 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 import java.util.TreeSet;
-import java.util.UUID;
-
 import static io.hexlet.typoreporter.web.Routers.DEFAULT_SORT_FIELD;
 import static io.hexlet.typoreporter.web.Routers.REDIRECT_ROOT;
-import static io.hexlet.typoreporter.web.Routers.SETTINGS;
 import static io.hexlet.typoreporter.web.Routers.Typo.TYPOS;
 import static io.hexlet.typoreporter.web.Routers.UPDATE;
 import static io.hexlet.typoreporter.web.Routers.USERS;
@@ -47,7 +42,6 @@ import static io.hexlet.typoreporter.web.Routers.Workspace.REDIRECT_WKS_ROOT;
 import static io.hexlet.typoreporter.web.Routers.Workspace.WKS_NAME_PATH;
 import static io.hexlet.typoreporter.web.Routers.Workspace.WORKSPACE;
 import static io.hexlet.typoreporter.web.Templates.WKS_INFO_TEMPLATE;
-import static io.hexlet.typoreporter.web.Templates.WKS_SETTINGS_TEMPLATE;
 import static io.hexlet.typoreporter.web.Templates.WKS_TYPOS_TEMPLATE;
 import static io.hexlet.typoreporter.web.Templates.WKS_UPDATE_TEMPLATE;
 import static io.hexlet.typoreporter.web.Templates.WKS_USERS_TEMPLATE;
@@ -95,26 +89,6 @@ public class WorkspaceController {
         getStatisticDataToModel(model, wksName);
         getLastTypoDataToModel(model, wksName);
         return WKS_INFO_TEMPLATE;
-    }
-
-    @GetMapping(SETTINGS)
-    public String getWorkspaceSettingsPage(Model model, @PathVariable String wksName) {
-        if (!workspaceService.existsWorkspaceByName(wksName)) {
-            //TODO send to error page
-            log.error("Workspace with name {} not found", wksName);
-            return REDIRECT_ROOT;
-        }
-        model.addAttribute("wksName", wksName);
-        final var wksToken = workspaceService.getWorkspaceApiAccessTokenByName(wksName)
-            .map(UUID::toString);
-        if (wksToken.isEmpty()) {
-            log.error("Workspace with name {} not found or token not generated", wksName);
-        }
-        model.addAttribute("wksToken", wksToken.orElse(""));
-
-        getStatisticDataToModel(model, wksName);
-        getLastTypoDataToModel(model, wksName);
-        return WKS_SETTINGS_TEMPLATE;
     }
 
     @GetMapping(TYPOS)
@@ -195,17 +169,6 @@ public class WorkspaceController {
             return WKS_UPDATE_TEMPLATE;
         }
         return REDIRECT_WKS_ROOT + wksUpdate.name();
-    }
-
-    @PatchMapping("/token/regenerate")
-    public String patchWorkspaceToken(@PathVariable String wksName) {
-        if (!workspaceService.existsWorkspaceByName(wksName)) {
-            //TODO send to error page
-            log.error("Workspace with name {} not found", wksName);
-            return REDIRECT_ROOT;
-        }
-        workspaceService.regenerateWorkspaceApiAccessTokenByName(wksName);
-        return REDIRECT_WKS_ROOT + wksName + SETTINGS;
     }
 
     @DeleteMapping

@@ -16,20 +16,10 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 import org.hibernate.Hibernate;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
-import javax.validation.constraints.NotNull;
+import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-import java.util.UUID;
 
 import static javax.persistence.CascadeType.ALL;
 
@@ -57,9 +47,6 @@ public class Workspace extends AbstractAuditingEntity implements Identifiable<Lo
 
     @WorkspaceDescription
     private String description;
-
-    @NotNull
-    private UUID apiAccessToken;
 
     @OneToMany(mappedBy = "workspace", cascade = ALL, orphanRemoval = true)
     @ToString.Exclude
