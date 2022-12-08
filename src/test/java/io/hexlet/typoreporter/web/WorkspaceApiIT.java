@@ -49,7 +49,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Transactional
 @DBRider
 @DBUnit(caseInsensitiveStrategy = LOWERCASE, dataTypeFactoryClass = DBUnitEnumPostgres.class, cacheConnection = false)
-@DataSet(value = {"workspaces.yml", "typos.yml"})
+@DataSet(value = {"workspace_settings.yml", "workspaces.yml", "typos.yml"})
 class WorkspaceApiIT {
 
     @Container

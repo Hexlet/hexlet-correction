@@ -17,10 +17,7 @@ import org.springframework.test.context.*;
 import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.*;
-
 import java.util.Optional;
-import java.util.UUID;
-
 import static com.github.database.rider.core.api.configuration.Orthography.LOWERCASE;
 import static io.hexlet.typoreporter.test.Constraints.POSTGRES_IMAGE;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -94,17 +91,5 @@ class WorkspaceRepositoryIT {
 
         assertThat(name).isEqualTo(wksName);
         assertThat(workspaceRepository.existsWorkspaceByName(wksName)).isTrue();
-    }
-
-    @ParameterizedTest
-    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspaceNamesExist")
-    void updateApiAccessTokenByWorkspaceNameIsSuccessful(final String wksName) {
-        final UUID newToken = UUID.randomUUID();
-        assertThat(workspaceRepository.updateApiAccessTokenByWorkspaceName(wksName, newToken)).isEqualTo(SUCCESSFUL_CODE);
-
-        String newUuid = workspaceRepository.getWorkspaceByName(wksName)
-            .map(Workspace::getApiAccessToken)
-            .map(Object::toString).orElse(null);
-        assertThat(newUuid).isEqualTo(newToken.toString());
     }
 }

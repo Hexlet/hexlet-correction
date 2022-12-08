@@ -30,13 +30,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
-
 import static com.github.database.rider.core.api.configuration.Orthography.LOWERCASE;
 import io.hexlet.typoreporter.domain.workspace.WorkspaceRole;
 import io.hexlet.typoreporter.service.WorkspaceRoleService;
@@ -52,7 +50,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
@@ -115,17 +112,6 @@ class WorkspaceControllerIT {
     void getWorkspaceInfoPageWithoutWks() throws Exception {
         mockMvc.perform(get(WORKSPACE + WKS_NAME_PATH, "notExistsWksName"))
             .andExpect(redirectedUrl("/workspaces"));
-    }
-
-    @ParameterizedTest
-    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspaceNamesExist")
-    void getWorkspaceSettingsPageIsSuccessful(final String wksName) throws Exception {
-        Workspace workspace = repository.getWorkspaceByName(wksName).orElse(null);
-
-        MockHttpServletResponse response = mockMvc.perform(get(WORKSPACE + WKS_NAME_PATH + SETTINGS, wksName))
-            .andExpect(model().attributeExists("wksToken"))
-            .andReturn().getResponse();
-        assertThat(response.getContentAsString()).contains(workspace.getApiAccessToken().toString());
     }
 
     @Test
@@ -222,29 +208,6 @@ class WorkspaceControllerIT {
     }
 
     //TODO tests for concurrency transactions in putWorkspaceUpdate() try-catch block
-
-
-    @ParameterizedTest
-    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspaceNamesExist")
-    void patchWorkspaceTokenIsSuccessful(final String wksName) throws Exception {
-        Workspace workspace = repository.getWorkspaceByName(wksName).orElse(null);
-        String previousWksToken = workspace.getApiAccessToken().toString();
-
-        MockHttpServletResponse response = mockMvc.perform(patch(WORKSPACE + WKS_NAME_PATH + "/token/regenerate", wksName)
-                .with(csrf()))
-            .andReturn().getResponse();
-
-        assertThat(previousWksToken).isEqualTo(String.valueOf(workspace.getApiAccessToken()));
-        assertThat(response.getRedirectedUrl()).isEqualTo(WORKSPACE + "/" + wksName + SETTINGS);
-    }
-
-    @Test
-    void patchWorkspaceTokenWithoutWks() throws Exception {
-        mockMvc.perform(patch(WORKSPACE + WKS_NAME_PATH + "/token/regenerate", "notExistsWksName")
-                .with(csrf()))
-            .andExpect(redirectedUrl("/workspaces"));
-    }
-
 
     @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspaceNamesExist")

@@ -23,10 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-
 import java.util.Objects;
-import java.util.UUID;
-
 import static com.github.database.rider.core.api.configuration.Orthography.LOWERCASE;
 import static io.hexlet.typoreporter.test.Constraints.POSTGRES_IMAGE;
 import static io.hexlet.typoreporter.test.factory.EntitiesFactory.WORKSPACE_101_NAME;
@@ -126,21 +123,6 @@ public class WorkspaceServiceIT {
         final Integer successfulCode = 1;
         assertThat(service.deleteWorkspaceByName(wksName)).isEqualTo(successfulCode);
         assertThat(service.existsWorkspaceByName(wksName)).isFalse();
-    }
-
-    @ParameterizedTest
-    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspaceNamesExist")
-    void getWorkspaceApiAccessTokenByNameIsSuccessful(final String wksName) {
-        UUID uuid = service.getWorkspaceApiAccessTokenByName(wksName).orElse(null);
-        assertThat(uuid != null).isTrue();
-    }
-
-    @ParameterizedTest
-    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspaceNamesExist")
-    void regenerateWorkspaceApiAccessTokenByNameIsSuccessful(final String wksName) {
-        UUID previousUuid = service.getWorkspaceApiAccessTokenByName(wksName).orElse(null);
-        UUID newUuid = service.regenerateWorkspaceApiAccessTokenByName(wksName).orElse(null);
-        assertThat(previousUuid).isNotEqualTo(newUuid);
     }
 
     @ParameterizedTest
