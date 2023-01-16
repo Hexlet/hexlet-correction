@@ -10,6 +10,7 @@
          <createTable tableName="workspace_role">
             <column name="account_id" type="BIGINT" />
             <column name="workspace_id" type="BIGINT" />
+            <column name="role" type="VARCHAR(50)" />
         </createTable>
     </changeSet>
 
