@@ -1,12 +1,13 @@
 package io.hexlet.typoreporter.domain.workspace;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.hexlet.typoreporter.domain.account.Account;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
+import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,18 +23,26 @@ import lombok.ToString;
 public class WorkspaceRole {
 
     @EmbeddedId
-    WorkspaceRoleId id;
+    private WorkspaceRoleId id;
 
-    @ManyToOne
+    @NotBlank
+    @Size(min = 1, max = 50)
+    private String role;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("workspaceId")
-    @JoinColumn(name = "workspace_id")
+    @ToString.Exclude
     private Workspace workspace;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @MapsId("accountId")
-    @JoinColumn(name = "account_id")
-    @JsonIgnore
+    @ToString.Exclude
     private Account account;
+
+    public WorkspaceRole(Workspace workspace, Account account) {
+        this.workspace = workspace;
+        this.account = account;
+    }
 
     @Override
     public boolean equals(Object o) {
