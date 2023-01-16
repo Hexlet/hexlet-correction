@@ -24,7 +24,8 @@ public class WorkspaceRoleService {
         Account account = accountRepository.findById(accountId).get();
         Workspace workspace = workspaceRepository.findById(workspaceId).get();
         WorkspaceRoleId id = new WorkspaceRoleId(workspaceId, accountId);
-        WorkspaceRole workspaceRole = new WorkspaceRole(id, workspace, account);
+        String role = "default_role";
+        WorkspaceRole workspaceRole = new WorkspaceRole(id, role, workspace, account);
         return repository.save(workspaceRole);
     }
 }

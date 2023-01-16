@@ -233,6 +233,7 @@ public class WorkspaceController {
     public String getWorkspaceUsersPage(Model model,
                                         @PathVariable String wksName,
                                         @SortDefault(DEFAULT_SORT_FIELD) Pageable pageable) {
+
         var wksOptional = workspaceService.getWorkspaceInfoByName(wksName);
         if (wksOptional.isEmpty()) {
             //TODO send error page
@@ -251,7 +252,10 @@ public class WorkspaceController {
             return REDIRECT_ROOT;
         }
 
-        Set<WorkspaceRole> workspaces = workspaceOptional.get().getWorkspaceRoles();
+
+
+        Set<WorkspaceRole> workspaces = workspaceOptional.get().getAccounts();
+
         List<Account> accounts = new ArrayList<>();
         if (!workspaces.isEmpty()) {
             accounts = workspaces.stream()
@@ -301,9 +305,11 @@ public class WorkspaceController {
 
         Long workspaceId = workspaceOptional.get().getId();
         Long accountId = accountOptional.get().getId();
+
         WorkspaceRole workspaceRole = workspaceRoleService.create(workspaceId, accountId);
 
-        workspaceOptional.get().addWorkspaceRole(workspaceRole);
+        workspaceOptional.get().addAccount(accountOptional.get());
+
         return REDIRECT_WKS_USER;
     }
 }

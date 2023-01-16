@@ -7,6 +7,7 @@ import io.hexlet.typoreporter.domain.Identifiable;
 import io.hexlet.typoreporter.domain.account.constraint.AccountUsername;
 import io.hexlet.typoreporter.domain.typo.Typo;
 import io.hexlet.typoreporter.domain.workspace.Workspace;
+import io.hexlet.typoreporter.domain.workspace.WorkspaceRole;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -32,7 +33,9 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -82,6 +85,14 @@ public class Account extends AbstractAuditingEntity implements Identifiable<Long
     @ManyToOne(fetch = FetchType.LAZY)
     @ToString.Exclude
     private Workspace workspace;
+
+    @OneToMany(
+            mappedBy = "account",
+            fetch = FetchType.EAGER,
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private Set<WorkspaceRole> workspaces = new HashSet<>();
 
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
