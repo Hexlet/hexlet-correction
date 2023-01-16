@@ -257,19 +257,17 @@ class WorkspaceControllerIT {
         Set<Account> accounts = accountRepository.findAll().stream().collect(Collectors.toSet());
 
         accounts.forEach(account -> {
-            WorkspaceRole workspaceRole = workspaceRoleService.create(workspace.getId(), account.getId());
-            workspace.addWorkspaceRole(workspaceRole);
+            workspace.addAccount(account);
         });
 
         MockHttpServletResponse response = mockMvc.perform(get(WORKSPACE + WKS_NAME_PATH + USERS, wksName))
                 .andExpect(model().attributeExists("wksInfo", "wksName", "userPage", "availableSizes", "sortProp", "sortDir", "DESC", "ASC"))
                 .andReturn().getResponse();
 
-        for (WorkspaceRole workspaceRole : workspace.getWorkspaceRoles()) {
+        for (WorkspaceRole workspaceRole : workspace.getAccounts()) {
             assertThat(response.getContentAsString()).contains(
                     workspaceRole.getId().toString()
             );
         }
     }
-
 }
