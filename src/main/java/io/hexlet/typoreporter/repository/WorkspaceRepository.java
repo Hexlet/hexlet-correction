@@ -9,10 +9,12 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 import java.util.UUID;
+import org.springframework.data.jpa.repository.EntityGraph;
 
 @Repository
 public interface WorkspaceRepository extends JpaRepository<Workspace, Long> {
 
+    @EntityGraph(attributePaths = {"accounts.account"})
     Optional<Workspace> getWorkspaceByName(String name);
 
     Optional<SecuredWorkspace> getSecuredWorkspaceByName(String name);
