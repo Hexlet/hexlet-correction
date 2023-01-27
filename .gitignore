@@ -434,3 +434,4 @@ fabric.properties
 
 # JPA Buddy settings
 /.jpb/
+src/main/resources/templates/widget/index.html
