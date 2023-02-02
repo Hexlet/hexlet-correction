@@ -7,10 +7,10 @@ import io.hexlet.typoreporter.service.dto.typo.TypoInfo;
 import io.hexlet.typoreporter.service.dto.workspace.CreateWorkspace;
 import io.hexlet.typoreporter.web.exception.WorkspaceAlreadyExistException;
 import io.hexlet.typoreporter.web.exception.WorkspaceNotFoundException;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
-import org.ocpsoft.prettytime.PrettyTime;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.SortDefault;
@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 import java.util.TreeSet;
@@ -45,6 +44,7 @@ import static io.hexlet.typoreporter.web.Templates.WKS_SETTINGS_TEMPLATE;
 import static io.hexlet.typoreporter.web.Templates.WKS_TYPOS_TEMPLATE;
 import static io.hexlet.typoreporter.web.Templates.WKS_UPDATE_TEMPLATE;
 import static io.hexlet.typoreporter.web.Templates.WKS_USERS_TEMPLATE;
+import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 import static org.springframework.data.domain.Sort.Direction.ASC;
 import static org.springframework.data.domain.Sort.Direction.DESC;
 import static org.springframework.data.domain.Sort.Order.asc;
@@ -209,7 +209,7 @@ public class WorkspaceController {
     private void getLastTypoDataToModel(final Model model, final String wksName) {
         final var createdDate = typoService.getLastTypoByWorkspaceName(wksName).map(TypoInfo::createdDate);
         model.addAttribute("lastTypoCreatedDate", createdDate);
-        model.addAttribute("lastTypoCreatedDateAgo", createdDate.map(new PrettyTime()::format));
+        model.addAttribute("lastTypoCreatedDateAgo", createdDate.map(d -> d.format(ISO_LOCAL_DATE_TIME)));
     }
 
     @GetMapping(USERS)

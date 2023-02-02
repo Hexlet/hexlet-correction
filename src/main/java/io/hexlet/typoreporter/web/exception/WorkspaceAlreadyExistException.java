@@ -1,12 +1,12 @@
 package io.hexlet.typoreporter.web.exception;
 
 import org.springframework.validation.FieldError;
-import org.zalando.problem.AbstractThrowableProblem;
+import org.springframework.web.ErrorResponseException;
 
 import static java.text.MessageFormat.format;
-import static org.zalando.problem.Status.CONFLICT;
+import static org.springframework.http.HttpStatus.CONFLICT;
 
-public class WorkspaceAlreadyExistException extends AbstractThrowableProblem {
+public class WorkspaceAlreadyExistException extends ErrorResponseException {
 
     private static final String MESSAGE_TEMPLATE = "Workspace with {0} ''{1}'' already exists";
 
@@ -15,7 +15,9 @@ public class WorkspaceAlreadyExistException extends AbstractThrowableProblem {
     private final String errorValue;
 
     public WorkspaceAlreadyExistException(String fieldName, String errorValue) {
-        super(null, "Workspace already exists", CONFLICT, format(MESSAGE_TEMPLATE, fieldName, errorValue));
+        super(CONFLICT);
+        this.setTitle("Workspace already exists");
+        this.getBody().setDetail(format(MESSAGE_TEMPLATE, fieldName, errorValue));
         this.fieldName = fieldName;
         this.errorValue = errorValue;
     }

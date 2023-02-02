@@ -1,15 +1,15 @@
 package io.hexlet.typoreporter.web.exception;
 
-import org.zalando.problem.AbstractThrowableProblem;
+import org.springframework.web.ErrorResponseException;
 
 import static java.text.MessageFormat.format;
-import static org.zalando.problem.Status.NOT_FOUND;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
-public class TypoNotFoundException extends AbstractThrowableProblem {
-
-    private static final String MESSAGE = "Typo with id=''{0}'' not found";
+public class TypoNotFoundException extends ErrorResponseException {
 
     public TypoNotFoundException(final Long id) {
-        super(null, "Typo not found", NOT_FOUND, format(MESSAGE, id));
+        super(NOT_FOUND);
+        this.setTitle("Typo not found");
+        this.getBody().setDetail(format("Typo with id=''{0}'' not found", id));
     }
 }

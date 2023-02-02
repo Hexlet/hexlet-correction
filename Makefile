@@ -1,42 +1,37 @@
 .PHONY: build
 
-build:
-	./mvnw -B -ntp -fae clean verify
+setup:
+	./gradlew build
 
 package:
-	./mvnw -B -ntp -fae clean package -Dmaven.test.skip=true
+	./gradlew bootJar
 
-clear:
-	./mvnw -B -ntp -fae clean
-	docker-compose -f src/main/docker/postgresql.yml down -v
+clean:
+	./gradlew clean
 
-setup: build
+stop-containers:
+	docker stop $(docker ps -aq) && docker rm $(docker ps -aq)
 
-test:
-	./mvnw -B -ntp -fae test verify
+check:
+	./gradlew check
 
 test-unit-only:
-	./mvnw -B -ntp -fae test
+	./gradlew test
 
 test-integration-only:
-	./mvnw -B -ntp -Dtest=noTest -DfailIfNoTests=false verify
+	./gradlew integrationTest
 
 run-dev:
-	java -jar -Dspring.profiles.active=dev ./target/hexlet-typo-reporter-*.jar
+	./gradlew bootRun --args='--spring.profiles.active=dev'
 
-run-dev-docker-db: docker-db run-dev
-
-start: run-dev-docker-db
+start: docker-db run-dev
 
 docker-db:
-	docker-compose -f ./src/main/docker/postgresql.yml up -d -V --remove-orphans
-
-update-versions:
-	./mvnw versions:update-properties versions:display-plugin-updates
+	docker compose -f ./src/main/docker/postgresql.yml up -d -V --remove-orphans
 
 vagrant-build:
 	vagrant up
-	vagrant ssh -c "cd /vagrant && make build"
+	vagrant ssh -c "cd /vagrant && make package"
 
 vagrant-run:
-	vagrant ssh -c "cd /vagrant && make run-dev-docker-db"
+	vagrant ssh -c "cd /vagrant && make start"

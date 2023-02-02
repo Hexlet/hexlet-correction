@@ -1,15 +1,15 @@
 package io.hexlet.typoreporter.web.exception;
 
-import org.zalando.problem.AbstractThrowableProblem;
+import org.springframework.web.ErrorResponseException;
 
 import static java.text.MessageFormat.format;
-import static org.zalando.problem.Status.NOT_FOUND;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
-public class WorkspaceNotFoundException extends AbstractThrowableProblem {
-
-    private static final String NAME_NOT_FOUND_MSG = "Workspace with name=''{0}'' not found";
+public class WorkspaceNotFoundException extends ErrorResponseException {
 
     public WorkspaceNotFoundException(final String name) {
-        super(null, "Workspace not found", NOT_FOUND, format(NAME_NOT_FOUND_MSG, name));
+        super(NOT_FOUND);
+        this.setTitle("Workspace not found");
+        this.getBody().setDetail(format("Workspace with name=''{0}'' not found", name));
     }
 }

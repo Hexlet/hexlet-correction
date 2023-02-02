@@ -3,6 +3,7 @@ package io.hexlet.typoreporter.web;
 import io.hexlet.typoreporter.service.QueryAccount;
 import io.hexlet.typoreporter.service.SignUpAccount;
 import io.hexlet.typoreporter.service.dto.account.SignupAccount;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -14,7 +15,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.validation.Valid;
 import java.util.List;
 
 import static io.hexlet.typoreporter.web.Routers.REDIRECT_ROOT;

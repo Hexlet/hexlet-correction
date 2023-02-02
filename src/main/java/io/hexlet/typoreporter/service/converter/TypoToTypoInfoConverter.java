@@ -2,9 +2,10 @@ package io.hexlet.typoreporter.service.converter;
 
 import io.hexlet.typoreporter.domain.typo.Typo;
 import io.hexlet.typoreporter.service.dto.typo.TypoInfo;
-import org.ocpsoft.prettytime.PrettyTime;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
+
+import java.time.format.DateTimeFormatter;
 
 @Component
 public class TypoToTypoInfoConverter implements Converter<Typo, TypoInfo> {
@@ -18,7 +19,6 @@ public class TypoToTypoInfoConverter implements Converter<Typo, TypoInfo> {
      */
     @Override
     public TypoInfo convert(Typo source) {
-        final var pt = new PrettyTime();
         return new TypoInfo(
             source.getId(),
             source.getPageUrl(),
@@ -30,10 +30,10 @@ public class TypoToTypoInfoConverter implements Converter<Typo, TypoInfo> {
             source.getTypoStatus().toString(),
             source.getTypoStatus(),
             source.getCreatedBy(),
-            pt.format(source.getCreatedDate()),
+            source.getCreatedDate().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME),
             source.getCreatedDate(),
             source.getModifiedBy(),
-            pt.format(source.getModifiedDate()),
+            source.getModifiedDate().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME),
             source.getModifiedDate()
         );
     }

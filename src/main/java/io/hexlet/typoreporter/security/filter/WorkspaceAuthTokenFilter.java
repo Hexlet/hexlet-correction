@@ -1,6 +1,10 @@
 package io.hexlet.typoreporter.security.filter;
 
 import io.hexlet.typoreporter.security.authentication.WorkspaceAuthenticationToken;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -9,13 +13,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
 import java.io.IOException;
 import java.util.Optional;
 
 import static io.hexlet.typoreporter.web.Routers.Typo.TYPOS;
-import static io.hexlet.typoreporter.web.Routers.Workspace.*;
+import static io.hexlet.typoreporter.web.Routers.Workspace.API_WORKSPACES;
+import static io.hexlet.typoreporter.web.Routers.Workspace.WKS_NAME_PATH;
 import static org.springframework.http.HttpMethod.POST;
 
 @Component

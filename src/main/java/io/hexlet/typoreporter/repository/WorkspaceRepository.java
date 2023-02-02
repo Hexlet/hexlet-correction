@@ -5,6 +5,7 @@ import io.hexlet.typoreporter.security.model.SecuredWorkspace;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -25,5 +26,5 @@ public interface WorkspaceRepository extends JpaRepository<Workspace, Long> {
 
     @Modifying
     @Query("update Workspace set apiAccessToken = :token where name = :wksName")
-    Integer updateApiAccessTokenByWorkspaceName(String wksName, UUID token);
+    Integer updateApiAccessTokenByWorkspaceName(@Param("wksName") String wksName, @Param("token") UUID token);
 }

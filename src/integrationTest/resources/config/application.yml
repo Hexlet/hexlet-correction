@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: hexletTypoReporter
+  jpa:
+    open-in-view: true
+    show-sql: true
+    properties:
+      hibernate:
+        generate_statistics: true
+        use_sql_comments: true
+        format_sql: true
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.xml
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
+
+logging:
+  level:
+    root: INFO
+    web: DEBUG
+    org.hibernate.type.descriptor.sql: TRACE
+    io.hexlet.typoreporter: DEBUG
+    # Bug in database rider, a lot of log 'warning'
+    com.github.database.rider.core.api.dataset.ScriptableTable: ERROR

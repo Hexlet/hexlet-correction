@@ -2,9 +2,10 @@ package io.hexlet.typoreporter.service.converter;
 
 import io.hexlet.typoreporter.domain.workspace.Workspace;
 import io.hexlet.typoreporter.service.dto.workspace.WorkspaceInfo;
-import org.ocpsoft.prettytime.PrettyTime;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
+
+import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
 @Component
 public class WorkspaceToWorkspaceInfo implements Converter<Workspace, WorkspaceInfo> {
@@ -18,7 +19,6 @@ public class WorkspaceToWorkspaceInfo implements Converter<Workspace, WorkspaceI
      */
     @Override
     public WorkspaceInfo convert(Workspace source) {
-        final var pt = new PrettyTime();
         return new WorkspaceInfo(
             source.getId(),
             source.getName(),
@@ -26,10 +26,10 @@ public class WorkspaceToWorkspaceInfo implements Converter<Workspace, WorkspaceI
             source.getDescription(),
             source.getCreatedBy(),
             source.getCreatedDate(),
-            pt.format(source.getCreatedDate()),
+            source.getCreatedDate().format(ISO_LOCAL_DATE_TIME),
             source.getModifiedBy(),
             source.getModifiedDate(),
-            pt.format(source.getModifiedDate())
+            source.getModifiedDate().format(ISO_LOCAL_DATE_TIME)
         );
     }
 }

@@ -9,6 +9,15 @@ import io.hexlet.typoreporter.domain.typo.Typo;
 import io.hexlet.typoreporter.domain.workspace.constraint.WorkspaceDescription;
 import io.hexlet.typoreporter.domain.workspace.constraint.WorkspaceName;
 import io.hexlet.typoreporter.domain.workspace.constraint.WorkspaceUrl;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,15 +25,6 @@ import lombok.ToString;
 import lombok.experimental.Accessors;
 import org.hibernate.Hibernate;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
-import javax.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -41,7 +41,7 @@ public class Workspace extends AbstractAuditingEntity implements Identifiable<Lo
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "workspace_id_seq")
-    @SequenceGenerator(name = "workspace_id_seq", allocationSize = 15)
+    @SequenceGenerator(name = "workspace_id_seq", sequenceName = "common_seq_id")
     private Long id;
 
     @WorkspaceName

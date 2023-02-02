@@ -1,15 +1,16 @@
 package io.hexlet.typoreporter.web.exception;
 
 import org.springframework.validation.FieldError;
-import org.zalando.problem.AbstractThrowableProblem;
-import static org.zalando.problem.Status.CONFLICT;
+import org.springframework.web.ErrorResponseException;
 
-public class NewPasswordTheSameException extends AbstractThrowableProblem implements ConvertibleToFieldError {
+import static org.springframework.http.HttpStatus.CONFLICT;
 
-    private static final String MESSAGE_TEMPLATE = "New password is the same as the old one";
+public class NewPasswordTheSameException extends ErrorResponseException implements ConvertibleToFieldError {
 
     public NewPasswordTheSameException() {
-        super(null, "The same new password", CONFLICT, MESSAGE_TEMPLATE);
+        super(CONFLICT);
+        this.setTitle("The same new password");
+        this.getBody().setDetail("New password is the same as the old one");
     }
 
     @Override
@@ -21,7 +22,7 @@ public class NewPasswordTheSameException extends AbstractThrowableProblem implem
             false,
             null,
             null,
-            MESSAGE_TEMPLATE
+            "New password is the same as the old one"
         );
     }
 }

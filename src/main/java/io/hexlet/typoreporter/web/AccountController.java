@@ -7,6 +7,7 @@ import io.hexlet.typoreporter.service.dto.account.UpdateProfile;
 import io.hexlet.typoreporter.web.exception.AccountAlreadyExistException;
 import io.hexlet.typoreporter.web.exception.NewPasswordTheSameException;
 import io.hexlet.typoreporter.web.exception.OldPasswordWrongException;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -15,13 +16,23 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
-import javax.validation.Valid;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
 import java.util.List;
 import java.util.Optional;
-import static io.hexlet.typoreporter.web.Routers.*;
-import static io.hexlet.typoreporter.web.Routers.Account.*;
-import static io.hexlet.typoreporter.web.Templates.*;
+
+import static io.hexlet.typoreporter.web.Routers.Account.ACCOUNT;
+import static io.hexlet.typoreporter.web.Routers.Account.PASSWORD;
+import static io.hexlet.typoreporter.web.Routers.Account.PROFILE;
+import static io.hexlet.typoreporter.web.Routers.Account.REDIRECT_ACC_ROOT;
+import static io.hexlet.typoreporter.web.Routers.UPDATE;
+import static io.hexlet.typoreporter.web.Templates.ACC_INFO_TEMPLATE;
+import static io.hexlet.typoreporter.web.Templates.ERROR_GENERAL_TEMPLATE;
+import static io.hexlet.typoreporter.web.Templates.PASS_UPDATE_TEMPLATE;
+import static io.hexlet.typoreporter.web.Templates.PROF_UPDATE_TEMPLATE;
 
 @Slf4j
 @Controller

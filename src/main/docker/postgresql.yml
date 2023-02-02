@@ -2,6 +2,7 @@ version: '3'
 services:
   typo-reporter-db-postgresql:
     image: postgres:14.2-alpine3.15
+    container_name: typo-reporter-db-pg
     environment:
       - POSTGRES_DB=typo-reporter
       - POSTGRES_USER=developer
