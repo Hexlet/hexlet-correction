@@ -22,7 +22,7 @@ test-integration-only:
 	./mvnw -B -ntp -Dtest=noTest -DfailIfNoTests=false verify
 
 run-dev:
-	java -jar -Dspring.profiles.active=dev ./target/hexlet-typo-reporter-*.jar
+	java -jar -Dspring.profiles.active=dev ./target/typoreporter-*.jar
 
 run-dev-docker-db: docker-db run-dev
 
