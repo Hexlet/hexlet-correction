@@ -8,7 +8,7 @@ Tasks can be discussed in the #hexlet-volunteers channel in the [Slack community
 
 Before you can build this project, you must install and configure the following dependencies on your machine:
 
-1. Java 17
+1. Java 19
 2. Docker, Docker Compose
 
 ### Packaging as uber-jar
