@@ -23,10 +23,8 @@
                     <div class="form-group">
                         <label for="exampleInputEmail1">Email address</label>
                         <select name="email" class="form-control">
-                            <option> --- </option>
                             <option th:each="account : ${accounts}" th:object="${account}" th:text="*{email}"></option>
                         </select>
-                        <input type="hidden" name="wksName" th:value=${wksName}></input>
                         <small id="emailHelp" class="form-text text-muted">Choose a user from the list</small>
                     </div>
                     <button type="submit" class="btn btn-secondary">Add to workspace</button>

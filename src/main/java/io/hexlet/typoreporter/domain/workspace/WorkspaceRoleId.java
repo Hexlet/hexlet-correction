@@ -1,6 +1,7 @@
 package io.hexlet.typoreporter.domain.workspace;
 
 import java.io.Serializable;
+import java.util.Objects;
 import javax.persistence.Embeddable;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -32,6 +33,6 @@ public class WorkspaceRoleId implements Serializable {
 
     @Override
     public int hashCode() {
-        return  workspaceId.hashCode() + accountId.hashCode();
+        return Objects.hash(workspaceId, accountId);
     }
 }
