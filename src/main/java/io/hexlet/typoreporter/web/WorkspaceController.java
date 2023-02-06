@@ -10,6 +10,7 @@ import io.hexlet.typoreporter.service.WorkspaceRoleService;
 import io.hexlet.typoreporter.service.WorkspaceService;
 import io.hexlet.typoreporter.service.dto.typo.TypoInfo;
 import io.hexlet.typoreporter.service.dto.workspace.CreateWorkspace;
+import io.hexlet.typoreporter.web.exception.AccountNotFoundException;
 import io.hexlet.typoreporter.web.exception.WorkspaceAlreadyExistException;
 import io.hexlet.typoreporter.web.exception.WorkspaceNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -286,30 +287,16 @@ public class WorkspaceController {
     }
 
     @PostMapping(USERS)
-    public String addUser(
-            @RequestParam("email") String email,
-            @RequestParam("wksName") String workspaceName
-    ) {
-        Optional<Account> accountOptional = accountRepository.findAccountByEmail(email);
-        if (accountOptional.isEmpty()) {
-            // flash?
+    public String addUser(@RequestParam String email, @PathVariable String wksName) {
+        try {
+            workspaceRoleService.addAccountToWorkspace(wksName, email);
+            return REDIRECT_WKS_USER;
+        } catch (WorkspaceNotFoundException e) {
+            log.error("Workspace with name {} not found", wksName);
+            return REDIRECT_ROOT;
+        } catch (AccountNotFoundException e) {
+            log.error("Account with email {} not found", email);
             return REDIRECT_WKS_USER;
         }
-
-        Optional<Workspace> workspaceOptional = workspaceRepository.getWorkspaceByName(workspaceName);
-        if (workspaceOptional.isEmpty()) {
-            //TODO send error page
-            log.error("Workspace with name {} not found", workspaceName);
-            return REDIRECT_ROOT;
-        }
-
-        Long workspaceId = workspaceOptional.get().getId();
-        Long accountId = accountOptional.get().getId();
-
-        WorkspaceRole workspaceRole = workspaceRoleService.create(workspaceId, accountId);
-
-        workspaceOptional.get().addAccount(accountOptional.get());
-
-        return REDIRECT_WKS_USER;
     }
 }
