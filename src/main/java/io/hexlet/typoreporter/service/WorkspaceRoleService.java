@@ -13,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static io.hexlet.typoreporter.domain.workspace.AccountRole.ROLE_ANONYMOUS;
+
 @Service
 @RequiredArgsConstructor
 public class WorkspaceRoleService {
@@ -35,7 +37,7 @@ public class WorkspaceRoleService {
 
         final var workspaceRole = new WorkspaceRole(
             new WorkspaceRoleId(wksId, accId),
-            "default_role",
+            ROLE_ANONYMOUS,
             workspaceRepository.getReferenceById(wksId),
             accountRepository.getReferenceById(accId)
         );

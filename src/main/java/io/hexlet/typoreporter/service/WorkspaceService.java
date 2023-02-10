@@ -59,6 +59,7 @@ public class WorkspaceService {
         }
         final var wksToCreate = requireNonNull(workspaceMapper.toWorkspace(createWks));
         wksToCreate.setApiAccessToken(UUID.randomUUID());
+        //TODO Add WorkspaceRole ADMIN for account who create the workspace
         final var createdWks = repository.save(wksToCreate);
         return workspaceMapper.toWorkspaceInfo(createdWks);
     }
