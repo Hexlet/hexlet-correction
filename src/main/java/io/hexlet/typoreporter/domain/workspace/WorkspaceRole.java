@@ -3,17 +3,23 @@ package io.hexlet.typoreporter.domain.workspace;
 import io.hexlet.typoreporter.domain.account.Account;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import lombok.Setter;
 import lombok.ToString;
+
+import static javax.persistence.EnumType.STRING;
 
 @Getter
 @Setter
@@ -26,9 +32,10 @@ public class WorkspaceRole {
     @EmbeddedId
     private WorkspaceRoleId id;
 
-    @NotBlank
-    @Size(min = 1, max = 50)
-    private String role;
+    @NotNull
+    @Enumerated(STRING)
+    @Size(max = 50)
+    private AccountRole role;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("workspaceId")
