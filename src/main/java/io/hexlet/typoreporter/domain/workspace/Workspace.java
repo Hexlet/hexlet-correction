@@ -31,6 +31,8 @@ import java.util.Set;
 import java.util.UUID;
 import javax.persistence.FetchType;
 
+import static javax.persistence.CascadeType.ALL;
+
 @Getter
 @Setter
 @ToString
@@ -59,16 +61,11 @@ public class Workspace extends AbstractAuditingEntity implements Identifiable<Lo
     @NotNull
     private UUID apiAccessToken;
 
-    @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "workspace", cascade = ALL, orphanRemoval = true)
     @ToString.Exclude
     private Set<Typo> typos = new HashSet<>();
 
-    @OneToMany(
-            mappedBy = "workspace",
-            fetch = FetchType.EAGER,
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
-    )
+    @OneToMany(mappedBy = "workspace", cascade = ALL, orphanRemoval = true)
     private Set<WorkspaceRole> accounts = new HashSet<>();
 
     public Workspace addTypo(final Typo typo) {

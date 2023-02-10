@@ -16,7 +16,6 @@ import lombok.experimental.Accessors;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -36,6 +35,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import static javax.persistence.CascadeType.ALL;
 
 @Getter
 @Setter
@@ -82,19 +83,16 @@ public class Account extends AbstractAuditingEntity implements Identifiable<Long
     @Size(min = 1, max = 50)
     private String lastName;
 
+    //TODO remove this with migration
     @ManyToOne(fetch = FetchType.LAZY)
     @ToString.Exclude
     private Workspace workspace;
 
-    @OneToMany(
-            mappedBy = "account",
-            fetch = FetchType.EAGER,
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
-    )
+    @OneToMany(mappedBy = "account", cascade = ALL, orphanRemoval = true)
+    @ToString.Exclude
     private Set<WorkspaceRole> workspaces = new HashSet<>();
 
-    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "account", cascade = ALL, orphanRemoval = true)
     @ToString.Exclude
     private List<Typo> typos = new ArrayList<>();
 
