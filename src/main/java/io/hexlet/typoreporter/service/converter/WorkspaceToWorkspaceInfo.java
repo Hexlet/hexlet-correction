@@ -2,9 +2,11 @@ package io.hexlet.typoreporter.service.converter;
 
 import io.hexlet.typoreporter.domain.workspace.Workspace;
 import io.hexlet.typoreporter.service.dto.workspace.WorkspaceInfo;
-import org.ocpsoft.prettytime.PrettyTime;
+import io.hexlet.typoreporter.service.mapper.WorkspaceMapper;
+import io.hexlet.typoreporter.service.mapper.WorkspaceMapperImpl;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
+
 
 @Component
 public class WorkspaceToWorkspaceInfo implements Converter<Workspace, WorkspaceInfo> {
@@ -16,20 +18,10 @@ public class WorkspaceToWorkspaceInfo implements Converter<Workspace, WorkspaceI
      * @return the converted object, which must be an instance of {@code WorkspaceInfo} (potentially {@code null})
      * @throws IllegalArgumentException if the source cannot be converted to the desired target type
      */
+
+    private final WorkspaceMapper workspaceMapper = new WorkspaceMapperImpl();
     @Override
     public WorkspaceInfo convert(Workspace source) {
-        final var pt = new PrettyTime();
-        return new WorkspaceInfo(
-            source.getId(),
-            source.getName(),
-            source.getUrl(),
-            source.getDescription(),
-            source.getCreatedBy(),
-            source.getCreatedDate(),
-            pt.format(source.getCreatedDate()),
-            source.getModifiedBy(),
-            source.getModifiedDate(),
-            pt.format(source.getModifiedDate())
-        );
+        return workspaceMapper.toWorkspaceInfo(source);
     }
 }

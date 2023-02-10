@@ -2,6 +2,8 @@ package io.hexlet.typoreporter.service.converter;
 
 import io.hexlet.typoreporter.domain.typo.Typo;
 import io.hexlet.typoreporter.service.dto.typo.ReportedTypo;
+import io.hexlet.typoreporter.service.mapper.TypoMapper;
+import io.hexlet.typoreporter.service.mapper.TypoMapperImpl;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
@@ -15,18 +17,10 @@ public class TypoToReportedTypoConverter implements Converter<Typo, ReportedTypo
      * @return the converted object, which must be an instance of {@code ReportedTypo} (potentially {@code null})
      * @throws IllegalArgumentException if the source cannot be converted to the desired target type
      */
+
+    private final TypoMapper typoMapper = new TypoMapperImpl();
     @Override
     public ReportedTypo convert(Typo source) {
-        return new ReportedTypo(
-            source.getId(),
-            source.getPageUrl(),
-            source.getReporterName(),
-            source.getReporterComment(),
-            source.getTextBeforeTypo(),
-            source.getTextTypo(),
-            source.getTextAfterTypo(),
-            source.getCreatedBy(),
-            source.getCreatedDate()
-        );
+        return typoMapper.toReportedTypo(source);
     }
 }

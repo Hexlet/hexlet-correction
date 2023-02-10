@@ -2,7 +2,8 @@ package io.hexlet.typoreporter.service.converter;
 
 import io.hexlet.typoreporter.domain.typo.Typo;
 import io.hexlet.typoreporter.service.dto.typo.TypoInfo;
-import org.ocpsoft.prettytime.PrettyTime;
+import io.hexlet.typoreporter.service.mapper.TypoMapper;
+import io.hexlet.typoreporter.service.mapper.TypoMapperImpl;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
@@ -16,25 +17,10 @@ public class TypoToTypoInfoConverter implements Converter<Typo, TypoInfo> {
      * @return the converted object, which must be an instance of {@code TypoInfo} (potentially {@code null})
      * @throws IllegalArgumentException if the source cannot be converted to the desired target type
      */
+
+    private final TypoMapper typoMapper = new TypoMapperImpl();
     @Override
     public TypoInfo convert(Typo source) {
-        final var pt = new PrettyTime();
-        return new TypoInfo(
-            source.getId(),
-            source.getPageUrl(),
-            source.getReporterName(),
-            source.getReporterComment(),
-            source.getTextBeforeTypo(),
-            source.getTextTypo(),
-            source.getTextAfterTypo(),
-            source.getTypoStatus().toString(),
-            source.getTypoStatus(),
-            source.getCreatedBy(),
-            pt.format(source.getCreatedDate()),
-            source.getCreatedDate(),
-            source.getModifiedBy(),
-            pt.format(source.getModifiedDate()),
-            source.getModifiedDate()
-        );
+        return typoMapper.toTypoInfo(source);
     }
 }
