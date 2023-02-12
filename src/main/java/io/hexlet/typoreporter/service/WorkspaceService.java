@@ -4,9 +4,9 @@ import io.hexlet.typoreporter.domain.workspace.Workspace;
 import io.hexlet.typoreporter.repository.WorkspaceRepository;
 import io.hexlet.typoreporter.service.dto.workspace.CreateWorkspace;
 import io.hexlet.typoreporter.service.dto.workspace.WorkspaceInfo;
+import io.hexlet.typoreporter.service.mapper.WorkspaceMapper;
 import io.hexlet.typoreporter.web.exception.WorkspaceAlreadyExistException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,20 +22,21 @@ public class WorkspaceService {
 
     private final WorkspaceRepository repository;
 
-    private final ConversionService conversionService;
+    private final WorkspaceMapper workspaceMapper;
+
 
     @Transactional(readOnly = true)
     public List<WorkspaceInfo> getAllWorkspacesInfo() {
         return repository.findAll()
             .stream()
-            .map(wks -> conversionService.convert(wks, WorkspaceInfo.class))
+            .map(workspaceMapper::toWorkspaceInfo)
             .toList();
     }
 
     @Transactional(readOnly = true)
     public Optional<WorkspaceInfo> getWorkspaceInfoByName(final String wksName) {
         return repository.getWorkspaceByName(wksName)
-            .map(workspace -> conversionService.convert(workspace, WorkspaceInfo.class));
+            .map(workspaceMapper::toWorkspaceInfo);
     }
 
     @Transactional(readOnly = true)
@@ -56,10 +57,10 @@ public class WorkspaceService {
         if (repository.existsWorkspaceByUrl(createWks.url())) {
             throw new WorkspaceAlreadyExistException("url", createWks.url());
         }
-        final var wksToCreate = requireNonNull(conversionService.convert(createWks, Workspace.class));
+        final var wksToCreate = requireNonNull(workspaceMapper.toWorkspace(createWks));
         wksToCreate.setApiAccessToken(UUID.randomUUID());
         final var createdWks = repository.save(wksToCreate);
-        return conversionService.convert(createdWks, WorkspaceInfo.class);
+        return workspaceMapper.toWorkspaceInfo(createdWks);
     }
 
     @Transactional
@@ -72,7 +73,7 @@ public class WorkspaceService {
             .map(oldWks -> oldWks.setName(updateWks.name()))
             .map(oldWks -> oldWks.setDescription(updateWks.description()))
             .map(repository::save)
-            .map(wks -> conversionService.convert(wks, WorkspaceInfo.class));
+            .map(workspaceMapper::toWorkspaceInfo);
     }
 
     @Transactional
