@@ -7,7 +7,7 @@ import io.hexlet.typoreporter.service.dto.typo.TypoReport;
 
 import org.mapstruct.Mapper;
 
-@Mapper(componentModel = "spring", uses = {AccountMapper.class, TypoMapper.class})
+@Mapper
 public interface TypoMapper {
     TypoReport toTypoReport(Typo source);
     Typo toTypo(TypoReport source);
