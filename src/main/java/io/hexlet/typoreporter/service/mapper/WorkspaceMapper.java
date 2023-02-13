@@ -21,7 +21,7 @@ public interface WorkspaceMapper {
     @Mapping(target = "modifiedDateAgo", source = "modifiedDate")
     WorkspaceInfo toWorkspaceInfo(Workspace source);
 
-    default String getDateAsString(LocalDateTime date) {
+    default String getDateAgoAsString(LocalDateTime date) {
         final PrettyTime pt = new PrettyTime();
         return pt.format(date);
     }

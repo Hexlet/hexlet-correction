@@ -102,7 +102,7 @@ public class AccountService implements SignUpAccount, QueryAccount {
         }
 
         return sourceAccount
-            .map(oldAcc -> accountMapper.toAccount(updateProfile))
+            .map(oldAcc -> accountMapper.toAccount(updateProfile, oldAcc))
             .map(accountRepository::save);
     }
 

@@ -3,15 +3,13 @@ package io.hexlet.typoreporter.service.mapper;
 import io.hexlet.typoreporter.domain.workspace.Workspace;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mapstruct.factory.Mappers;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest(classes = {WorkspaceMapperImpl.class})
 class WorkspaceToWorkspaceInfoTest {
-    @Autowired
-    private WorkspaceMapper workspaceMapper;
+
+    private final WorkspaceMapper workspaceMapper = Mappers.getMapper(WorkspaceMapper.class);
 
     @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspaces")
