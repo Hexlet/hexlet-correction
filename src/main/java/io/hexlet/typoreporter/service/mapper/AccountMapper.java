@@ -10,12 +10,9 @@ import org.mapstruct.MappingTarget;
 
 @Mapper
 public interface AccountMapper {
+
     InfoAccount toInfoAccount(Account source);
-    Account toAccount(UpdateProfile source);
     UpdateProfile toUpdateProfile(Account source);
-
     Account toAccount(UpdateProfile source, @MappingTarget Account account);
-
     Account toAccount(SignupAccount source);
-    SignupAccount toSignupAccount(Account source);
 }
