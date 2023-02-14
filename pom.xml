@@ -30,6 +30,7 @@
         <maven-failsafe-plugin.version>3.0.0-M8</maven-failsafe-plugin.version>
         <maven-surefire-plugin.version>3.0.0-M8</maven-surefire-plugin.version>
         <maven-enforcer-plugin.version>3.2.1</maven-enforcer-plugin.version>
+        <maven-resources-plugin.version>3.3.0</maven-resources-plugin.version>
     </properties>
 
     <dependencyManagement>
@@ -216,6 +217,11 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>${maven-resources-plugin.version}</version>
             </plugin>
         </plugins>
     </build>
