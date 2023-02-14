@@ -34,7 +34,6 @@ public class WorkspaceRole {
 
     @NotNull
     @Enumerated(STRING)
-    @Size(max = 50)
     private AccountRole role;
 
     @ManyToOne(fetch = FetchType.LAZY)
