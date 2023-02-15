@@ -9,12 +9,12 @@ import io.hexlet.typoreporter.service.dto.account.SignupAccount;
 import io.hexlet.typoreporter.service.dto.account.UpdatePassword;
 import io.hexlet.typoreporter.service.dto.account.UpdateProfile;
 import io.hexlet.typoreporter.service.dto.workspace.WorkspaceInfo;
+import io.hexlet.typoreporter.service.mapper.AccountMapper;
+import io.hexlet.typoreporter.service.mapper.WorkspaceMapper;
 import io.hexlet.typoreporter.web.exception.NewPasswordTheSameException;
 import io.hexlet.typoreporter.web.exception.OldPasswordWrongException;
 import io.hexlet.typoreporter.web.exception.AccountAlreadyExistException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.convert.ConversionService;
-import org.springframework.data.util.Pair;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,7 +27,9 @@ public class AccountService implements SignUpAccount, QueryAccount {
 
     private final AccountRepository accountRepository;
 
-    private final ConversionService conversionService;
+    private final AccountMapper accountMapper;
+
+    private final WorkspaceMapper workspaceMapper;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -43,7 +45,7 @@ public class AccountService implements SignUpAccount, QueryAccount {
 
     @Override
     public Account signup(SignupAccount signupAccount) {
-        Account sourceAccount = conversionService.convert(signupAccount, Account.class);
+        Account sourceAccount = accountMapper.toAccount(signupAccount);
         if (sourceAccount == null) {
             return null;
         }
@@ -63,7 +65,7 @@ public class AccountService implements SignUpAccount, QueryAccount {
     @Transactional(readOnly = true)
     public Optional<InfoAccount> getInfoAccount(final String name) {
         return accountRepository.findAccountByUsername(name)
-            .map(account -> conversionService.convert(account, InfoAccount.class));
+            .map(accountMapper::toInfoAccount);
     }
 
     @Transactional(readOnly = true)
@@ -75,13 +77,13 @@ public class AccountService implements SignUpAccount, QueryAccount {
             sourceWorkspace = Optional.ofNullable(sourceAccount.get().getWorkspace());
         }
 
-        return sourceWorkspace.map(workspace -> conversionService.convert(workspace, WorkspaceInfo.class));
+        return sourceWorkspace.map(workspaceMapper::toWorkspaceInfo);
     }
 
     @Transactional(readOnly = true)
     public Optional<UpdateProfile> getUpdateProfile(final String name) {
         return accountRepository.findAccountByUsername(name)
-            .map(account -> conversionService.convert(account, UpdateProfile.class));
+            .map(accountMapper::toUpdateProfile);
     }
 
     public Optional<Account> updateProfile(final UpdateProfile updateProfile, final String name) {
@@ -100,7 +102,7 @@ public class AccountService implements SignUpAccount, QueryAccount {
         }
 
         return sourceAccount
-            .map(oldAcc -> conversionService.convert(Pair.of(oldAcc, updateProfile), Account.class))
+            .map(oldAcc -> accountMapper.toAccount(updateProfile, oldAcc))
             .map(accountRepository::save);
     }
 
