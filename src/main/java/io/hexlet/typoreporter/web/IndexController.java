@@ -1,5 +1,7 @@
 package io.hexlet.typoreporter.web;
 
+import io.hexlet.typoreporter.service.AccountService;
+import io.hexlet.typoreporter.service.WorkspaceRoleService;
 import io.hexlet.typoreporter.service.WorkspaceService;
 import io.hexlet.typoreporter.service.dto.workspace.CreateWorkspace;
 import io.hexlet.typoreporter.web.exception.WorkspaceAlreadyExistException;
@@ -26,6 +28,10 @@ public class IndexController {
 
     private final WorkspaceService workspaceService;
 
+    private final WorkspaceRoleService workspaceRoleService;
+
+    private final AccountService accountService;
+
     @GetMapping("/workspaces")
     public String index(final Model model) {
         final var wksInfoList = workspaceService.getAllWorkspacesInfo();
@@ -44,6 +50,7 @@ public class IndexController {
     public String postCreateWorkspacePage(final Model model,
                                           @Valid @ModelAttribute CreateWorkspace createWorkspace,
                                           BindingResult bindingResult) {
+        String currentEmail = accountService.getCurrentAccountEmail();
         model.addAttribute("formModified", true);
         if (bindingResult.hasErrors()) {
             model.addAttribute("createWorkspace", createWorkspace);
@@ -51,6 +58,7 @@ public class IndexController {
         }
         try {
             workspaceService.createWorkspace(createWorkspace);
+            workspaceRoleService.addAccountToWorkspaceWhenCreating(createWorkspace.name(), currentEmail);
         } catch (WorkspaceAlreadyExistException e) {
             bindingResult.addError(e.toFieldError("createWorkspace"));
             return CREATE_WKS;

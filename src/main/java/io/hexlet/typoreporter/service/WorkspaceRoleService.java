@@ -1,6 +1,7 @@
 package io.hexlet.typoreporter.service;
 
 import io.hexlet.typoreporter.domain.account.Account;
+import io.hexlet.typoreporter.domain.workspace.AccountRole;
 import io.hexlet.typoreporter.domain.workspace.Workspace;
 import io.hexlet.typoreporter.domain.workspace.WorkspaceRole;
 import io.hexlet.typoreporter.domain.workspace.WorkspaceRoleId;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import static io.hexlet.typoreporter.domain.workspace.AccountRole.ROLE_ANONYMOUS;
+import static io.hexlet.typoreporter.domain.workspace.AccountRole.ROLE_ADMIN;
 
 @Service
 @RequiredArgsConstructor
@@ -26,7 +28,7 @@ public class WorkspaceRoleService {
     private final AccountRepository accountRepository;
 
     @Transactional
-    public WorkspaceRole addAccountToWorkspace(String wksName, String accEmail) {
+    public WorkspaceRole addAccountToWorkspace(String wksName, String accEmail, AccountRole role) {
         final var accId = accountRepository.findAccountByEmail(accEmail)
             .map(Account::getId)
             .orElseThrow(() -> new AccountNotFoundException(accEmail));
@@ -37,10 +39,18 @@ public class WorkspaceRoleService {
 
         final var workspaceRole = new WorkspaceRole(
             new WorkspaceRoleId(wksId, accId),
-            ROLE_ANONYMOUS,
+            role,
             workspaceRepository.getReferenceById(wksId),
             accountRepository.getReferenceById(accId)
         );
         return repository.save(workspaceRole);
+    }
+
+    public WorkspaceRole addAccountToWorkspace(String wksName, String accEmail) {
+        return addAccountToWorkspace(wksName, accEmail, ROLE_ANONYMOUS);
+    }
+
+    public WorkspaceRole addAccountToWorkspaceWhenCreating(String wksName, String accEmail) {
+        return addAccountToWorkspace(wksName, accEmail, ROLE_ADMIN);
     }
 }

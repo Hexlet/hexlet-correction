@@ -15,9 +15,12 @@ import io.hexlet.typoreporter.web.exception.NewPasswordTheSameException;
 import io.hexlet.typoreporter.web.exception.OldPasswordWrongException;
 import io.hexlet.typoreporter.web.exception.AccountAlreadyExistException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -124,5 +127,10 @@ public class AccountService implements SignUpAccount, QueryAccount {
         return sourceAccount
             .map(oldAcc -> oldAcc.setPassword(passwordEncoder.encode(updatePassword.getNewPassword())))
             .map(accountRepository::save);
+    }
+
+    public String getCurrentAccountEmail() {
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        return accountRepository.findAccountByUsername(name).orElseThrow().getEmail();
     }
 }
