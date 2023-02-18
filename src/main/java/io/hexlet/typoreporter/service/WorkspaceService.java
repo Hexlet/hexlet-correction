@@ -1,6 +1,9 @@
 package io.hexlet.typoreporter.service;
 
+import io.hexlet.typoreporter.domain.account.Account;
+import io.hexlet.typoreporter.domain.workspace.AccountRole;
 import io.hexlet.typoreporter.domain.workspace.Workspace;
+import io.hexlet.typoreporter.repository.AccountRepository;
 import io.hexlet.typoreporter.repository.WorkspaceRepository;
 import io.hexlet.typoreporter.service.dto.workspace.CreateWorkspace;
 import io.hexlet.typoreporter.service.dto.workspace.WorkspaceInfo;
@@ -24,6 +27,7 @@ public class WorkspaceService {
 
     private final WorkspaceMapper workspaceMapper;
 
+    private final AccountRepository accountRepository;
 
     @Transactional(readOnly = true)
     public List<WorkspaceInfo> getAllWorkspacesInfo() {
@@ -60,6 +64,24 @@ public class WorkspaceService {
         final var wksToCreate = requireNonNull(workspaceMapper.toWorkspace(createWks));
         wksToCreate.setApiAccessToken(UUID.randomUUID());
         //TODO Add WorkspaceRole ADMIN for account who create the workspace
+        final var createdWks = repository.save(wksToCreate);
+        return workspaceMapper.toWorkspaceInfo(createdWks);
+    }
+
+    @Transactional
+    public WorkspaceInfo createWorkspace(final CreateWorkspace createWks, final String userName) {
+        if (repository.existsWorkspaceByName(createWks.name())) {
+            throw new WorkspaceAlreadyExistException("name", createWks.name());
+        }
+        if (repository.existsWorkspaceByUrl(createWks.url())) {
+            throw new WorkspaceAlreadyExistException("url", createWks.url());
+        }
+        final var wksToCreate = requireNonNull(workspaceMapper.toWorkspace(createWks));
+        wksToCreate.setApiAccessToken(UUID.randomUUID());
+
+        Account account = accountRepository.findAccountByUsername(userName).orElseThrow();
+        wksToCreate.addAccount(account, AccountRole.ROLE_ADMIN);
+
         final var createdWks = repository.save(wksToCreate);
         return workspaceMapper.toWorkspaceInfo(createdWks);
     }

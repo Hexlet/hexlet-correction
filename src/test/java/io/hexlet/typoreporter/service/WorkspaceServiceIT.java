@@ -14,6 +14,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.transaction.annotation.Transactional;
@@ -91,7 +92,7 @@ public class WorkspaceServiceIT {
     @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getCreateWorkspaces")
     void createWorkspaceWithWorkspaceAlreadyExistException(CreateWorkspace createWks) {
         Throwable thrown = assertThrows(WorkspaceAlreadyExistException.class, () -> {
-            service.createWorkspace(createWks);
+            service.createWorkspace(createWks, "user");
         });
         assertNotNull(thrown.getMessage());
     }

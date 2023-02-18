@@ -80,10 +80,10 @@ public class Workspace extends AbstractAuditingEntity implements Identifiable<Lo
         return this;
     }
 
-    public Workspace addAccount(Account account) {
-        WorkspaceRole workspaceRole = new WorkspaceRole(this, account);
+    public Workspace addAccount(final Account account, AccountRole role) {
+        final var workspaceRoleId = new WorkspaceRoleId(this.getId(), account.getId());
+        final var workspaceRole = new WorkspaceRole(workspaceRoleId, role, this, account);
         accounts.add(workspaceRole);
-        account.getWorkspaces().add(workspaceRole);
         return this;
     }
 

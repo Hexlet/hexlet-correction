@@ -46,11 +46,6 @@ public class WorkspaceRole {
     @ToString.Exclude
     private Account account;
 
-    public WorkspaceRole(Workspace workspace, Account account) {
-        this.workspace = workspace;
-        this.account = account;
-    }
-
     @Override
     public boolean equals(Object o) {
         return this == o || id != null && o instanceof WorkspaceRole other && id.equals(other.id);
