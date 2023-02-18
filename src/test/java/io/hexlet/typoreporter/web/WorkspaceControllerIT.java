@@ -6,6 +6,7 @@ import com.github.database.rider.spring.api.DBRider;
 import io.hexlet.typoreporter.domain.AbstractAuditingEntity;
 import io.hexlet.typoreporter.domain.account.Account;
 import io.hexlet.typoreporter.domain.typo.Typo;
+import io.hexlet.typoreporter.domain.workspace.AccountRole;
 import io.hexlet.typoreporter.domain.workspace.Workspace;
 import io.hexlet.typoreporter.repository.AccountRepository;
 import io.hexlet.typoreporter.repository.WorkspaceRepository;
@@ -257,7 +258,7 @@ class WorkspaceControllerIT {
         Set<Account> accounts = accountRepository.findAll().stream().collect(Collectors.toSet());
 
         accounts.forEach(account -> {
-            workspace.addAccount(account);
+            workspace.addAccount(account, AccountRole.ROLE_ANONYMOUS);
         });
 
         MockHttpServletResponse response = mockMvc.perform(get(WORKSPACE + WKS_NAME_PATH + USERS, wksName))
