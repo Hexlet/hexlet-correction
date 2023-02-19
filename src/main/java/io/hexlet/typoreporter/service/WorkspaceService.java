@@ -54,21 +54,6 @@ public class WorkspaceService {
     }
 
     @Transactional
-    public WorkspaceInfo createWorkspace(final CreateWorkspace createWks) {
-        if (repository.existsWorkspaceByName(createWks.name())) {
-            throw new WorkspaceAlreadyExistException("name", createWks.name());
-        }
-        if (repository.existsWorkspaceByUrl(createWks.url())) {
-            throw new WorkspaceAlreadyExistException("url", createWks.url());
-        }
-        final var wksToCreate = requireNonNull(workspaceMapper.toWorkspace(createWks));
-        wksToCreate.setApiAccessToken(UUID.randomUUID());
-        //TODO Add WorkspaceRole ADMIN for account who create the workspace
-        final var createdWks = repository.save(wksToCreate);
-        return workspaceMapper.toWorkspaceInfo(createdWks);
-    }
-
-    @Transactional
     public WorkspaceInfo createWorkspace(final CreateWorkspace createWks, final String userName) {
         if (repository.existsWorkspaceByName(createWks.name())) {
             throw new WorkspaceAlreadyExistException("name", createWks.name());
