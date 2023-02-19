@@ -4,9 +4,11 @@ import com.github.database.rider.core.api.configuration.DBUnit;
 import com.github.database.rider.core.api.dataset.DataSet;
 import com.github.database.rider.spring.api.DBRider;
 import io.hexlet.typoreporter.domain.workspace.Workspace;
+import io.hexlet.typoreporter.repository.AccountRepository;
 import io.hexlet.typoreporter.repository.WorkspaceRepository;
 import io.hexlet.typoreporter.service.dto.workspace.CreateWorkspace;
 import io.hexlet.typoreporter.service.dto.workspace.WorkspaceInfo;
+import io.hexlet.typoreporter.service.mapper.WorkspaceMapper;
 import io.hexlet.typoreporter.test.DBUnitEnumPostgres;
 import io.hexlet.typoreporter.web.exception.WorkspaceAlreadyExistException;
 import org.junit.jupiter.api.Test;
@@ -28,6 +30,7 @@ import java.util.UUID;
 import static com.github.database.rider.core.api.configuration.Orthography.LOWERCASE;
 import static io.hexlet.typoreporter.test.Constraints.POSTGRES_IMAGE;
 import static io.hexlet.typoreporter.test.factory.EntitiesFactory.WORKSPACE_101_NAME;
+import static java.util.Objects.requireNonNull;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -50,6 +53,12 @@ public class WorkspaceServiceIT {
 
     @Autowired
     private WorkspaceService service;
+
+    @Autowired
+    private WorkspaceMapper workspaceMapper;
+
+    @Autowired
+    private WorkspaceRepository workspaceRepository;
 
     @DynamicPropertySource
     static void datasourceProperties(DynamicPropertyRegistry registry) {
@@ -81,10 +90,16 @@ public class WorkspaceServiceIT {
         assertThat(service.existsWorkspaceByName(wksName)).isTrue();
     }
 
+    @Autowired
+    private AccountRepository accountRepository;
+
     @Test
     void createWorkspaceIsSuccessful() {
         final var newWks = new CreateWorkspace("wks-name-1", "wks desc", "https://other.com");
-        WorkspaceInfo workspaceInfo = service.createWorkspace(newWks);
+        final var wksToCreate = requireNonNull(workspaceMapper.toWorkspace(newWks));
+        wksToCreate.setApiAccessToken(UUID.randomUUID());
+        WorkspaceInfo workspaceInfo = workspaceMapper.toWorkspaceInfo(workspaceRepository.save(wksToCreate));
+
         assertThat(workspaceInfo.name()).isNotEmpty();
     }
 

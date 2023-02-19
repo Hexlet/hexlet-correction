@@ -12,6 +12,7 @@ import io.hexlet.typoreporter.repository.AccountRepository;
 import io.hexlet.typoreporter.repository.WorkspaceRepository;
 import io.hexlet.typoreporter.service.WorkspaceService;
 import io.hexlet.typoreporter.service.dto.workspace.CreateWorkspace;
+import io.hexlet.typoreporter.service.mapper.WorkspaceMapper;
 import io.hexlet.typoreporter.test.DBUnitEnumPostgres;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -32,6 +33,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static com.github.database.rider.core.api.configuration.Orthography.LOWERCASE;
@@ -44,6 +46,7 @@ import static io.hexlet.typoreporter.web.Routers.UPDATE;
 import static io.hexlet.typoreporter.web.Routers.USERS;
 import static io.hexlet.typoreporter.web.Routers.Workspace.WKS_NAME_PATH;
 import static io.hexlet.typoreporter.web.Routers.Workspace.WORKSPACE;
+import static java.util.Objects.requireNonNull;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -82,6 +85,12 @@ class WorkspaceControllerIT {
 
     @Autowired
     private WorkspaceRoleService workspaceRoleService;
+
+    @Autowired
+    private WorkspaceRepository workspaceRepository;
+
+    @Autowired
+    private WorkspaceMapper workspaceMapper;
 
     @DynamicPropertySource
     static void datasourceProperties(DynamicPropertyRegistry registry) {
@@ -194,7 +203,11 @@ class WorkspaceControllerIT {
 
         LocalDateTime previosModifiedDate = repository.getWorkspaceByName(wksName).orElse(null).getModifiedDate();
 
-        service.createWorkspace(new CreateWorkspace(newWksName, wksDescription, wksUrl));
+        var createWks = new CreateWorkspace(newWksName, wksDescription, wksUrl);
+        final var wksToCreate = requireNonNull(workspaceMapper.toWorkspace(createWks));
+        wksToCreate.setApiAccessToken(UUID.randomUUID());
+        workspaceRepository.save(wksToCreate);
+
         assertThat(repository.existsWorkspaceByName(newWksName)).isTrue();
 
         mockMvc.perform(put(WORKSPACE + WKS_NAME_PATH + UPDATE, wksName)
