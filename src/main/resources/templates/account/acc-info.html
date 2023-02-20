@@ -32,22 +32,27 @@
             <a class="btn btn-primary" th:href="@{/account/password}">Edit</a>
         </div>
     </div>
-    <div class="card mb-3">
-        <div class="card-body">
-            <h5 class="card-title mb-1">Workspace</h5>
-            <div th:if="${workspaceInfo}" th:object="${workspaceInfo}">
-                <p class="card-title" th:text="*{name}"></p>
-                <p class="card-text" th:text="*{url}"></p>
-                <p class="card-text" th:text="*{description}"></p>
-            </div>
-        </div>
-        <div class="card-footer text-muted fst-italic" th:if="${workspaceInfo}" th:object="${workspaceInfo}">
-            <h6 class="card-subtitle m-2"
-                th:text="|Modified by *{modifiedBy} *{modifiedDateAgo} at *{#temporals.format(modifiedDate, 'hh:mm:ss dd-MM-yyyy')}|"></h6>
-            <h6 class="card-subtitle m-2"
-                th:text="|Created by *{createdBy} *{createdDateAgo} at *{#temporals.format(createdDate, 'hh:mm:ss dd-MM-yyyy')}|"></h6>
-        </div>
-    </div>
+    <h5 class="card-title mb-1">Workspaces</h5>
+    <table class="table table-bordered table-hover mt-3">
+        <thead>
+        <tr>
+            <th class="col-1">Name</th>
+            <th>Url</th>
+            <th class="col-2">Description</th>
+            <th class="col-2">Modified by</th>
+            <th class="col-2">Created by</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="workspaceInfo : ${workspaceInfoList}" th:object="${workspaceInfo}">
+            <td th:text="*{name}"></td>
+            <td th:text="*{url}"></td>
+            <td th:text="*{description}"></td>
+            <td th:text="|*{modifiedBy} *{modifiedDateAgo} at *{#temporals.format(modifiedDate, 'hh:mm:ss dd-MM-yyyy')}|"></td>
+            <td th:text="|*{createdBy} *{createdDateAgo} at *{#temporals.format(createdDate, 'hh:mm:ss dd-MM-yyyy')}|"></td>
+        </tr>
+        </tbody>
+    </table>
 </main>
 </body>
 </html>

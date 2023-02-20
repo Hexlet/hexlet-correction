@@ -73,15 +73,4 @@ public class AccountRepositoryIT {
     void getAccountByEmailNotExist(final String email) {
         assertThat(accountRepository.findAccountByEmail(email)).isEmpty();
     }
-
-    @Test
-    void getPageAccountByWorkspaceName() {
-        Workspace wks = workspaceRepository.findAll().stream().findFirst().get();
-        accountRepository.findAll().forEach(account -> account.setWorkspace(wks));
-        Pageable pageable = PageRequest.of(0, 10, Sort.by("id"));
-        Page<Account> page = accountRepository.findPageAccountByWorkspaceName(pageable, wks.getName());
-        assertThat(page).isNotEmpty();
-        assertThat(page.getTotalElements()).isEqualTo(accountRepository.count());
-        assertThat(page.getTotalPages()).isEqualTo(1);
-    }
 }

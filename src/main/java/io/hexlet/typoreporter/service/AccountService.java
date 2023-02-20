@@ -3,6 +3,7 @@ package io.hexlet.typoreporter.service;
 import io.hexlet.typoreporter.domain.account.Account;
 import io.hexlet.typoreporter.domain.account.AuthProvider;
 import io.hexlet.typoreporter.domain.workspace.Workspace;
+import io.hexlet.typoreporter.domain.workspace.WorkspaceRole;
 import io.hexlet.typoreporter.repository.AccountRepository;
 import io.hexlet.typoreporter.service.dto.account.InfoAccount;
 import io.hexlet.typoreporter.service.dto.account.SignupAccount;
@@ -18,7 +19,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @Transactional
@@ -69,15 +74,17 @@ public class AccountService implements SignUpAccount, QueryAccount {
     }
 
     @Transactional(readOnly = true)
-    public Optional<WorkspaceInfo> getWorkspaceInfoByUsername(final String name) {
+    public List<WorkspaceInfo> getWorkspacesInfoListByUsername(final String name) {
         final var sourceAccount = accountRepository.findAccountByUsername(name);
 
-        Optional<Workspace> sourceWorkspace = Optional.empty();
+        List<WorkspaceInfo> workspaceInfoList = new ArrayList<>();
         if (sourceAccount.isPresent()) {
-            sourceWorkspace = Optional.ofNullable(sourceAccount.get().getWorkspace());
+            for (WorkspaceRole workspaceRole : sourceAccount.get().getWorkspaces()) {
+                workspaceInfoList.add(workspaceMapper.toWorkspaceInfo(workspaceRole.getWorkspace()));
+            }
         }
 
-        return sourceWorkspace.map(workspaceMapper::toWorkspaceInfo);
+        return workspaceInfoList;
     }
 
     @Transactional(readOnly = true)
