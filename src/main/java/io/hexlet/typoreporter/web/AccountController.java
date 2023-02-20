@@ -36,14 +36,14 @@ public class AccountController {
                                      final Authentication authentication) {
         final String name = authentication.getName();
         final var accountInfo = accountService.getInfoAccount(name);
-        final var workspaceInfo =  accountService.getWorkspaceInfoByUsername(name);
+        final var workspaceInfoList =  accountService.getWorkspacesInfoListByUsername(name);
 
         if (accountInfo.isEmpty()) {
             log.error("Error during getting account info page. Account info not found");
             return ERROR_GENERAL_TEMPLATE;
         }
 
-        workspaceInfo.ifPresent(info -> model.addAttribute("workspaceInfo", info));
+        model.addAttribute("workspaceInfoList", workspaceInfoList);
         model.addAttribute("accInfo", accountInfo.get());
 
         return ACC_INFO_TEMPLATE;

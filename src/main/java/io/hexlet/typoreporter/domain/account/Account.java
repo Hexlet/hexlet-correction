@@ -83,11 +83,6 @@ public class Account extends AbstractAuditingEntity implements Identifiable<Long
     @Size(min = 1, max = 50)
     private String lastName;
 
-    //TODO remove this with migration
-    @ManyToOne(fetch = FetchType.LAZY)
-    @ToString.Exclude
-    private Workspace workspace;
-
     @OneToMany(mappedBy = "account", cascade = ALL, orphanRemoval = true)
     @ToString.Exclude
     private Set<WorkspaceRole> workspaces = new HashSet<>();
