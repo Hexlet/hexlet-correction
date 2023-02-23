@@ -28,6 +28,12 @@ public class EntitiesFactory {
 
     public static final String ACCOUNT_103_EMAIL = "test103@gmail.com";
 
+    public static final String ACCOUNT_101_USERNAME = "test1";
+
+    public static final String ACCOUNT_102_USERNAME = "test2";
+
+    public static final String ACCOUNT_103_USERNAME = "test3";
+
     public static Stream<String> getWorkspaceNamesExist() {
         return Stream.of(WORKSPACE_101_NAME, WORKSPACE_102_NAME, WORKSPACE_103_NAME);
     }
@@ -145,5 +151,9 @@ public class EntitiesFactory {
 
     public static Stream<? extends Identifiable<Long>> getEntities() {
         return Stream.concat(getTypos(), getWorkspaces());
+    }
+
+    public static Stream<String> getAccountUsernameExist() {
+        return Stream.of(ACCOUNT_101_USERNAME, ACCOUNT_102_USERNAME, ACCOUNT_103_USERNAME);
     }
 }

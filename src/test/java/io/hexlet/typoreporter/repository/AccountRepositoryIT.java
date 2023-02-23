@@ -5,9 +5,7 @@ import com.github.database.rider.core.api.dataset.DataSet;
 import com.github.database.rider.spring.api.DBRider;
 import io.hexlet.typoreporter.config.audit.AuditConfiguration;
 import io.hexlet.typoreporter.domain.account.Account;
-import io.hexlet.typoreporter.domain.workspace.Workspace;
 import io.hexlet.typoreporter.test.DBUnitEnumPostgres;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
@@ -16,10 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,7 +31,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Transactional
 @DBRider
 @DBUnit(caseInsensitiveStrategy = LOWERCASE, dataTypeFactoryClass = DBUnitEnumPostgres.class, cacheConnection = false)
-@DataSet(value = {"accounts.yml", "workspaces.yml"})
+@DataSet(value = {"accounts.yml", "workspaces.yml", "workspaceRoles.yml"})
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class AccountRepositoryIT {
 
@@ -72,5 +66,13 @@ public class AccountRepositoryIT {
     @ValueSource(strings = "invalid-email")
     void getAccountByEmailNotExist(final String email) {
         assertThat(accountRepository.findAccountByEmail(email)).isEmpty();
+    }
+
+    @ParameterizedTest
+    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getAccountUsernameExist")
+    void getAccountByUsername(final String username) {
+        final var account = accountRepository.findAccountByUsername(username);
+        assertThat(account).isNotEmpty();
+        assertThat(account.map(Account::getUsername).orElseThrow()).isEqualTo(username);
     }
 }

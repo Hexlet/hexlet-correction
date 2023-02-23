@@ -36,20 +36,18 @@
     <table class="table table-bordered table-hover mt-3">
         <thead>
         <tr>
-            <th class="col-1">Name</th>
-            <th>Url</th>
-            <th class="col-2">Description</th>
-            <th class="col-2">Modified by</th>
-            <th class="col-2">Created by</th>
+            <th class="col-1">Workspace name</th>
+            <th class="col-1">Workspace description</th>
+            <th class="col-1">Account name</th>
+            <th class="col-1">Role</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="workspaceInfo : ${workspaceInfoList}" th:object="${workspaceInfo}">
-            <td th:text="*{name}"></td>
-            <td th:text="*{url}"></td>
-            <td th:text="*{description}"></td>
-            <td th:text="|*{modifiedBy} *{modifiedDateAgo} at *{#temporals.format(modifiedDate, 'hh:mm:ss dd-MM-yyyy')}|"></td>
-            <td th:text="|*{createdBy} *{createdDateAgo} at *{#temporals.format(createdDate, 'hh:mm:ss dd-MM-yyyy')}|"></td>
+        <tr th:each="workspaceRoleInfo : ${workspaceRoleInfoList}" th:object="${workspaceRoleInfo}">
+            <td th:text="*{workspaceName}"></td>
+            <td th:text="*{workspaceDescription}"></td>
+            <td th:text="*{accountName}"></td>
+            <td th:text="*{roleName}"></td>
         </tr>
         </tbody>
     </table>

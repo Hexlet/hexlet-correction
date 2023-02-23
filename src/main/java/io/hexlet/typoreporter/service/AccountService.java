@@ -10,8 +10,10 @@ import io.hexlet.typoreporter.service.dto.account.SignupAccount;
 import io.hexlet.typoreporter.service.dto.account.UpdatePassword;
 import io.hexlet.typoreporter.service.dto.account.UpdateProfile;
 import io.hexlet.typoreporter.service.dto.workspace.WorkspaceInfo;
+import io.hexlet.typoreporter.service.dto.workspace.WorkspaceRoleInfo;
 import io.hexlet.typoreporter.service.mapper.AccountMapper;
 import io.hexlet.typoreporter.service.mapper.WorkspaceMapper;
+import io.hexlet.typoreporter.service.mapper.WorkspaceRoleMapper;
 import io.hexlet.typoreporter.web.exception.NewPasswordTheSameException;
 import io.hexlet.typoreporter.web.exception.OldPasswordWrongException;
 import io.hexlet.typoreporter.web.exception.AccountAlreadyExistException;
@@ -35,6 +37,8 @@ public class AccountService implements SignUpAccount, QueryAccount {
     private final AccountMapper accountMapper;
 
     private final WorkspaceMapper workspaceMapper;
+
+    private final WorkspaceRoleMapper workspaceRoleMapper;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -74,17 +78,17 @@ public class AccountService implements SignUpAccount, QueryAccount {
     }
 
     @Transactional(readOnly = true)
-    public List<WorkspaceInfo> getWorkspacesInfoListByUsername(final String name) {
+    public List<WorkspaceRoleInfo> getWorkspacesInfoListByUsername(final String name) {
         final var sourceAccount = accountRepository.findAccountByUsername(name);
 
-        List<WorkspaceInfo> workspaceInfoList = new ArrayList<>();
+        List<WorkspaceRoleInfo> workspaceRoleInfoList = new ArrayList<>();
         if (sourceAccount.isPresent()) {
             for (WorkspaceRole workspaceRole : sourceAccount.get().getWorkspaces()) {
-                workspaceInfoList.add(workspaceMapper.toWorkspaceInfo(workspaceRole.getWorkspace()));
+                workspaceRoleInfoList.add(workspaceRoleMapper.toWorkspaceRoleInfo(workspaceRole));
             }
         }
 
-        return workspaceInfoList;
+        return workspaceRoleInfoList;
     }
 
     @Transactional(readOnly = true)
