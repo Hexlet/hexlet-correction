@@ -17,7 +17,7 @@ class CreateWorkspaceToWorkspaceTest {
     void requestReportToTypo(final CreateWorkspace createWorkspace) {
         final var workspace = workspaceMapper.toWorkspace(createWorkspace);
         assertThat(workspace).usingRecursiveComparison()
-            .ignoringFields("id", "apiAccessToken", "typos", "createdDate", "createdBy", "modifiedDate", "modifiedBy", "accounts", "accounts")
+            .ignoringFields("id", "apiAccessToken", "typos", "createdDate", "createdBy", "modifiedDate", "modifiedBy", "workspaceRoles", "accounts")
             .isEqualTo(createWorkspace);
     }
 }
