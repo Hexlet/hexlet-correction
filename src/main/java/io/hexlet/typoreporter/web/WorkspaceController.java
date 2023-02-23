@@ -253,10 +253,7 @@ public class WorkspaceController {
             return REDIRECT_ROOT;
         }
 
-
-
-        Set<WorkspaceRole> workspaces = workspaceOptional.get().getAccounts();
-
+        Set<WorkspaceRole> workspaces = workspaceOptional.get().getWorkspaceRoles();
         List<Account> accounts = new ArrayList<>();
         if (!workspaces.isEmpty()) {
             accounts = workspaces.stream()

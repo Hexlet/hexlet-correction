@@ -90,7 +90,7 @@ public class Account extends AbstractAuditingEntity implements Identifiable<Long
 
     @OneToMany(mappedBy = "account", cascade = ALL, orphanRemoval = true)
     @ToString.Exclude
-    private Set<WorkspaceRole> workspaces = new HashSet<>();
+    private Set<WorkspaceRole> workspaceRoles = new HashSet<>();
 
     @OneToMany(mappedBy = "account", cascade = ALL, orphanRemoval = true)
     @ToString.Exclude
@@ -105,6 +105,12 @@ public class Account extends AbstractAuditingEntity implements Identifiable<Long
     public Account removeTypo(final Typo typo) {
         typos.remove(typo);
         typo.setAccount(null);
+        return this;
+    }
+
+    public Account addWorkspaceRole(WorkspaceRole workspaceRole) {
+        workspaceRole.setAccount(this);
+        workspaceRoles.add(workspaceRole);
         return this;
     }
 

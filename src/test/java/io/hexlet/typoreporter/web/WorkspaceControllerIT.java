@@ -8,6 +8,7 @@ import io.hexlet.typoreporter.domain.account.Account;
 import io.hexlet.typoreporter.domain.typo.Typo;
 import io.hexlet.typoreporter.domain.workspace.AccountRole;
 import io.hexlet.typoreporter.domain.workspace.Workspace;
+import io.hexlet.typoreporter.domain.workspace.WorkspaceRoleId;
 import io.hexlet.typoreporter.repository.AccountRepository;
 import io.hexlet.typoreporter.repository.WorkspaceRepository;
 import io.hexlet.typoreporter.service.WorkspaceService;
@@ -271,14 +272,16 @@ class WorkspaceControllerIT {
         Set<Account> accounts = accountRepository.findAll().stream().collect(Collectors.toSet());
 
         accounts.forEach(account -> {
-            workspace.addAccount(account, AccountRole.ROLE_ANONYMOUS);
+            final var workspaceRoleId = new WorkspaceRoleId(workspace.getId(), account.getId());
+            final var workspaceRole = new WorkspaceRole(workspaceRoleId, AccountRole.ROLE_ANONYMOUS, workspace, account);
+            workspace.addWorkspaceRole(workspaceRole);
         });
 
         MockHttpServletResponse response = mockMvc.perform(get(WORKSPACE + WKS_NAME_PATH + USERS, wksName))
                 .andExpect(model().attributeExists("wksInfo", "wksName", "userPage", "availableSizes", "sortProp", "sortDir", "DESC", "ASC"))
                 .andReturn().getResponse();
 
-        for (WorkspaceRole workspaceRole : workspace.getAccounts()) {
+        for (WorkspaceRole workspaceRole : workspace.getWorkspaceRoles()) {
             assertThat(response.getContentAsString()).contains(
                     workspaceRole.getId().toString()
             );

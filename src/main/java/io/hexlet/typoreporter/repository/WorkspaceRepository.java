@@ -14,7 +14,7 @@ import org.springframework.data.jpa.repository.EntityGraph;
 @Repository
 public interface WorkspaceRepository extends JpaRepository<Workspace, Long> {
 
-    @EntityGraph(attributePaths = {"accounts.account"})
+    @EntityGraph(attributePaths = {"workspaceRoles.account"})
     Optional<Workspace> getWorkspaceByName(String name);
 
     Optional<SecuredWorkspace> getSecuredWorkspaceByName(String name);

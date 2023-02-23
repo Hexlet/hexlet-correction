@@ -3,6 +3,8 @@ package io.hexlet.typoreporter.service;
 import io.hexlet.typoreporter.domain.account.Account;
 import io.hexlet.typoreporter.domain.workspace.AccountRole;
 import io.hexlet.typoreporter.domain.workspace.Workspace;
+import io.hexlet.typoreporter.domain.workspace.WorkspaceRole;
+import io.hexlet.typoreporter.domain.workspace.WorkspaceRoleId;
 import io.hexlet.typoreporter.repository.AccountRepository;
 import io.hexlet.typoreporter.repository.WorkspaceRepository;
 import io.hexlet.typoreporter.service.dto.workspace.CreateWorkspace;
@@ -65,7 +67,10 @@ public class WorkspaceService {
         wksToCreate.setApiAccessToken(UUID.randomUUID());
 
         Account account = accountRepository.findAccountByUsername(userName).orElseThrow();
-        wksToCreate.addAccount(account, AccountRole.ROLE_ADMIN);
+
+        final var workspaceRoleId = new WorkspaceRoleId(wksToCreate.getId(), account.getId());
+        final var workspaceRole = new WorkspaceRole(workspaceRoleId, AccountRole.ROLE_ADMIN, wksToCreate, account);
+        wksToCreate.addWorkspaceRole(workspaceRole);
 
         final var createdWks = repository.save(wksToCreate);
         return workspaceMapper.toWorkspaceInfo(createdWks);

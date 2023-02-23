@@ -16,7 +16,6 @@ import lombok.ToString;
 import lombok.experimental.Accessors;
 import org.hibernate.Hibernate;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -29,7 +28,6 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
-import javax.persistence.FetchType;
 
 import static javax.persistence.CascadeType.ALL;
 
@@ -66,7 +64,7 @@ public class Workspace extends AbstractAuditingEntity implements Identifiable<Lo
     private Set<Typo> typos = new HashSet<>();
 
     @OneToMany(mappedBy = "workspace", cascade = ALL, orphanRemoval = true)
-    private Set<WorkspaceRole> accounts = new HashSet<>();
+    private Set<WorkspaceRole> workspaceRoles = new HashSet<>();
 
     public Workspace addTypo(final Typo typo) {
         typos.add(typo);
@@ -80,10 +78,9 @@ public class Workspace extends AbstractAuditingEntity implements Identifiable<Lo
         return this;
     }
 
-    public Workspace addAccount(final Account account, AccountRole role) {
-        final var workspaceRoleId = new WorkspaceRoleId(this.getId(), account.getId());
-        final var workspaceRole = new WorkspaceRole(workspaceRoleId, role, this, account);
-        accounts.add(workspaceRole);
+    public Workspace addWorkspaceRole(WorkspaceRole workspaceRole) {
+        workspaceRole.setWorkspace(this);
+        workspaceRoles.add(workspaceRole);
         return this;
     }
 
