@@ -1,0 +1,10 @@
+workspace_role:
+  - account_id: 101
+    workspace_id: 101
+    role: ROLE_CORRECTOR
+  - account_id: 102
+    workspace_id: 102
+    role: ROLE_ANONYMOUS
+  - account_id: 103
+    workspace_id: 103
+    role: ROLE_ADMIN

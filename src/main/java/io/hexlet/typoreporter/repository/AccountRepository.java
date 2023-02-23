@@ -20,6 +20,7 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
 
     Optional<Account> findAccountByEmail(String email);
 
+    @EntityGraph(attributePaths = {"workspaces"})
     Optional<Account> findAccountByUsername(String username);
 
     Optional<SecuredAccount> findSecuredAccountByUsername(String username);

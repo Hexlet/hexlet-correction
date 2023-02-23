@@ -43,7 +43,7 @@ public class AccountController {
             return ERROR_GENERAL_TEMPLATE;
         }
 
-        model.addAttribute("workspaceInfoList", workspaceInfoList);
+        model.addAttribute("workspaceRoleInfoList", workspaceInfoList);
         model.addAttribute("accInfo", accountInfo.get());
 
         return ACC_INFO_TEMPLATE;
