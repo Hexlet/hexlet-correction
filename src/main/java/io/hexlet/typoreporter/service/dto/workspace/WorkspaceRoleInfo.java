@@ -6,7 +6,7 @@ public record WorkspaceRoleInfo (
     Long workspaceId,
     String workspaceName,
     String workspaceDescription,
-    String accountId,
+    Long accountId,
     String accountName,
     String roleName
 ) {
