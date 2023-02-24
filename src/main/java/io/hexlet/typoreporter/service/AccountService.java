@@ -5,6 +5,7 @@ import io.hexlet.typoreporter.domain.account.AuthProvider;
 import io.hexlet.typoreporter.domain.workspace.Workspace;
 import io.hexlet.typoreporter.domain.workspace.WorkspaceRole;
 import io.hexlet.typoreporter.repository.AccountRepository;
+import io.hexlet.typoreporter.repository.WorkspaceRoleRepository;
 import io.hexlet.typoreporter.service.dto.account.InfoAccount;
 import io.hexlet.typoreporter.service.dto.account.SignupAccount;
 import io.hexlet.typoreporter.service.dto.account.UpdatePassword;
@@ -36,11 +37,11 @@ public class AccountService implements SignUpAccount, QueryAccount {
 
     private final AccountMapper accountMapper;
 
-    private final WorkspaceMapper workspaceMapper;
-
     private final WorkspaceRoleMapper workspaceRoleMapper;
 
     private final PasswordEncoder passwordEncoder;
+
+    private final WorkspaceRoleRepository workspaceRoleRepository;
 
     @Transactional(readOnly = true)
     public boolean existsByUsername(String username) {
@@ -81,9 +82,13 @@ public class AccountService implements SignUpAccount, QueryAccount {
     public List<WorkspaceRoleInfo> getWorkspacesInfoListByUsername(final String name) {
         final var sourceAccount = accountRepository.findAccountByUsername(name);
 
+
+
         List<WorkspaceRoleInfo> workspaceRoleInfoList = new ArrayList<>();
         if (sourceAccount.isPresent()) {
-            for (WorkspaceRole workspaceRole : sourceAccount.get().getWorkspaces()) {
+            List<WorkspaceRole> workspaceRoleList = workspaceRoleRepository.getWorkspaceRolesByAccountId(sourceAccount.get().getId());
+
+            for (WorkspaceRole workspaceRole : workspaceRoleList) {
                 workspaceRoleInfoList.add(workspaceRoleMapper.toWorkspaceRoleInfo(workspaceRole));
             }
         }

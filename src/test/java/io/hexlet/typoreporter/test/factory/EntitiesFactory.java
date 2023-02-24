@@ -34,6 +34,18 @@ public class EntitiesFactory {
 
     public static final String ACCOUNT_103_USERNAME = "test3";
 
+    public static final Long ACCOUNT_101_ID = 101L;
+
+    public static final Long ACCOUNT_102_ID = 102L;
+
+    public static final Long ACCOUNT_103_ID = 103L;
+
+    public static final Long WORKSPACE_101_ID = 101L;
+
+    public static final Long WORKSPACE_102_ID = 102L;
+
+    public static final Long WORKSPACE_103_ID = 103L;
+
     public static Stream<String> getWorkspaceNamesExist() {
         return Stream.of(WORKSPACE_101_NAME, WORKSPACE_102_NAME, WORKSPACE_103_NAME);
     }
@@ -155,5 +167,13 @@ public class EntitiesFactory {
 
     public static Stream<String> getAccountUsernameExist() {
         return Stream.of(ACCOUNT_101_USERNAME, ACCOUNT_102_USERNAME, ACCOUNT_103_USERNAME);
+    }
+
+    public static Stream<Long> getAccountsIdExist() {
+        return Stream.of(ACCOUNT_101_ID, ACCOUNT_102_ID, ACCOUNT_103_ID);
+    }
+
+    public static Stream<Long> getWorkspacesIdExist() {
+        return Stream.of(WORKSPACE_101_ID, WORKSPACE_102_ID, WORKSPACE_103_ID);
     }
 }
