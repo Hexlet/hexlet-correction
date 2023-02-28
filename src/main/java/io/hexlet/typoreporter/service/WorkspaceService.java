@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 import static java.util.Objects.requireNonNull;
@@ -35,6 +36,18 @@ public class WorkspaceService {
     public List<WorkspaceInfo> getAllWorkspacesInfo() {
         return repository.findAll()
             .stream()
+            .map(workspaceMapper::toWorkspaceInfo)
+            .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<WorkspaceInfo> getWorkspacesInfoForAccountName(String name) {
+        Set<WorkspaceRole> roles = accountRepository.findAccountByUsername(name).orElseThrow().getWorkspaceRoles();
+        return repository.findAll()
+            .stream()
+            .filter(wks -> wks.getWorkspaceRoles().stream()
+                .anyMatch(roles::contains)
+            )
             .map(workspaceMapper::toWorkspaceInfo)
             .toList();
     }

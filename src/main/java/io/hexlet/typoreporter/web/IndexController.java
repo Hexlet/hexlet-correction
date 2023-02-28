@@ -3,6 +3,7 @@ package io.hexlet.typoreporter.web;
 import io.hexlet.typoreporter.domain.account.Account;
 import io.hexlet.typoreporter.service.WorkspaceService;
 import io.hexlet.typoreporter.service.dto.workspace.CreateWorkspace;
+import io.hexlet.typoreporter.service.dto.workspace.WorkspaceInfo;
 import io.hexlet.typoreporter.web.exception.WorkspaceAlreadyExistException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.validation.Valid;
 
 import java.security.Principal;
+import java.util.List;
+import java.util.Set;
 
 import static io.hexlet.typoreporter.web.Routers.CREATE;
 import static io.hexlet.typoreporter.web.Routers.REDIRECT_ROOT;
@@ -31,9 +34,12 @@ public class IndexController {
     private final WorkspaceService workspaceService;
 
     @GetMapping("/workspaces")
-    public String index(final Model model) {
-        final var wksInfoList = workspaceService.getAllWorkspacesInfo();
-        model.addAttribute("wksInfoList", wksInfoList);
+    public String index(final Principal principal, final Model model) {
+        if (principal != null) {
+            String name = principal.getName();
+            final List<WorkspaceInfo> wksInfoList = workspaceService.getWorkspacesInfoForAccountName(name);
+            model.addAttribute("wksInfoList", wksInfoList);
+        }
         return "workspaces";
     }
 
