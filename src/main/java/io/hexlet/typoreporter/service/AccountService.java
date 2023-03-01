@@ -2,31 +2,25 @@ package io.hexlet.typoreporter.service;
 
 import io.hexlet.typoreporter.domain.account.Account;
 import io.hexlet.typoreporter.domain.account.AuthProvider;
-import io.hexlet.typoreporter.domain.workspace.Workspace;
-import io.hexlet.typoreporter.domain.workspace.WorkspaceRole;
 import io.hexlet.typoreporter.repository.AccountRepository;
 import io.hexlet.typoreporter.repository.WorkspaceRoleRepository;
 import io.hexlet.typoreporter.service.dto.account.InfoAccount;
 import io.hexlet.typoreporter.service.dto.account.SignupAccount;
 import io.hexlet.typoreporter.service.dto.account.UpdatePassword;
 import io.hexlet.typoreporter.service.dto.account.UpdateProfile;
-import io.hexlet.typoreporter.service.dto.workspace.WorkspaceInfo;
 import io.hexlet.typoreporter.service.dto.workspace.WorkspaceRoleInfo;
 import io.hexlet.typoreporter.service.mapper.AccountMapper;
-import io.hexlet.typoreporter.service.mapper.WorkspaceMapper;
 import io.hexlet.typoreporter.service.mapper.WorkspaceRoleMapper;
+import io.hexlet.typoreporter.web.exception.AccountAlreadyExistException;
 import io.hexlet.typoreporter.web.exception.NewPasswordTheSameException;
 import io.hexlet.typoreporter.web.exception.OldPasswordWrongException;
-import io.hexlet.typoreporter.web.exception.AccountAlreadyExistException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 @Transactional
@@ -79,21 +73,10 @@ public class AccountService implements SignUpAccount, QueryAccount {
     }
 
     @Transactional(readOnly = true)
-    public List<WorkspaceRoleInfo> getWorkspacesInfoListByUsername(final String name) {
-        final var sourceAccount = accountRepository.findAccountByUsername(name);
-
-
-
-        List<WorkspaceRoleInfo> workspaceRoleInfoList = new ArrayList<>();
-        if (sourceAccount.isPresent()) {
-            List<WorkspaceRole> workspaceRoleList = workspaceRoleRepository.getWorkspaceRolesByAccountId(sourceAccount.get().getId());
-
-            for (WorkspaceRole workspaceRole : workspaceRoleList) {
-                workspaceRoleInfoList.add(workspaceRoleMapper.toWorkspaceRoleInfo(workspaceRole));
-            }
-        }
-
-        return workspaceRoleInfoList;
+    public List<WorkspaceRoleInfo> getWorkspacesInfoListByUsername(final String username) {
+        return workspaceRoleRepository.getWorkspaceRolesByAccountUsername(username).stream()
+            .map(workspaceRoleMapper::toWorkspaceRoleInfo)
+            .toList();
     }
 
     @Transactional(readOnly = true)

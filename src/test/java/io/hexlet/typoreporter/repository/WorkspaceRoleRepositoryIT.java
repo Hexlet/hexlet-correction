@@ -59,6 +59,15 @@ public class WorkspaceRoleRepositoryIT {
     }
 
     @ParameterizedTest
+    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getAccountUsernameExist")
+    void getWorkspaceRolesByAccountIdIsSuccessful(final String username) {
+        List<WorkspaceRole> workspaceRoles = workspaceRoleRepository.getWorkspaceRolesByAccountUsername(username);
+
+        assertThat(workspaceRoles).isNotEmpty();
+        assertThat(workspaceRoles.get(0).getAccount().getUsername()).isEqualTo(username);
+    }
+
+    @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspacesIdExist")
     void getWorkspaceRolesByWorkspaceIdIsSuccessful(final Long workspaceId) {
         List<WorkspaceRole> workspaceRoles = workspaceRoleRepository.getWorkspaceRolesByWorkspaceId(workspaceId);

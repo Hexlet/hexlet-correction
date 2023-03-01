@@ -32,19 +32,17 @@ public class AccountController {
     private final AccountService accountService;
 
     @GetMapping
-    public String getAccountInfoPage(final Model model,
-                                     final Authentication authentication) {
-        final String name = authentication.getName();
-        final var accountInfo = accountService.getInfoAccount(name);
-        final var workspaceInfoList =  accountService.getWorkspacesInfoListByUsername(name);
-
-        if (accountInfo.isEmpty()) {
+    public String getAccountInfoPage(final Model model, final Authentication authentication) {
+        final var maybeAccInfo = accountService.getInfoAccount(authentication.getName());
+        if (maybeAccInfo.isEmpty()) {
             log.error("Error during getting account info page. Account info not found");
             return ERROR_GENERAL_TEMPLATE;
         }
+        final var accInfo = maybeAccInfo.get();
+        final var workspaceInfoList =  accountService.getWorkspacesInfoListByUsername(accInfo.username());
 
         model.addAttribute("workspaceRoleInfoList", workspaceInfoList);
-        model.addAttribute("accInfo", accountInfo.get());
+        model.addAttribute("accInfo", accInfo);
 
         return ACC_INFO_TEMPLATE;
     }

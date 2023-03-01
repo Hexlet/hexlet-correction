@@ -9,10 +9,10 @@ import org.mapstruct.Mapping;
 public interface WorkspaceRoleMapper {
 
     @Mapping(target = "workspaceId", source = "workspace.id")
+    @Mapping(target = "accountId", source = "account.id")
+    @Mapping(target = "workspaceUrl", source = "workspace.url")
     @Mapping(target = "workspaceDescription", source = "workspace.description")
     @Mapping(target = "workspaceName", source = "workspace.name")
-    @Mapping(target = "accountId", source = "account.id")
-    @Mapping(target = "accountName", source = "account.username")
-    @Mapping(target = "roleName", source = "role")
+    @Mapping(target = "username", source = "account.username")
     WorkspaceRoleInfo toWorkspaceRoleInfo(WorkspaceRole source);
 }

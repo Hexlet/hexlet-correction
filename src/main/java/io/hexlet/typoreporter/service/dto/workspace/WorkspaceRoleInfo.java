@@ -1,13 +1,14 @@
 package io.hexlet.typoreporter.service.dto.workspace;
 
-import io.hexlet.typoreporter.domain.workspace.Workspace;
+import io.hexlet.typoreporter.domain.workspace.AccountRole;
 
 public record WorkspaceRoleInfo (
     Long workspaceId,
-    String workspaceName,
-    String workspaceDescription,
     Long accountId,
-    String accountName,
-    String roleName
+    String workspaceName,
+    String workspaceUrl,
+    String workspaceDescription,
+    String username,
+    AccountRole role
 ) {
 }
