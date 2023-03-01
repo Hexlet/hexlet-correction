@@ -37,17 +37,19 @@
         <thead>
         <tr>
             <th class="col-1">Workspace name</th>
+            <th class="col-1">Workspace URL</th>
             <th class="col-1">Workspace description</th>
-            <th class="col-1">Account name</th>
+            <th class="col-1">Username</th>
             <th class="col-1">Role</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="workspaceRoleInfo : ${workspaceRoleInfoList}" th:object="${workspaceRoleInfo}">
             <td th:text="*{workspaceName}"></td>
+            <td th:text="*{workspaceUrl}"></td>
             <td th:text="*{workspaceDescription}"></td>
-            <td th:text="*{accountName}"></td>
-            <td th:text="*{roleName}"></td>
+            <td th:text="*{username}"></td>
+            <td th:text="*{role}"></td>
         </tr>
         </tbody>
     </table>

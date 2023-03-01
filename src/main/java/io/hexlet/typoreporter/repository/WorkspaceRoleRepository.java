@@ -9,9 +9,13 @@ import java.util.List;
 
 @Repository
 public interface WorkspaceRoleRepository extends JpaRepository<WorkspaceRole, Long> {
-    @EntityGraph(attributePaths = {"account"})
+
+    @EntityGraph(attributePaths = {"account", "workspace"})
     List<WorkspaceRole> getWorkspaceRolesByAccountId(Long accountId);
 
-    @EntityGraph(attributePaths = {"workspace"})
-    List<WorkspaceRole> getWorkspaceRolesByWorkspaceId(Long accountId);
+    @EntityGraph(attributePaths = {"account", "workspace"})
+    List<WorkspaceRole> getWorkspaceRolesByAccountUsername(String username);
+
+    @EntityGraph(attributePaths = {"account", "workspace"})
+    List<WorkspaceRole> getWorkspaceRolesByWorkspaceId(Long workspaceId);
 }
