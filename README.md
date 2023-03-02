@@ -2,7 +2,7 @@
 
 A service to notify site owners of errors and typos. After integrating with the site, visitors are able to highlight an error or typo and report it to the administrator. The project works in Java.
 
-Tasks can be discussed in the #hexlet-volunteers channel in the [Slack community](https://slack-ru.hexlet.io/).
+Tasks can be discussed in the [Telegram community](https://t.me/hexletcommunity/12).
 
 ## Development
 
