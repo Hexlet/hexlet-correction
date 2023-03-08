@@ -9,6 +9,7 @@ import io.hexlet.typoreporter.domain.typo.Typo;
 import io.hexlet.typoreporter.domain.workspace.AccountRole;
 import io.hexlet.typoreporter.domain.workspace.Workspace;
 import io.hexlet.typoreporter.domain.workspace.WorkspaceRoleId;
+import io.hexlet.typoreporter.domain.workspacesettings.WorkspaceSettings;
 import io.hexlet.typoreporter.repository.AccountRepository;
 import io.hexlet.typoreporter.repository.WorkspaceRepository;
 import io.hexlet.typoreporter.service.WorkspaceService;
@@ -192,7 +193,9 @@ class WorkspaceControllerIT {
 
         var createWks = new CreateWorkspace(newWksName, wksDescription, wksUrl);
         final var wksToCreate = requireNonNull(workspaceMapper.toWorkspace(createWks));
-        wksToCreate.setApiAccessToken(UUID.randomUUID());
+        final var wksSettings = new WorkspaceSettings();
+        wksSettings.setWorkspace(wksToCreate);
+        wksSettings.setApiAccessToken(UUID.randomUUID());
         workspaceRepository.save(wksToCreate);
 
         assertThat(repository.existsWorkspaceByName(newWksName)).isTrue();

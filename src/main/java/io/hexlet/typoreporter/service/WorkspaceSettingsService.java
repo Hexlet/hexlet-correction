@@ -1,6 +1,8 @@
 package io.hexlet.typoreporter.service;
 
+import io.hexlet.typoreporter.domain.workspacesettings.WorkspaceSettings;
 import io.hexlet.typoreporter.repository.WorkspaceSettingsRepository;
+import io.hexlet.typoreporter.web.exception.WorkspaceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,14 +16,20 @@ public class WorkspaceSettingsService {
     private final WorkspaceSettingsRepository repository;
 
     @Transactional(readOnly = true)
-    public Optional<UUID> getWorkspaceApiAccessTokenByName(String wksName) {
-        return repository.getApiAccessTokenByWorkspaceName(wksName);
+    public UUID getWorkspaceApiAccessTokenByName(String wksName) {
+        return repository.getWorkspaceSettingsByWorkspaceName(wksName)
+            .map(WorkspaceSettings::getApiAccessToken)
+            .orElseThrow(() -> new WorkspaceNotFoundException(wksName));
     }
 
     @Transactional
-    public Optional<UUID> regenerateWorkspaceApiAccessTokenByName(String wksName) {
-        final var newToken = UUID.randomUUID();
-        final var numberRowAffected = repository.updateApiAccessTokenByWorkspaceName(wksName, newToken);
-        return numberRowAffected == 0 ? Optional.empty() : Optional.of(newToken);
+    public void regenerateWorkspaceApiAccessTokenByName(String wksName) {
+        final var maybeWksSettings = repository.getWorkspaceSettingsByWorkspaceName(wksName);
+        if (maybeWksSettings.isEmpty()) {
+            throw new WorkspaceNotFoundException(wksName);
+        }
+        final var wksSettings = maybeWksSettings.get();
+        wksSettings.setApiAccessToken(UUID.randomUUID());
+        repository.save(wksSettings);
     }
 }

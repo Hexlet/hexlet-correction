@@ -30,14 +30,14 @@
             <column name="api_access_token" type="UUID">
                 <constraints nullable="false"/>
             </column>
-            <column name="workspace_id" type="BIGINT"/>
         </createTable>
     </changeSet>
-
     <changeSet id="2022-12-08-create-workspace-settings-table-3" author="nikita">
-        <addForeignKeyConstraint baseColumnNames="workspace_id" baseTableName="workspace_settings"
+        <addForeignKeyConstraint baseColumnNames="id" baseTableName="workspace_settings"
                                  constraintName="fk_workspace_settings_on_workspace" referencedColumnNames="id"
                                  referencedTableName="workspace"/>
     </changeSet>
-
+    <changeSet id="2022-12-08-create-workspace-settings-table-3" author="kacetal">
+        <dropColumn tableName="workspace" columnName="api_access_token" />
+    </changeSet>
 </databaseChangeLog>

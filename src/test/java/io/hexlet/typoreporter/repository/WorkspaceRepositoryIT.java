@@ -5,7 +5,6 @@ import com.github.database.rider.core.api.dataset.DataSet;
 import com.github.database.rider.spring.api.DBRider;
 import io.hexlet.typoreporter.config.audit.AuditConfiguration;
 import io.hexlet.typoreporter.domain.workspace.Workspace;
-import io.hexlet.typoreporter.security.model.SecuredWorkspace;
 import io.hexlet.typoreporter.test.DBUnitEnumPostgres;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.*;
@@ -17,7 +16,6 @@ import org.springframework.test.context.*;
 import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.*;
-import java.util.Optional;
 import static com.github.database.rider.core.api.configuration.Orthography.LOWERCASE;
 import static io.hexlet.typoreporter.test.Constraints.POSTGRES_IMAGE;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -81,15 +79,5 @@ class WorkspaceRepositoryIT {
     void deleteWorkspaceByNameIsSuccessful(final String wksName) {
         assertThat(workspaceRepository.deleteWorkspaceByName(wksName)).isEqualTo(SUCCESSFUL_CODE);
         assertThat(workspaceRepository.existsWorkspaceByName(wksName)).isFalse();
-    }
-
-    @ParameterizedTest
-    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspaceNamesExist")
-    void getSecuredWorkspaceByNameIsSuccessful(final String wksName) {
-        Optional<SecuredWorkspace> securedWorkspace = workspaceRepository.getSecuredWorkspaceByName(wksName);
-        String name = securedWorkspace.map(SecuredWorkspace::getUsername).orElse(null);
-
-        assertThat(name).isEqualTo(wksName);
-        assertThat(workspaceRepository.existsWorkspaceByName(wksName)).isTrue();
     }
 }

@@ -45,15 +45,16 @@ public class WorkspaceSettingsServiceIT {
     @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspaceNamesExist")
     void getWorkspaceApiAccessTokenByNameIsSuccessful(final String wksName) {
-        UUID uuid = service.getWorkspaceApiAccessTokenByName(wksName).orElse(null);
+        UUID uuid = service.getWorkspaceApiAccessTokenByName(wksName);
         assertThat(uuid != null).isTrue();
     }
 
     @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspaceNamesExist")
     void regenerateWorkspaceApiAccessTokenByNameIsSuccessful(final String wksName) {
-        UUID previousUuid = service.getWorkspaceApiAccessTokenByName(wksName).orElse(null);
-        UUID newUuid = service.regenerateWorkspaceApiAccessTokenByName(wksName).orElse(null);
+        UUID previousUuid = service.getWorkspaceApiAccessTokenByName(wksName);
+        service.regenerateWorkspaceApiAccessTokenByName(wksName);
+        UUID newUuid = service.getWorkspaceApiAccessTokenByName(wksName);
         assertThat(previousUuid).isNotEqualTo(newUuid);
     }
 }

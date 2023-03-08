@@ -18,8 +18,8 @@
                  th:insert="fragments/workspace :: wksLastTypoDate (${lastTypoCreatedDateAgo}, ${lastTypoCreatedDate})"></div>
             <div class="row row-cols-1 row-cols-md-2 g-4">
                 <div class="col">
-                    <form th:action="@{'/workspace/' + ${wksName} + '/update'}" th:method="put"
-                          th:object="${createWorkspace}">
+                    <form th:action="@{'/workspace/' + ${wksName} + '/update'}" th:method="put" th:object="${createWorkspace}">
+                        <input hidden="hidden" th:field="*{url}">
                         <div class="form-floating mb-3">
                             <input class="form-control" id="inputWksName" placeholder="p"
                                    th:classappend="${!#fields.hasErrors('name') && formModified ? 'is-valid' : ''}"
@@ -27,8 +27,7 @@
                                    th:field="*{name}"
                                    type="text">
                             <label for="inputWksName">Workspace Name</label>
-                            <div class="invalid-feedback" th:each="err : ${#fields.errors('name')}"
-                                 th:text="${err}"></div>
+                            <div class="invalid-feedback" th:each="err : ${#fields.errors('name')}" th:text="${err}"></div>
                         </div>
                         <div class="form-floating mb-3">
                             <textarea class="form-control" id="inWksDesc" placeholder="p" style="height: 100px"
@@ -36,8 +35,7 @@
                                       th:errorclass="is-invalid"
                                       th:field="*{description}"></textarea>
                             <label for="inWksDesc">Workspace Description</label>
-                            <div class="invalid-feedback" th:each="err : ${#fields.errors('description')}"
-                                 th:text="${err}"></div>
+                            <div class="invalid-feedback" th:each="err : ${#fields.errors('description')}" th:text="${err}"></div>
                         </div>
                         <button class="btn btn-primary" type="submit">Create</button>
                         <a class="btn btn-secondary" th:href="@{'/workspace/' + ${wksName}}">Close</a>

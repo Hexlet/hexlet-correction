@@ -56,10 +56,6 @@ public class Workspace extends AbstractAuditingEntity implements Identifiable<Lo
     @ToString.Exclude
     private Set<WorkspaceRole> workspaceRoles = new HashSet<>();
 
-    @OneToOne(mappedBy = "workspace", cascade = CascadeType.ALL, orphanRemoval = true)
-    @ToString.Exclude
-    private WorkspaceSettings workspaceSettings;
-
     public Workspace addTypo(final Typo typo) {
         typos.add(typo);
         typo.setWorkspace(this);
@@ -75,18 +71,6 @@ public class Workspace extends AbstractAuditingEntity implements Identifiable<Lo
     public Workspace addWorkspaceRole(WorkspaceRole workspaceRole) {
         workspaceRole.setWorkspace(this);
         workspaceRoles.add(workspaceRole);
-        return this;
-    }
-
-    public Workspace addWorkspaceSettings(final WorkspaceSettings workspaceSettings) {
-        this.workspaceSettings = workspaceSettings;
-        workspaceSettings.setWorkspace(this);
-        return this;
-    }
-
-    public Workspace removeWorkspaceSettings(final WorkspaceSettings workspaceSettings) {
-        if (workspaceSettings != null) workspaceSettings.setWorkspace(null);
-        this.workspaceSettings = null;
         return this;
     }
 

@@ -11,10 +11,5 @@ import java.util.UUID;
 @Repository
 public interface WorkspaceSettingsRepository extends JpaRepository<WorkspaceSettings, Long> {
 
-    @Modifying
-    @Query("update WorkspaceSettings set apiAccessToken = :token where workspace.id in (select id from Workspace where name = :wksName)")
-    Integer updateApiAccessTokenByWorkspaceName(String wksName, UUID token);
-
-    @Query("select apiAccessToken from WorkspaceSettings where workspace.id in (select id from Workspace where name = :wksName)")
-    Optional<UUID> getApiAccessTokenByWorkspaceName(String wksName);
+    Optional<WorkspaceSettings> getWorkspaceSettingsByWorkspaceName(String wksName);
 }
