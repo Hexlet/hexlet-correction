@@ -1,10 +1,11 @@
 package io.hexlet.typoreporter.service.dto;
 
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 import org.springframework.beans.PropertyAccessorFactory;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
 import java.util.Objects;
+
 import static java.text.MessageFormat.format;
 
 public class FieldMatchValidator implements ConstraintValidator<FieldMatch, Object> {

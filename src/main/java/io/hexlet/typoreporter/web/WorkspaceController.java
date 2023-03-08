@@ -13,10 +13,13 @@ import io.hexlet.typoreporter.service.dto.workspace.CreateWorkspace;
 import io.hexlet.typoreporter.web.exception.AccountNotFoundException;
 import io.hexlet.typoreporter.web.exception.WorkspaceAlreadyExistException;
 import io.hexlet.typoreporter.web.exception.WorkspaceNotFoundException;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
 import org.ocpsoft.prettytime.PrettyTime;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.SortDefault;
@@ -27,39 +30,26 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import javax.validation.Valid;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.TreeSet;
-import static io.hexlet.typoreporter.web.Routers.DEFAULT_SORT_FIELD;
-import static io.hexlet.typoreporter.web.Routers.REDIRECT_ROOT;
-import static io.hexlet.typoreporter.web.Routers.Typo.TYPOS;
-import static io.hexlet.typoreporter.web.Routers.UPDATE;
-import static io.hexlet.typoreporter.web.Routers.USERS;
-import static io.hexlet.typoreporter.web.Routers.Workspace.REDIRECT_WKS_ROOT;
-import static io.hexlet.typoreporter.web.Routers.Workspace.WKS_NAME_PATH;
-import static io.hexlet.typoreporter.web.Routers.Workspace.WORKSPACE;
-import static io.hexlet.typoreporter.web.Templates.WKS_INFO_TEMPLATE;
-import static io.hexlet.typoreporter.web.Templates.WKS_TYPOS_TEMPLATE;
-import static io.hexlet.typoreporter.web.Templates.WKS_UPDATE_TEMPLATE;
-import static io.hexlet.typoreporter.web.Templates.WKS_USERS_TEMPLATE;
-import java.util.ArrayList;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
+
 import static org.springframework.data.domain.Sort.Direction.ASC;
 import static org.springframework.data.domain.Sort.Direction.DESC;
 import static org.springframework.data.domain.Sort.Order.asc;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import static io.hexlet.typoreporter.web.Routers.Workspace.REDIRECT_WKS_USER;
 
 @Slf4j
 @Controller
-@RequestMapping(WORKSPACE + WKS_NAME_PATH)
+@RequestMapping("/workspace")
 @RequiredArgsConstructor
 public class WorkspaceController {
 
@@ -75,31 +65,58 @@ public class WorkspaceController {
 
     private final WorkspaceRoleService workspaceRoleService;
 
-    @GetMapping
+    @GetMapping("/create")
+    public String getCreateWorkspacePage(final Model model) {
+        model.addAttribute("createWorkspace", new CreateWorkspace("", "", ""));
+        model.addAttribute("formModified", false);
+        return "create-workspace";
+    }
+
+    @PostMapping("/create")
+    public String postCreateWorkspacePage(final Model model,
+                                          Principal principal,
+                                          @Valid @ModelAttribute CreateWorkspace createWorkspace,
+                                          BindingResult bindingResult) {
+        String userName = principal.getName();
+        model.addAttribute("formModified", true);
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("createWorkspace", createWorkspace);
+            return "create-workspace";
+        }
+        try {
+            workspaceService.createWorkspace(createWorkspace, userName);
+        } catch (WorkspaceAlreadyExistException e) {
+            bindingResult.addError(e.toFieldError("createWorkspace"));
+            return "create-workspace";
+        }
+        return "redirect:/workspaces";
+    }
+
+    @GetMapping("/{wksName}")
     public String getWorkspaceInfoPage(Model model, @PathVariable String wksName) {
         var wksOptional = workspaceService.getWorkspaceInfoByName(wksName);
         if (wksOptional.isEmpty()) {
             //TODO send to error page
             log.error("Workspace with name {} not found", wksName);
-            return REDIRECT_ROOT;
+            return "redirect:/workspaces";
         }
         model.addAttribute("wksInfo", wksOptional.get());
         model.addAttribute("wksName", wksName);
 
         getStatisticDataToModel(model, wksName);
         getLastTypoDataToModel(model, wksName);
-        return WKS_INFO_TEMPLATE;
+        return "workspace/wks-info";
     }
 
-    @GetMapping(TYPOS)
+    @GetMapping("/{wksName}/typos")
     public String getWorkspaceTyposPage(Model model,
                                         @PathVariable String wksName,
-                                        @SortDefault(DEFAULT_SORT_FIELD) Pageable pageable) {
+                                        @SortDefault("createdDate") Pageable pageable) {
         var wksOptional = workspaceService.getWorkspaceInfoByName(wksName);
         if (wksOptional.isEmpty()) {
             //TODO send error page
             log.error("Workspace with name {} not found", wksName);
-            return REDIRECT_ROOT;
+            return "redirect:/workspaces";
         }
         model.addAttribute("wksName", wksName);
         model.addAttribute("wksInfo", wksOptional.get());
@@ -113,7 +130,7 @@ public class WorkspaceController {
         var sort = typoPage.getSort()
             .stream()
             .findFirst()
-            .orElseGet(() -> asc(DEFAULT_SORT_FIELD));
+            .orElseGet(() -> asc("createdDate"));
 
         model.addAttribute("typoPage", typoPage);
         model.addAttribute("availableSizes", availableSizes);
@@ -121,16 +138,16 @@ public class WorkspaceController {
         model.addAttribute("sortDir", sort.getDirection());
         model.addAttribute("DESC", DESC);
         model.addAttribute("ASC", ASC);
-        return WKS_TYPOS_TEMPLATE;
+        return "workspace/wks-typos";
     }
 
-    @GetMapping(UPDATE)
+    @GetMapping("/{wksName}/update")
     public String getWorkspaceUpdatePage(Model model, @PathVariable String wksName) {
         var wksOptional = workspaceService.getWorkspaceInfoByName(wksName);
         if (wksOptional.isEmpty()) {
             //TODO send to error page
             log.error("Workspace with name {} not found", wksName);
-            return REDIRECT_ROOT;
+            return "redirect:/workspaces";
         }
         final var wksUpdate = wksOptional
             .map(wksInfo -> new CreateWorkspace(wksInfo.name(), wksInfo.description(), wksInfo.url()))
@@ -140,11 +157,11 @@ public class WorkspaceController {
         model.addAttribute("formModified", false);
         getStatisticDataToModel(model, wksName);
         getLastTypoDataToModel(model, wksName);
-        return WKS_UPDATE_TEMPLATE;
+        return "workspace/wks-update";
     }
 
     //TODO add tests
-    @PutMapping(UPDATE)
+    @PutMapping("/{wksName}/update")
     public String putWorkspaceUpdate(Model model,
                                      @PathVariable String wksName,
                                      @Valid @ModelAttribute CreateWorkspace wksUpdate,
@@ -162,47 +179,35 @@ public class WorkspaceController {
             if (workspaceService.updateWorkspace(wksUpdate, wksName).isEmpty()) {
                 //TODO send to error page
                 log.error("Workspace with name {} not found", wksName);
-                return REDIRECT_ROOT;
+                return "redirect:/workspaces";
             }
         } catch (WorkspaceAlreadyExistException e) {
             bindingResult.addError(e.toFieldError("createWorkspace"));
-            return WKS_UPDATE_TEMPLATE;
+            return "workspace/wks-update";
         }
-        return REDIRECT_WKS_ROOT + wksUpdate.name();
+        return ("redirect:/workspace/") + wksUpdate.name();
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{wksName}")
     public String deleteWorkspaceByName(@PathVariable String wksName) {
         if (workspaceService.deleteWorkspaceByName(wksName) == 0) {
             //TODO send to error page
             final var e = new WorkspaceNotFoundException(wksName);
             log.error(e.toString(), e);
         }
-        return REDIRECT_ROOT;
+        return "redirect:/workspaces";
     }
 
-    private void getStatisticDataToModel(final Model model, final String wksName) {
-        final var countTypoByStatus = typoService.getCountTypoByStatusForWorkspaceName(wksName);
-        model.addAttribute("countTypoByStatus", countTypoByStatus);
-        model.addAttribute("sumTypoInWks", countTypoByStatus.stream().mapToLong(Pair::getValue).sum());
-    }
-
-    private void getLastTypoDataToModel(final Model model, final String wksName) {
-        final var createdDate = typoService.getLastTypoByWorkspaceName(wksName).map(TypoInfo::createdDate);
-        model.addAttribute("lastTypoCreatedDate", createdDate);
-        model.addAttribute("lastTypoCreatedDateAgo", createdDate.map(new PrettyTime()::format));
-    }
-
-    @GetMapping(USERS)
+    @GetMapping("/{wksName}/users")
     public String getWorkspaceUsersPage(Model model,
                                         @PathVariable String wksName,
-                                        @SortDefault(DEFAULT_SORT_FIELD) Pageable pageable) {
+                                        @SortDefault("createdDate") Pageable pageable) {
 
         var wksOptional = workspaceService.getWorkspaceInfoByName(wksName);
         if (wksOptional.isEmpty()) {
             //TODO send error page
             log.error("Workspace with name {} not found", wksName);
-            return REDIRECT_ROOT;
+            return "redirect:/workspaces";
         }
         model.addAttribute("wksName", wksName);
         model.addAttribute("wksInfo", wksOptional.get());
@@ -213,7 +218,7 @@ public class WorkspaceController {
         if (workspaceOptional.isEmpty()) {
             //TODO send error page
             log.error("Workspace with name {} not found", wksName);
-            return REDIRECT_ROOT;
+            return "redirect:/workspaces";
         }
 
         Set<WorkspaceRole> workspaces = workspaceOptional.get().getWorkspaceRoles();
@@ -231,7 +236,7 @@ public class WorkspaceController {
         var sort = userPage.getSort()
             .stream()
             .findFirst()
-            .orElseGet(() -> asc(DEFAULT_SORT_FIELD));
+            .orElseGet(() -> asc("createdDate"));
 
         List<Account> allAccounts = accountRepository.findAll();
         allAccounts.removeAll(accounts);
@@ -243,20 +248,32 @@ public class WorkspaceController {
         model.addAttribute("sortDir", sort.getDirection());
         model.addAttribute("DESC", DESC);
         model.addAttribute("ASC", ASC);
-        return WKS_USERS_TEMPLATE;
+        return "workspace/wks-users";
     }
 
-    @PostMapping(USERS)
+    @PostMapping("/{wksName}/users")
     public String addUser(@RequestParam String email, @PathVariable String wksName) {
         try {
             workspaceRoleService.addAccountToWorkspace(wksName, email);
-            return REDIRECT_WKS_USER;
+            return "redirect:/workspace/{wksName}/users/";
         } catch (WorkspaceNotFoundException e) {
             log.error("Workspace with name {} not found", wksName);
-            return REDIRECT_ROOT;
+            return "redirect:/workspaces";
         } catch (AccountNotFoundException e) {
             log.error("Account with email {} not found", email);
-            return REDIRECT_WKS_USER;
+            return "redirect:/workspace/{wksName}/users/";
         }
+    }
+
+    private void getStatisticDataToModel(final Model model, final String wksName) {
+        final var countTypoByStatus = typoService.getCountTypoByStatusForWorkspaceName(wksName);
+        model.addAttribute("countTypoByStatus", countTypoByStatus);
+        model.addAttribute("sumTypoInWks", countTypoByStatus.stream().mapToLong(Pair::getValue).sum());
+    }
+
+    private void getLastTypoDataToModel(final Model model, final String wksName) {
+        final var createdDate = typoService.getLastTypoByWorkspaceName(wksName).map(TypoInfo::createdDate);
+        model.addAttribute("lastTypoCreatedDate", createdDate);
+        model.addAttribute("lastTypoCreatedDateAgo", createdDate.map(new PrettyTime()::format));
     }
 }

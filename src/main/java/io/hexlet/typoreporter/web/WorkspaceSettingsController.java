@@ -4,6 +4,7 @@ import io.hexlet.typoreporter.service.TypoService;
 import io.hexlet.typoreporter.service.WorkspaceService;
 import io.hexlet.typoreporter.service.WorkspaceSettingsService;
 import io.hexlet.typoreporter.service.dto.typo.TypoInfo;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
@@ -14,15 +15,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import java.util.UUID;
-import static io.hexlet.typoreporter.web.Routers.REDIRECT_ROOT;
-import static io.hexlet.typoreporter.web.Routers.SETTINGS;
-import static io.hexlet.typoreporter.web.Routers.Workspace.*;
-import static io.hexlet.typoreporter.web.Templates.WKS_SETTINGS_TEMPLATE;
 
 @Slf4j
 @Controller
-@RequestMapping(WORKSPACE + WKS_NAME_PATH)
+@RequestMapping("/workspace/{wksName}")
 @RequiredArgsConstructor
 public class WorkspaceSettingsController {
 
@@ -30,21 +26,23 @@ public class WorkspaceSettingsController {
     private final WorkspaceService workspaceService;
     private final WorkspaceSettingsService workspaceSettingsService;
 
-    @GetMapping(SETTINGS)
-    public String getWorkspaceSettingsPage(Model model, @PathVariable String wksName) {
+    @GetMapping("/settings")
+    public String getWorkspaceSettingsPage(Model model, @PathVariable String wksName, HttpServletRequest req) {
         if (!workspaceService.existsWorkspaceByName(wksName)) {
             //TODO send to error page
             log.error("Workspace with name {} not found", wksName);
-            return REDIRECT_ROOT;
+            return "redirect:/workspaces";
         }
         model.addAttribute("wksName", wksName);
 
         final var wksToken = workspaceSettingsService.getWorkspaceApiAccessTokenByName(wksName);
         model.addAttribute("wksToken", wksToken);
+        final var rootUrl = req.getRequestURL().toString().replace(req.getRequestURI(), "");
+        model.addAttribute("rootUrl", rootUrl);
 
         getStatisticDataToModel(model, wksName);
         getLastTypoDataToModel(model, wksName);
-        return WKS_SETTINGS_TEMPLATE;
+        return "workspace/wks-settings";
     }
 
     @PatchMapping("/token/regenerate")
@@ -52,10 +50,10 @@ public class WorkspaceSettingsController {
         if (!workspaceService.existsWorkspaceByName(wksName)) {
             //TODO send to error page
             log.error("Workspace with name {} not found", wksName);
-            return REDIRECT_ROOT;
+            return "redirect:/workspaces";
         }
         workspaceSettingsService.regenerateWorkspaceApiAccessTokenByName(wksName);
-        return REDIRECT_WKS_ROOT + wksName + SETTINGS;
+        return ("redirect:/workspace/") + wksName + "/settings";
     }
 
     private void getStatisticDataToModel(final Model model, final String wksName) {

@@ -1,10 +1,15 @@
 package io.hexlet.typoreporter.domain.typo.constraint;
 
-import org.hibernate.validator.constraints.*;
+import jakarta.validation.Constraint;
+import jakarta.validation.Payload;
+import jakarta.validation.constraints.Size;
+import org.hibernate.validator.constraints.CompositionType;
+import org.hibernate.validator.constraints.ConstraintComposition;
 
-import javax.validation.*;
-import javax.validation.constraints.Size;
-import java.lang.annotation.*;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 @Size(max = 100)
 @ConstraintComposition(CompositionType.OR)

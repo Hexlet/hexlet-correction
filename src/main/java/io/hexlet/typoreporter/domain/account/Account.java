@@ -6,37 +6,35 @@ import io.hexlet.typoreporter.domain.AbstractAuditingEntity;
 import io.hexlet.typoreporter.domain.Identifiable;
 import io.hexlet.typoreporter.domain.account.constraint.AccountUsername;
 import io.hexlet.typoreporter.domain.typo.Typo;
-import io.hexlet.typoreporter.domain.workspace.Workspace;
 import io.hexlet.typoreporter.domain.workspace.WorkspaceRole;
+import io.hypersistence.utils.hibernate.type.basic.PostgreSQLEnumType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static javax.persistence.CascadeType.ALL;
+import static jakarta.persistence.CascadeType.ALL;
+
 
 @Getter
 @Setter
@@ -44,7 +42,6 @@ import static javax.persistence.CascadeType.ALL;
 @NoArgsConstructor
 @Accessors(chain = true)
 @Entity
-@TypeDef(name = "pgsql_auth_provider_enum", typeClass = AuthProviderPgEnum.class)
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Account extends AbstractAuditingEntity implements Identifiable<Long> {
 
@@ -60,8 +57,8 @@ public class Account extends AbstractAuditingEntity implements Identifiable<Long
 
     @NotNull
     @Enumerated(EnumType.STRING)
-    @Type(type = "pgsql_auth_provider_enum")
     @Column(columnDefinition = "AUTH_PROVIDER")
+    @Type(PostgreSQLEnumType.class)
     private AuthProvider authProvider;
 
     @Email

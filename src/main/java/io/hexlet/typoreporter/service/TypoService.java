@@ -1,18 +1,26 @@
 package io.hexlet.typoreporter.service;
 
-import io.hexlet.typoreporter.domain.typo.*;
+import io.hexlet.typoreporter.domain.typo.Typo;
+import io.hexlet.typoreporter.domain.typo.TypoEvent;
+import io.hexlet.typoreporter.domain.typo.TypoStatus;
 import io.hexlet.typoreporter.repository.TypoRepository;
-import io.hexlet.typoreporter.service.dto.typo.*;
+import io.hexlet.typoreporter.service.dto.typo.ReportedTypo;
+import io.hexlet.typoreporter.service.dto.typo.TypoInfo;
+import io.hexlet.typoreporter.service.dto.typo.TypoReport;
 import io.hexlet.typoreporter.service.mapper.TypoMapper;
 import io.hexlet.typoreporter.web.exception.WorkspaceNotFoundException;
-import lombok.*;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 import java.util.function.UnaryOperator;
 
 import static java.util.Map.Entry.comparingByKey;

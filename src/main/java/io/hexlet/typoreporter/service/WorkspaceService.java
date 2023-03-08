@@ -5,8 +5,8 @@ import io.hexlet.typoreporter.domain.workspace.AccountRole;
 import io.hexlet.typoreporter.domain.workspace.Workspace;
 import io.hexlet.typoreporter.domain.workspace.WorkspaceRole;
 import io.hexlet.typoreporter.domain.workspace.WorkspaceRoleId;
-import io.hexlet.typoreporter.repository.AccountRepository;
 import io.hexlet.typoreporter.domain.workspacesettings.WorkspaceSettings;
+import io.hexlet.typoreporter.repository.AccountRepository;
 import io.hexlet.typoreporter.repository.WorkspaceRepository;
 import io.hexlet.typoreporter.repository.WorkspaceSettingsRepository;
 import io.hexlet.typoreporter.service.dto.workspace.CreateWorkspace;
@@ -16,9 +16,11 @@ import io.hexlet.typoreporter.web.exception.WorkspaceAlreadyExistException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
 import static java.util.Objects.requireNonNull;
 
 @Service

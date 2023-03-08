@@ -3,19 +3,19 @@ package io.hexlet.typoreporter.domain.workspacesettings;
 import io.hexlet.typoreporter.domain.AbstractAuditingEntity;
 import io.hexlet.typoreporter.domain.Identifiable;
 import io.hexlet.typoreporter.domain.workspace.Workspace;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.MapsId;
+import jakarta.persistence.OneToOne;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.MapsId;
-import javax.persistence.OneToOne;
-import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
-import static javax.persistence.FetchType.LAZY;
+import static jakarta.persistence.FetchType.LAZY;
 
 @Data
 @Accessors(chain = true)

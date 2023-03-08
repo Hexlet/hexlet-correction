@@ -5,7 +5,7 @@
 <body>
 <nav aria-label="Main navbar" class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark" th:fragment="mainNavbarTop">
     <div class="container-fluid">
-        <a class="navbar-brand" th:href="@{/}">Hexlet Typo Reporter</a>
+        <a class="navbar-brand" th:href="@{/workspaces}">Hexlet Typo Reporter</a>
         <button aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler"
                 data-bs-target="#mainNavbar" data-bs-toggle="collapse" type="button">
             <span class="navbar-toggler-icon"></span>
@@ -13,7 +13,7 @@
         <div class="collapse navbar-collapse" id="mainNavbar">
             <ul class="navbar-nav me-auto mb-2 mb-md-0" sec:authorize="isAuthenticated()">
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{/create/workspace}">Create Workspace</a>
+                    <a class="nav-link" th:href="@{/workspace/create}">Create Workspace</a>
                 </li>
                 <li sec:authorize="isAuthenticated()" class="nav-item">
                     <a class="nav-link" th:href="@{/account}">Account Info</a>

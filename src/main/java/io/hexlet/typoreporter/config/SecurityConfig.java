@@ -3,8 +3,6 @@ package io.hexlet.typoreporter.config;
 import io.hexlet.typoreporter.security.filter.WorkspaceAuthTokenFilter;
 import io.hexlet.typoreporter.security.provider.AccountAuthenticationProvider;
 import io.hexlet.typoreporter.security.provider.WorkspaceTokenAuthenticationProvider;
-import lombok.RequiredArgsConstructor;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,30 +13,19 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.zalando.problem.spring.web.advice.AdviceTrait;
-import org.zalando.problem.spring.web.advice.security.SecurityProblemSupport;
 
-import static io.hexlet.typoreporter.web.Routers.Typo.TYPOS;
-import static io.hexlet.typoreporter.web.Routers.Workspace.API_WORKSPACES;
-import static org.springframework.http.HttpMethod.*;
+import static org.springframework.http.HttpMethod.GET;
+import static org.springframework.http.HttpMethod.POST;
 
 
 @Configuration
-@RequiredArgsConstructor
 public class SecurityConfig {
-
-    private final SecurityProblemSupport problemSupport;
 
     @Bean
     public PasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    @ConditionalOnMissingBean(AdviceTrait.class)
-    public AdviceTrait securityExceptionHandling() {
-        return new SecurityExceptionHandler();
-    }
 
     @Bean
     public AuthenticationManager authenticationManager(WorkspaceTokenAuthenticationProvider wksProvider,
@@ -50,24 +37,21 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authManager) throws Exception {
         http.httpBasic();
 
-        http.exceptionHandling()
-            .authenticationEntryPoint(problemSupport)
-            .accessDeniedHandler(problemSupport);
-
-        http.authorizeRequests()
-            .antMatchers(GET, "/", "/workspaces", "/webjars/**", "/static/**").permitAll()
-            .mvcMatchers(POST, API_WORKSPACES + "/*" + TYPOS).authenticated()
-            .antMatchers("/workspace/**", "/create/workspace").authenticated()
-            .antMatchers("/account/**").authenticated()
-            .and()
-            .formLogin()
-            .defaultSuccessUrl("/workspaces")
-            .permitAll()
-            .and()
-            .csrf()
-            .ignoringRequestMatchers(
-                new AntPathRequestMatcher(API_WORKSPACES + "/*" + TYPOS, POST.name()),
-                new AntPathRequestMatcher("/typo/form/*", POST.name())
+        http.authorizeHttpRequests(authz -> authz
+                .requestMatchers(GET, "/webjars/**", "/widget/**", "/img/**").permitAll()
+                .requestMatchers("/", "/workspaces", "/login", "/logout").permitAll()
+                .anyRequest().authenticated()
+            )
+            .formLogin(login -> login
+                .loginPage("/login")
+                .defaultSuccessUrl("/workspaces")
+                .permitAll()
+            )
+            .csrf(csrf -> csrf
+                .ignoringRequestMatchers(
+                    new AntPathRequestMatcher("/api/workspaces/*/typos", POST.name()),
+                    new AntPathRequestMatcher("/typo/form/*", POST.name())
+                )
             );
 
         http.addFilterBefore(new WorkspaceAuthTokenFilter(authManager), BasicAuthenticationFilter.class);

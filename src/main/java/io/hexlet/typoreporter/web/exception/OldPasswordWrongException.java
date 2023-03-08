@@ -1,15 +1,17 @@
 package io.hexlet.typoreporter.web.exception;
 
+import org.springframework.http.ProblemDetail;
 import org.springframework.validation.FieldError;
-import org.zalando.problem.AbstractThrowableProblem;
-import static org.zalando.problem.Status.CONFLICT;
+import org.springframework.web.ErrorResponseException;
 
-public class OldPasswordWrongException extends AbstractThrowableProblem implements ConvertibleToFieldError {
+import static org.springframework.http.HttpStatus.CONFLICT;
+
+public class OldPasswordWrongException extends ErrorResponseException implements ConvertibleToFieldError {
 
     private static final String MESSAGE_TEMPLATE = "Wrong old password";
 
     public OldPasswordWrongException() {
-        super(null, "Wrong old password", CONFLICT, MESSAGE_TEMPLATE);
+        super(CONFLICT, ProblemDetail.forStatusAndDetail(CONFLICT, "Wrong old password"), null, MESSAGE_TEMPLATE, null);
     }
 
     @Override

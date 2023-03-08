@@ -29,8 +29,6 @@ import static com.github.database.rider.core.api.configuration.Orthography.LOWER
 import static io.hexlet.typoreporter.test.Constraints.POSTGRES_IMAGE;
 import static io.hexlet.typoreporter.test.factory.EntitiesFactory.WORKSPACE_101_NAME;
 import static io.hexlet.typoreporter.test.factory.EntitiesFactory.WORKSPACE_101_TOKEN;
-import static io.hexlet.typoreporter.web.Routers.Typo.TYPOS;
-import static io.hexlet.typoreporter.web.Routers.Workspace.API_WORKSPACES;
 import static java.time.LocalDateTime.now;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
@@ -80,7 +78,7 @@ class WorkspaceApiIT {
     @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getTypoReport")
     void addTypoReport(final TypoReport typoReport) throws Exception {
         final var content = mockMvc
-            .perform(post(API_WORKSPACES + "/" + WORKSPACE_101_NAME + TYPOS)
+            .perform(post("/api/workspaces/" + WORKSPACE_101_NAME + "/typos")
                 .content(objectMapper.writeValueAsString(typoReport))
                 .header("Authorization", "Token " + WORKSPACE_101_TOKEN)
                 .contentType(APPLICATION_JSON)
@@ -107,17 +105,13 @@ class WorkspaceApiIT {
             }
             """;
 
-        mockMvc.perform(post(API_WORKSPACES + "/" + WORKSPACE_101_NAME + TYPOS)
+        mockMvc.perform(post("/api/workspaces/" + WORKSPACE_101_NAME + "/typos")
                 .content(typoJson)
                 .header("Authorization", "Token " + WORKSPACE_101_TOKEN)
                 .contentType(APPLICATION_JSON))
             .andExpect(status().isBadRequest())
             .andExpect(content().contentType(APPLICATION_PROBLEM_JSON))
-            .andExpect(jsonPath("$.title").value("Constraint Violation"))
-            .andExpect(jsonPath("$.violations").isArray())
-            .andExpect(jsonPath("$.violations", hasSize(1)))
-            .andExpect(jsonPath("$.violations[*].field", hasItem("pageUrl")))
-            .andExpect(jsonPath("$.violations[*].message", hasItem("must not be blank")));
+            .andExpect(jsonPath("$.title").value("Bad Request"));
     }
 
     @Test
@@ -129,18 +123,13 @@ class WorkspaceApiIT {
             }
             """;
 
-        mockMvc.perform(post(API_WORKSPACES + "/" + WORKSPACE_101_NAME + TYPOS)
+        mockMvc.perform(post("/api/workspaces/" + WORKSPACE_101_NAME + "/typos")
                 .content(typoJson)
                 .header("Authorization", "Token " + WORKSPACE_101_TOKEN)
                 .contentType(APPLICATION_JSON))
             .andExpect(status().isBadRequest())
             .andExpect(content().contentType(APPLICATION_PROBLEM_JSON))
-            .andExpect(jsonPath("$.title").value("Constraint Violation"))
-            .andExpect(jsonPath("$.violations").isArray())
-            .andExpect(jsonPath("$.violations", hasSize(2)))
-            .andExpect(jsonPath("$.violations[*].field", hasItem("pageUrl")))
-            .andExpect(jsonPath("$.violations[*].message", hasItem("must not be null")))
-            .andExpect(jsonPath("$.violations[*].message", hasItem("must not be blank")));
+            .andExpect(jsonPath("$.title").value("Bad Request"));
     }
 
     @Test
@@ -153,17 +142,13 @@ class WorkspaceApiIT {
             }
             """;
 
-        mockMvc.perform(post(API_WORKSPACES + "/" + WORKSPACE_101_NAME + TYPOS)
+        mockMvc.perform(post("/api/workspaces/" + WORKSPACE_101_NAME + "/typos")
                 .content(typoJson)
                 .header("Authorization", "Token " + WORKSPACE_101_TOKEN)
                 .contentType(APPLICATION_JSON))
             .andExpect(status().isBadRequest())
             .andExpect(content().contentType(APPLICATION_PROBLEM_JSON))
-            .andExpect(jsonPath("$.title").value("Constraint Violation"))
-            .andExpect(jsonPath("$.violations").isArray())
-            .andExpect(jsonPath("$.violations", hasSize(1)))
-            .andExpect(jsonPath("$.violations[*].field", hasItem("pageUrl")))
-            .andExpect(jsonPath("$.violations[*].message", hasItem("must be a valid URL")));
+            .andExpect(jsonPath("$.title").value("Bad Request"));
     }
 }
 

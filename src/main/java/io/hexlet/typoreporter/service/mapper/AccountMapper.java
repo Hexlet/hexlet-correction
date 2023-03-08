@@ -4,7 +4,6 @@ import io.hexlet.typoreporter.domain.account.Account;
 import io.hexlet.typoreporter.service.dto.account.InfoAccount;
 import io.hexlet.typoreporter.service.dto.account.SignupAccount;
 import io.hexlet.typoreporter.service.dto.account.UpdateProfile;
-
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 

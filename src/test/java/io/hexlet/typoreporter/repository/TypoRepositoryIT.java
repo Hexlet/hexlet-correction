@@ -21,7 +21,6 @@ import org.testcontainers.junit.jupiter.*;
 
 import static com.github.database.rider.core.api.configuration.Orthography.LOWERCASE;
 import static io.hexlet.typoreporter.test.Constraints.POSTGRES_IMAGE;
-import static io.hexlet.typoreporter.web.Routers.DEFAULT_SORT_FIELD;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -73,7 +72,7 @@ class TypoRepositoryIT {
     @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspaceIdsExist")
     void findPageTypoByWorkspaceName(final Long wksId) {
         final var wks = workspaceRepository.findById(wksId).orElseThrow();
-        final var pageReq = PageRequest.of(0, 10, Sort.by(DEFAULT_SORT_FIELD));
+        final var pageReq = PageRequest.of(0, 10, Sort.by("createdDate"));
         final var typoPage = typoRepository.findPageTypoByWorkspaceName(pageReq, wks.getName());
         assertThat(typoPage.getTotalElements()).isEqualTo(wks.getTypos().size());
     }
@@ -82,7 +81,7 @@ class TypoRepositoryIT {
     @NullAndEmptySource
     @ValueSource(strings = "wks-not-exists")
     void findPageTypoByWorkspaceNameNotExist(final String wksName) {
-        final var pageReq = PageRequest.of(0, 10, Sort.by(DEFAULT_SORT_FIELD));
+        final var pageReq = PageRequest.of(0, 10, Sort.by("createdDate"));
         final var typoPage = typoRepository.findPageTypoByWorkspaceName(pageReq, wksName);
         assertThat(typoPage.getTotalElements()).isZero();
     }

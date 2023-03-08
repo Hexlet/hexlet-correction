@@ -1,15 +1,16 @@
 package io.hexlet.typoreporter.web.exception;
 
-import org.zalando.problem.AbstractThrowableProblem;
+import org.springframework.http.ProblemDetail;
+import org.springframework.web.ErrorResponseException;
 
 import static java.text.MessageFormat.format;
-import static org.zalando.problem.Status.NOT_FOUND;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
-public class AccountNotFoundException extends AbstractThrowableProblem {
+public class AccountNotFoundException extends ErrorResponseException {
 
     private static final String NOT_FOUND_MSG = "Account with email=''{0}'' not found";
 
     public AccountNotFoundException(final String email) {
-        super(null, "Account not found", NOT_FOUND, format(NOT_FOUND_MSG, email));
+        super(NOT_FOUND, ProblemDetail.forStatusAndDetail(NOT_FOUND, "Account not found"), null, format(NOT_FOUND_MSG, email), new Object[]{email});
     }
 }

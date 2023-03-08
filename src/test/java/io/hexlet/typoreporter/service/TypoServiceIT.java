@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,11 +43,11 @@ import static io.hexlet.typoreporter.domain.typo.TypoStatus.RESOLVED;
 import static io.hexlet.typoreporter.test.Constraints.POSTGRES_IMAGE;
 import static io.hexlet.typoreporter.test.factory.EntitiesFactory.WORKSPACE_101_NAME;
 import static io.hexlet.typoreporter.test.factory.EntitiesFactory.WORKSPACE_103_NAME;
-import static io.hexlet.typoreporter.web.Routers.DEFAULT_SORT_FIELD;
 import static java.util.function.Predicate.not;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
+@WithMockUser
 @Testcontainers
 @Transactional
 @DBRider
@@ -91,7 +92,7 @@ class TypoServiceIT {
             .count();
         final var page = 1;
         final var pageSize = 3;
-        final var pageReq = PageRequest.of(page, pageSize, Sort.by(DEFAULT_SORT_FIELD));
+        final var pageReq = PageRequest.of(page, pageSize, Sort.by("createdDate"));
         final var pageTypo = service.getTypoPage(pageReq, WORKSPACE_101_NAME);
         assertThat(pageTypo.getTotalPages()).isEqualTo(totalSize / pageSize + page);
         assertThat(pageTypo.getTotalElements()).isEqualTo(totalSize);

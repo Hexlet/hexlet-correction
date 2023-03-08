@@ -1,21 +1,17 @@
 package io.hexlet.typoreporter.domain.typo;
 
-import org.zalando.problem.AbstractThrowableProblem;
+import org.springframework.http.ProblemDetail;
+import org.springframework.web.ErrorResponseException;
 
-import java.text.MessageFormat;
+import static java.text.MessageFormat.format;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
-import static org.zalando.problem.Status.BAD_REQUEST;
-
-public class InvalidTypoEventException extends AbstractThrowableProblem {
+public class InvalidTypoEventException extends ErrorResponseException {
 
     private static final String MESSAGE = "Invalid event ''{0}'' for typo status ''{1}''. Valid events: {2}";
 
     public InvalidTypoEventException(final TypoStatus status, final TypoEvent event) {
-        super(
-            null,
-            "Invalid event",
-            BAD_REQUEST,
-            MessageFormat.format(MESSAGE, event, status, status.getValidEvents())
-        );
+        super(BAD_REQUEST, ProblemDetail.forStatusAndDetail(BAD_REQUEST, "Invalid event"), null,
+            format(MESSAGE, event, status, status.getValidEvents()), new Object[]{status, event});
     }
 }

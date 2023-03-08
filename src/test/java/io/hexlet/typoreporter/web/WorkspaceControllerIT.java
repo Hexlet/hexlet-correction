@@ -40,12 +40,6 @@ import static com.github.database.rider.core.api.configuration.Orthography.LOWER
 import io.hexlet.typoreporter.domain.workspace.WorkspaceRole;
 import io.hexlet.typoreporter.service.WorkspaceRoleService;
 import static io.hexlet.typoreporter.test.Constraints.POSTGRES_IMAGE;
-import static io.hexlet.typoreporter.web.Routers.SETTINGS;
-import static io.hexlet.typoreporter.web.Routers.Typo.TYPOS;
-import static io.hexlet.typoreporter.web.Routers.UPDATE;
-import static io.hexlet.typoreporter.web.Routers.USERS;
-import static io.hexlet.typoreporter.web.Routers.Workspace.WKS_NAME_PATH;
-import static io.hexlet.typoreporter.web.Routers.Workspace.WORKSPACE;
 import static java.util.Objects.requireNonNull;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -103,7 +97,7 @@ class WorkspaceControllerIT {
     void getWorkspaceInfoPageIsSuccessful(final String wksName) throws Exception {
         Workspace workspace = repository.getWorkspaceByName(wksName).orElse(null);
 
-        MockHttpServletResponse response = mockMvc.perform(get(WORKSPACE + WKS_NAME_PATH, wksName))
+        MockHttpServletResponse response = mockMvc.perform(get("/workspace/{wksName}", wksName))
             .andExpect(model().attributeExists("wksInfo", "wksName"))
             .andReturn().getResponse();
         assertThat(response.getContentAsString()).contains(wksName, workspace.getCreatedBy());
@@ -111,13 +105,13 @@ class WorkspaceControllerIT {
 
     @Test
     void getWorkspaceInfoPageWithoutWks() throws Exception {
-        mockMvc.perform(get(WORKSPACE + WKS_NAME_PATH, "notExistsWksName"))
+        mockMvc.perform(get("/workspace/{wksName}", "notExistsWksName"))
             .andExpect(redirectedUrl("/workspaces"));
     }
 
     @Test
     void getWorkspaceSettingsPageWithoutWks() throws Exception {
-        mockMvc.perform(get(WORKSPACE + WKS_NAME_PATH + SETTINGS, "notExistsWksName"))
+        mockMvc.perform(get("/workspace/{wksName}/settings", "notExistsWksName"))
             .andExpect(redirectedUrl("/workspaces"));
     }
 
@@ -126,7 +120,7 @@ class WorkspaceControllerIT {
     void getWorkspaceTyposPageIsSuccessful(final String wksName) throws Exception {
         Workspace workspace = repository.getWorkspaceByName(wksName).orElse(null);
 
-        MockHttpServletResponse response = mockMvc.perform(get(WORKSPACE + WKS_NAME_PATH + TYPOS, wksName))
+        MockHttpServletResponse response = mockMvc.perform(get("/workspace/{wksName}/typos", wksName))
             .andExpect(model().attributeExists("wksInfo", "wksName", "typoPage", "availableSizes", "sortProp", "sortDir", "DESC", "ASC"))
             .andReturn().getResponse();
 
@@ -143,7 +137,7 @@ class WorkspaceControllerIT {
 
     @Test
     void getWorkspaceSettingsPageWithoutWksInfo() throws Exception {
-        mockMvc.perform(get(WORKSPACE + WKS_NAME_PATH + TYPOS, "notExistsWksName"))
+        mockMvc.perform(get("/workspace/{wksName}/typos", "notExistsWksName"))
             .andExpect(redirectedUrl("/workspaces"));
     }
 
@@ -152,7 +146,7 @@ class WorkspaceControllerIT {
     void getWorkspaceUpdatePageIsSuccessful(final String wksName) throws Exception {
         Workspace workspace = repository.getWorkspaceByName(wksName).orElse(null);
 
-        MockHttpServletResponse response = mockMvc.perform(get(WORKSPACE + WKS_NAME_PATH + UPDATE, wksName))
+        MockHttpServletResponse response = mockMvc.perform(get("/workspace/{wksName}/update", wksName))
             .andExpect(model().attributeExists("wksName", "formModified", "formModified"))
             .andReturn().getResponse();
         assertThat(response.getContentAsString()).contains(workspace.getDescription());
@@ -160,7 +154,7 @@ class WorkspaceControllerIT {
 
     @Test
     void getWorkspaceUpdatePageWithoutWks() throws Exception {
-        mockMvc.perform(get(WORKSPACE + WKS_NAME_PATH + UPDATE, "notExistsWksName"))
+        mockMvc.perform(get("/workspace/{wksName}/update", "notExistsWksName"))
             .andExpect(redirectedUrl("/workspaces"));
     }
 
@@ -171,12 +165,12 @@ class WorkspaceControllerIT {
         String newWksName = "createWksName01";
         LocalDateTime previosModifiedDate = workspace.getModifiedDate();
 
-        mockMvc.perform(put(WORKSPACE + WKS_NAME_PATH + UPDATE, wksName)
+        mockMvc.perform(put("/workspace/{wksName}/update", wksName)
                 .param("name", newWksName)
                 .param("url", "https://other.com")
                 .param("description", "Wks description 01")
                 .with(csrf()))
-            .andExpect(redirectedUrl(WORKSPACE + "/" + newWksName));
+            .andExpect(redirectedUrl("/workspace/" + newWksName));
 
         LocalDateTime newModifiedDate = repository.getWorkspaceByName(newWksName).orElse(null).getModifiedDate();
         assertThat(previosModifiedDate).isNotEqualTo(newModifiedDate);
@@ -200,7 +194,7 @@ class WorkspaceControllerIT {
 
         assertThat(repository.existsWorkspaceByName(newWksName)).isTrue();
 
-        mockMvc.perform(put(WORKSPACE + WKS_NAME_PATH + UPDATE, wksName)
+        mockMvc.perform(put("/workspace/{wksName}/update", wksName)
                 .param("name", newWksName)
                 .param("description", wksDescription)
                 .with(csrf()))
@@ -217,7 +211,7 @@ class WorkspaceControllerIT {
     void deleteWorkspaceByNameIsSuccessful(final String wksName) throws Exception {
         assertThat(repository.existsWorkspaceByName(wksName)).isTrue();
 
-        MockHttpServletResponse response = mockMvc.perform(delete(WORKSPACE + WKS_NAME_PATH, wksName)
+        MockHttpServletResponse response = mockMvc.perform(delete("/workspace/{wksName}", wksName)
                 .with(csrf()))
             .andReturn().getResponse();
 
@@ -227,7 +221,7 @@ class WorkspaceControllerIT {
 
     @Test
     void deleteWorkspaceByNameIsNotSuccessful() throws Exception {
-        mockMvc.perform(delete(WORKSPACE + WKS_NAME_PATH, "notExistsWksName").with(csrf()))
+        mockMvc.perform(delete("/workspace/{wksName}", "notExistsWksName").with(csrf()))
             .andExpect(redirectedUrl("/workspaces"));
     }
 
@@ -243,7 +237,7 @@ class WorkspaceControllerIT {
             workspace.addWorkspaceRole(workspaceRole);
         });
 
-        MockHttpServletResponse response = mockMvc.perform(get(WORKSPACE + WKS_NAME_PATH + USERS, wksName))
+        MockHttpServletResponse response = mockMvc.perform(get("/workspace/{wksName}/users", wksName))
                 .andExpect(model().attributeExists("wksInfo", "wksName", "userPage", "availableSizes", "sortProp", "sortDir", "DESC", "ASC"))
                 .andReturn().getResponse();
 

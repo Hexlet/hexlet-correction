@@ -23,9 +23,6 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import java.util.UUID;
 import static com.github.database.rider.core.api.configuration.Orthography.LOWERCASE;
 import static io.hexlet.typoreporter.test.Constraints.POSTGRES_IMAGE;
-import static io.hexlet.typoreporter.web.Routers.SETTINGS;
-import static io.hexlet.typoreporter.web.Routers.Workspace.WKS_NAME_PATH;
-import static io.hexlet.typoreporter.web.Routers.Workspace.WORKSPACE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -69,7 +66,7 @@ public class WorkspaceSettingsControllerIT {
             .map(UUID::toString)
             .orElse(null);
 
-        MockHttpServletResponse response = mockMvc.perform(get(WORKSPACE + WKS_NAME_PATH + SETTINGS, wksName))
+        MockHttpServletResponse response = mockMvc.perform(get("/workspace/{wksName}/settings", wksName))
             .andExpect(model().attributeExists("wksToken"))
             .andReturn().getResponse();
 
@@ -84,7 +81,7 @@ public class WorkspaceSettingsControllerIT {
             .map(UUID::toString)
             .orElse(null);
 
-        MockHttpServletResponse response = mockMvc.perform(patch(WORKSPACE + WKS_NAME_PATH + "/token/regenerate", wksName)
+        MockHttpServletResponse response = mockMvc.perform(patch("/workspace/{wksName}/token/regenerate", wksName)
                 .with(csrf()))
             .andReturn().getResponse();
 
@@ -94,12 +91,12 @@ public class WorkspaceSettingsControllerIT {
             .orElse(null);
 
         assertThat(previousWksToken).isNotEqualTo(newWksToken);
-        assertThat(response.getRedirectedUrl()).isEqualTo(WORKSPACE + "/" + wksName + SETTINGS);
+        assertThat(response.getRedirectedUrl()).isEqualTo("/workspace/" + wksName + "/settings");
     }
 
     @Test
     void patchWorkspaceTokenWithoutWks() throws Exception {
-        mockMvc.perform(patch(WORKSPACE + WKS_NAME_PATH + "/token/regenerate", "notExistsWksName")
+        mockMvc.perform(patch("/workspace/{wksName}/token/regenerate", "notExistsWksName")
                 .with(csrf()))
             .andExpect(redirectedUrl("/workspaces"));
     }

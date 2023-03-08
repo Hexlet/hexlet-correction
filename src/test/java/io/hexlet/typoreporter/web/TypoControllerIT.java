@@ -12,6 +12,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
@@ -23,10 +24,6 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import static com.github.database.rider.core.api.configuration.Orthography.LOWERCASE;
 import static io.hexlet.typoreporter.domain.typo.TypoEvent.CANCEL;
 import static io.hexlet.typoreporter.test.Constraints.POSTGRES_IMAGE;
-import static io.hexlet.typoreporter.web.Routers.ID_PATH;
-import static io.hexlet.typoreporter.web.Routers.Typo.TYPOS;
-import static io.hexlet.typoreporter.web.Routers.Typo.TYPO_STATUS;
-import static io.hexlet.typoreporter.web.Routers.Workspace.WORKSPACE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -35,6 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @Testcontainers
 @SpringBootTest
+@WithMockUser
 @AutoConfigureMockMvc
 @Transactional
 @DBRider
@@ -69,11 +67,11 @@ public class TypoControllerIT {
         typo.setTypoStatus(TypoStatus.IN_PROGRESS);
         TypoStatus previousStatus = typo.getTypoStatus(); // IN_PROGRESS
 
-        mockMvc.perform(patch(TYPOS + ID_PATH + TYPO_STATUS, typoId)
+        mockMvc.perform(patch("/typos/{id}/status", typoId)
                 .param("wksName", wksName)
                 .param("event", CANCEL.name())
                 .with(csrf()))
-            .andExpect(redirectedUrl(WORKSPACE + "/" + wksName + TYPOS));
+            .andExpect(redirectedUrl("/workspace/" + wksName + "/typos"));
         assertThat(previousStatus).isNotEqualTo(typo.getTypoStatus());
     }
 
@@ -86,11 +84,11 @@ public class TypoControllerIT {
         typo.setTypoStatus(TypoStatus.IN_PROGRESS);
         TypoStatus previousStatus = typo.getTypoStatus(); // IN_PROGRESS
 
-        mockMvc.perform(patch(TYPOS + ID_PATH + TYPO_STATUS, typoId)
+        mockMvc.perform(patch("/typos/{id}/status", typoId)
                 .param("wksName", wksName)
                 .param("event", "")
                 .with(csrf()))
-            .andExpect(redirectedUrl(WORKSPACE + "/" + wksName + TYPOS));
+            .andExpect(redirectedUrl("/workspace/" + wksName + "/typos"));
         assertThat(previousStatus).isEqualTo(typo.getTypoStatus());
     }
 
@@ -98,11 +96,11 @@ public class TypoControllerIT {
     @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspaceNamesExist")
     void updateTypoStatusWithUpdatedTypoIsEmpty(final String wksName) throws Exception {
         final Long NOT_EXIST_TYPO_ID = 11L;
-        mockMvc.perform(patch(TYPOS + ID_PATH + TYPO_STATUS, NOT_EXIST_TYPO_ID)
+        mockMvc.perform(patch("/typos/{id}/status", NOT_EXIST_TYPO_ID)
                 .param("wksName", wksName)
                 .param("event", CANCEL.name())
                 .with(csrf()))
-            .andExpect(redirectedUrl(WORKSPACE + "/" + wksName + TYPOS));
+            .andExpect(redirectedUrl("/workspace/" + wksName + "/typos"));
     }
 
 
@@ -114,10 +112,10 @@ public class TypoControllerIT {
 
         assertThat(typoRepository.existsById(typoId)).isTrue();
 
-        mockMvc.perform(delete(TYPOS + ID_PATH, typoId)
+        mockMvc.perform(delete("/typos/{id}", typoId)
                 .param("wksName", wksName)
                 .with(csrf()))
-            .andExpect(redirectedUrl(WORKSPACE + "/" + wksName + TYPOS));
+            .andExpect(redirectedUrl("/workspace/" + wksName + "/typos"));
 
         assertThat(typoRepository.existsById(typoId)).isFalse();
     }
@@ -128,13 +126,13 @@ public class TypoControllerIT {
         assertThat(typoRepository.existsById(typoId)).isTrue();
 
         String emptyWksName = "";
-        mockMvc.perform(delete(TYPOS + ID_PATH, typoId)
+        mockMvc.perform(delete("/typos/{id}", typoId)
                 .param("wksName", emptyWksName)
                 .with(csrf()))
             .andExpect(redirectedUrl("/workspaces"));
 
         String notExistsWksName = "noExistsWks";
-        mockMvc.perform(delete(TYPOS + ID_PATH, typoId)
+        mockMvc.perform(delete("/typos/{id}", typoId)
                 .param("wksName", notExistsWksName)
                 .with(csrf()))
             .andExpect(redirectedUrl("/workspaces"));

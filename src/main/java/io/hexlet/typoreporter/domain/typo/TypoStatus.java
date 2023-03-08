@@ -1,9 +1,13 @@
 package io.hexlet.typoreporter.domain.typo;
 
 
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
 
-import static io.hexlet.typoreporter.domain.typo.TypoEvent.*;
+import static io.hexlet.typoreporter.domain.typo.TypoEvent.CANCEL;
+import static io.hexlet.typoreporter.domain.typo.TypoEvent.OPEN;
+import static io.hexlet.typoreporter.domain.typo.TypoEvent.REOPEN;
+import static io.hexlet.typoreporter.domain.typo.TypoEvent.RESOLVE;
 
 
 public enum TypoStatus {

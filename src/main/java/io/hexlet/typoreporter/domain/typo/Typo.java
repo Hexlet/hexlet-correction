@@ -12,25 +12,24 @@ import io.hexlet.typoreporter.domain.typo.constraint.TextBeforeTypo;
 import io.hexlet.typoreporter.domain.typo.constraint.TextTypo;
 import io.hexlet.typoreporter.domain.typo.constraint.TypoPageUrl;
 import io.hexlet.typoreporter.domain.workspace.Workspace;
+import io.hypersistence.utils.hibernate.type.basic.PostgreSQLEnumType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
-import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
@@ -38,7 +37,6 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @Accessors(chain = true)
 @Entity
-@TypeDef(name = "pgsql_typo_status_enum", typeClass = TypoStatusPgEnum.class)
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Typo extends AbstractAuditingEntity implements Identifiable<Long> {
 
@@ -68,7 +66,7 @@ public class Typo extends AbstractAuditingEntity implements Identifiable<Long> {
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "TYPO_STATUS")
-    @Type(type = "pgsql_typo_status_enum")
+    @Type(PostgreSQLEnumType.class)
     private TypoStatus typoStatus = TypoStatus.REPORTED;
 
     @NotNull

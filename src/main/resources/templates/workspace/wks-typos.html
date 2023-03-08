@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sd="http://www.w3.org/1999/xhtml">
-<head th:replace="fragments/header :: head"></head>
+<head th:replace="~{fragments/header :: head}"></head>
 <body style="padding-top: 4.5rem">
-<nav th:replace="fragments/panels :: mainNavbarTop"></nav>
+<nav th:replace="~{fragments/panels :: mainNavbarTop}"></nav>
 <main class="container-fluid">
     <div class="row">
         <!-- Workspace Side Bar -->
@@ -11,7 +11,7 @@
             <!-- Workspace progress typo bar -->
             <div class="row my-3"
                  th:if="${sumTypoInWks} > 0"
-                 th:insert="fragments/workspace :: wksProgressBar (${sumTypoInWks}, ${countTypoByStatus})"></div>
+                 th:insert="~{fragments/workspace :: wksProgressBar (${sumTypoInWks}, ${countTypoByStatus})}"></div>
             <!-- Workspace number of typo -->
             <div class="row">
                 <p th:text="|Total number of typos in workspace ${wksName} : ${sumTypoInWks}|"></p>
@@ -19,7 +19,7 @@
             <!-- Workspace last typo date -->
             <div class="row"
                  th:if="${lastTypoCreatedDateAgo.isPresent() && lastTypoCreatedDate.isPresent()}"
-                 th:insert="fragments/workspace :: wksLastTypoDate (${lastTypoCreatedDateAgo}, ${lastTypoCreatedDate})"></div>
+                 th:insert="~{fragments/workspace :: wksLastTypoDate (${lastTypoCreatedDateAgo}, ${lastTypoCreatedDate})}"></div>
             <!-- Workspace typo page -->
             <div class="row">
                 <main class="col">

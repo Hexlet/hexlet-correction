@@ -3,6 +3,7 @@ package io.hexlet.typoreporter.web;
 import io.hexlet.typoreporter.service.QueryAccount;
 import io.hexlet.typoreporter.service.SignUpAccount;
 import io.hexlet.typoreporter.service.dto.account.SignupAccount;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -14,12 +15,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.validation.Valid;
 import java.util.List;
-
-import static io.hexlet.typoreporter.web.Routers.REDIRECT_ROOT;
-import static io.hexlet.typoreporter.web.Routers.SIGNUP;
-import static io.hexlet.typoreporter.web.Templates.SIGNUP_TEMPLATE;
 
 @Controller
 @RequestMapping
@@ -30,14 +26,14 @@ public class LoginController {
 
     private final QueryAccount queryAccount;
 
-    @GetMapping(SIGNUP)
+    @GetMapping("/signup")
     public String getSignUpPage(final Model model) {
         model.addAttribute("signupAccount", new SignupAccount());
         model.addAttribute("formModified", false);
-        return SIGNUP_TEMPLATE;
+        return "account/signup";
     }
 
-    @PostMapping(SIGNUP)
+    @PostMapping("/signup")
     public String createAccount(@ModelAttribute("signupAccount") @Valid SignupAccount signupAccount,
                                 BindingResult bindingResult,
                                 Model model) {
@@ -62,17 +58,17 @@ public class LoginController {
         }
 
         if (hasErrors) {
-            return SIGNUP_TEMPLATE;
+            return "account/signup";
         }
 
         final var newAccount = signUpAccount.signup(signupAccount);
         if (newAccount == null) {
-            return SIGNUP_TEMPLATE;
+            return "account/signup";
         }
 
         final var authenticated = UsernamePasswordAuthenticationToken.authenticated(newAccount.getUsername(), newAccount.getPassword(), List.of(() -> "ROLE_USER"));
         SecurityContextHolder.getContext().setAuthentication(authenticated);
 
-        return REDIRECT_ROOT;
+        return "redirect:/workspaces";
     }
 }

@@ -4,24 +4,29 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import io.hexlet.typoreporter.domain.AbstractAuditingEntity;
 import io.hexlet.typoreporter.domain.Identifiable;
-import io.hexlet.typoreporter.domain.account.Account;
 import io.hexlet.typoreporter.domain.typo.Typo;
 import io.hexlet.typoreporter.domain.workspace.constraint.WorkspaceDescription;
 import io.hexlet.typoreporter.domain.workspace.constraint.WorkspaceName;
 import io.hexlet.typoreporter.domain.workspace.constraint.WorkspaceUrl;
-import io.hexlet.typoreporter.domain.workspacesettings.WorkspaceSettings;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.SequenceGenerator;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 import org.hibernate.Hibernate;
-import javax.persistence.*;
+
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-import static javax.persistence.CascadeType.ALL;
+import static jakarta.persistence.CascadeType.ALL;
 
 @Getter
 @Setter

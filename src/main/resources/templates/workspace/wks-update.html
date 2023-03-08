@@ -1,21 +1,21 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/header :: head"></head>
+<head th:replace="~{fragments/header :: head}"></head>
 <body style="padding-top: 4.5rem">
-<nav th:replace="fragments/panels :: mainNavbarTop"></nav>
+<nav th:replace="~{fragments/panels :: mainNavbarTop}"></nav>
 <main class="container-fluid">
     <div class="row">
         <div class="col-2" th:insert="fragments/panels :: workspaceSideBar (${wksName}, 'info')"></div>
         <div class="col">
             <div class="row my-3"
                  th:if="${sumTypoInWks} > 0"
-                 th:insert="fragments/workspace :: wksProgressBar (${sumTypoInWks}, ${countTypoByStatus})"></div>
+                 th:insert="~{fragments/workspace :: wksProgressBar (${sumTypoInWks}, ${countTypoByStatus})}"></div>
             <div class="row">
                 <p th:text="|Total number of typos in workspace ${wksName} : ${sumTypoInWks}|"></p>
             </div>
             <div class="row"
                  th:if="${lastTypoCreatedDateAgo.isPresent() && lastTypoCreatedDate.isPresent()}"
-                 th:insert="fragments/workspace :: wksLastTypoDate (${lastTypoCreatedDateAgo}, ${lastTypoCreatedDate})"></div>
+                 th:insert="~{fragments/workspace :: wksLastTypoDate (${lastTypoCreatedDateAgo}, ${lastTypoCreatedDate})}"></div>
             <div class="row row-cols-1 row-cols-md-2 g-4">
                 <div class="col">
                     <form th:action="@{'/workspace/' + ${wksName} + '/update'}" th:method="put" th:object="${createWorkspace}">

@@ -11,3 +11,5 @@ spring:
     hiddenmethod:
       filter:
         enabled: true
+    problemdetails:
+      enabled: true

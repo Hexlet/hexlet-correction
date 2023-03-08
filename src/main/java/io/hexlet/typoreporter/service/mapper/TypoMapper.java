@@ -4,7 +4,6 @@ import io.hexlet.typoreporter.domain.typo.Typo;
 import io.hexlet.typoreporter.service.dto.typo.ReportedTypo;
 import io.hexlet.typoreporter.service.dto.typo.TypoInfo;
 import io.hexlet.typoreporter.service.dto.typo.TypoReport;
-
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;

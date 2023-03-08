@@ -3,6 +3,8 @@ package io.hexlet.typoreporter.web;
 import io.hexlet.typoreporter.service.TypoService;
 import io.hexlet.typoreporter.service.WorkspaceService;
 import io.hexlet.typoreporter.service.dto.typo.TypoReport;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -12,9 +14,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 
 @Slf4j
 @Controller

@@ -7,6 +7,7 @@ import io.hexlet.typoreporter.service.dto.account.UpdateProfile;
 import io.hexlet.typoreporter.web.exception.AccountAlreadyExistException;
 import io.hexlet.typoreporter.web.exception.NewPasswordTheSameException;
 import io.hexlet.typoreporter.web.exception.OldPasswordWrongException;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -15,17 +16,17 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
-import javax.validation.Valid;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
 import java.util.List;
 import java.util.Optional;
-import static io.hexlet.typoreporter.web.Routers.*;
-import static io.hexlet.typoreporter.web.Routers.Account.*;
-import static io.hexlet.typoreporter.web.Templates.*;
 
 @Slf4j
 @Controller
-@RequestMapping(ACCOUNT)
+@RequestMapping("/account")
 @RequiredArgsConstructor
 public class AccountController {
 
@@ -36,7 +37,7 @@ public class AccountController {
         final var maybeAccInfo = accountService.getInfoAccount(authentication.getName());
         if (maybeAccInfo.isEmpty()) {
             log.error("Error during getting account info page. Account info not found");
-            return ERROR_GENERAL_TEMPLATE;
+            return "/error-general";
         }
         final var accInfo = maybeAccInfo.get();
         final var workspaceInfoList =  accountService.getWorkspacesInfoListByUsername(accInfo.username());
@@ -44,10 +45,10 @@ public class AccountController {
         model.addAttribute("workspaceRoleInfoList", workspaceInfoList);
         model.addAttribute("accInfo", accInfo);
 
-        return ACC_INFO_TEMPLATE;
+        return "account/acc-info";
     }
 
-    @GetMapping(PROFILE)
+    @GetMapping("/profile")
     public String getProfilePage(final Model model,
                                  final Authentication authentication) {
         final String name = authentication.getName();
@@ -55,16 +56,16 @@ public class AccountController {
 
         if (updateProfile.isEmpty()) {
             log.error("Error during getting profile for update. UpdateProfile not found");
-            return ERROR_GENERAL_TEMPLATE;
+            return "/error-general";
         }
 
         model.addAttribute("formModified", false);
         model.addAttribute("updateProfile", updateProfile.get());
 
-        return PROF_UPDATE_TEMPLATE;
+        return "account/prof-update";
     }
 
-    @PutMapping(PROFILE + UPDATE)
+    @PutMapping("/profile/update")
     public String putProfileUpdate(final Model model,
                                    final @Valid @ModelAttribute("updateProfile") UpdateProfile updateProfile,
                                    final BindingResult bindingResult,
@@ -73,7 +74,7 @@ public class AccountController {
         model.addAttribute("formModified", true);
 
         if (bindingResult.hasErrors()) {
-            return PROF_UPDATE_TEMPLATE;
+            return "account/prof-update";
         }
 
         Optional<Account> updatedAccount;
@@ -83,29 +84,29 @@ public class AccountController {
 
             if (updatedAccount.isEmpty()) {
                 log.error("Error during getting updated account. Updated account not found");
-                return ERROR_GENERAL_TEMPLATE;
+                return "/error-general";
             }
         } catch (AccountAlreadyExistException e) {
             bindingResult.addError(e.toFieldError("updateProfile"));
-            return PROF_UPDATE_TEMPLATE;
+            return "account/prof-update";
         }
 
         final var authenticated = UsernamePasswordAuthenticationToken.authenticated(updatedAccount.get().getUsername(),
             updatedAccount.get().getPassword(), List.of(() -> "ROLE_USER"));
         SecurityContextHolder.getContext().setAuthentication(authenticated);
 
-        return REDIRECT_ACC_ROOT;
+        return "redirect:/account/";
     }
 
-    @GetMapping(PASSWORD)
+    @GetMapping("/password")
     public String getPasswordPage(final Model model) {
         model.addAttribute("formModified", false);
         model.addAttribute("updatePassword", new UpdatePassword());
 
-        return PASS_UPDATE_TEMPLATE;
+        return "account/pass-update";
     }
 
-    @PutMapping(PASSWORD + UPDATE)
+    @PutMapping("/password/update")
     public String putPasswordUpdate(final Model model,
                                    final @Valid @ModelAttribute("updatePassword") UpdatePassword updatePassword,
                                    final BindingResult bindingResult,
@@ -114,7 +115,7 @@ public class AccountController {
         model.addAttribute("formModified", true);
 
         if (bindingResult.hasErrors()) {
-            return PASS_UPDATE_TEMPLATE;
+            return "account/pass-update";
         }
 
         Optional<Account> updatedAccount;
@@ -124,17 +125,17 @@ public class AccountController {
 
             if (updatedAccount.isEmpty()) {
                 log.error("Error during getting updated account with new password. Updated account not found");
-                return ERROR_GENERAL_TEMPLATE;
+                return "/error-general";
             }
         } catch (OldPasswordWrongException | NewPasswordTheSameException e) {
             bindingResult.addError(e.toFieldError("updatePassword"));
-            return PASS_UPDATE_TEMPLATE;
+            return "account/pass-update";
         }
 
         final var authenticated = UsernamePasswordAuthenticationToken.authenticated(updatedAccount.get().getUsername(),
             updatedAccount.get().getPassword(), List.of(() -> "ROLE_USER"));
         SecurityContextHolder.getContext().setAuthentication(authenticated);
 
-        return REDIRECT_ACC_ROOT;
+        return "redirect:/account/";
     }
 }

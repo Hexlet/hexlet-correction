@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.7.8</version>
+        <version>3.0.4</version>
         <relativePath /> <!-- lookup parent from repository -->
     </parent>
     <groupId>io.hexlet</groupId>
@@ -25,9 +25,11 @@
         <prettytime.version>5.0.6.Final</prettytime.version>
         <org.mapstruct.version>1.5.3.Final</org.mapstruct.version>
         <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
+        <hypersistence-utils-hibernate-60.version>3.2.0</hypersistence-utils-hibernate-60.version>
+        <thymeleaf-spring-data-dialect.version>3.6.0</thymeleaf-spring-data-dialect.version>
         <!-- Test -->
         <testcontainers.version>1.17.6</testcontainers.version>
-        <database-rider.version>1.35.1</database-rider.version>
+        <database-rider.version>1.36.0</database-rider.version>
         <!-- Plugins -->
         <maven-failsafe-plugin.version>3.0.0-M8</maven-failsafe-plugin.version>
         <maven-surefire-plugin.version>3.0.0-M8</maven-surefire-plugin.version>
@@ -80,6 +82,11 @@
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
         <dependency>
+            <groupId>io.hypersistence</groupId>
+            <artifactId>hypersistence-utils-hibernate-60</artifactId>
+            <version>${hypersistence-utils-hibernate-60.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
@@ -105,17 +112,6 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.zalando</groupId>
-            <artifactId>problem-spring-web-starter</artifactId>
-            <version>${problem-spring-web-starter.version}</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>apiguardian-api</artifactId>
-                    <groupId>org.apiguardian</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
             <groupId>org.ocpsoft.prettytime</groupId>
             <artifactId>prettytime</artifactId>
             <version>${prettytime.version}</version>
@@ -123,12 +119,12 @@
         <dependency>
             <groupId>io.github.jpenren</groupId>
             <artifactId>thymeleaf-spring-data-dialect</artifactId>
-            <version>3.5.0</version>
+            <version>${thymeleaf-spring-data-dialect.version}</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.thymeleaf.extras/thymeleaf-extras-springsecurity5 -->
+        <!-- https://mvnrepository.com/artifact/org.thymeleaf.extras/thymeleaf-extras-springsecurity6 -->
         <dependency>
             <groupId>org.thymeleaf.extras</groupId>
-            <artifactId>thymeleaf-extras-springsecurity5</artifactId>
+            <artifactId>thymeleaf-extras-springsecurity6</artifactId>
         </dependency>
         <!-- Test -->
         <dependency>
@@ -234,7 +230,7 @@
                         <configuration>
                             <rules>
                                 <requireMavenVersion>
-                                    <version>3.2.5</version>
+                                    <version>3.9.0</version>
                                 </requireMavenVersion>
                                 <requireJavaVersion>
                                     <version>19</version>

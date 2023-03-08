@@ -1,17 +1,17 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sd="http://www.w3.org/1999/xhtml">
-<head th:replace="fragments/header :: head"></head>
+<html lang="en" xmlns:sd="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head}"></head>
 <body style="padding-top: 4.5rem">
-<nav th:replace="fragments/panels :: mainNavbarTop"></nav>
+<nav th:replace="~{fragments/panels :: mainNavbarTop}"></nav>
 <main class="container-fluid">
     <div class="row">
         <!-- Workspace Side Bar -->
-        <div class="col-2" th:include="fragments/panels :: workspaceSideBar (${wksName}, 'users')"></div>
+        <div class="col-2" th:include="~{fragments/panels :: workspaceSideBar (${wksName}, 'users')}"></div>
         <div class="col">
             <!-- Workspace progress typo bar -->
             <div class="row my-3"
                  th:if="${sumTypoInWks} > 0"
-                 th:insert="fragments/workspace :: wksProgressBar (${sumTypoInWks}, ${countTypoByStatus})"></div>
+                 th:insert="~{fragments/workspace :: wksProgressBar (${sumTypoInWks}, ${countTypoByStatus})}"></div>
             <!-- Workspace number of typo -->
             <div class="row">
                 <p th:text="|Total number of typos in workspace ${wksName} : ${sumTypoInWks}|"></p>
@@ -19,7 +19,7 @@
             <!-- Adding a user to a workspace -->
             <div class="row my-3" th:unless="${accounts.isEmpty()}">
                 <p>Adding a user to a workspace</p>
-                <form th:action="@{'/workspace/' + ${wksName} + '/users'}" method="POST">
+                <form method="POST" th:action="@{'/workspace/' + ${wksName} + '/users'}">
                     <div class="form-group">
                         <label for="selectUserEmail">Email address</label>
                         <select name="email" class="form-control" id="selectUserEmail">
@@ -33,7 +33,7 @@
             <!-- Workspace last typo date -->
             <div class="row"
                  th:if="${lastTypoCreatedDateAgo.isPresent() && lastTypoCreatedDate.isPresent()}"
-                 th:insert="fragments/workspace :: wksLastTypoDate (${lastTypoCreatedDateAgo}, ${lastTypoCreatedDate})"></div>
+                 th:insert="~{fragments/workspace :: wksLastTypoDate (${lastTypoCreatedDateAgo}, ${lastTypoCreatedDate})}"></div>
             <!-- Workspace typo page -->
             <div class="row">
                 <main class="col">
@@ -116,8 +116,7 @@
                                                         <div class="col-1">
                                                             <form th:action="@{'/users/' + *{id}(wksName=${wksName})}"
                                                                   th:method="delete">
-                                                                <button class="btn btn-danger" type="submit">
-                                                                    Delete
+                                                                <button class="btn btn-danger" type="submit">Delete
                                                                 </button>
                                                             </form>
                                                         </div>
