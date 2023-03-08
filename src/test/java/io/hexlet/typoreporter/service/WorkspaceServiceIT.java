@@ -4,6 +4,7 @@ import com.github.database.rider.core.api.configuration.DBUnit;
 import com.github.database.rider.core.api.dataset.DataSet;
 import com.github.database.rider.spring.api.DBRider;
 import io.hexlet.typoreporter.domain.workspace.Workspace;
+import io.hexlet.typoreporter.domain.workspacesettings.WorkspaceSettings;
 import io.hexlet.typoreporter.repository.AccountRepository;
 import io.hexlet.typoreporter.repository.WorkspaceRepository;
 import io.hexlet.typoreporter.service.dto.workspace.CreateWorkspace;
@@ -24,6 +25,8 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import java.util.Objects;
+import java.util.UUID;
+
 import static com.github.database.rider.core.api.configuration.Orthography.LOWERCASE;
 import static io.hexlet.typoreporter.test.Constraints.POSTGRES_IMAGE;
 import static io.hexlet.typoreporter.test.factory.EntitiesFactory.WORKSPACE_101_NAME;
@@ -94,7 +97,9 @@ public class WorkspaceServiceIT {
     void createWorkspaceIsSuccessful() {
         final var newWks = new CreateWorkspace("wks-name-1", "wks desc", "https://other.com");
         final var wksToCreate = requireNonNull(workspaceMapper.toWorkspace(newWks));
-        wksToCreate.setApiAccessToken(UUID.randomUUID());
+        final var wksSettings = new WorkspaceSettings();
+        wksSettings.setWorkspace(wksToCreate);
+        wksSettings.setApiAccessToken(UUID.randomUUID());
         WorkspaceInfo workspaceInfo = workspaceMapper.toWorkspaceInfo(workspaceRepository.save(wksToCreate));
 
         assertThat(workspaceInfo.name()).isNotEmpty();

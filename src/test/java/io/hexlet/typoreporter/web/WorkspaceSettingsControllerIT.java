@@ -3,6 +3,7 @@ package io.hexlet.typoreporter.web;
 import com.github.database.rider.core.api.configuration.DBUnit;
 import com.github.database.rider.core.api.dataset.DataSet;
 import com.github.database.rider.spring.api.DBRider;
+import io.hexlet.typoreporter.domain.workspacesettings.WorkspaceSettings;
 import io.hexlet.typoreporter.repository.WorkspaceSettingsRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -63,7 +64,8 @@ public class WorkspaceSettingsControllerIT {
     @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspaceNamesExist")
     void getWorkspaceSettingsPageIsSuccessful(final String wksName) throws Exception {
-        String apiAccessToken = repository.getApiAccessTokenByWorkspaceName(wksName)
+        String apiAccessToken = repository.getWorkspaceSettingsByWorkspaceName(wksName)
+            .map(WorkspaceSettings::getApiAccessToken)
             .map(UUID::toString)
             .orElse(null);
 
@@ -77,7 +79,8 @@ public class WorkspaceSettingsControllerIT {
     @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspaceNamesExist")
     void patchWorkspaceTokenIsSuccessful(final String wksName) throws Exception {
-        String previousWksToken = repository.getApiAccessTokenByWorkspaceName(wksName)
+        String previousWksToken = repository.getWorkspaceSettingsByWorkspaceName(wksName)
+            .map(WorkspaceSettings::getApiAccessToken)
             .map(UUID::toString)
             .orElse(null);
 
@@ -85,7 +88,8 @@ public class WorkspaceSettingsControllerIT {
                 .with(csrf()))
             .andReturn().getResponse();
 
-        String newWksToken = repository.getApiAccessTokenByWorkspaceName(wksName)
+        String newWksToken = repository.getWorkspaceSettingsByWorkspaceName(wksName)
+            .map(WorkspaceSettings::getApiAccessToken)
             .map(UUID::toString)
             .orElse(null);
 

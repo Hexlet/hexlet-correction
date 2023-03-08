@@ -39,12 +39,8 @@ public class WorkspaceSettingsController {
         }
         model.addAttribute("wksName", wksName);
 
-        final var wksToken = workspaceSettingsService.getWorkspaceApiAccessTokenByName(wksName)
-            .map(UUID::toString);
-        if (wksToken.isEmpty()) {
-            log.error("Workspace with name {} not found or token not generated", wksName);
-        }
-        model.addAttribute("wksToken", wksToken.orElse(""));
+        final var wksToken = workspaceSettingsService.getWorkspaceApiAccessTokenByName(wksName);
+        model.addAttribute("wksToken", wksToken);
 
         getStatisticDataToModel(model, wksName);
         getLastTypoDataToModel(model, wksName);

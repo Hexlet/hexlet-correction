@@ -156,7 +156,7 @@ public class WorkspaceController {
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("createWorkspace", wksUpdate);
-            return WKS_UPDATE_TEMPLATE;
+            return "workspace/wks-update";
         }
         try {
             if (workspaceService.updateWorkspace(wksUpdate, wksName).isEmpty()) {

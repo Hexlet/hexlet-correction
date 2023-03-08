@@ -8,6 +8,7 @@ import io.hexlet.typoreporter.domain.workspace.WorkspaceRoleId;
 import io.hexlet.typoreporter.repository.AccountRepository;
 import io.hexlet.typoreporter.domain.workspacesettings.WorkspaceSettings;
 import io.hexlet.typoreporter.repository.WorkspaceRepository;
+import io.hexlet.typoreporter.repository.WorkspaceSettingsRepository;
 import io.hexlet.typoreporter.service.dto.workspace.CreateWorkspace;
 import io.hexlet.typoreporter.service.dto.workspace.WorkspaceInfo;
 import io.hexlet.typoreporter.service.mapper.WorkspaceMapper;
@@ -25,6 +26,8 @@ import static java.util.Objects.requireNonNull;
 public class WorkspaceService {
 
     private final WorkspaceRepository repository;
+
+    private final WorkspaceSettingsRepository settingsRepository;
 
     private final WorkspaceMapper workspaceMapper;
 
@@ -63,10 +66,10 @@ public class WorkspaceService {
             throw new WorkspaceAlreadyExistException("url", createWks.url());
         }
 
-        WorkspaceSettings workspaceSettings = new WorkspaceSettings();
-        workspaceSettings.setApiAccessToken(UUID.randomUUID());
-
-        final var wksToCreate = requireNonNull(conversionService.convert(createWks, Workspace.class));
+        final var wksToCreate = requireNonNull(workspaceMapper.toWorkspace(createWks));
+        final var wksSettings = new WorkspaceSettings();
+        wksSettings.setApiAccessToken(UUID.randomUUID());
+        wksSettings.setWorkspace(wksToCreate);
 
         Account account = accountRepository.findAccountByUsername(userName).orElseThrow();
 
@@ -74,8 +77,8 @@ public class WorkspaceService {
         final var workspaceRole = new WorkspaceRole(workspaceRoleId, AccountRole.ROLE_ADMIN, wksToCreate, account);
         wksToCreate.addWorkspaceRole(workspaceRole);
 
-        final var createdWks = repository.save(wksToCreate);
-        return workspaceMapper.toWorkspaceInfo(createdWks);
+        settingsRepository.save(wksSettings);
+        return workspaceMapper.toWorkspaceInfo(wksToCreate);
     }
 
     @Transactional

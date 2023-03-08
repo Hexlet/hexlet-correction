@@ -1,38 +1,36 @@
 package io.hexlet.typoreporter.domain.workspacesettings;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import io.hexlet.typoreporter.domain.AbstractAuditingEntity;
 import io.hexlet.typoreporter.domain.Identifiable;
 import io.hexlet.typoreporter.domain.workspace.Workspace;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
 import lombok.ToString;
 import lombok.experimental.Accessors;
-import org.hibernate.Hibernate;
-import javax.persistence.*;
+
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.MapsId;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
-@Getter
-@Setter
-@ToString
-@NoArgsConstructor
+import static javax.persistence.FetchType.LAZY;
+
+@Data
 @Accessors(chain = true)
 @Entity
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class WorkspaceSettings extends AbstractAuditingEntity implements Identifiable<Long> {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "workspace_settings_id_seq")
-    @SequenceGenerator(name = "workspace_settings_id_seq", allocationSize = 15)
     private Long id;
 
     @NotNull
     private UUID apiAccessToken;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @MapsId
+    @OneToOne(fetch = LAZY)
+    @JoinColumn(name = "id")
     @ToString.Exclude
     private Workspace workspace;
 
@@ -46,10 +44,9 @@ public class WorkspaceSettings extends AbstractAuditingEntity implements Identif
         if (obj == this) {
             return true;
         }
-        if (obj == null || Hibernate.getClass(obj) != Hibernate.getClass(this)) {
-            return false;
+        if (obj instanceof WorkspaceSettings workspaceSettings) {
+            return id != null && id.equals(workspaceSettings.id);
         }
-        WorkspaceSettings workspaceSettings = (WorkspaceSettings) obj;
-        return id != null && id.equals(workspaceSettings.id);
+        return false;
     }
 }
