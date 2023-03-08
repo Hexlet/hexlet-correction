@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.Base64;
+
 @Slf4j
 @Controller
 @RequestMapping("/workspace/{wksName}")
@@ -35,8 +37,10 @@ public class WorkspaceSettingsController {
         }
         model.addAttribute("wksName", wksName);
 
-        final var wksToken = workspaceSettingsService.getWorkspaceApiAccessTokenByName(wksName);
-        model.addAttribute("wksToken", wksToken);
+        final var settings = workspaceSettingsService.getWorkspaceSettingsByWorkspaceName(wksName);
+        final var basicTokenStr = settings.getId() + ":" + settings.getApiAccessToken();
+        final var wksBasicToken = Base64.getEncoder().encodeToString(basicTokenStr.getBytes());
+        model.addAttribute("wksBasicToken", wksBasicToken);
         final var rootUrl = req.getRequestURL().toString().replace(req.getRequestURI(), "");
         model.addAttribute("rootUrl", rootUrl);
 

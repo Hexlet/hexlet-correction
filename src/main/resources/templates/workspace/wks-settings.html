@@ -25,17 +25,17 @@
             </div>
             <div class="row mt-4">
                 <div class="col">
-                    <p>Workspace API access token: <code th:text="${wksToken ?: '<Token not generated>'}"></code></p>
-                    <p>You shall use header: <code>Authorization: Token [[${wksToken}]]</code></p>
+                    <p>Workspace API access token: <code th:text="${wksBasicToken ?: '<Token not generated>'}"></code></p>
+                    <p>You shall use header: <code>Authorization: Basic [[${wksBasicToken}]]</code></p>
                 </div>
             </div>
             <div class="row my-4">
                 <div class="col">
                     <p class="fw-bold">Example with <code>curl</code> for your workspace:</p>
                     <pre><code>
-curl -X POST --location "[[${rootUrl}]]/api/workspaces/[[${wksName}]]/typos" \
+curl -X POST --location "[[${rootUrl}]]/api/workspaces/typos" \
 -H "Content-Type: application/json" \
--H "Authorization: Token [[${wksToken}]]" \
+-H "Authorization: Basic [[${wksBasicToken}]]" \
 -d "{
         \"pageUrl\": \"https://site.com/\",
         \"reporterName\": \"reporterName\",

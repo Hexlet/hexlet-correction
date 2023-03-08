@@ -2,6 +2,7 @@ package io.hexlet.typoreporter.security.service;
 
 import io.hexlet.typoreporter.repository.AccountRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -15,7 +16,11 @@ public class AccountDetailService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return accountRepository.findSecuredAccountByUsername(username)
+        return accountRepository.findAccountByUsername(username)
+            .map(acc -> User.withUsername(acc.getUsername())
+                .password(acc.getPassword())
+                .authorities("USER")
+                .build())
             .orElseThrow(() -> new UsernameNotFoundException("Account with name='" + username + "' not found"));
     }
 }

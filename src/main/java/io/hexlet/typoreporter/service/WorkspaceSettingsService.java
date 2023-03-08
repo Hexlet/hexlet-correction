@@ -22,6 +22,12 @@ public class WorkspaceSettingsService {
             .orElseThrow(() -> new WorkspaceNotFoundException(wksName));
     }
 
+    @Transactional(readOnly = true)
+    public WorkspaceSettings getWorkspaceSettingsByWorkspaceName(String wksName) {
+        return repository.getWorkspaceSettingsByWorkspaceName(wksName)
+            .orElseThrow(() -> new WorkspaceNotFoundException(wksName));
+    }
+
     @Transactional
     public void regenerateWorkspaceApiAccessTokenByName(String wksName) {
         final var maybeWksSettings = repository.getWorkspaceSettingsByWorkspaceName(wksName);

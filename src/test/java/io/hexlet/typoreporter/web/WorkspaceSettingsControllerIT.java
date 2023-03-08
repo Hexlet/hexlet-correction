@@ -20,7 +20,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+
+import java.util.Base64;
 import java.util.UUID;
+
 import static com.github.database.rider.core.api.configuration.Orthography.LOWERCASE;
 import static io.hexlet.typoreporter.test.Constraints.POSTGRES_IMAGE;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -61,13 +64,14 @@ public class WorkspaceSettingsControllerIT {
     @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspaceNamesExist")
     void getWorkspaceSettingsPageIsSuccessful(final String wksName) throws Exception {
-        String apiAccessToken = repository.getWorkspaceSettingsByWorkspaceName(wksName)
-            .map(WorkspaceSettings::getApiAccessToken)
-            .map(UUID::toString)
+        final var apiAccessToken = repository.getWorkspaceSettingsByWorkspaceName(wksName)
+            .map(s -> s.getId() + ":" + s.getApiAccessToken())
+            .map(String::getBytes)
+            .map(Base64.getEncoder()::encodeToString)
             .orElse(null);
 
         MockHttpServletResponse response = mockMvc.perform(get("/workspace/{wksName}/settings", wksName))
-            .andExpect(model().attributeExists("wksToken"))
+            .andExpect(model().attributeExists("wksBasicToken"))
             .andReturn().getResponse();
 
         assertThat(response.getContentAsString()).contains(apiAccessToken);

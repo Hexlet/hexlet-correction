@@ -4,6 +4,7 @@ import io.hexlet.typoreporter.domain.typo.Typo;
 import io.hexlet.typoreporter.domain.typo.TypoEvent;
 import io.hexlet.typoreporter.domain.typo.TypoStatus;
 import io.hexlet.typoreporter.repository.TypoRepository;
+import io.hexlet.typoreporter.repository.WorkspaceRepository;
 import io.hexlet.typoreporter.service.dto.typo.ReportedTypo;
 import io.hexlet.typoreporter.service.dto.typo.TypoInfo;
 import io.hexlet.typoreporter.service.dto.typo.TypoReport;
@@ -32,6 +33,8 @@ import static java.util.stream.Collectors.toMap;
 @RequiredArgsConstructor
 public class TypoService {
 
+    private final WorkspaceRepository workspaceRepository;
+
     private final TypoRepository repository;
 
     private final TypoMapper typoMapper;
@@ -40,12 +43,21 @@ public class TypoService {
     private WorkspaceService workspaceService;
 
     @Transactional
-    public ReportedTypo addTypoReport(final TypoReport report, final String wksName) {
-        final var workspace = workspaceService.getWorkspaceByName(wksName)
-            .orElseThrow(() -> new WorkspaceNotFoundException(wksName));
+    public ReportedTypo addTypoReport(final TypoReport report, final String wksIdStr) {
+        final var workspace = workspaceService.getWorkspaceByName(wksIdStr)
+            .orElseThrow(() -> new WorkspaceNotFoundException(wksIdStr));
 
         final var typo = requireNonNull(typoMapper.toTypo(report));
         workspace.addTypo(typo);
+        return typoMapper.toReportedTypo(repository.save(typo));
+    }
+
+    @Transactional
+    public ReportedTypo addTypoReport(final TypoReport report, final Long wksId) {
+        final var wks = workspaceRepository.getReferenceById(wksId);
+
+        final var typo = requireNonNull(typoMapper.toTypo(report));
+        typo.setWorkspace(wks);
         return typoMapper.toReportedTypo(repository.save(typo));
     }
 

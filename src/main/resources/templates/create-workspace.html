@@ -6,7 +6,7 @@
 <main class="container">
     <div class="row">
         <div class="col">
-            <form method="post" th:action="@{/workspace/create}" th:object="${createWorkspace}">
+            <form method="post" th:action="@{/workspace}" th:object="${createWorkspace}">
                 <div class="form-floating mb-3">
                     <input class="form-control" id="inputWksUrl" placeholder="p"
                            th:classappend="${!#fields.hasErrors('url') && formModified ? 'is-valid' : ''}"

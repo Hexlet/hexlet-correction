@@ -65,14 +65,14 @@ public class WorkspaceController {
 
     private final WorkspaceRoleService workspaceRoleService;
 
-    @GetMapping("/create")
+    @GetMapping
     public String getCreateWorkspacePage(final Model model) {
         model.addAttribute("createWorkspace", new CreateWorkspace("", "", ""));
         model.addAttribute("formModified", false);
         return "create-workspace";
     }
 
-    @PostMapping("/create")
+    @PostMapping
     public String postCreateWorkspacePage(final Model model,
                                           Principal principal,
                                           @Valid @ModelAttribute CreateWorkspace createWorkspace,

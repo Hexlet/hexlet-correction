@@ -25,17 +25,16 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+import java.util.Base64;
+
 import static com.github.database.rider.core.api.configuration.Orthography.LOWERCASE;
 import static io.hexlet.typoreporter.test.Constraints.POSTGRES_IMAGE;
-import static io.hexlet.typoreporter.test.factory.EntitiesFactory.WORKSPACE_101_NAME;
+import static io.hexlet.typoreporter.test.factory.EntitiesFactory.WORKSPACE_101_ID;
 import static io.hexlet.typoreporter.test.factory.EntitiesFactory.WORKSPACE_101_TOKEN;
 import static java.time.LocalDateTime.now;
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -77,13 +76,15 @@ class WorkspaceApiIT {
     @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getTypoReport")
     void addTypoReport(final TypoReport typoReport) throws Exception {
+        final var idTokenBytes = (WORKSPACE_101_ID + ":" + WORKSPACE_101_TOKEN).getBytes();
+        final var basicEncodedStr = Base64.getEncoder().encodeToString(idTokenBytes);
         final var content = mockMvc
-            .perform(post("/api/workspaces/" + WORKSPACE_101_NAME + "/typos")
+            .perform(post("/api/workspaces/typos")
                 .content(objectMapper.writeValueAsString(typoReport))
-                .header("Authorization", "Token " + WORKSPACE_101_TOKEN)
+                .header("Authorization", "Basic " + basicEncodedStr)
                 .contentType(APPLICATION_JSON)
             )
-            .andDo(print())
+//            .andDo(print())
             .andExpect(status().isCreated())
             .andExpect(content().contentType(APPLICATION_JSON))
             .andExpect(header().exists("Location"))
@@ -105,9 +106,11 @@ class WorkspaceApiIT {
             }
             """;
 
-        mockMvc.perform(post("/api/workspaces/" + WORKSPACE_101_NAME + "/typos")
+        final var idTokenBytes = (WORKSPACE_101_ID + ":" + WORKSPACE_101_TOKEN).getBytes();
+        final var basicEncodedStr = Base64.getEncoder().encodeToString(idTokenBytes);
+        mockMvc.perform(post("/api/workspaces/typos")
                 .content(typoJson)
-                .header("Authorization", "Token " + WORKSPACE_101_TOKEN)
+                .header("Authorization", "Basic " + basicEncodedStr)
                 .contentType(APPLICATION_JSON))
             .andExpect(status().isBadRequest())
             .andExpect(content().contentType(APPLICATION_PROBLEM_JSON))
@@ -123,9 +126,11 @@ class WorkspaceApiIT {
             }
             """;
 
-        mockMvc.perform(post("/api/workspaces/" + WORKSPACE_101_NAME + "/typos")
+        final var idTokenBytes = (WORKSPACE_101_ID + ":" + WORKSPACE_101_TOKEN).getBytes();
+        final var basicEncodedStr = Base64.getEncoder().encodeToString(idTokenBytes);
+        mockMvc.perform(post("/api/workspaces/typos")
                 .content(typoJson)
-                .header("Authorization", "Token " + WORKSPACE_101_TOKEN)
+                .header("Authorization", "Basic " + basicEncodedStr)
                 .contentType(APPLICATION_JSON))
             .andExpect(status().isBadRequest())
             .andExpect(content().contentType(APPLICATION_PROBLEM_JSON))
@@ -142,9 +147,11 @@ class WorkspaceApiIT {
             }
             """;
 
-        mockMvc.perform(post("/api/workspaces/" + WORKSPACE_101_NAME + "/typos")
+        final var idTokenBytes = (WORKSPACE_101_ID + ":" + WORKSPACE_101_TOKEN).getBytes();
+        final var basicEncodedStr = Base64.getEncoder().encodeToString(idTokenBytes);
+        mockMvc.perform(post("/api/workspaces/typos")
                 .content(typoJson)
-                .header("Authorization", "Token " + WORKSPACE_101_TOKEN)
+                .header("Authorization", "Basic " + basicEncodedStr)
                 .contentType(APPLICATION_JSON))
             .andExpect(status().isBadRequest())
             .andExpect(content().contentType(APPLICATION_PROBLEM_JSON))

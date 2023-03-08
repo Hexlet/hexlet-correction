@@ -13,4 +13,10 @@ public class WorkspaceNotFoundException extends ErrorResponseException {
     public WorkspaceNotFoundException(final String name) {
         super(NOT_FOUND, ProblemDetail.forStatusAndDetail(NOT_FOUND, "Workspace not found"), null, format(NAME_NOT_FOUND_MSG, name), new Object[]{name});
     }
+
+    public WorkspaceNotFoundException(final String wksIdStr, final Throwable cause) {
+        super(NOT_FOUND, ProblemDetail.forStatusAndDetail(NOT_FOUND, "Workspace not found"), cause,
+            "Workspace with id='" + wksIdStr + "' not found"
+            , new Object[]{wksIdStr});
+    }
 }

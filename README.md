@@ -71,12 +71,12 @@ make clear
 For creating new `typo`:
 
 ```plaintext
-POST http://localhost:8080/api/workspaces/{workspace-name}/typos
+POST http://localhost:8080/api/workspaces/typos
 Content-Type: application/json
-Authorization: Token workspace-token
+Authorization: Basic base64(workspaceId:api-token)
 
 {
-    "pageUrl": "http://site.com/",
+    "pageUrl": "https://mysite.com/page/with/typo",
     "reporterName": "reporterName",
     "reporterComment": "reporterComment",
     "textBeforeTypo": "textBeforeTypo",
