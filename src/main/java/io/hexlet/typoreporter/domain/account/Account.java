@@ -70,6 +70,7 @@ public class Account extends AbstractAuditingEntity implements Identifiable<Long
     private String username;
 
     @NotBlank
+    @ToString.Exclude
     private String password;
 
     @NotBlank

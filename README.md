@@ -45,7 +45,7 @@ make test
 For example, to start a postgresql database in a docker container, run:
 
 ```bash
-make docker-db
+make docker-infra-start
 ```
 
 ## Run application with database in docker

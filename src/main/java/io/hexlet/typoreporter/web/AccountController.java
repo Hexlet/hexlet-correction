@@ -40,7 +40,7 @@ public class AccountController {
             return "/error-general";
         }
         final var accInfo = maybeAccInfo.get();
-        final var workspaceInfoList =  accountService.getWorkspacesInfoListByUsername(accInfo.username());
+        final var workspaceInfoList = accountService.getWorkspacesInfoListByUsername(accInfo.username());
 
         model.addAttribute("workspaceRoleInfoList", workspaceInfoList);
         model.addAttribute("accInfo", accInfo);
@@ -48,7 +48,7 @@ public class AccountController {
         return "account/acc-info";
     }
 
-    @GetMapping("/profile")
+    @GetMapping("/update")
     public String getProfilePage(final Model model,
                                  final Authentication authentication) {
         final String name = authentication.getName();
@@ -65,7 +65,7 @@ public class AccountController {
         return "account/prof-update";
     }
 
-    @PutMapping("/profile/update")
+    @PutMapping("/update")
     public String putProfileUpdate(final Model model,
                                    final @Valid @ModelAttribute("updateProfile") UpdateProfile updateProfile,
                                    final BindingResult bindingResult,
@@ -106,10 +106,10 @@ public class AccountController {
         return "account/pass-update";
     }
 
-    @PutMapping("/password/update")
+    @PutMapping("/password")
     public String putPasswordUpdate(final Model model,
-                                   final @Valid @ModelAttribute("updatePassword") UpdatePassword updatePassword,
-                                   final BindingResult bindingResult,
+                                    final @Valid @ModelAttribute("updatePassword") UpdatePassword updatePassword,
+                                    final BindingResult bindingResult,
                                     final Authentication authentication) {
 
         model.addAttribute("formModified", true);

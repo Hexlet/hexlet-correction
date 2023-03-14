@@ -6,7 +6,7 @@
 <main class="container">
     <div class="row">
         <div class="col">
-            <form th:action="@{/account/profile/update}" th:method="put" th:object="${updateProfile}">
+            <form th:action="@{/account/update}" th:method="put" th:object="${updateProfile}">
                 <div class="form-floating mb-3">
                     <input class="form-control" id="inputFirstName" placeholder="p"
                            th:classappend="${!#fields.hasErrors('firstName') && formModified ? 'is-valid' : ''}"

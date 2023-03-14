@@ -2,11 +2,11 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{fragments/header :: head}"></head>
 <body style="padding-top: 4.5rem">
-<nav th:replace="~{~{fragments/panels :: mainNavbarTop}}"></nav>
+<nav th:replace="~{fragments/panels :: mainNavbarTop}"></nav>
 <main class="container">
     <div class="row">
         <div class="col">
-            <form th:action="@{/account/password/update}" th:method="put" th:object="${updatePassword}">
+            <form th:action="@{/account/password}" th:method="put" th:object="${updatePassword}">
                 <div class="form-floating mb-3">
                     <input class="form-control" id="inputOldPassword" placeholder="p"
                            th:classappend="${!#fields.hasErrors('oldPassword') && formModified ? 'is-valid' : ''}"

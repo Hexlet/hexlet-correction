@@ -8,7 +8,7 @@ package:
 
 clear:
 	./mvnw -B -ntp -fae clean
-	docker-compose -f src/main/docker/postgresql.yml down -v
+	docker-compose -f docker/docker-compose.yml down -v
 
 setup: build
 
@@ -24,12 +24,12 @@ test-integration-only:
 run-dev:
 	java -jar -Dspring.profiles.active=dev ./target/typoreporter-*.jar
 
-run-dev-docker-db: docker-db run-dev
+run-dev-docker-db: docker-infra-start run-dev
 
 start: run-dev-docker-db
 
-docker-db:
-	docker-compose -f ./src/main/docker/postgresql.yml up -d -V --remove-orphans
+docker-infra-start:
+	docker-compose -f docker/docker-compose.yml up -d -V --remove-orphans
 
 update-versions:
 	./mvnw versions:update-properties versions:display-plugin-updates

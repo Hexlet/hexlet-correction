@@ -1,4 +1,4 @@
-package io.hexlet.typoreporter.service.dto.account;
+package io.hexlet.typoreporter.web.model;
 
 import io.hexlet.typoreporter.domain.account.constraint.AccountPassword;
 import io.hexlet.typoreporter.domain.account.constraint.AccountUsername;
@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
@@ -15,7 +16,8 @@ import lombok.Setter;
     @FieldMatch(first = "password", second = "confirmPassword", message = "The password and it confirmation must match"),
     @FieldMatch(first = "email", second = "confirmEmail", message = "The email \"{0}\" and it confirmation \"{1}\" must match")
 })
-public class SignupAccount {
+@ToString
+public class SignupAccountModel {
 
     @AccountUsername
     private String username;
@@ -27,9 +29,11 @@ public class SignupAccount {
     private String confirmEmail;
 
     @AccountPassword
+    @ToString.Exclude
     private String password;
 
     @AccountPassword
+    @ToString.Exclude
     private String confirmPassword;
 
     @NotBlank

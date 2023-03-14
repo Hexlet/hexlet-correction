@@ -4,8 +4,11 @@ import io.hexlet.typoreporter.domain.account.Account;
 import io.hexlet.typoreporter.domain.account.AuthProvider;
 import io.hexlet.typoreporter.repository.AccountRepository;
 import io.hexlet.typoreporter.repository.WorkspaceRoleRepository;
+import io.hexlet.typoreporter.service.account.EmailAlreadyExistException;
+import io.hexlet.typoreporter.service.account.UsernameAlreadyExistException;
+import io.hexlet.typoreporter.service.account.signup.SignupAccount;
+import io.hexlet.typoreporter.service.account.signup.SignupAccountUseCase;
 import io.hexlet.typoreporter.service.dto.account.InfoAccount;
-import io.hexlet.typoreporter.service.dto.account.SignupAccount;
 import io.hexlet.typoreporter.service.dto.account.UpdatePassword;
 import io.hexlet.typoreporter.service.dto.account.UpdateProfile;
 import io.hexlet.typoreporter.service.dto.workspace.WorkspaceRoleInfo;
@@ -25,7 +28,7 @@ import java.util.Optional;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class AccountService implements SignUpAccount, QueryAccount {
+public class AccountService implements SignupAccountUseCase, QueryAccount {
 
     private final AccountRepository accountRepository;
 
@@ -48,22 +51,21 @@ public class AccountService implements SignUpAccount, QueryAccount {
     }
 
     @Override
-    public Account signup(SignupAccount signupAccount) {
-        Account sourceAccount = accountMapper.toAccount(signupAccount);
-        if (sourceAccount == null) {
-            return null;
+    public InfoAccount signup(SignupAccount signupAccount) throws UsernameAlreadyExistException, EmailAlreadyExistException {
+        if (accountRepository.existsByEmail(signupAccount.email())) {
+            throw new EmailAlreadyExistException(signupAccount.email());
         }
-        sourceAccount.setAuthProvider(AuthProvider.EMAIL);
-
-        boolean existsByUsername = existsByUsername(sourceAccount.getUsername());
-        boolean existsByEmail = existsByEmail(sourceAccount.getEmail());
-        if (existsByUsername || existsByEmail) {
-            return null;
+        if (accountRepository.existsByUsername(signupAccount.username())) {
+            throw new UsernameAlreadyExistException(signupAccount.username());
         }
 
-        // account.setRoles(Collections.singleton(new Role(1L, "ROLE_USER"))); // TODO make roles
-        sourceAccount.setPassword(passwordEncoder.encode(sourceAccount.getPassword()));
-        return accountRepository.save(sourceAccount);
+        final var accToSave = accountMapper.toAccount(signupAccount);
+
+        accToSave.setPassword(passwordEncoder.encode(signupAccount.password()));
+        accToSave.setAuthProvider(AuthProvider.EMAIL);
+        accountRepository.save(accToSave);
+
+        return accountMapper.toInfoAccount(accToSave);
     }
 
     @Transactional(readOnly = true)

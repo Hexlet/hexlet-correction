@@ -13,6 +13,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.context.DelegatingSecurityContextRepository;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+import org.springframework.security.web.context.RequestAttributeSecurityContextRepository;
+import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import static org.springframework.http.HttpMethod.GET;
@@ -38,27 +42,36 @@ public class SecurityConfig {
     }
 
     @Bean
-    public DaoAuthenticationProvider accProvider(AccountDetailService userDetailsService,
-                                                 PasswordEncoder pEncoder) {
-        final var apiProvider = new DaoAuthenticationProvider();
-        apiProvider.setUserDetailsService(userDetailsService);
-        apiProvider.setPasswordEncoder(pEncoder);
-        return apiProvider;
+    public DaoAuthenticationProvider accountProvider(AccountDetailService userDetailsService,
+                                                     PasswordEncoder pEncoder) {
+        final var accountProvider = new DaoAuthenticationProvider();
+        accountProvider.setUserDetailsService(userDetailsService);
+        accountProvider.setPasswordEncoder(pEncoder);
+        return accountProvider;
     }
 
     @Bean
     public AuthenticationManager authenticationManager(DaoAuthenticationProvider apiProvider,
-                                                       DaoAuthenticationProvider accProvider) {
-        return new ProviderManager(apiProvider, accProvider);
+                                                       DaoAuthenticationProvider accountProvider) {
+        return new ProviderManager(apiProvider, accountProvider);
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityContextRepository securityContextRepository() {
+        return new DelegatingSecurityContextRepository(
+            new RequestAttributeSecurityContextRepository(),
+            new HttpSessionSecurityContextRepository()
+        );
+    }
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http,
+                                           SecurityContextRepository securityContextRepository) throws Exception {
         http.httpBasic();
 
         http.authorizeHttpRequests(authz -> authz
                 .requestMatchers(GET, "/webjars/**", "/widget/**", "/img/**").permitAll()
-                .requestMatchers("/", "/workspaces", "/login", "/signup").permitAll()
+                .requestMatchers("/", "/workspaces", "/login", "/signup", "/error").permitAll()
                 .anyRequest().authenticated()
             )
             .formLogin(login -> login
@@ -72,6 +85,8 @@ public class SecurityConfig {
                     new AntPathRequestMatcher("/typo/form/*", POST.name())
                 )
             );
+
+        http.securityContext().securityContextRepository(securityContextRepository);
 
         http.headers().frameOptions().disable();
         return http.build();
