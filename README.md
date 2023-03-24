@@ -26,7 +26,7 @@ Install Vagrant and VM provider (Virtualbox).
 Run commands:
 
 ```bash
-make vagrant build
+make vagrant-build
 make vagrant-run
 ```
 
