@@ -8,12 +8,14 @@ import io.hexlet.typoreporter.domain.typo.Typo;
 import io.hexlet.typoreporter.domain.workspace.constraint.WorkspaceDescription;
 import io.hexlet.typoreporter.domain.workspace.constraint.WorkspaceName;
 import io.hexlet.typoreporter.domain.workspace.constraint.WorkspaceUrl;
+import io.hexlet.typoreporter.domain.workspacesettings.WorkspaceSettings;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -60,6 +62,10 @@ public class Workspace extends AbstractAuditingEntity implements Identifiable<Lo
     @OneToMany(mappedBy = "workspace", cascade = ALL, orphanRemoval = true)
     @ToString.Exclude
     private Set<WorkspaceRole> workspaceRoles = new HashSet<>();
+
+    @OneToOne(mappedBy = "workspace", cascade = ALL, orphanRemoval = true)
+    @ToString.Exclude
+    private WorkspaceSettings workspaceSettings;
 
     public Workspace addTypo(final Typo typo) {
         typos.add(typo);
