@@ -217,12 +217,6 @@
                 cancelBtn.addEventListener('click', closeModal);
                 closeModalBtn.addEventListener('click', closeModal);
 
-                window.addEventListener('click', (event) => {
-                    if (event.target === modal) {
-                        closeModal();
-                    }
-                });
-
                 submitButton.addEventListener('click', async (event) => {
                     event.preventDefault();
                     data.pageUrl = window.location.href;
