@@ -105,34 +105,66 @@
         background-color: #e2e6ea;
     }
 </style>
-
-<div class="modal">
-    <div class="modal-content">
-        <span class="modal-close">&times;</span>
-        <div class="ReportTypo">
-            <div class="ReportTypo-header">Сообщите об ошибке на странице</div>
-            <div class="ReportTypo-label">Ошибка содержится в следующем тексте:</div>
-            <div class="ReportTypo-message" id="selectedText"></div>
-            <input type="text" class="ReportTypo-name" placeholder="Ваше имя">
-            <textarea class="ReportTypo-comment" placeholder="Опишите ошибку"></textarea>
-            <div class="ReportTypo-label">
-                <strong class="mb-2">Отправить сообщение об ошибке редактору сайта?</strong>
-            </div>
-            <div style="text-align: right;">
-                <button type="button" class="btn btn-primary ReportTypo-submit"><strong>Отправить</strong></button>
-                <button type="button" class="btn btn-light ReportTypo-cancel">Отмена</button>
-            </div>
-        </div>
-    </div>
-</div>
 <script>
-    const modal = document.querySelector('.modal');
-    const selectedText = document.getElementById('selectedText');
-    const commentField = document.querySelector('.ReportTypo-comment');
-    const submitButton = document.querySelector('.ReportTypo-submit');
-    const closeModalBtn = document.querySelector('.modal-close');
-    const cancelBtn = document.querySelector('.ReportTypo-cancel');
-    const name = document.querySelector('.ReportTypo-name');
+    const renderModal = () => {
+        const divModal = document.createElement('div');
+        divModal.classList.add('modal');
+        divModal.style.display = 'block';
+
+        const divContent = document.createElement('div');
+        divContent.classList.add('modal-content');
+        divModal.append(divContent);
+
+        const divTypoReporter = document.createElement('div');
+        divTypoReporter.classList.add('ReportTypo');
+        divContent.append(divTypoReporter);
+
+        const divHeader = document.createElement('div');
+        divHeader.classList.add('ReportTypo-header');
+        divHeader.textContent = 'Сообщите об ошибке на странице';
+
+        const divFirstLabel = document.createElement('div');
+        divFirstLabel.classList.add('ReportTypo-label');
+        divFirstLabel.textContent = 'Ошибка содержится в следующем тексте:';
+
+        const divMessage = document.createElement('div');
+        divMessage.classList.add('ReportTypo-message');
+        divMessage.id = 'selectedText';
+
+        const inputName = document.createElement('input');
+        inputName.type = 'text';
+        inputName.placeholder = 'Ваше имя';
+        inputName.classList.add('ReportTypo-name');
+
+        const textareaComment = document.createElement('textarea');
+        textareaComment.classList.add('ReportTypo-comment');
+        textareaComment.placeholder = 'Опишите ошибку';
+
+        const divSecondLabel = document.createElement('div');
+        divSecondLabel.classList.add('ReportTypo-label');
+        const strong = document.createElement('strong');
+        strong.classList.add('mb-2');
+        strong.textContent = 'Отправить сообщение об ошибке редактору сайта?';
+        divSecondLabel.append(strong);
+
+        const divButtons = document.createElement('div');
+        divButtons.style.textAlign = 'right';
+
+        const submitButton = document.createElement('button');
+        submitButton.type = 'button';
+        submitButton.classList.add('btn', 'btn-primary', 'ReportTypo-submit');
+        submitButton.textContent = 'Отправить';
+
+        const cancelButton = document.createElement('button');
+        cancelButton.type = 'button';
+        cancelButton.classList.add('btn', 'btn-light', 'ReportTypo-cancel');
+        cancelButton.textContent = 'Отмена';
+
+        divButtons.append(submitButton, cancelButton);
+        divTypoReporter.append(divHeader, divFirstLabel, divMessage, inputName, textareaComment, divSecondLabel, divButtons);
+        const body = document.querySelector('body');
+        body.append(divModal);
+    };
 
     const data = {
         pageUrl: null,
@@ -143,23 +175,33 @@
         textAfterTypo: null,
     };
 
-    const closeModal = () => {
-        modal.style.display = 'none';
-        commentField.value = '';
-        name.value = '';
-    }
-
     document.addEventListener('keydown', (event) => {
         if (event.ctrlKey && event.key === 'Enter') {
             const selection = window.getSelection();
             if (!selection.isCollapsed) {
-                modal.style.display = 'block';
+                if (!document.querySelector('.modal')) {
+                    renderModal();
+                }
+                const modal = document.querySelector('.modal');
+                const selectedText = document.getElementById('selectedText');
+                const commentField = document.querySelector('.ReportTypo-comment');
+                const submitButton = document.querySelector('.ReportTypo-submit');
+                const closeModalBtn = document.querySelector('.modal-close');
+                const cancelBtn = document.querySelector('.ReportTypo-cancel');
+                const name = document.querySelector('.ReportTypo-name');
 
+                const closeModal = () => {
+                    modal.style.display = 'none';
+                    commentField.value = '';
+                    name.value = '';
+                }
+
+                modal.style.display = 'block';
                 const selectionText = selection.toString().trim();
                 const anchorNode = selection.anchorNode;
                 const anchorOffset = selection.anchorOffset;
                 const focusOffset = selection.focusOffset;
-                const maxLength = selection.toString().length + 20;
+                const maxLength = 50;
                 const end = Math.min(focusOffset + maxLength, anchorNode.length);
                 const start = Math.max(anchorOffset - maxLength, 0);
                 const textBeforeSelection = anchorNode.textContent.substring(start, anchorOffset);
@@ -171,37 +213,38 @@
                 data.textTypo = selectionText;
                 data.textBeforeTypo = textBeforeSelection;
                 data.textAfterTypo = textAfterSelection;
+
+                cancelBtn.addEventListener('click', closeModal);
+                closeModalBtn.addEventListener('click', closeModal);
+
+                window.addEventListener('click', (event) => {
+                    if (event.target === modal) {
+                        closeModal();
+                    }
+                });
+
+                submitButton.addEventListener('click', async (event) => {
+                    event.preventDefault();
+                    data.pageUrl = window.location.href;
+                    data.reporterName = name.value;
+                    data.reporterComment = commentField.value;
+
+                    const response = await fetch('https://hexlet-correction.herokuapp.com/api/workspaces/typos', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Basic Nzc6ZWEyNzlmNTctMWIyYy00MjA3LTk1NjctNGRiNzk2NzhhYmI5'
+                        },
+                        body: JSON.stringify(data)
+                    });
+
+                    if (response.ok) {
+                        closeModal();
+                    } else {
+                        alert('Произошла ошибка при отправке данных на сервер.');
+                    }
+                });
             }
-        }
-    });
-
-    cancelBtn.addEventListener('click', closeModal);
-    closeModalBtn.addEventListener('click', closeModal);
-
-    window.addEventListener('click', (event) => {
-        if (event.target === modal) {
-            closeModal();
-        }
-    });
-    submitButton.addEventListener('click', async (event) => {
-        event.preventDefault();
-        data.pageUrl = window.location.href;
-        data.reporterName = name.value;
-        data.reporterComment = commentField.value;
-
-        const response = await fetch('https://hexlet-correction.herokuapp.com/api/workspaces/typos', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Basic Nzc6ZWEyNzlmNTctMWIyYy00MjA3LTk1NjctNGRiNzk2NzhhYmI5'
-            },
-            body: JSON.stringify(data)
-        });
-
-        if (response.ok) {
-            closeModal();
-        } else {
-            alert('Произошла ошибка при отправке данных на сервер.');
         }
     });
 </script>
