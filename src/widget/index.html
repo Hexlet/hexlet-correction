@@ -106,6 +106,9 @@
     }
 </style>
 <script>
+    const state = {
+        modalShown: false,
+    };
     const renderModal = () => {
         const divModal = document.createElement('div');
         divModal.classList.add('modal');
@@ -164,6 +167,8 @@
         divTypoReporter.append(divHeader, divFirstLabel, divMessage, inputName, textareaComment, divSecondLabel, divButtons);
         const body = document.querySelector('body');
         body.append(divModal);
+
+        state.modalShown = true;
     };
 
     const data = {
@@ -176,69 +181,70 @@
     };
 
     document.addEventListener('keydown', (event) => {
+        const selection = window.getSelection();
+        if (selection.isCollapsed) {
+            return;
+        }
         if (event.ctrlKey && event.key === 'Enter') {
-            const selection = window.getSelection();
-            if (!selection.isCollapsed) {
-                if (!document.querySelector('.modal')) {
-                    renderModal();
-                }
-                const modal = document.querySelector('.modal');
-                const selectedText = document.getElementById('selectedText');
-                const commentField = document.querySelector('.ReportTypo-comment');
-                const submitButton = document.querySelector('.ReportTypo-submit');
-                const closeModalBtn = document.querySelector('.modal-close');
-                const cancelBtn = document.querySelector('.ReportTypo-cancel');
-                const name = document.querySelector('.ReportTypo-name');
-
-                const closeModal = () => {
-                    modal.style.display = 'none';
-                    commentField.value = '';
-                    name.value = '';
-                }
-
-                modal.style.display = 'block';
-                const selectionText = selection.toString().trim();
-                const anchorNode = selection.anchorNode;
-                const anchorOffset = selection.anchorOffset;
-                const focusOffset = selection.focusOffset;
-                const maxLength = 50;
-                const end = Math.min(focusOffset + maxLength, anchorNode.length);
-                const start = Math.max(anchorOffset - maxLength, 0);
-                const textBeforeSelection = anchorNode.textContent.substring(start, anchorOffset);
-                const textAfterSelection = anchorNode.substringData(focusOffset, end - focusOffset);
-
-                selectedText.innerHTML = `${textBeforeSelection}<u class="ReportTypo-heighlight">${selectionText}</u>${textAfterSelection}`;
-                commentField.focus();
-
-                data.textTypo = selectionText;
-                data.textBeforeTypo = textBeforeSelection;
-                data.textAfterTypo = textAfterSelection;
-
-                cancelBtn.addEventListener('click', closeModal);
-                closeModalBtn.addEventListener('click', closeModal);
-
-                submitButton.addEventListener('click', async (event) => {
-                    event.preventDefault();
-                    data.pageUrl = window.location.href;
-                    data.reporterName = name.value;
-                    data.reporterComment = commentField.value;
-
-                    const response = await fetch('https://hexlet-correction.herokuapp.com/api/workspaces/typos', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': 'Basic Nzc6ZWEyNzlmNTctMWIyYy00MjA3LTk1NjctNGRiNzk2NzhhYmI5'
-                        },
-                        body: JSON.stringify(data)
-                    });
-
-                    if (response.ok) {
-                        closeModal();
-                    } else {
-                        alert('Произошла ошибка при отправке данных на сервер.');
-                    }
-                });
+            if (state.modalShown === false) {
+                renderModal();
             }
+            const modal = document.querySelector('.modal');
+            const selectedText = document.getElementById('selectedText');
+            const commentField = document.querySelector('.ReportTypo-comment');
+            const submitButton = document.querySelector('.ReportTypo-submit');
+            const closeModalBtn = document.querySelector('.modal-close');
+            const cancelBtn = document.querySelector('.ReportTypo-cancel');
+            const name = document.querySelector('.ReportTypo-name');
+
+            const closeModal = () => {
+                modal.style.display = 'none';
+                commentField.value = '';
+                name.value = '';
+            }
+
+            modal.style.display = 'block';
+            const selectionText = selection.toString().trim();
+            const anchorNode = selection.anchorNode;
+            const anchorOffset = selection.anchorOffset;
+            const focusOffset = selection.focusOffset;
+            const maxLength = 50;
+            const end = Math.min(focusOffset + maxLength, anchorNode.length);
+            const start = Math.max(anchorOffset - maxLength, 0);
+            const textBeforeSelection = anchorNode.textContent.substring(start, anchorOffset);
+            const textAfterSelection = anchorNode.substringData(focusOffset, end - focusOffset);
+
+            selectedText.innerHTML = `${textBeforeSelection}<u class="ReportTypo-highlight">${selectionText}</u>${textAfterSelection}`;
+            commentField.focus();
+
+            data.textTypo = selectionText;
+            data.textBeforeTypo = textBeforeSelection;
+            data.textAfterTypo = textAfterSelection;
+
+            cancelBtn.addEventListener('click', closeModal);
+            closeModalBtn.addEventListener('click', closeModal);
+
+            submitButton.addEventListener('click', async (event) => {
+                event.preventDefault();
+                data.pageUrl = window.location.href;
+                data.reporterName = name.value;
+                data.reporterComment = commentField.value;
+
+                const response = await fetch('https://hexlet-correction.herokuapp.com/api/workspaces/typos', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Basic Nzc6ZWEyNzlmNTctMWIyYy00MjA3LTk1NjctNGRiNzk2NzhhYmI5'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    closeModal();
+                } else {
+                    throw  new Error('Ошибка соединения');
+                }
+            });
         }
     });
 </script>
