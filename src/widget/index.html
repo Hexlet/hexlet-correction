@@ -1,110 +1,3 @@
-<style>
-    .modal {
-        display: none;
-        position: fixed;
-        z-index: 1;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        overflow: auto;
-        background-color: rgba(0, 0, 0, 0.4);
-    }
-
-    .modal-content {
-        background-color: #fefefe;
-        margin: 15% auto;
-        padding: 20px;
-        border: 1px solid #888;
-        width: 80%;
-        max-width: 700px;
-    }
-
-    .modal-close {
-        color: #aaa;
-        float: right;
-        font-size: 28px;
-        font-weight: bold;
-    }
-
-    .modal-close:hover,
-    .modal-close:focus {
-        color: black;
-        text-decoration: none;
-        cursor: pointer;
-    }
-
-    .ReportTypo-header {
-        font-weight: 700;
-        font-size: 150%;
-        margin-bottom: 16px;
-        margin-bottom: 1rem;
-        width: 100%;
-        flex-shrink: 0;
-    }
-
-    .ReportTypo-label {
-        margin-bottom: 8px;
-        margin-bottom: 0.5rem;
-        display: flex;
-        flex-direction: column;
-        flex-shrink: 0;
-    }
-
-    .ReportTypo-message {
-        width: 100%;
-        padding: 5px 10px;
-        margin-bottom: 15px;
-        border: 1px solid #f3f3f3;
-        background: #f3f3f3;
-        overflow-y: auto;
-    }
-
-    .ReportTypo-comment {
-        display: block;
-        width: 100%;
-        height: 100px;
-        margin-bottom: 16px;
-        margin-bottom: 1rem;
-        border: 1px solid #ccc;
-        flex-shrink: 0;
-    }
-
-    .ReportTypo-name {
-        display: block;
-        width: 100%;
-        height: 40px;
-        margin-bottom: 16px;
-        margin-bottom: 1rem;
-        border: 1px solid #ccc;
-        flex-shrink: 0;
-        padding: 5px;
-    }
-
-    .ReportTypo-heighlight {
-        text-decoration: underline;
-        color: black;
-        font-weight: 700;
-        margin: 0 10px;
-    }
-
-    .btn-primary {
-        background-color: blue;
-        color: white;
-    }
-
-    .btn-light {
-        background-color: #f8f9fa;
-    }
-
-    .btn-primary:hover {
-        background-color: #1e7cd6;
-    }
-
-    .btn-light:hover {
-        background-color: #e2e6ea;
-    }
-</style>
 <script>
     const state = {
         modalShown: false,
@@ -169,6 +62,112 @@
         body.append(divModal);
 
         state.modalShown = true;
+
+        const style = document.createElement('style');
+        style.textContent = `
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.4);
+    }
+
+    .modal-content {
+      background-color: #fefefe;
+      margin: 15% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 80%;
+      max-width: 700px;
+    }
+
+    .modal-close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    .modal-close:hover,
+    .modal-close:focus {
+      color: black;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .ReportTypo-header {
+      font-weight: 700;
+      font-size: 150%;
+      margin-bottom: 1rem;
+      width: 100%;
+      flex-shrink: 0;
+    }
+
+    .ReportTypo-label {
+      margin-bottom: 0.5rem;
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+    }
+
+    .ReportTypo-message {
+      width: 100%;
+      padding: 5px 10px;
+      margin-bottom: 15px;
+      border: 1px solid #f3f3f3;
+      background: #f3f3f3;
+      overflow-y: auto;
+    }
+
+    .ReportTypo-comment {
+      display: block;
+      width: 100%;
+      height: 100px;
+      margin-bottom: 1rem;
+      border: 1px solid #ccc;
+      flex-shrink: 0;
+    }
+
+    .ReportTypo-name {
+      display: block;
+      width: 100%;
+      height: 40px;
+      margin-bottom: 1rem;
+      border: 1px solid #ccc;
+      flex-shrink: 0;
+      padding: 5px;
+    }
+
+    .ReportTypo-highlight {
+      text-decoration: underline;
+      color: black;
+      font-weight: 700;
+      margin: 0 10px;
+    }
+
+    .btn-primary {
+      background-color: blue;
+      color: white;
+    }
+
+    .btn-light {
+      background-color: #f8f9fa;
+    }
+
+    .btn-primary:hover {
+      background-color: #1e7cd6;
+    }
+
+    .btn-light:hover {
+      background-color: #e2e6ea;
+    }
+    `
+        document.head.append(style);
     };
 
     const data = {
