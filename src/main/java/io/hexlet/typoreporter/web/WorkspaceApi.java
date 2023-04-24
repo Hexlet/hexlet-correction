@@ -25,6 +25,7 @@ public class WorkspaceApi {
     private final TypoService service;
 
     @PostMapping("/typos")
+    // TODO: allow sending a request only from the pages specified in the Workspace settings
     @CrossOrigin(
         originPatterns = {"*"},
         allowCredentials = "true"
