@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import static org.springframework.http.ResponseEntity.created;
 
@@ -24,6 +25,10 @@ public class WorkspaceApi {
     private final TypoService service;
 
     @PostMapping("/typos")
+    @CrossOrigin(
+        originPatterns = {"*"},
+        allowCredentials = "true"
+    )
     public ResponseEntity<ReportedTypo> addTypoReport(Authentication authentication,
                                                       @Valid @RequestBody TypoReport typoReport,
                                                       UriComponentsBuilder builder) {
