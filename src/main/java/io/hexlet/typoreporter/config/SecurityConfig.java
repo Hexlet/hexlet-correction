@@ -68,6 +68,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http,
                                            SecurityContextRepository securityContextRepository) throws Exception {
         http.httpBasic();
+        http.cors();
 
         http.authorizeHttpRequests(authz -> authz
                 .requestMatchers(GET, "/webjars/**", "/widget/**", "/img/**").permitAll()
