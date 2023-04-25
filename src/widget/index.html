@@ -1,152 +1,44 @@
-<style>
-    .modal {
-        display: none;
-        position: fixed;
-        z-index: 1;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        overflow: auto;
-        background-color: rgba(0, 0, 0, 0.4);
-    }
-
-    .modal-content {
-        background-color: #fefefe;
-        margin: 15% auto;
-        padding: 20px;
-        border: 1px solid #888;
-        width: 80%;
-        max-width: 700px;
-    }
-
-    .modal-close {
-        color: #aaa;
-        float: right;
-        font-size: 28px;
-        font-weight: bold;
-    }
-
-    .modal-close:hover,
-    .modal-close:focus {
-        color: black;
-        text-decoration: none;
-        cursor: pointer;
-    }
-
-    .ReportTypo-header {
-        font-weight: 700;
-        font-size: 150%;
-        margin-bottom: 16px;
-        margin-bottom: 1rem;
-        width: 100%;
-        flex-shrink: 0;
-    }
-
-    .ReportTypo-label {
-        margin-bottom: 8px;
-        margin-bottom: 0.5rem;
-        display: flex;
-        flex-direction: column;
-        flex-shrink: 0;
-    }
-
-    .ReportTypo-message {
-        width: 100%;
-        padding: 5px 10px;
-        margin-bottom: 15px;
-        border: 1px solid #f3f3f3;
-        background: #f3f3f3;
-        overflow-y: auto;
-    }
-
-    .ReportTypo-comment {
-        display: block;
-        width: 100%;
-        height: 100px;
-        margin-bottom: 16px;
-        margin-bottom: 1rem;
-        border: 1px solid #ccc;
-        flex-shrink: 0;
-    }
-
-    .ReportTypo-name {
-        display: block;
-        width: 100%;
-        height: 40px;
-        margin-bottom: 16px;
-        margin-bottom: 1rem;
-        border: 1px solid #ccc;
-        flex-shrink: 0;
-        padding: 5px;
-    }
-
-    .ReportTypo-heighlight {
-        text-decoration: underline;
-        color: black;
-        font-weight: 700;
-        margin: 0 10px;
-    }
-
-    .btn-primary {
-        background-color: blue;
-        color: white;
-    }
-
-    .btn-light {
-        background-color: #f8f9fa;
-    }
-
-    .btn-primary:hover {
-        background-color: #1e7cd6;
-    }
-
-    .btn-light:hover {
-        background-color: #e2e6ea;
-    }
-</style>
 <script>
     const state = {
         modalShown: false,
     };
     const renderModal = () => {
         const divModal = document.createElement('div');
-        divModal.classList.add('modal');
+        divModal.id = 'hexlet-correction-modal_modal';
         divModal.style.display = 'block';
 
         const divContent = document.createElement('div');
-        divContent.classList.add('modal-content');
+        divContent.id = 'hexlet-correction-modal_modal-content';
         divModal.append(divContent);
 
         const divTypoReporter = document.createElement('div');
-        divTypoReporter.classList.add('ReportTypo');
+        divTypoReporter.id = 'hexlet-correction-modal_ReportTypo';
         divContent.append(divTypoReporter);
 
         const divHeader = document.createElement('div');
-        divHeader.classList.add('ReportTypo-header');
+        divHeader.id = 'hexlet-correction-modal_ReportTypo-header';
         divHeader.textContent = 'Сообщите об ошибке на странице';
 
         const divFirstLabel = document.createElement('div');
-        divFirstLabel.classList.add('ReportTypo-label');
+        divFirstLabel.id = 'hexlet-correction-modal_ReportTypo-label';
         divFirstLabel.textContent = 'Ошибка содержится в следующем тексте:';
 
         const divMessage = document.createElement('div');
-        divMessage.classList.add('ReportTypo-message');
-        divMessage.id = 'selectedText';
+        divMessage.id = 'hexlet-correction-modal_ReportTypo-message';
 
         const inputName = document.createElement('input');
         inputName.type = 'text';
         inputName.placeholder = 'Ваше имя';
-        inputName.classList.add('ReportTypo-name');
+        inputName.id = 'hexlet-correction-modal_ReportTypo-name';
 
         const textareaComment = document.createElement('textarea');
-        textareaComment.classList.add('ReportTypo-comment');
+        textareaComment.id = 'hexlet-correction-modal_ReportTypo-comment';
         textareaComment.placeholder = 'Опишите ошибку';
 
         const divSecondLabel = document.createElement('div');
-        divSecondLabel.classList.add('ReportTypo-label');
+        divSecondLabel.id = 'hexlet-correction-modal_ReportTypo-label';
         const strong = document.createElement('strong');
-        strong.classList.add('mb-2');
+        strong.id = 'hexlet-correction-modal_question';
         strong.textContent = 'Отправить сообщение об ошибке редактору сайта?';
         divSecondLabel.append(strong);
 
@@ -155,12 +47,12 @@
 
         const submitButton = document.createElement('button');
         submitButton.type = 'button';
-        submitButton.classList.add('btn', 'btn-primary', 'ReportTypo-submit');
+        submitButton.id = 'hexlet-correction-modal_ReportTypo-submit'
         submitButton.textContent = 'Отправить';
 
         const cancelButton = document.createElement('button');
         cancelButton.type = 'button';
-        cancelButton.classList.add('btn', 'btn-light', 'ReportTypo-cancel');
+        cancelButton.id = 'hexlet-correction-modal_ReportTypo-cancel'
         cancelButton.textContent = 'Отмена';
 
         divButtons.append(submitButton, cancelButton);
@@ -169,6 +61,117 @@
         body.append(divModal);
 
         state.modalShown = true;
+
+        const style = document.createElement('style');
+        style.textContent = `
+    #hexlet-correction-modal_modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 1050;
+      display: none;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      outline: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    #hexlet-correction-modal_modal-content {
+      background-color: #fefefe;
+      margin: 15% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 80%;
+      max-width: 700px;
+    }
+
+    #hexlet-correction-modal_ReportTypo-header {
+      font-weight: 700;
+      font-size: 150%;
+      margin-bottom: 1rem;
+      width: 100%;
+      flex-shrink: 0;
+    }
+
+    #hexlet-correction-modal_ReportTypo-label {
+      margin-bottom: 0.5rem;
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+    }
+
+    #hexlet-correction-modal_ReportTypo-message {
+      width: 100%;
+      padding: 5px 5px;
+      margin-bottom: 15px;
+      border: 1px solid #f3f3f3;
+      background: #f3f3f3;
+      overflow-y: auto;
+    }
+
+    #hexlet-correction-modal_ReportTypo-comment {
+      display: block;
+      width: 100%;
+      height: 100px;
+      margin-bottom: 1rem;
+      border: 1px solid #ccc;
+      flex-shrink: 0;
+      padding-right: 8px;
+    }
+
+    #hexlet-correction-modal_ReportTypo-name {
+      display: block;
+      width: 100%;
+      height: 40px;
+      margin-bottom: 1rem;
+      border: 1px solid #ccc;
+      flex-shrink: 0;
+      padding: 5px;
+    }
+
+    #hexlet-correction-modal_ReportTypo-highlight {
+      text-decoration: underline;
+      color: black;
+      font-weight: 700;
+      margin: 0 10px;
+    }
+
+    #hexlet-correction-modal_question {
+      margin-bottom: 8px;
+    }
+
+    #hexlet-correction-modal_ReportTypo-submit {
+      height: 35px;
+      width: 120px;
+      background-color: #0d6efd;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      margin-right: 15px;
+    }
+
+    #hexlet-correction-modal_ReportTypo-cancel {
+      height: 35px;
+      width: 120px;
+      background-color: #f8f9fa;
+      color: #212529;
+      border-color: #dee2e6;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+    }
+
+    #hexlet-correction-modal_ReportTypo-submit:hover {
+      background-color: #1e7cd6;
+    }
+
+    #hexlet-correction-modal_ReportTypo-cancel:hover {
+      background-color: #e2e6ea;
+    }
+    `
+        document.head.append(style);
     };
 
     const data = {
@@ -189,13 +192,12 @@
             if (state.modalShown === false) {
                 renderModal();
             }
-            const modal = document.querySelector('.modal');
-            const selectedText = document.getElementById('selectedText');
-            const commentField = document.querySelector('.ReportTypo-comment');
-            const submitButton = document.querySelector('.ReportTypo-submit');
-            const closeModalBtn = document.querySelector('.modal-close');
-            const cancelBtn = document.querySelector('.ReportTypo-cancel');
-            const name = document.querySelector('.ReportTypo-name');
+            const modal = document.getElementById('hexlet-correction-modal_modal');
+            const selectedText = document.getElementById('hexlet-correction-modal_ReportTypo-message');
+            const commentField = document.getElementById('hexlet-correction-modal_ReportTypo-comment');
+            const submitButton = document.getElementById('hexlet-correction-modal_ReportTypo-submit');
+            const cancelBtn = document.getElementById('hexlet-correction-modal_ReportTypo-cancel');
+            const name = document.getElementById('hexlet-correction-modal_ReportTypo-name');
 
             const closeModal = () => {
                 modal.style.display = 'none';
@@ -214,7 +216,7 @@
             const textBeforeSelection = anchorNode.textContent.substring(start, anchorOffset);
             const textAfterSelection = anchorNode.substringData(focusOffset, end - focusOffset);
 
-            selectedText.innerHTML = `${textBeforeSelection}<u class="ReportTypo-highlight">${selectionText}</u>${textAfterSelection}`;
+            selectedText.innerHTML = `${textBeforeSelection}<u id="hexlet-correction-modal_ReportTypo-highlight">${selectionText}</u>${textAfterSelection}`;
             commentField.focus();
 
             data.textTypo = selectionText;
@@ -222,8 +224,6 @@
             data.textAfterTypo = textAfterSelection;
 
             cancelBtn.addEventListener('click', closeModal);
-            closeModalBtn.addEventListener('click', closeModal);
-
             submitButton.addEventListener('click', async (event) => {
                 event.preventDefault();
                 data.pageUrl = window.location.href;
