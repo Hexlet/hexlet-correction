@@ -79,7 +79,7 @@ class WorkspaceApiIT {
         final var idTokenBytes = (WORKSPACE_101_ID + ":" + WORKSPACE_101_TOKEN).getBytes();
         final var basicEncodedStr = Base64.getEncoder().encodeToString(idTokenBytes);
         final var content = mockMvc
-            .perform(post("/api/workspaces/typos")
+            .perform(post("/api/workspaces/" + WORKSPACE_101_ID + "/typos")
                 .content(objectMapper.writeValueAsString(typoReport))
                 .header("Authorization", "Basic " + basicEncodedStr)
                 .contentType(APPLICATION_JSON)
@@ -108,7 +108,7 @@ class WorkspaceApiIT {
 
         final var idTokenBytes = (WORKSPACE_101_ID + ":" + WORKSPACE_101_TOKEN).getBytes();
         final var basicEncodedStr = Base64.getEncoder().encodeToString(idTokenBytes);
-        mockMvc.perform(post("/api/workspaces/typos")
+        mockMvc.perform(post("/api/workspaces/" + WORKSPACE_101_ID + "/typos")
                 .content(typoJson)
                 .header("Authorization", "Basic " + basicEncodedStr)
                 .contentType(APPLICATION_JSON))
@@ -128,7 +128,7 @@ class WorkspaceApiIT {
 
         final var idTokenBytes = (WORKSPACE_101_ID + ":" + WORKSPACE_101_TOKEN).getBytes();
         final var basicEncodedStr = Base64.getEncoder().encodeToString(idTokenBytes);
-        mockMvc.perform(post("/api/workspaces/typos")
+        mockMvc.perform(post("/api/workspaces/" + WORKSPACE_101_ID + "/typos")
                 .content(typoJson)
                 .header("Authorization", "Basic " + basicEncodedStr)
                 .contentType(APPLICATION_JSON))
@@ -149,7 +149,7 @@ class WorkspaceApiIT {
 
         final var idTokenBytes = (WORKSPACE_101_ID + ":" + WORKSPACE_101_TOKEN).getBytes();
         final var basicEncodedStr = Base64.getEncoder().encodeToString(idTokenBytes);
-        mockMvc.perform(post("/api/workspaces/typos")
+        mockMvc.perform(post("/api/workspaces/" + WORKSPACE_101_ID + "/typos")
                 .content(typoJson)
                 .header("Authorization", "Basic " + basicEncodedStr)
                 .contentType(APPLICATION_JSON))
