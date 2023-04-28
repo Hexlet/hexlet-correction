@@ -1,4 +1,4 @@
-const showModal = () => {
+const handleTypoReporter = (authorizationToken, workSpaceUrl) => {
   const state = {
     modalShown: false,
   };
@@ -230,11 +230,11 @@ const showModal = () => {
         data.reporterName = name.value;
         data.reporterComment = commentField.value;
 
-        const response = await fetch('https://hexlet-correction.herokuapp.com/api/workspaces/typos', {
+        const response = await fetch(workSpaceUrl, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Basic Nzc6ZWEyNzlmNTctMWIyYy00MjA3LTk1NjctNGRiNzk2NzhhYmI5'
+            'Authorization': `Basic ${authorizationToken}`
           },
           body: JSON.stringify(data)
         });
