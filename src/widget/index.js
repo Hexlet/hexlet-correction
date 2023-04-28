@@ -230,19 +230,18 @@ const handleTypoReporter = (authorizationToken, workSpaceUrl) => {
         data.reporterName = name.value;
         data.reporterComment = commentField.value;
 
-        const response = await fetch(workSpaceUrl, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Basic ${authorizationToken}`
-          },
-          body: JSON.stringify(data)
-        });
-
-        if (response.ok) {
+        try {
+          await fetch(workSpaceUrl, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Basic ${authorizationToken}`
+            },
+            body: JSON.stringify(data)
+          });
           closeModal();
-        } else {
-          throw new Error('Ошибка соединения');
+        } catch (error) {
+          throw new Error('Произошла ошибка:', error);
         }
       });
     }
