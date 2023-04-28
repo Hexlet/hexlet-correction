@@ -242,7 +242,7 @@ const handleTypoReporter = (authorizationToken, workSpaceUrl) => {
         if (response.ok) {
           closeModal();
         } else {
-          throw  new Error('Ошибка соединения');
+          throw new Error('Ошибка соединения');
         }
       });
     }
