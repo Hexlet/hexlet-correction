@@ -1,8 +1,8 @@
 const handleTypoReporter = (options) => {
-  if (!options || !options.authorizationToken && !options.workSpaceUrl) {
-    throw new Error('Для работы модуля требуется указать workSpaceUrl и authorizationToken');
+  if (!options || !options.authorizationToken && !options.workSpaceId) {
+    throw new Error('Для работы модуля требуется указать workSpaceId и authorizationToken');
   }
-  const { workSpaceUrl, userName = null, authorizationToken } = options;
+  const { workSpaceUrl = 'https://hexlet-correction.herokuapp.com/api/workspaces', userName = null, authorizationToken, workSpaceId } = options;
   const state = {
     modalShown: false,
   };
@@ -221,7 +221,7 @@ const handleTypoReporter = (options) => {
         data.reporterName = name.value === '' ? 'Anonymous' : name.value;
         data.reporterComment = commentField.value;
         try {
-          await fetch(workSpaceUrl, {
+          await fetch(`${workSpaceUrl}/${workSpaceId}/typos`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
