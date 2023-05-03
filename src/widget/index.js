@@ -223,7 +223,6 @@ const handleTypoReporter = (options) => {
           data.reporterName = name.value === '' ? 'Anonymous' : name.value;
         }
         data.reporterComment = commentField.value;
-        console.log(authorizationToken, workSpaceUrl);
         try {
           await fetch(workSpaceUrl, {
             method: 'POST',
