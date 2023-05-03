@@ -1,8 +1,8 @@
 const handleTypoReporter = (options) => {
-  if (!options || !options.authorizationToken) {
-    throw new Error('Необходимо указать authorizationToken');
+  if (!options || !options.authorizationToken && !options.workSpaceUrl) {
+    throw new Error('Для работы модуля требуется указать workSpaceUrl и authorizationToken');
   }
-  const { workSpaceUrl = 'https://hexlet-correction.herokuapp.com/api/workspaces/typos', userName = null, authorizationToken } = options;
+  const { workSpaceUrl, userName = null, authorizationToken } = options;
   const state = {
     modalShown: false,
   };
@@ -33,6 +33,7 @@ const handleTypoReporter = (options) => {
     const inputName = document.createElement('input');
     inputName.type = 'text';
     inputName.placeholder = 'Введите свое имя или email';
+    inputName.value = userName === null ? '' : userName;
     inputName.id = 'hexlet-correction-modal_ReportTypo-name';
 
     const textareaComment = document.createElement('textarea');
@@ -217,11 +218,7 @@ const handleTypoReporter = (options) => {
       const sendData = async (event) => {
         event.preventDefault();
         data.pageUrl = window.location.href;
-        if (userName !== null) {
-          data.reporterName = userName;
-        } else {
-          data.reporterName = name.value === '' ? 'Anonymous' : name.value;
-        }
+        data.reporterName = name.value === '' ? 'Anonymous' : name.value;
         data.reporterComment = commentField.value;
         try {
           await fetch(workSpaceUrl, {
