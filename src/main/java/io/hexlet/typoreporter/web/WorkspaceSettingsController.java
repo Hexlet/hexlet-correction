@@ -43,6 +43,8 @@ public class WorkspaceSettingsController {
         model.addAttribute("wksBasicToken", wksBasicToken);
         final var rootUrl = req.getRequestURL().toString().replace(req.getRequestURI(), "");
         model.addAttribute("rootUrl", rootUrl);
+        final var wksId = settings.getWorkspace().getId();
+        model.addAttribute("wksId", wksId);
 
         getStatisticDataToModel(model, wksName);
         getLastTypoDataToModel(model, wksName);
