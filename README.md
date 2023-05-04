@@ -4,6 +4,12 @@ A service to notify site owners of errors and typos. After integrating with the 
 
 Tasks can be discussed in the [Telegram community](https://t.me/hexletcommunity/12).
 
+## Example
+
+Go to: https://hexlet.github.io/hexlet-correction/index.html
+
+Highlight text and press <kbd>Ctrl+Enter</kbd>
+
 ## Development
 
 Before you can build this project, you must install and configure the following dependencies on your machine:

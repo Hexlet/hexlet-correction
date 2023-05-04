@@ -8,6 +8,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,13 +25,23 @@ public class WorkspaceApi {
 
     private final TypoService service;
 
-    @PostMapping("/typos")
-    public ResponseEntity<ReportedTypo> addTypoReport(Authentication authentication,
+    @PostMapping("/{id}/typos")
+    // TODO: allow sending a request only from the pages specified in the Workspace settings
+    @CrossOrigin(
+        originPatterns = {"*"},
+        allowCredentials = "true"
+    )
+    public ResponseEntity<ReportedTypo> addTypoReport(@PathVariable long id,
+                                                      Authentication authentication,
                                                       @Valid @RequestBody TypoReport typoReport,
                                                       UriComponentsBuilder builder) {
         final var wksIdStr = authentication.getName();
+
         try {
-            final var id = Long.parseLong(wksIdStr);
+            final var authId = Long.parseLong(wksIdStr);
+            if (authId != id) {
+                throw new WorkspaceNotFoundException(wksIdStr);
+            }
             final var uri = builder.path("/workspace").pathSegment(wksIdStr).path("/typos").build().toUri();
             return created(uri).body(service.addTypoReport(typoReport, id));
         } catch (NumberFormatException e) {
