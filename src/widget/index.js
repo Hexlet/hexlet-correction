@@ -1,4 +1,8 @@
-const handleTypoReporter = (authorizationToken, workSpaceUrl) => {
+const handleTypoReporter = (options) => {
+  if (!options || !options.authorizationToken && !options.workSpaceId) {
+    throw new Error('Для работы модуля требуется указать workSpaceId и authorizationToken');
+  }
+  const { workSpaceUrl = 'https://hexlet-correction.herokuapp.com/api/workspaces', userName = null, authorizationToken, workSpaceId } = options;
   const state = {
     modalShown: false,
   };
@@ -28,7 +32,8 @@ const handleTypoReporter = (authorizationToken, workSpaceUrl) => {
 
     const inputName = document.createElement('input');
     inputName.type = 'text';
-    inputName.placeholder = 'Ваше имя';
+    inputName.placeholder = 'Введите свое имя или email';
+    inputName.value = userName === null ? '' : userName;
     inputName.id = 'hexlet-correction-modal_ReportTypo-name';
 
     const textareaComment = document.createElement('textarea');
@@ -183,6 +188,8 @@ const handleTypoReporter = (authorizationToken, workSpaceUrl) => {
     textAfterTypo: null,
   };
 
+  let sendDataHandler = null;
+
   document.addEventListener('keydown', (event) => {
     const selection = window.getSelection();
     if (selection.isCollapsed) {
@@ -203,7 +210,30 @@ const handleTypoReporter = (authorizationToken, workSpaceUrl) => {
         modal.style.display = 'none';
         commentField.value = '';
         name.value = '';
-      }
+        submitButton.removeEventListener('click', sendDataHandler);
+        cancelBtn.removeEventListener('click', sendDataHandler);
+      };
+
+
+      const sendData = async (event) => {
+        event.preventDefault();
+        data.pageUrl = window.location.href;
+        data.reporterName = name.value === '' ? 'Anonymous' : name.value;
+        data.reporterComment = commentField.value;
+        try {
+          await fetch(`${workSpaceUrl}/${workSpaceId}/typos`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Basic ${authorizationToken}`
+            },
+            body: JSON.stringify(data)
+          });
+          closeModal();
+        } catch (error) {
+          throw new Error('Произошла ошибка:', error);
+        }
+      };
 
       modal.style.display = 'block';
       const selectionText = selection.toString().trim();
@@ -223,27 +253,15 @@ const handleTypoReporter = (authorizationToken, workSpaceUrl) => {
       data.textBeforeTypo = textBeforeSelection;
       data.textAfterTypo = textAfterSelection;
 
-      cancelBtn.addEventListener('click', closeModal);
-      submitButton.addEventListener('click', async (event) => {
-        event.preventDefault();
-        data.pageUrl = window.location.href;
-        data.reporterName = name.value;
-        data.reporterComment = commentField.value;
+      if (sendDataHandler) {
+        submitButton.removeEventListener('click', sendDataHandler);
+        cancelBtn.removeEventListener('click', sendDataHandler);
+      }
 
-        try {
-          await fetch(workSpaceUrl, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Basic ${authorizationToken}`
-            },
-            body: JSON.stringify(data)
-          });
-          closeModal();
-        } catch (error) {
-          throw new Error('Произошла ошибка:', error);
-        }
-      });
+      sendDataHandler = sendData;
+
+      cancelBtn.addEventListener('click', closeModal);
+      submitButton.addEventListener('click', sendData);
     }
   });
 };
