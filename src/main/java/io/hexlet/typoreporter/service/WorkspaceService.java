@@ -115,4 +115,13 @@ public class WorkspaceService {
             .map(workspaceMapper::toWorkspaceInfo)
             .toList()).orElseGet(ArrayList::new);
     }
+
+    @Transactional
+    public boolean isUserRelatedToWorkspace(String wksName, String username) {
+        final var accountOptional = accountRepository.findAccountByUsername(username);
+        return accountOptional.map(account -> account.getWorkspaceRoles().stream()
+                .map(WorkspaceRole::getWorkspace)
+                .anyMatch(wks -> wks.getName().equals(wksName)))
+            .orElse(false);
+    }
 }
