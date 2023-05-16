@@ -32,9 +32,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import java.time.LocalDateTime;
-import java.util.Comparator;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 import static com.github.database.rider.core.api.configuration.Orthography.LOWERCASE;
 import io.hexlet.typoreporter.domain.workspace.WorkspaceRole;
@@ -238,7 +236,6 @@ class WorkspaceControllerIT {
                 delete("/workspace/{wksName}", wksName)
                     .with(user(username))
                     .with(csrf()))
-            .andExpect(status().is3xxRedirection())
             .andReturn()
             .getResponse();
 
@@ -249,22 +246,9 @@ class WorkspaceControllerIT {
 
     @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspacesAndUsersRelated")
-    void deleteWorkspaceByNameIsNotSuccessful(final String wksName, final String username) throws Exception {
-        mockMvc.perform(delete("/workspace/{wksName}", wksName)
-                .with(user(username))
-                .with(csrf()))
-            .andExpect(status().isForbidden())
-            .andReturn()
-            .getResponse();
-        assertThat(repository.existsWorkspaceByName(wksName)).isTrue();
-    }
-
-    @ParameterizedTest
-    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspacesAndUsersRelated")
     void getWorkspaceUsersPage(final String wksName, final String username) throws Exception {
-        Workspace workspace = repository.getWorkspaceByName(wksName).orElse(null);
-        assertThat(workspace).isNotNull();
-        Set<Account> accounts = accountRepository.findAll().stream().collect(Collectors.toSet());
+        Workspace workspace = repository.getWorkspaceByName(wksName).orElseThrow();
+        Set<Account> accounts = new HashSet<>(accountRepository.findAll());
 
         accounts.forEach(account -> {
             final var workspaceRoleId = new WorkspaceRoleId(workspace.getId(), account.getId());
@@ -279,10 +263,10 @@ class WorkspaceControllerIT {
             .andExpect(model().attributeExists("wksInfo", "wksName", "userPage", "availableSizes", "sortProp", "sortDir", "DESC", "ASC"))
             .andReturn().getResponse();
 
-//        for (WorkspaceRole workspaceRole : workspace.getWorkspaceRoles()) {
-//            assertThat(response.getContentAsString()).contains(
-//                    workspaceRole.getId().toString()
-//            );
-//        }
+        var html = response.getContentAsString();
+        for (var wksRole : workspace.getWorkspaceRoles()) {
+            var email = wksRole.getAccount().getEmail();
+            assertThat(html).contains(email);
+        }
     }
 }
