@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -104,5 +105,23 @@ public class WorkspaceService {
     @Transactional(readOnly = true)
     public Optional<Workspace> getWorkspaceByName(final String name) {
         return repository.getWorkspaceByName(name);
+    }
+
+    @Transactional(readOnly = true)
+    public List<WorkspaceInfo> getAllWorkspacesInfoByUsername(String username) {
+        final var accountOptional = accountRepository.findAccountByUsername(username);
+        return accountOptional.map(account -> account.getWorkspaceRoles().stream()
+            .map(WorkspaceRole::getWorkspace)
+            .map(workspaceMapper::toWorkspaceInfo)
+            .toList()).orElseGet(ArrayList::new);
+    }
+
+    @Transactional
+    public boolean isUserRelatedToWorkspace(String wksName, String username) {
+        final var accountOptional = accountRepository.findAccountByUsername(username);
+        return accountOptional.map(account -> account.getWorkspaceRoles().stream()
+                .map(WorkspaceRole::getWorkspace)
+                .anyMatch(wks -> wks.getName().equals(wksName)))
+            .orElse(false);
     }
 }

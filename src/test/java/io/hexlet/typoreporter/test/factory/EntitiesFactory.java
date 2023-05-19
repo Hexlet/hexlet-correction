@@ -5,6 +5,7 @@ import io.hexlet.typoreporter.domain.typo.Typo;
 import io.hexlet.typoreporter.domain.workspace.Workspace;
 import io.hexlet.typoreporter.service.dto.typo.TypoReport;
 import io.hexlet.typoreporter.service.dto.workspace.CreateWorkspace;
+import org.junit.jupiter.params.provider.Arguments;
 
 import java.util.stream.LongStream;
 import java.util.stream.Stream;
@@ -48,6 +49,22 @@ public class EntitiesFactory {
 
     public static Stream<String> getWorkspaceNamesExist() {
         return Stream.of(WORKSPACE_101_NAME, WORKSPACE_102_NAME, WORKSPACE_103_NAME);
+    }
+
+    public static Stream<Arguments> getWorkspacesAndUsersRelated() {
+        return Stream.of(
+            Arguments.of(WORKSPACE_101_NAME, ACCOUNT_101_USERNAME),
+            Arguments.of(WORKSPACE_102_NAME, ACCOUNT_102_USERNAME),
+            Arguments.of(WORKSPACE_103_NAME, ACCOUNT_103_USERNAME)
+        );
+    }
+
+    public static Stream<Arguments> getWorkspacesAndUsersNotRelated() {
+        return Stream.of(
+            Arguments.of(WORKSPACE_101_NAME, ACCOUNT_103_USERNAME),
+            Arguments.of(WORKSPACE_102_NAME, ACCOUNT_101_USERNAME),
+            Arguments.of(WORKSPACE_103_NAME, ACCOUNT_102_USERNAME)
+        );
     }
 
     public static Stream<Long> getWorkspaceIdsExist() {

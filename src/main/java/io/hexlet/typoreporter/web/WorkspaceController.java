@@ -23,6 +23,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.SortDefault;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -52,6 +53,9 @@ import static org.springframework.data.domain.Sort.Order.asc;
 @RequestMapping("/workspace")
 @RequiredArgsConstructor
 public class WorkspaceController {
+
+    private static final String IS_USER_RELATED_TO_WKS =
+        "@workspaceService.isUserRelatedToWorkspace(#wksName, authentication.name)";
 
     private final TreeSet<Integer> availableSizes = new TreeSet<>(List.of(2, 5, 10, 15, 25));
 
@@ -93,6 +97,7 @@ public class WorkspaceController {
     }
 
     @GetMapping("/{wksName}")
+    @PreAuthorize(IS_USER_RELATED_TO_WKS)
     public String getWorkspaceInfoPage(Model model, @PathVariable String wksName) {
         var wksOptional = workspaceService.getWorkspaceInfoByName(wksName);
         if (wksOptional.isEmpty()) {
@@ -109,6 +114,7 @@ public class WorkspaceController {
     }
 
     @GetMapping("/{wksName}/typos")
+    @PreAuthorize(IS_USER_RELATED_TO_WKS)
     public String getWorkspaceTyposPage(Model model,
                                         @PathVariable String wksName,
                                         @SortDefault("createdDate") Pageable pageable) {
@@ -142,6 +148,7 @@ public class WorkspaceController {
     }
 
     @GetMapping("/{wksName}/update")
+    @PreAuthorize(IS_USER_RELATED_TO_WKS)
     public String getWorkspaceUpdatePage(Model model, @PathVariable String wksName) {
         var wksOptional = workspaceService.getWorkspaceInfoByName(wksName);
         if (wksOptional.isEmpty()) {
@@ -162,6 +169,7 @@ public class WorkspaceController {
 
     //TODO add tests
     @PutMapping("/{wksName}/update")
+    @PreAuthorize(IS_USER_RELATED_TO_WKS)
     public String putWorkspaceUpdate(Model model,
                                      @PathVariable String wksName,
                                      @Valid @ModelAttribute CreateWorkspace wksUpdate,
@@ -189,6 +197,7 @@ public class WorkspaceController {
     }
 
     @DeleteMapping("/{wksName}")
+    @PreAuthorize(IS_USER_RELATED_TO_WKS)
     public String deleteWorkspaceByName(@PathVariable String wksName) {
         if (workspaceService.deleteWorkspaceByName(wksName) == 0) {
             //TODO send to error page
@@ -199,6 +208,7 @@ public class WorkspaceController {
     }
 
     @GetMapping("/{wksName}/users")
+    @PreAuthorize(IS_USER_RELATED_TO_WKS)
     public String getWorkspaceUsersPage(Model model,
                                         @PathVariable String wksName,
                                         @SortDefault("createdDate") Pageable pageable) {
@@ -252,6 +262,7 @@ public class WorkspaceController {
     }
 
     @PostMapping("/{wksName}/users")
+    @PreAuthorize(IS_USER_RELATED_TO_WKS)
     public String addUser(@RequestParam String email, @PathVariable String wksName) {
         try {
             workspaceRoleService.addAccountToWorkspace(wksName, email);

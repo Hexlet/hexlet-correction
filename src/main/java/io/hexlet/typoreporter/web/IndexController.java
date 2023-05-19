@@ -7,6 +7,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.security.Principal;
+
 @Controller
 @RequestMapping
 @RequiredArgsConstructor
@@ -15,9 +17,12 @@ public class IndexController {
     private final WorkspaceService workspaceService;
 
     @GetMapping("/workspaces")
-    public String index(final Model model) {
-        final var wksInfoList = workspaceService.getAllWorkspacesInfo();
-        model.addAttribute("wksInfoList", wksInfoList);
+    public String index(final Model model, Principal principal) {
+        if (principal != null) {
+            final var username = principal.getName();
+            final var wksInfoList = workspaceService.getAllWorkspacesInfoByUsername(username);
+            model.addAttribute("wksInfoList", wksInfoList);
+        }
         return "workspaces";
     }
 }
