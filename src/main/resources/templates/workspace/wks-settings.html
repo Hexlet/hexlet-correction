@@ -29,22 +29,29 @@
                     <p>You shall use header: <code>Authorization: Basic [[${wksBasicToken}]]</code></p>
                 </div>
             </div>
+
+
             <div class="row my-4">
                 <div class="col">
-                    <p class="fw-bold">Example with <code>curl</code> for your workspace:</p>
-                    <pre><code>
-curl -X POST --location "[[${rootUrl}]]/api/workspaces/[[${wksId}]]/typos" \
--H "Content-Type: application/json" \
--H "Authorization: Basic [[${wksBasicToken}]]" \
--d "{
-        \"pageUrl\": \"https://site.com/\",
-        \"reporterName\": \"reporterName\",
-        \"reporterComment\": \"reporterComment\",
-        \"textBeforeTypo\": \"textBeforeTypo\",
-        \"textTypo\": \"textTypo\",
-        \"textAfterTypo\": \"textAfterTypo\"
-    }"
-                    </code></pre>
+                    <p class="fw-bold">Install this <code>script</code> on your website:</p>
+                    <div class="row mb-3">
+    <textarea class="form-control" id="myInput" style="width: 900px; height: 110px" readonly>
+<script>
+    handleTypoReporter({ authorizationToken: [[${wksBasicToken}]],
+    workSpaceUrl: [[${rootUrl}]], workSpaceId: [[${wksId}]]})
+    </script></textarea>
+                    </div>
+
+                    <button class="btn btn-primary" onclick="myFunction()">Copy the script</button>
+
+                    <script>
+                        function myFunction() {
+                            var copyText = document.getElementById("myInput");
+                            copyText.select();
+                            copyText.setSelectionRange(0, 99999);
+                            navigator.clipboard.writeText(copyText.value);
+                        }
+                    </script>
                 </div>
             </div>
         </div>
