@@ -34,24 +34,12 @@
             <div class="row my-4">
                 <div class="col">
                     <p class="fw-bold">Install this <code>script</code> on your website:</p>
-                    <div class="row mb-3">
-    <textarea class="form-control" id="myInput" style="width: 900px; height: 110px" readonly>
-<script>
+                    <pre><code>
+&lt;script&gt;
     handleTypoReporter({ authorizationToken: [[${wksBasicToken}]],
     workSpaceUrl: [[${rootUrl}]], workSpaceId: [[${wksId}]]})
-    </script></textarea>
-                    </div>
-
-                    <button class="btn btn-primary" onclick="myFunction()">Copy the script</button>
-
-                    <script>
-                        function myFunction() {
-                            var copyText = document.getElementById("myInput");
-                            copyText.select();
-                            copyText.setSelectionRange(0, 99999);
-                            navigator.clipboard.writeText(copyText.value);
-                        }
-                    </script>
+&lt;/script&gt;
+    </code></pre>
                 </div>
             </div>
         </div>
