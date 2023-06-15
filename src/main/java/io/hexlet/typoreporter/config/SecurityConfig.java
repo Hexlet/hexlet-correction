@@ -9,6 +9,8 @@ import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,6 +28,7 @@ import static org.springframework.http.HttpMethod.POST;
 
 @Configuration
 @EnableMethodSecurity
+@EnableWebSecurity
 public class SecurityConfig {
 
     @Bean
@@ -68,9 +71,10 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http,
                                            SecurityContextRepository securityContextRepository) throws Exception {
-        http.httpBasic();
+        http.httpBasic().disable();
         http.cors();
         http.exceptionHandling().accessDeniedHandler(accessDeniedHandler());
+
 
         http.authorizeHttpRequests(authz -> authz
                 .requestMatchers(GET, "/webjars/**", "/widget/**", "/img/**").permitAll()
@@ -87,7 +91,13 @@ public class SecurityConfig {
                     new AntPathRequestMatcher("/api/**", POST.name()),
                     new AntPathRequestMatcher("/typo/form/*", POST.name())
                 )
-            );
+            )
+            .oauth2Login()
+            .and()
+            .logout()
+            .logoutSuccessUrl("/")
+        ;
+
 
         http.securityContext().securityContextRepository(securityContextRepository);
 
