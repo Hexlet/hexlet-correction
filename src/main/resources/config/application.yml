@@ -13,3 +13,12 @@ spring:
         enabled: true
     problemdetails:
       enabled: true
+  security:
+    oauth2:
+      client:
+        registration:
+          github:
+            client-id: 60d34dbac6eddff47dfe
+            client-secret: 683a93f6cee02d6258c3d7aed2b335065c54b307
+
+

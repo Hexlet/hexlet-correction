@@ -27,6 +27,11 @@
         </form>
     </div>
 </div>
+    <div authorize="isAnonymous()">
+        <a class="btn btn-primary" th:href="@{/oauth2/authorization/github}" role="button">
+            Log in with GitHub
+        </a>
+    </div>
 <div class="row">
     <div class="mt-4">
         <a class="link-primary" th:href="@{/signup}">Sign up</a>

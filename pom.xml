@@ -16,7 +16,7 @@
     <description>Service for receiving typo</description>
 
     <properties>
-        <java.version>19</java.version>
+        <java.version>17</java.version>
         <!-- WebJars -->
         <webjars-locator.version>0.46</webjars-locator.version>
         <bootstrap.version>5.2.3</bootstrap.version>
@@ -173,6 +173,19 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
+
+
+
+        <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-oauth2-client -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-oauth2-client</artifactId>
+            <version>3.0.4</version>
+        </dependency>
+
+
+
+
     </dependencies>
 
     <build>
@@ -237,7 +250,7 @@
                                     <version>3.9.0</version>
                                 </requireMavenVersion>
                                 <requireJavaVersion>
-                                    <version>19</version>
+                                    <version>17</version>
                                 </requireJavaVersion>
                                 <banDuplicatePomDependencyVersions/>
                             </rules>
