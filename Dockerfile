@@ -1,4 +1,5 @@
-FROM alpine:3.17
+FROM openjdk:21-jdk
 
-COPY ./target/*.jar
-ENTRYPOINT ["java","-jar","/typoreporter-0.0.1-SNAPSHOT.jar"]
+
+COPY ./target/*.jar .
+#ENTRYPOINT ["java","-jar","/typoreporter-0.0.1-SNAPSHOT.jar"]
