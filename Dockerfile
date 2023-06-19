@@ -1,9 +1,4 @@
-FROM gradle:7.4.0-jdk17
-
-WORKDIR /src
-
-COPY / .
-
-RUN docker-infra-start run-dev
-
-CMD ./target/typoreporter-*.jar
+FROM alpine:3.17
+ARG JAR_FILE=target/*.jar
+COPY ${JAR_FILE} typoreporter-0.0.1-SNAPSHOT.jar
+ENTRYPOINT ["java","-jar","/typoreporter-0.0.1-SNAPSHOT.jar"]
