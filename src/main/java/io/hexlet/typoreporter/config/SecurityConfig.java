@@ -75,7 +75,6 @@ public class SecurityConfig {
         http.cors();
         http.exceptionHandling().accessDeniedHandler(accessDeniedHandler());
 
-
         http.authorizeHttpRequests(authz -> authz
                 .requestMatchers(GET, "/webjars/**", "/widget/**", "/img/**").permitAll()
                 .requestMatchers("/", "/login", "/signup", "/error").permitAll()
