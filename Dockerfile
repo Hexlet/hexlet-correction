@@ -1,5 +1,5 @@
 FROM openjdk:19
-WORKDIR /
+#WORKDIR /
 
 COPY / .
 
