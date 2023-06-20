@@ -3,6 +3,7 @@ WORKDIR /
 
 COPY / .
 
+RUN ./mvnw -B -ntp -fae clean verify
 
 CMD java -jar -Dspring.profiles.active=dev ./target/typoreporter-*.jar
 
