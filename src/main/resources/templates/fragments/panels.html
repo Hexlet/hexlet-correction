@@ -19,23 +19,34 @@
                     <a class="nav-link" th:href="@{/account}" th:text="#{navbar.account-info}"></a>
                 </li>
             </ul>
-            <ul class="navbar-nav mr-2 ms-auto" sec:authorize="isAuthenticated()">
-                <li class="nav-item">
-                    <a class="nav-link" href="/" th:text="${#authentication.getName()}"></a>
+            <ul class="navbar-nav mr-2 ms-auto">
+                <!-- Begin Switcher -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Select Language</a>
+                    <ul class="dropdown-menu" aria-labelledby="languageDropdown">
+                        <li><a class="dropdown-item" href="javascript:void(0)" onclick="switchLanguage('en')">English</a></li>
+                        <li><a class="dropdown-item" href="javascript:void(0)" onclick="switchLanguage('ru')">Русский</a></li>
+                    </ul>
                 </li>
-                <li class="nav-item">
-                    <form th:action="@{/logout}" th:method="post">
-                        <button class="btn btn-link nav-link" type="submit">Logout</button>
-                    </form>
-                </li>
-            </ul>
-            <ul class="navbar-nav mr-2 ms-auto" sec:authorize="isAnonymous()">
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/login}">Login</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/signup}">Sign Up</a>
-                </li>
+                <!-- End Switcher -->
+                <div class="navbar-nav" sec:authorize="isAuthenticated()">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/" th:text="${#authentication.getName()}"></a>
+                    </li>
+                    <li class="nav-item">
+                        <form th:action="@{/logout}" th:method="post">
+                            <button class="btn btn-link nav-link" type="submit" th:text="#{navbar.logout}">Logout</button>
+                        </form>
+                    </li>
+                </div>
+                <div class="navbar-nav" sec:authorize="isAnonymous()">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/login}" th:text="#{navbar.login}"></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/signup}" th:text="#{navbar.signup}"></a>
+                    </li>
+                </div>
             </ul>
         </div>
     </div>
