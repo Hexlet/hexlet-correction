@@ -16,21 +16,21 @@ import java.util.Locale;
 public class I18nConfig implements WebMvcConfigurer {
     @Bean
     public LocaleResolver localeResolver() {
-        SessionLocaleResolver slr = new SessionLocaleResolver();
+        var slr = new CookieLocaleResolver();
         slr.setDefaultLocale(Locale.US);
         return slr;
     }
 
     @Bean
     public LocaleChangeInterceptor localeChangeInterceptor() {
-        LocaleChangeInterceptor lci = new LocaleChangeInterceptor();
+        var lci = new LocaleChangeInterceptor();
         lci.setParamName("lang");
         return lci;
     }
 
     @Bean
     public MessageSource messageSource() {
-        ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
+        var messageSource = new ResourceBundleMessageSource();
         messageSource.setBasename("messages");
         messageSource.setDefaultEncoding("UTF-8");
         return messageSource;
