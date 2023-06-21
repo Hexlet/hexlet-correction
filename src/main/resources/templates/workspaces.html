@@ -10,9 +10,9 @@
                 <div class="card-body">
                     <h5 class="card-title" th:text="*{name}"></h5>
                     <p class="card-text" th:text="*{description}"></p>
-                    <a class="card-link" th:href="@{'/workspace/' + *{name}}">Info</a>
-                    <a class="card-link" th:href="@{'/workspace/' + *{name} + '/typos'}">Typos</a>
-                    <a class="card-link" th:href="@{'/workspace/' + *{name} + '/users'}">Users</a>
+                    <a class="card-link" th:href="@{'/workspace/' + *{name}}" th:text="#{wks.info}"></a>
+                    <a class="card-link" th:href="@{'/workspace/' + *{name} + '/typos'}" th:text="#{wks.typos}"></a>
+                    <a class="card-link" th:href="@{'/workspace/' + *{name} + '/users'}" th:text="#{wks.users}"></a>
                 </div>
             </div>
         </div>

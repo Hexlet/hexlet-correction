@@ -11,7 +11,7 @@
                  th:if="${sumTypoInWks} > 0"
                  th:insert="~{fragments/workspace :: wksProgressBar (${sumTypoInWks}, ${countTypoByStatus})}"></div>
             <div class="row">
-                <p th:text="|Total number of typos in workspace ${wksName} : ${sumTypoInWks}|"></p>
+                <p th:text="|#{text.number-of-typos(${wksName}, ${sumTypoInWks})}|"></p>
             </div>
             <div class="row"
                  th:if="${lastTypoCreatedDateAgo.isPresent() && lastTypoCreatedDate.isPresent()}"
@@ -19,19 +19,19 @@
             <div class="row my-2">
                 <div aria-label="Re-generate workspace authentication token" class="col">
                     <form th:action="@{'/workspace/' + ${wksName} + '/token/regenerate'}" th:method="patch">
-                        <button class="btn btn-danger" type="submit">Regenerate Token</button>
+                        <button class="btn btn-danger" type="submit" th:text="#{btn.regenerate-token}"></button>
                     </form>
                 </div>
             </div>
             <div class="row mt-4">
                 <div class="col">
-                    <p>Workspace API access token: <code th:text="${wksBasicToken ?: '<Token not generated>'}"></code></p>
-                    <p>You shall use header: <code>Authorization: Basic [[${wksBasicToken}]]</code></p>
+                    <p><span th:text="#{text.wks-access-token}"></span>: <code th:text="${wksBasicToken ?: '<Token not generated>'}"></code></p>
+                    <p><span th:text="#{text.use-header}"></span>: <code>Authorization: Basic [[${wksBasicToken}]]</code></p>
                 </div>
             </div>
             <div class="row my-4">
                 <div class="col">
-                    <p class="fw-bold">Example with <code>curl</code> for your workspace:</p>
+                    <p class="fw-bold"><span th:utext="#{text.curl-example('<code>curl</code>')}"></span>:</p>
                     <pre><code>
 curl -X POST --location "[[${rootUrl}]]/api/workspaces/[[${wksId}]]/typos" \
 -H "Content-Type: application/json" \

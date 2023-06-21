@@ -14,7 +14,7 @@
                  th:insert="~{fragments/workspace :: wksProgressBar (${sumTypoInWks}, ${countTypoByStatus})}"></div>
             <!-- Workspace number of typo -->
             <div class="row">
-                <p th:text="|Total number of typos in workspace ${wksName} : ${sumTypoInWks}|"></p>
+                <p th:text="|#{text.number-of-typos(${wksName}, ${sumTypoInWks})}|"></p>
             </div>
             <!-- Workspace last typo date -->
             <div class="row"
@@ -31,7 +31,7 @@
                                         class="btn btn-secondary dropdown-toggle"
                                         data-bs-toggle="dropdown"
                                         id="dropdownSizePage"
-                                        th:text="|Page size ${typoPage.size}|"
+                                        th:text="|#{btn.page-size} ${typoPage.size}|"
                                         type="button">
                                 </button>
                                 <ul aria-labelledby="dropdownSizePage" class="dropdown-menu">

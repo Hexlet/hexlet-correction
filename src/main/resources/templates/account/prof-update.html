@@ -11,39 +11,39 @@
                     <input class="form-control" id="inputFirstName" placeholder="p"
                            th:classappend="${!#fields.hasErrors('firstName') && formModified ? 'is-valid' : ''}"
                            th:errorclass="is-invalid" th:field="*{firstName}" type="text">
-                    <label for="inputFirstName">First Name</label>
+                    <label for="inputFirstName" th:text="#{firstname}"></label>
                     <div class="invalid-feedback" th:each="err : ${#fields.errors('firstName')}" th:text="${err}"></div>
                 </div>
                 <div class="form-floating mb-3">
                     <input class="form-control" id="inputLastName" placeholder="p"
                            th:classappend="${!#fields.hasErrors('lastName') && formModified ? 'is-valid' : ''}"
                            th:errorclass="is-invalid" th:field="*{lastName}" type="text">
-                    <label for="inputLastName">Last Name</label>
+                    <label for="inputLastName" th:text="#{lastname}"></label>
                     <div class="invalid-feedback" th:each="err : ${#fields.errors('lastName')}" th:text="${err}"></div>
                 </div>
                 <div class="form-floating mb-3">
                     <input class="form-control" id="inputUsername" placeholder="p"
                            th:classappend="${!#fields.hasErrors('username') && formModified ? 'is-valid' : ''}"
                            th:errorclass="is-invalid" th:field="*{username}" type="text">
-                    <label for="inputUsername">UserName</label>
+                    <label for="inputUsername" th:text="#{username}"></label>
                     <div class="invalid-feedback" th:each="err : ${#fields.errors('username')}" th:text="${err}"></div>
                 </div>
                 <div class="form-floating mb-3">
                     <input class="form-control" id="inputEmail" placeholder="p"
                            th:classappend="${!#fields.hasErrors('email') && formModified ? 'is-valid' : ''}"
                            th:errorclass="is-invalid" th:field="*{email}" type="email">
-                    <label for="inputEmail">Email</label>
+                    <label for="inputEmail" th:text="#{email}"></label>
                     <div class="invalid-feedback" th:each="err : ${#fields.errors('email')}" th:text="${err}"></div>
                 </div>
                 <div class="form-floating mb-3">
                     <input class="form-control" id="inputConfirmEmail" placeholder="p"
                            th:classappend="${!#fields.hasErrors('confirmEmail') && formModified ? 'is-valid' : ''}"
                            th:errorclass="is-invalid" th:field="*{confirmEmail}" type="email">
-                    <label for="inputConfirmEmail">Confirm Email</label>
+                    <label for="inputConfirmEmail" th:text="#{email.confirm}"></label>
                     <div class="invalid-feedback" th:each="err : ${#fields.errors('confirmEmail')}" th:text="${err}"></div>
                 </div>
-                <button class="btn btn-primary" type="submit">Save</button>
-                <a class="btn btn-secondary" th:href="@{/account}">Close</a>
+                <button class="btn btn-primary" type="submit" th:text="#{btn.save}"></button>
+                <a class="btn btn-secondary" th:href="@{/account}" th:text="#{btn.close}"></a>
             </form>
         </div>
     </div>
