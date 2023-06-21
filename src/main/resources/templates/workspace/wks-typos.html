@@ -60,37 +60,37 @@
                                     <th scope="col">
                                         <a class="btn btn-light"
                                            th:href="@{'/workspace/' + ${wksName} + '/typos'(size=*{size},sort=|pageUrl,${sortProp == 'pageUrl' && sortDir.isAscending() ? DESC : ASC}|)}">
-                                            Page Url <span>[[${sortProp == 'pageUrl' && sortDir.isAscending() ? '&uArr;' : '&dArr;'}]]</span>
+                                            <span th:text="#{url-page}"></span> <span>[[${sortProp == 'pageUrl' && sortDir.isAscending() ? '&uArr;' : '&dArr;'}]]</span>
                                         </a>
                                     </th>
                                     <th scope="col">
                                         <a class="btn btn-light"
                                            th:href="@{'/workspace/' + ${wksName} + '/typos'(size=*{size},sort=|reporterName,${sortProp == 'reporterName' && sortDir.isAscending() ? DESC : ASC}|)}">
-                                            Reporter Name <span>[[${sortProp == 'reporterName' && sortDir.isAscending() ? '&uArr;' : '&dArr;'}]]</span>
+                                            <span th:text="#{reporter-name}"></span> <span>[[${sortProp == 'reporterName' && sortDir.isAscending() ? '&uArr;' : '&dArr;'}]]</span>
                                         </a>
                                     </th>
                                     <th scope="col">
                                         <a class="btn btn-light"
                                            th:href="@{'/workspace/' + ${wksName} + '/typos'(size=*{size},sort=|createdDate,${sortProp == 'createdDate' && sortDir.isAscending() ? DESC : ASC}|)}">
-                                            Created Date <span>[[${sortProp == 'createdDate' && sortDir.isAscending() ? '&uArr;' : '&dArr;'}]]</span>
+                                            <span th:text="#{date.created}"></span> <span>[[${sortProp == 'createdDate' && sortDir.isAscending() ? '&uArr;' : '&dArr;'}]]</span>
                                         </a>
                                     </th>
                                     <th scope="col">
                                         <a class="btn btn-light"
                                            th:href="@{'/workspace/' + ${wksName} + '/typos'(size=*{size},sort=|modifiedDate,${sortProp == 'modifiedDate' && sortDir.isAscending() ? DESC : ASC}|)}">
-                                            Modified Date <span>[[${sortProp == 'modifiedDate' && sortDir.isAscending() ? '&uArr;' : '&dArr;'}]]</span>
+                                            <span th:text="#{date.modified}"></span> <span>[[${sortProp == 'modifiedDate' && sortDir.isAscending() ? '&uArr;' : '&dArr;'}]]</span>
                                         </a>
                                     </th>
                                     <th scope="col">
                                         <a class="btn btn-light"
                                            th:href="@{'/workspace/' + ${wksName} + '/typos'(size=*{size},sort=|modifiedBy,${sortProp == 'modifiedBy' && sortDir.isAscending() ? DESC : ASC}|)}">
-                                            Modified By <span>[[${sortProp == 'modifiedBy' && sortDir.isAscending() ? '&uArr;' : '&dArr;'}]]</span>
+                                            <span th:text="#{modified-by}"></span> <span>[[${sortProp == 'modifiedBy' && sortDir.isAscending() ? '&uArr;' : '&dArr;'}]]</span>
                                         </a>
                                     </th>
                                     <th scope="col">
                                         <a class="btn btn-light"
                                            th:href="@{'/workspace/' + ${wksName} + '/typos'(size=*{size},sort=|typoStatus,${sortProp == 'typoStatus' && sortDir.isAscending() ? DESC : ASC}|)}">
-                                            Typo Status <span>[[${sortProp == 'typoStatus' && sortDir.isAscending() ? '&uArr;' : '&dArr;'}]]</span>
+                                            <span th:text="#{typo-status}"></span> <span>[[${sortProp == 'typoStatus' && sortDir.isAscending() ? '&uArr;' : '&dArr;'}]]</span>
                                         </a>
                                     </th>
                                 </tr>

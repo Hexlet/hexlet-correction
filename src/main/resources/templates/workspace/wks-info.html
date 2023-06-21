@@ -46,11 +46,10 @@
                             th:classappend="|text-*{key.getStyle()}|"
                             th:each="pair : ${countTypoByStatus}"
                             th:object="${pair}">
-                            [[*{key.toString()}]]<span class="badge rounded-pill"
-                                                       th:classappend="|bg-*{key.getStyle()}|">[[*{value}]]</span>
+                            <span th:text="#{*{key.toString()}}"></span><span class="badge rounded-pill" th:classappend="|bg-*{key.getStyle()}|">[[*{value}]]</span>
                         </li>
                         <li class="list-group-item d-flex justify-content-between align-items-center fw-bolder text-primary">
-                            TOTAL<span class="badge rounded-pill bg-primary" th:text="${sumTypoInWks}"></span>
+                            <span th:text="#{TOTAL}"></span><span class="badge rounded-pill bg-primary" th:text="${sumTypoInWks}"></span>
                         </li>
                     </ul>
                 </div>

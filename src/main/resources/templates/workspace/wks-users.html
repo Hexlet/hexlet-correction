@@ -80,19 +80,19 @@
                                     <th scope="col">
                                         <a class="btn btn-light"
                                            th:href="@{'/workspace/' + ${wksName} + '/users'(size=*{size},sort=|firstName,${sortProp == 'firstName' && sortDir.isAscending() ? DESC : ASC}|)}">
-                                            First Name <span>[[${sortProp == 'firstName' && sortDir.isAscending() ? '&uArr;' : '&dArr;'}]]</span>
+                                            <span th:text="#{firstname}"></span> <span>[[${sortProp == 'firstName' && sortDir.isAscending() ? '&uArr;' : '&dArr;'}]]</span>
                                         </a>
                                     </th>
                                     <th scope="col">
                                         <a class="btn btn-light"
                                            th:href="@{'/workspace/' + ${wksName} + '/users'(size=*{size},sort=|lastName,${sortProp == 'lastName' && sortDir.isAscending() ? DESC : ASC}|)}">
-                                           Last Name <span>[[${sortProp == 'lastName' && sortDir.isAscending() ? '&uArr;' : '&dArr;'}]]</span>
+                                           <span th:text="#{lastname}"></span> <span>[[${sortProp == 'lastName' && sortDir.isAscending() ? '&uArr;' : '&dArr;'}]]</span>
                                         </a>
                                     </th>
                                     <th scope="col">
                                         <a class="btn btn-light"
                                            th:href="@{'/workspace/' + ${wksName} + '/users'(size=*{size},sort=|email,${sortProp == 'email' && sortDir.isAscending() ? DESC : ASC}|)}">
-                                            Email <span>[[${sortProp == 'email' && sortDir.isAscending() ? '&uArr;' : '&dArr;'}]]</span>
+                                            <span th:text="#{email}"></span> <span>[[${sortProp == 'email' && sortDir.isAscending() ? '&uArr;' : '&dArr;'}]]</span>
                                         </a>
                                     </th>
                                 </tr>
