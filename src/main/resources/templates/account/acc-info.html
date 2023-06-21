@@ -6,41 +6,41 @@
 <main class="container" th:object="${accInfo}">
     <div class="card mb-3">
         <div class="card-body">
-            <h5 class="card-title mb-1">General</h5>
+            <h5 class="card-title mb-1" th:text="#{acc-info.card-title.general}"></h5>
             <div class="row mb-1">
-                <div class="col">FirstName</div>
+                <div class="col" th:text="#{firstname}"></div>
                 <div class="col" th:text="*{firstName}"></div>
             </div>
             <div class="row mb-1">
-                <div class="col">LastName</div>
+                <div class="col" th:text="#{lastname}"></div>
                 <div class="col" th:text="*{lastName}"></div>
             </div>
             <div class="row mb-1">
-                <div class="col">Username</div>
+                <div class="col" th:text="#{username}"></div>
                 <div class="col" th:text="*{username}"></div>
             </div>
             <div class="row mb-3">
-                <div class="col">Email</div>
+                <div class="col" th:text="#{email}"></div>
                 <div class="col" th:text="*{email}"></div>
             </div>
-            <a class="btn btn-primary" th:href="@{/account/update}">Edit</a>
+            <a class="btn btn-primary" th:href="@{/account/update}" th:text="#{btn.edit}"></a>
         </div>
     </div>
     <div class="card mb-3">
         <div class="card-body">
-            <h5 class="card-title mb-3">Password</h5>
-            <a class="btn btn-primary" th:href="@{/account/password}">Edit</a>
+            <h5 class="card-title mb-3" th:text="#{password}"></h5>
+            <a class="btn btn-primary" th:href="@{/account/password}" th:text="#{btn.edit}"></a>
         </div>
     </div>
-    <h5 class="card-title mb-1">Workspaces</h5>
+    <h5 class="card-title mb-1" th:text="#{acc-info.card-title.workspaces}"></h5>
     <table class="table table-bordered table-hover mt-3">
         <thead>
         <tr>
-            <th class="col-1">Workspace name</th>
-            <th class="col-1">Workspace URL</th>
-            <th class="col-1">Workspace description</th>
-            <th class="col-1">Username</th>
-            <th class="col-1">Role</th>
+            <th class="col-1" th:text="#{acc-info.wks.name}"></th>
+            <th class="col-1" th:text="#{acc-info.wks.url}"></th>
+            <th class="col-1" th:text="#{acc-info.wks.descr}"></th>
+            <th class="col-1" th:text="#{username}"></th>
+            <th class="col-1" th:text="#{acc-info.wks.role}"></th>
         </tr>
         </thead>
         <tbody>

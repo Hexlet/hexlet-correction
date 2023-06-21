@@ -11,28 +11,28 @@
                     <input class="form-control" id="inputOldPassword" placeholder="p"
                            th:classappend="${!#fields.hasErrors('oldPassword') && formModified ? 'is-valid' : ''}"
                            th:errorclass="is-invalid" th:field="*{oldPassword}" type="password">
-                    <label for="inputOldPassword">Current Password</label>
+                    <label for="inputOldPassword" th:text="#{password.current}"></label>
                     <div class="invalid-feedback" th:each="err : ${#fields.errors('oldPassword')}" th:text="${err}"></div>
                 </div>
                 <div class="form-floating mb-3">
                     <input class="form-control" id="inputNewPassword" placeholder="p"
                            th:classappend="${!#fields.hasErrors('newPassword') && formModified ? 'is-valid' : ''}"
                            th:errorclass="is-invalid" th:field="*{newPassword}" type="password">
-                    <label for="inputNewPassword">New Password</label>
+                    <label for="inputNewPassword" th:text="#{password.new}"></label>
                     <div class="invalid-feedback" th:each="err : ${#fields.errors('newPassword')}" th:text="${err}"></div>
                 </div>
                 <div class="form-floating mb-3">
                     <input class="form-control" id="inputConfirmPassword" placeholder="p"
                            th:classappend="${!#fields.hasErrors('confirmNewPassword') && formModified ? 'is-valid' : ''}"
                            th:errorclass="is-invalid" th:field="*{confirmNewPassword}" type="password">
-                    <label for="inputConfirmPassword">Confirm Password</label>
+                    <label for="inputConfirmPassword" th:text="#{password.confirm}"></label>
                     <div class="invalid-feedback" th:each="err : ${#fields.errors('confirmNewPassword')}" th:text="${err}"></div>
                 </div>
                 <div th:if="${#fields.hasGlobalErrors()}">
                     <div class="alert alert-danger" th:each="err : ${#fields.globalErrors()}" th:text="${err}"></div>
                 </div>
-                <button class="btn btn-primary" type="submit">Save</button>
-                <a class="btn btn-secondary" th:href="@{/account}">Close</a>
+                <button class="btn btn-primary" type="submit" th:text="#{btn.save}"></button>
+                <a class="btn btn-secondary" th:href="@{/account}" th:text="#{btn.close}"></a>
             </form>
         </div>
     </div>

@@ -11,7 +11,7 @@
                  th:if="${sumTypoInWks} > 0"
                  th:insert="~{fragments/workspace :: wksProgressBar (${sumTypoInWks}, ${countTypoByStatus})}"></div>
             <div class="row">
-                <p th:text="|Total number of typos in workspace ${wksName} : ${sumTypoInWks}|"></p>
+                <p th:text="|#{text.number-of-typos(${wksName}, ${sumTypoInWks})}|"></p>
             </div>
             <div class="row"
                  th:if="${lastTypoCreatedDateAgo.isPresent() && lastTypoCreatedDate.isPresent()}"
@@ -26,7 +26,7 @@
                                    th:errorclass="is-invalid"
                                    th:field="*{name}"
                                    type="text">
-                            <label for="inputWksName">Workspace Name</label>
+                            <label for="inputWksName" th:text="#{wks.placeholder.name}"></label>
                             <div class="invalid-feedback" th:each="err : ${#fields.errors('name')}" th:text="${err}"></div>
                         </div>
                         <div class="form-floating mb-3">
@@ -34,11 +34,11 @@
                                       th:classappend="${!#fields.hasErrors('description') && formModified ? 'is-valid' : ''}"
                                       th:errorclass="is-invalid"
                                       th:field="*{description}"></textarea>
-                            <label for="inWksDesc">Workspace Description</label>
+                            <label for="inWksDesc" th:text="#{wks.placeholder.descr}"></label>
                             <div class="invalid-feedback" th:each="err : ${#fields.errors('description')}" th:text="${err}"></div>
                         </div>
-                        <button class="btn btn-primary" type="submit">Create</button>
-                        <a class="btn btn-secondary" th:href="@{'/workspace/' + ${wksName}}">Close</a>
+                        <button class="btn btn-primary" type="submit" th:text="#{btn.create}"></button>
+                        <a class="btn btn-secondary" th:href="@{'/workspace/' + ${wksName}}" th:text="#{btn.close}"></a>
                     </form>
                 </div>
                 <div class="col">

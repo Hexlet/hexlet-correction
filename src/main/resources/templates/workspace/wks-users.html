@@ -14,20 +14,20 @@
                  th:insert="~{fragments/workspace :: wksProgressBar (${sumTypoInWks}, ${countTypoByStatus})}"></div>
             <!-- Workspace number of typo -->
             <div class="row">
-                <p th:text="|Total number of typos in workspace ${wksName} : ${sumTypoInWks}|"></p>
+                <p th:text="|#{text.number-of-typos(${wksName}, ${sumTypoInWks})}|"></p>
             </div>
             <!-- Adding a user to a workspace -->
             <div class="row my-3" th:unless="${accounts.isEmpty()}">
-                <p>Adding a user to a workspace</p>
+                <p th:text="#{text.add-user-to-wks}"></p>
                 <form method="POST" th:action="@{'/workspace/' + ${wksName} + '/users'}">
                     <div class="form-group">
-                        <label for="selectUserEmail">Email address</label>
+                        <label for="selectUserEmail" th:text="#{email}"></label>
                         <select name="email" class="form-control" id="selectUserEmail">
                             <option th:each="account : ${accounts}" th:object="${account}" th:text="*{email}"></option>
                         </select>
-                        <small id="emailHelp" class="form-text text-muted">Choose a user from the list</small>
+                        <small id="emailHelp" class="form-text text-muted" th:text="#{text.hint-choose-a-user}"></small>
                     </div>
-                    <button type="submit" class="btn btn-secondary">Add to workspace</button>
+                    <button type="submit" class="btn btn-secondary" th:text="#{btn.add-to-wks}"></button>
                 </form>
             </div>
             <!-- Workspace last typo date -->
@@ -45,7 +45,7 @@
                                         class="btn btn-secondary dropdown-toggle"
                                         data-bs-toggle="dropdown"
                                         id="dropdownSizePage"
-                                        th:text="|Page size ${userPage.size}|"
+                                        th:text="|#{btn.page-size} ${userPage.size}|"
                                         type="button">
                                 </button>
                                 <ul aria-labelledby="dropdownSizePage" class="dropdown-menu">

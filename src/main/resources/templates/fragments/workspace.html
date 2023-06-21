@@ -13,9 +13,7 @@
     </div>
 </div>
 <div class="col" th:fragment="wksLastTypoDate (lastTypoCreatedDateAgo, lastTypoCreatedDate)">
-    <p class="col-6"
-       th:text="|Last typo added ${lastTypoCreatedDateAgo.get()} at ${#temporals.format(lastTypoCreatedDate.get(), 'hh:mm:ss dd-MM-yyyy')}|">
-    </p>
+    <p class="col-6" th:text="|#{text.last-typo-added(${lastTypoCreatedDateAgo.get()}, ${#temporals.format(lastTypoCreatedDate.get(), 'hh:mm:ss dd-MM-yyyy')})}|"></p>
 </div>
 </body>
 </html>

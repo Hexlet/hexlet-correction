@@ -13,9 +13,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@NotNull(message = "Workspace url must not be null")
-@NotBlank(message = "Workspace url must not be blank")
-@NotEmpty(message = "Workspace url must not be empty")
+@NotNull
+@NotBlank
+@NotEmpty
 @Size(min = 2, max = 255)
 @URL
 @Constraint(validatedBy = {})

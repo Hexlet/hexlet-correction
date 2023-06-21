@@ -13,10 +13,10 @@
         <div class="collapse navbar-collapse" id="mainNavbar">
             <ul class="navbar-nav me-auto mb-2 mb-md-0" sec:authorize="isAuthenticated()">
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{/workspace}">Create Workspace</a>
+                    <a class="nav-link" th:href="@{/workspace}" th:text="#{navbar.create-workspace}"></a>
                 </li>
                 <li sec:authorize="isAuthenticated()" class="nav-item">
-                    <a class="nav-link" th:href="@{/account}">Account Info</a>
+                    <a class="nav-link" th:href="@{/account}" th:text="#{navbar.account-info}"></a>
                 </li>
             </ul>
             <ul class="navbar-nav mr-2 ms-auto" sec:authorize="isAuthenticated()">
@@ -49,19 +49,23 @@
         <a class="list-group-item list-group-item-action"
            th:aria-current="${itemActive} == 'info'"
            th:classappend="${itemActive} == 'info' ? 'active' : ''"
-           th:href="@{'/workspace/' + ${wksName}}">Info</a>
+           th:href="@{'/workspace/' + ${wksName}}"
+           th:text="#{wks.info}"></a>
         <a class="list-group-item list-group-item-action"
            th:aria-current="${itemActive} == 'typos'"
            th:classappend="${itemActive} == 'typos' ? 'active' : ''"
-           th:href="@{'/workspace/' + ${wksName} + '/typos'}">Typos</a>
+           th:href="@{'/workspace/' + ${wksName} + '/typos'}"
+           th:text="#{wks.typos}"></a>
         <a class="list-group-item list-group-item-action"
            th:aria-current="${itemActive} == 'settings'"
            th:classappend="${itemActive} == 'settings' ? 'active' : ''"
-           th:href="@{'/workspace/' + ${wksName} + '/settings'}">Settings</a>
+           th:href="@{'/workspace/' + ${wksName} + '/settings'}"
+           th:text="#{wks.settings}"></a>
         <a class="list-group-item list-group-item-action"
            th:aria-current="${itemActive} == 'users'"
            th:classappend="${itemActive} == 'users' ? 'active' : ''"
-           th:href="@{'/workspace/' + ${wksName} + '/users'}">Users</a>
+           th:href="@{'/workspace/' + ${wksName} + '/users'}"
+           th:text="#{wks.users}"></a>
         <a aria-disabled="true" class="list-group-item list-group-item-action disabled" href="#" tabindex="-1">Integration</a>
     </div>
 </th:block>
