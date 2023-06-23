@@ -31,7 +31,7 @@
             </div>
             <div class="row my-4">
                 <div class="col">
-                    <p class="fw-bold">Install this <code>script</code> on your website:</p>
+                    <p class="fw-bold" th:text="#{text.script-descr('<code>script</code>')}"></p>
                     <pre><code>
 &lt;script&gt;
     handleTypoReporter({ authorizationToken: [[${wksBasicToken}]],
