@@ -12,7 +12,7 @@
                            th:classappend="${!#fields.hasErrors('url') && formModified ? 'is-valid' : ''}"
                            th:errorclass="is-invalid" th:field="*{url}"
                            type="url">
-                    <label for="inputWksUrl">Site URL</label>
+                    <label for="inputWksUrl" th:text="#{wks.placeholder.url}"></label>
                     <div class="invalid-feedback" th:each="err : ${#fields.errors('url')}" th:text="${err}"></div>
                 </div>
                 <div class="form-floating mb-3">
@@ -20,17 +20,17 @@
                            th:classappend="${!#fields.hasErrors('name') && formModified ? 'is-valid' : ''}"
                            th:errorclass="is-invalid" th:field="*{name}"
                            type="text">
-                    <label for="inputWksName">Workspace Name</label>
+                    <label for="inputWksName" th:text="#{wks.placeholder.name}"></label>
                     <div class="invalid-feedback" th:each="err : ${#fields.errors('name')}" th:text="${err}"></div>
                 </div>
                 <div class="form-floating mb-3">
                     <textarea class="form-control" id="inWksDesc" placeholder="p" style="height: 100px"
                               th:errorclass="is-invalid" th:field="*{description}"></textarea>
-                    <label for="inWksDesc">Workspace Description</label>
+                    <label for="inWksDesc" th:text="#{wks.placeholder.descr}"></label>
                     <div class="invalid-feedback" th:each="err : ${#fields.errors('description')}"
                          th:text="${err}"></div>
                 </div>
-                <button class="btn btn-primary" type="submit">Create</button>
+                <button class="btn btn-primary" type="submit" th:text="#{btn.create}"></button>
             </form>
         </div>
     </div>

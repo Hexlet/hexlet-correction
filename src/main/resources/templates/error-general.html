@@ -3,7 +3,7 @@
 <head th:replace="~{fragments/header :: head}"></head>
 <body>
 <div class="alert alert-danger">
-    <span>Во время работы произошла ошибка. Попробуйте позже.</span>
+    <span th:text="#{alert.general-error}"></span>
 </div>
 </body>
 </html>

@@ -6,30 +6,26 @@
 <main class="container">
 <div class="row">
     <div class="col">
-        <div class="alert alert-danger" role="alert" th:if="${param.error}">
-            Bad credential
-        </div>
-        <div class="alert alert-warning" role="alert" th:if="${param.logout}">
-            You have been logged out.
-        </div>
+        <div class="alert alert-danger" role="alert" th:if="${param.error}" th:text="#{alert.bad-credential}"></div>
+        <div class="alert alert-warning" role="alert" th:if="${param.logout}" th:text="#{alert.logout}"></div>
         <form method="post" th:action="@{/login}">
             <div class="form-floating mb-3">
                 <input autofocus class="form-control" id="inputUsername"
                        name="username" placeholder="Username" required type="text">
-                <label for="inputUsername">Username</label>
+                <label for="inputUsername" th:text="#{username}"></label>
             </div>
             <div class="form-floating mb-3">
                 <input class="form-control" id="inputPassword" name="password"
                        placeholder="Password" required type="password">
-                <label for="inputPassword">Password</label>
+                <label for="inputPassword" th:text="#{password}"></label>
             </div>
-            <button class="btn btn-primary" type="submit">Login</button>
+            <button class="btn btn-primary" type="submit" th:text="#{btn.login}"></button>
         </form>
     </div>
 </div>
 <div class="row">
     <div class="mt-4">
-        <a class="link-primary" th:href="@{/signup}">Sign up</a>
+        <a class="link-primary" th:href="@{/signup}" th:text="#{link.signup}"></a>
     </div>
 </div>
 </main>

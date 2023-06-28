@@ -13,11 +13,11 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@NotNull(message = "Workspace name must not be null")
-@NotBlank(message = "Workspace name must not be blank")
-@NotEmpty(message = "Workspace name must not be empty")
+@NotNull
+@NotBlank
+@NotEmpty
 @Size(min = 2, max = 20)
-@Pattern(regexp = "^[-_A-Za-z0-9]*$", message = "Workspace name must contain A-Z a-z 0-9 _ - characters")
+@Pattern(regexp = "^[-_A-Za-z0-9]*$")
 @Constraint(validatedBy = {})
 @Target({ElementType.FIELD, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)

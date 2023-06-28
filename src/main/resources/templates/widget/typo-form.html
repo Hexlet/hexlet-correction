@@ -16,12 +16,12 @@
                   th:field="*{reporterComment}"
                   type="text"
         ></textarea>
-        <label class="form-label" for="commentTextarea">Оставить дополнительный комментарий:</label>
+        <label class="form-label" for="commentTextarea" th:text="#{text.leave-comment}"></label>
         <div class="alert alert-danger" th:if="${#fields.hasErrors('reporterComment')}">
             <p th:each="err : ${#fields.errors('reporterComment')}" th:text="${err}"></p>
         </div>
     </div>
-    <button class="btn btn-primary" type="submit">Отправить</button>
+    <button class="btn btn-primary" type="submit" th:text="#{btn.send}"></button>
 </form>
 <script th:inline="javascript">
     window.onload = () => {
