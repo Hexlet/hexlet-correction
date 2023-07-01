@@ -3,59 +3,60 @@
 <head th:replace="~{fragments/header :: head}"></head>
 <body style="padding-top: 4.5rem">
 <nav th:replace="~{fragments/panels :: mainNavbarTop}"></nav>
-<main class="container-fluid">
-    <div class="row">
-        <div class="col-2" th:insert="fragments/panels :: workspaceSideBar (${wksName}, 'info')"></div>
-        <div class="col">
-            <div class="row my-3"
-                 th:if="${sumTypoInWks} > 0"
-                 th:insert="~{fragments/workspace :: wksProgressBar (${sumTypoInWks}, ${countTypoByStatus})}"></div>
-            <div class="row">
-                <p th:text="|#{text.number-of-typos(${wksName}, ${sumTypoInWks})}|"></p>
-            </div>
-            <div class="row"
-                 th:if="${lastTypoCreatedDateAgo.isPresent() && lastTypoCreatedDate.isPresent()}"
-                 th:insert="~{fragments/workspace :: wksLastTypoDate (${lastTypoCreatedDateAgo}, ${lastTypoCreatedDate})}"></div>
-            <div class="row row-cols-1 row-cols-md-2 g-4">
-                <div class="col">
-                    <div class="card" th:object="${wksInfo}">
-                        <div class="card-body">
-                            <h5 class="card-title" th:text="*{name}"></h5>
-                            <p class="card-text" th:text="*{url}"></p>
-                            <p class="card-text" th:text="*{description}"></p>
-                            <form th:action="@{'/workspace/' + ${wksName}}" th:method="delete">
-                                <a class="btn btn-primary" th:href="@{'/workspace/' + ${wksName} + '/update'}" th:text="#{btn.edit}"></a>
-                                <button
-                                    class="btn btn-danger"
-                                    type="submit"
-                                    th:onclick="return confirm(/*[[#{text.wks-delete-confirm}]]*/)"
-                                    th:text="#{btn.delete}"></button>
-                            </form>
-                        </div>
-                        <div class="card-footer text-muted fst-italic">
-                            <h6 class="card-subtitle m-2"
-                                th:text="|#{text.modified-info(*{modifiedBy}, *{modifiedDateAgo}, *{#temporals.format(modifiedDate, 'hh:mm:ss dd-MM-yyyy')})}|"></h6>
-                            <h6 class="card-subtitle m-2"
-                                th:text="|#{text.created-info(*{createdBy}, *{createdDateAgo}, *{#temporals.format(createdDate, 'hh:mm:ss dd-MM-yyyy')})}|"></h6>
+    <main class="container-fluid">
+        <div class="row">
+            <div class="col-2" th:insert="fragments/panels :: workspaceSideBar (${wksName}, 'info')"></div>
+            <div class="col">
+                <div class="row my-3"
+                     th:if="${sumTypoInWks} > 0"
+                     th:insert="~{fragments/workspace :: wksProgressBar (${sumTypoInWks}, ${countTypoByStatus})}"></div>
+                <div class="row">
+                    <p th:text="|#{text.number-of-typos(${wksName}, ${sumTypoInWks})}|"></p>
+                </div>
+                <div class="row"
+                     th:if="${lastTypoCreatedDateAgo.isPresent() && lastTypoCreatedDate.isPresent()}"
+                     th:insert="~{fragments/workspace :: wksLastTypoDate (${lastTypoCreatedDateAgo}, ${lastTypoCreatedDate})}"></div>
+                <div class="row row-cols-1 row-cols-md-2 g-4">
+                    <div class="col">
+                        <div class="card" th:object="${wksInfo}">
+                            <div class="card-body">
+                                <h5 class="card-title" th:text="*{name}"></h5>
+                                <p class="card-text" th:text="*{url}"></p>
+                                <p class="card-text" th:text="*{description}"></p>
+                                <form th:action="@{'/workspace/' + ${wksName}}" th:method="delete">
+                                    <a class="btn btn-primary" th:href="@{'/workspace/' + ${wksName} + '/update'}" th:text="#{btn.edit}"></a>
+                                    <button
+                                        class="btn btn-danger"
+                                        type="submit"
+                                        th:onclick="return confirm(/*[[#{text.wks-delete-confirm}]]*/)"
+                                        th:text="#{btn.delete}"></button>
+                                </form>
+                            </div>
+                            <div class="card-footer text-muted fst-italic">
+                                <h6 class="card-subtitle m-2"
+                                    th:text="|#{text.modified-info(*{modifiedBy}, *{modifiedDateAgo}, *{#temporals.format(modifiedDate, 'hh:mm:ss dd-MM-yyyy')})}|"></h6>
+                                <h6 class="card-subtitle m-2"
+                                    th:text="|#{text.created-info(*{createdBy}, *{createdDateAgo}, *{#temporals.format(createdDate, 'hh:mm:ss dd-MM-yyyy')})}|"></h6>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col">
-                    <ul class="list-group list-group-flush col-6">
-                        <li class="list-group-item d-flex justify-content-between align-items-center fw-bold bg-gradient"
-                            th:classappend="|text-*{key.getStyle()}|"
-                            th:each="pair : ${countTypoByStatus}"
-                            th:object="${pair}">
-                            <span th:text="#{*{key.toString()}}"></span><span class="badge rounded-pill" th:classappend="|bg-*{key.getStyle()}|">[[*{value}]]</span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center fw-bolder text-primary">
-                            <span th:text="#{TOTAL}"></span><span class="badge rounded-pill bg-primary" th:text="${sumTypoInWks}"></span>
-                        </li>
-                    </ul>
+                    <div class="col">
+                        <ul class="list-group list-group-flush col-6">
+                            <li class="list-group-item d-flex justify-content-between align-items-center fw-bold bg-gradient"
+                                th:classappend="|text-*{key.getStyle()}|"
+                                th:each="pair : ${countTypoByStatus}"
+                                th:object="${pair}">
+                                <span th:text="#{*{key.toString()}}"></span><span class="badge rounded-pill" th:classappend="|bg-*{key.getStyle()}|">[[*{value}]]</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center fw-bolder text-primary">
+                                <span th:text="#{TOTAL}"></span><span class="badge rounded-pill bg-primary" th:text="${sumTypoInWks}"></span>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</main>
+    </main>
+    <footer th:replace="~{fragments/footer :: mainFooter}"></footer>
 </body>
 </html>
