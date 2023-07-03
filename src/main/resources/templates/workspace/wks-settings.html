@@ -32,12 +32,16 @@
             <div class="row my-4">
                 <div class="col">
                     <p class="fw-bold" th:text="#{text.script-descr('<code>script</code>')}"></p>
-                    <pre><code>
+                    <pre>
+                        <code>
+&lt;script src="https://cdn.jsdelivr.net/gh/hexlet/hexlet-correction@main/src/widget/index.js"&gt;&lt;/script&gt;
+
 &lt;script&gt;
-    handleTypoReporter({ authorizationToken: [[${wksBasicToken}]],
-    workSpaceUrl: [[${rootUrl}]], workSpaceId: [[${wksId}]]})
+    handleTypoReporter({ authorizationToken: '[[${wksBasicToken}]]',
+    workSpaceUrl: '[[${rootUrl}]]', workSpaceId: '[[${wksId}]]'})
 &lt;/script&gt;
-    </code></pre>
+                        </code>
+                    </pre>
                 </div>
             </div>
         </div>
