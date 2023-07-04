@@ -26,11 +26,6 @@ public class WorkspaceApi {
     private final TypoService service;
 
     @PostMapping("/{id}/typos")
-    // TODO: allow sending a request only from the pages specified in the Workspace settings
-    @CrossOrigin(
-        originPatterns = {"*"},
-        allowCredentials = "true"
-    )
     public ResponseEntity<ReportedTypo> addTypoReport(@PathVariable long id,
                                                       Authentication authentication,
                                                       @Valid @RequestBody TypoReport typoReport,
