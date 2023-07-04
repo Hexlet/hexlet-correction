@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/head :: head}"></head>
+<head th:replace="~{fragments/header :: head}"></head>
 <body>
 <form method="POST" th:action="@{/typo/form/{name}(name=${wksName})}" th:object="${typoReport}">
     <input hidden id="pageUrl" name="pageUrl" type="text" />
