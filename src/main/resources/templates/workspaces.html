@@ -1,23 +1,22 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/header :: head}"></head>
-<body style="padding-top: 4.5rem">
-<nav th:replace="~{fragments/panels :: mainNavbarTop}"></nav>
-<main class="container">
-    <div class="row row-cols-1 row-cols-md-3 g-4">
-        <div class="col" th:each="wksInfo : ${wksInfoList}" th:object="${wksInfo}">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title" th:text="*{name}"></h5>
-                    <p class="card-text" th:text="*{description}"></p>
-                    <a class="card-link" th:href="@{'/workspace/' + *{name}}" th:text="#{wks.info}"></a>
-                    <a class="card-link" th:href="@{'/workspace/' + *{name} + '/typos'}" th:text="#{wks.typos}"></a>
-                    <a class="card-link" th:href="@{'/workspace/' + *{name} + '/users'}" th:text="#{wks.users}"></a>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="application.html">
+
+    <main layout:fragment="content" class="container">
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            <div class="col" th:each="wksInfo : ${wksInfoList}" th:object="${wksInfo}">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="*{name}"></h5>
+                        <p class="card-text" th:text="*{description}"></p>
+                        <a class="card-link" th:href="@{'/workspace/' + *{name}}" th:text="#{wks.info}"></a>
+                        <a class="card-link" th:href="@{'/workspace/' + *{name} + '/typos'}" th:text="#{wks.typos}"></a>
+                        <a class="card-link" th:href="@{'/workspace/' + *{name} + '/users'}" th:text="#{wks.users}"></a>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</main>
-<footer th:replace="~{fragments/footer :: mainFooter}"></footer>
-</body>
+    </main>
+
 </html>
