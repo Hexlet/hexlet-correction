@@ -266,13 +266,13 @@ public class WorkspaceController {
     public String addUser(@RequestParam String email, @PathVariable String wksName) {
         try {
             workspaceRoleService.addAccountToWorkspace(wksName, email);
-            return "redirect:/workspace/{wksName}/users/";
+            return "redirect:/workspace/{wksName}/users";
         } catch (WorkspaceNotFoundException e) {
             log.error("Workspace with name {} not found", wksName);
             return "redirect:/workspaces";
         } catch (AccountNotFoundException e) {
             log.error("Account with email {} not found", email);
-            return "redirect:/workspace/{wksName}/users/";
+            return "redirect:/workspace/{wksName}/users";
         }
     }
 
