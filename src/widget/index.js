@@ -221,7 +221,7 @@ const handleTypoReporter = (options) => {
         data.reporterName = name.value === '' ? 'Anonymous' : name.value;
         data.reporterComment = commentField.value;
         try {
-          await fetch(`${workSpaceUrl}/${workSpaceId}/typos`, {
+          await fetch(`${workSpaceUrl}/api/workspaces/${workSpaceId}/typos`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
