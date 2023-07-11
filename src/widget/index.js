@@ -187,7 +187,7 @@ const renderModal = (state) => {
 };
 
 const runModal = (dataForModal) => {
-  const textTypo = dataForModal.selection.toString().trim();
+  const textTypo = dataForModal.selection.toString();
   const anchorNode = dataForModal.selection.anchorNode;
   const anchorOffset = dataForModal.selection.anchorOffset;
   const focusOffset = dataForModal.selection.focusOffset;
@@ -227,7 +227,7 @@ const runModal = (dataForModal) => {
     state.data.reporterName = value === '' ? 'Anonymous' : value;
     state.data.reporterComment = elements.commentEl.value;
     try {
-      await fetch(`${state.options.workSpaceUrl}${state.options.workSpaceId}/typos`, {
+      await fetch(`${state.options.workSpaceUrl}/api/workspaces/${state.options.workSpaceId}/typos`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
