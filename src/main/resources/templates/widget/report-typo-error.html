@@ -1,10 +1,12 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+layout:decorate="~{fragments/footer.html}">
 <head th:replace="~{fragments/header :: head}"></head>
 <body>
 <div class="alert alert-danger">
     <span>Во время отправки произошла ошибка. Попробуйте позже.</span>
 </div>
-<footer th:replace="~{fragments/footer :: foot}"></footer>
+
 </body>
 </html>

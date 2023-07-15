@@ -55,6 +55,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
+        <dependency>
+            <groupId>nz.net.ultraq.thymeleaf</groupId>
+            <artifactId>thymeleaf-layout-dialect</artifactId>
+            <version>3.2.0</version>
+        </dependency>
         <!-- Security -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
