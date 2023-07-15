@@ -4,15 +4,16 @@ import io.hexlet.typoreporter.domain.account.Account;
 import io.hexlet.typoreporter.domain.workspace.Workspace;
 import io.hexlet.typoreporter.domain.workspace.WorkspaceRole;
 import io.hexlet.typoreporter.repository.AccountRepository;
-import io.hexlet.typoreporter.repository.WorkspaceRepository;
 import io.hexlet.typoreporter.service.TypoService;
 import io.hexlet.typoreporter.service.WorkspaceRoleService;
 import io.hexlet.typoreporter.service.WorkspaceService;
 import io.hexlet.typoreporter.service.dto.typo.TypoInfo;
 import io.hexlet.typoreporter.service.dto.workspace.CreateWorkspace;
+import io.hexlet.typoreporter.service.dto.workspace.WorkspaceInfo;
 import io.hexlet.typoreporter.web.exception.AccountNotFoundException;
 import io.hexlet.typoreporter.web.exception.WorkspaceAlreadyExistException;
 import io.hexlet.typoreporter.web.exception.WorkspaceNotFoundException;
+import io.hexlet.typoreporter.web.exception.WorkspaceRoleNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +25,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.SortDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -38,6 +41,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -56,6 +60,8 @@ public class WorkspaceController {
 
     private static final String IS_USER_RELATED_TO_WKS =
         "@workspaceService.isUserRelatedToWorkspace(#wksName, authentication.name)";
+    private static final String IS_USER_ADMIN_IN_WKS =
+        "@workspaceService.isAdminRoleUserInWorkspace(#wksName, authentication.name)";
 
     private final TreeSet<Integer> availableSizes = new TreeSet<>(List.of(2, 5, 10, 15, 25));
 
@@ -64,8 +70,6 @@ public class WorkspaceController {
     private final WorkspaceService workspaceService;
 
     private final AccountRepository accountRepository;
-
-    private final WorkspaceRepository workspaceRepository;
 
     private final WorkspaceRoleService workspaceRoleService;
 
@@ -213,45 +217,48 @@ public class WorkspaceController {
                                         @PathVariable String wksName,
                                         @SortDefault("createdDate") Pageable pageable) {
 
-        var wksOptional = workspaceService.getWorkspaceInfoByName(wksName);
-        if (wksOptional.isEmpty()) {
+        Optional<WorkspaceInfo> workSpaceInfoOptional = workspaceService.getWorkspaceInfoByName(wksName);
+        if (workSpaceInfoOptional.isEmpty()) {
             //TODO send error page
             log.error("Workspace with name {} not found", wksName);
             return "redirect:/workspaces";
         }
         model.addAttribute("wksName", wksName);
-        model.addAttribute("wksInfo", wksOptional.get());
+        model.addAttribute("wksInfo", workSpaceInfoOptional.get());
         getStatisticDataToModel(model, wksName);
         getLastTypoDataToModel(model, wksName);
 
-        Optional<Workspace> workspaceOptional = workspaceRepository.getWorkspaceByName(wksName);
+        Optional<Workspace> workspaceOptional = workspaceService.getWorkspaceByName(wksName);
         if (workspaceOptional.isEmpty()) {
             //TODO send error page
             log.error("Workspace with name {} not found", wksName);
             return "redirect:/workspaces";
         }
 
-        Set<WorkspaceRole> workspaces = workspaceOptional.get().getWorkspaceRoles();
-        List<Account> accounts = new ArrayList<>();
-        if (!workspaces.isEmpty()) {
-            accounts = workspaces.stream()
-                    .map(a -> a.getAccount())
-                    .collect(Collectors.toList());
+        Set<WorkspaceRole> workspaceRoles = workspaceOptional.get().getWorkspaceRoles();
+        List<Account> lindkedAccounts = new ArrayList<>();
+        if (!workspaceRoles.isEmpty()) {
+            lindkedAccounts = workspaceRoles.stream()
+                .map(WorkspaceRole::getAccount)
+                .collect(Collectors.toList());
         }
-
-        var size = Optional.ofNullable(availableSizes.floor(pageable.getPageSize())).orElseGet(availableSizes::first);
-        var pageRequest = PageRequest.of(pageable.getPageNumber(), size, pageable.getSort());
-        Page<Account> userPage =  new PageImpl<>(accounts, pageable, accounts.size());
-
+        List<Account> allAccounts = accountRepository.findAll();
+        List<Account> nonLinkedAccounts = getNonLinkedAccounts(allAccounts, lindkedAccounts);
+        final Account authenticatedAccount = getAccountFromAuthentication();
+        final boolean accountIsAdminRole = workspaceService.isAdminRoleUserInWorkspace(wksName,
+            authenticatedAccount.getUsername());
+        List<Account> linkedAccountsWithoutCurrentAccount = lindkedAccounts.stream()
+            .filter(account -> !account.getId().equals(authenticatedAccount.getId()))
+            .toList();
+        Page<Account> userPage = new PageImpl<>(lindkedAccounts, pageable, lindkedAccounts.size());
         var sort = userPage.getSort()
             .stream()
             .findFirst()
             .orElseGet(() -> asc("createdDate"));
 
-        List<Account> allAccounts = accountRepository.findAll();
-        allAccounts.removeAll(accounts);
-
-        model.addAttribute("accounts", allAccounts);
+        model.addAttribute("nonLinkedAccounts", nonLinkedAccounts);
+        model.addAttribute("isAdmin", accountIsAdminRole);
+        model.addAttribute("linkedAccounts", linkedAccountsWithoutCurrentAccount);
         model.addAttribute("userPage", userPage);
         model.addAttribute("availableSizes", availableSizes);
         model.addAttribute("sortProp", sort.getProperty());
@@ -276,6 +283,24 @@ public class WorkspaceController {
         }
     }
 
+    @DeleteMapping("/{wksName}/users")
+    @PreAuthorize(IS_USER_ADMIN_IN_WKS)
+    public String deleteUser(@RequestParam String email, @PathVariable String wksName) {
+        try {
+            workspaceRoleService.deleteAccountFromWorkspace(wksName, email);
+            return "redirect:/workspace/{wksName}/users";
+        } catch (WorkspaceNotFoundException e) {
+            log.error("Workspace with name {} not found", wksName);
+            return "redirect:/workspaces";
+        } catch (AccountNotFoundException e) {
+            log.error("Account with email {} not found", email);
+            return "redirect:/workspace/{wksName}/users";
+        } catch (WorkspaceRoleNotFoundException e) {
+            log.error("The user with email {} has no role in the workspace {} ", email, wksName, e);
+            return "redirect:/workspaces";
+        }
+    }
+
     private void getStatisticDataToModel(final Model model, final String wksName) {
         final var countTypoByStatus = typoService.getCountTypoByStatusForWorkspaceName(wksName);
         model.addAttribute("countTypoByStatus", countTypoByStatus);
@@ -286,5 +311,19 @@ public class WorkspaceController {
         final var createdDate = typoService.getLastTypoByWorkspaceName(wksName).map(TypoInfo::createdDate);
         model.addAttribute("lastTypoCreatedDate", createdDate);
         model.addAttribute("lastTypoCreatedDateAgo", createdDate.map(new PrettyTime()::format));
+    }
+
+    private List<Account> getNonLinkedAccounts(Collection<Account> allAccounts, Collection<Account> linkedAccounts) {
+        final List<Long> linkedIds = linkedAccounts.stream()
+            .map(Account::getId)
+            .toList();
+        return allAccounts.stream()
+            .filter(account -> !linkedIds.contains(account.getId()))
+            .collect(Collectors.toList());
+    }
+
+    private Account getAccountFromAuthentication() {
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return accountRepository.findAccountByUsername(authentication.getName()).get();
     }
 }

@@ -9,6 +9,7 @@ import io.hexlet.typoreporter.repository.WorkspaceRepository;
 import io.hexlet.typoreporter.repository.WorkspaceRoleRepository;
 import io.hexlet.typoreporter.web.exception.AccountNotFoundException;
 import io.hexlet.typoreporter.web.exception.WorkspaceNotFoundException;
+import io.hexlet.typoreporter.web.exception.WorkspaceRoleNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +20,7 @@ import static io.hexlet.typoreporter.domain.workspace.AccountRole.ROLE_ANONYMOUS
 @RequiredArgsConstructor
 public class WorkspaceRoleService {
 
-    private final WorkspaceRoleRepository repository;
+    private final WorkspaceRoleRepository workspaceRoleRepository;
 
     private final WorkspaceRepository workspaceRepository;
 
@@ -41,6 +42,23 @@ public class WorkspaceRoleService {
             workspaceRepository.getReferenceById(wksId),
             accountRepository.getReferenceById(accId)
         );
-        return repository.save(workspaceRole);
+        return workspaceRoleRepository.save(workspaceRole);
     }
+
+    @Transactional
+    public void deleteAccountFromWorkspace(String workspaceName, String accountEmail) {
+        final var account = accountRepository.findAccountByEmail(accountEmail)
+            .orElseThrow(() -> new AccountNotFoundException(accountEmail));
+        final var workspace = workspaceRepository.getWorkspaceByName(workspaceName)
+            .orElseThrow(() -> new WorkspaceNotFoundException(workspaceName));
+        final var beingDeleteRole = workspaceRoleRepository.getWorkspaceRoleByAccountIdAndWorkspaceId(
+                account.getId(),
+                workspace.getId())
+            .orElseThrow(() -> new WorkspaceRoleNotFoundException(account.getId(), workspace.getId()));
+        account.removeWorkSpaceRole(beingDeleteRole);
+        workspace.removeWorkSpaceRole(beingDeleteRole);
+        accountRepository.save(account);
+        workspaceRepository.save(workspace);
+    }
+
 }

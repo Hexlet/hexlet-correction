@@ -107,6 +107,11 @@ public class Account extends AbstractAuditingEntity implements Identifiable<Long
         return this;
     }
 
+    public void removeWorkSpaceRole(WorkspaceRole workspaceRole) {
+        workspaceRoles.remove(workspaceRole);
+        workspaceRole.setAccount(null);
+    }
+
     @Override
     public boolean equals(Object o) {
         return this == o || id != null && o instanceof Account other && id.equals(other.id);

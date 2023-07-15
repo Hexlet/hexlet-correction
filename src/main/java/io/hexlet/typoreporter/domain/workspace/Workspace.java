@@ -85,6 +85,11 @@ public class Workspace extends AbstractAuditingEntity implements Identifiable<Lo
         return this;
     }
 
+    public void removeWorkSpaceRole(WorkspaceRole workspaceRole) {
+        workspaceRoles.remove(workspaceRole);
+        workspaceRole.setWorkspace(null);
+    }
+
     @Override
     public int hashCode() {
         return getClass().hashCode();

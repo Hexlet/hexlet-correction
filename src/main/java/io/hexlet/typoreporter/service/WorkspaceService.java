@@ -8,11 +8,14 @@ import io.hexlet.typoreporter.domain.workspace.WorkspaceRoleId;
 import io.hexlet.typoreporter.domain.workspacesettings.WorkspaceSettings;
 import io.hexlet.typoreporter.repository.AccountRepository;
 import io.hexlet.typoreporter.repository.WorkspaceRepository;
+import io.hexlet.typoreporter.repository.WorkspaceRoleRepository;
 import io.hexlet.typoreporter.repository.WorkspaceSettingsRepository;
 import io.hexlet.typoreporter.service.dto.workspace.CreateWorkspace;
 import io.hexlet.typoreporter.service.dto.workspace.WorkspaceInfo;
 import io.hexlet.typoreporter.service.mapper.WorkspaceMapper;
+import io.hexlet.typoreporter.web.exception.AccountNotFoundException;
 import io.hexlet.typoreporter.web.exception.WorkspaceAlreadyExistException;
+import io.hexlet.typoreporter.web.exception.WorkspaceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,6 +38,7 @@ public class WorkspaceService {
     private final WorkspaceMapper workspaceMapper;
 
     private final AccountRepository accountRepository;
+    private final WorkspaceRoleRepository workspaceRoleRepository;
 
     @Transactional(readOnly = true)
     public List<WorkspaceInfo> getAllWorkspacesInfo() {
@@ -123,5 +127,18 @@ public class WorkspaceService {
                 .map(WorkspaceRole::getWorkspace)
                 .anyMatch(wks -> wks.getName().equals(wksName)))
             .orElse(false);
+    }
+
+    @Transactional(readOnly = true)
+    public boolean isAdminRoleUserInWorkspace(String wksName, String username) {
+        final var account = accountRepository.findAccountByUsername(username).
+            orElseThrow(() -> new AccountNotFoundException(username));
+        final var workspace = repository.getWorkspaceByName(wksName).
+            orElseThrow(() -> new WorkspaceNotFoundException(wksName));
+        final var workSpaceRoleOptional = workspaceRoleRepository.getWorkspaceRoleByAccountIdAndWorkspaceId(
+            account.getId(),
+            workspace.getId()
+        );
+        return workSpaceRoleOptional.filter(workspaceRole -> workspaceRole.getRole() == AccountRole.ROLE_ADMIN).isPresent();
     }
 }
