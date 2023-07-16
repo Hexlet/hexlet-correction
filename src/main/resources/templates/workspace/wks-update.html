@@ -19,7 +19,6 @@
             <div class="row row-cols-1 row-cols-md-2 g-4">
                 <div class="col">
                     <form th:action="@{'/workspace/' + ${wksName} + '/update'}" th:method="put" th:object="${createWorkspace}">
-                        <input hidden="hidden" th:field="*{url}">
                         <div class="form-floating mb-3">
                             <input class="form-control" id="inputWksName" placeholder="p"
                                    th:classappend="${!#fields.hasErrors('name') && formModified ? 'is-valid' : ''}"
@@ -28,6 +27,15 @@
                                    type="text">
                             <label for="inputWksName" th:text="#{wks.placeholder.name}"></label>
                             <div class="invalid-feedback" th:each="err : ${#fields.errors('name')}" th:text="${err}"></div>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input class="form-control" id="inputWksUrl" placeholder="p"
+                                   th:classappend="${!#fields.hasErrors('url') && formModified ? 'is-valid' : ''}"
+                                   th:errorclass="is-invalid"
+                                   th:field="*{url}"
+                                   type="text">
+                            <label for="inputWksUrl" th:text="#{wks.placeholder.url}"></label>
+                            <div class="invalid-feedback" th:each="err : ${#fields.errors('url')}" th:text="${err}"></div>
                         </div>
                         <div class="form-floating mb-3">
                             <textarea class="form-control" id="inWksDesc" placeholder="p" style="height: 100px"

@@ -116,10 +116,14 @@ public class WorkspaceServiceIT {
 
     @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspaceNamesExist")
-    void updateWorkspaceIsSuccessful(final String wksName) {
-        final var newWks = new CreateWorkspace("wks-name-1", "wks desc", "https://mysite.com");
-        WorkspaceInfo workspaceInfo = service.updateWorkspace(newWks, "wks-test").orElse(null);
+    void updateWorkspaceIsSuccessful() {
+        final var newUrl = "https://updatemysite.com";
+        assertThat(workspaceRepository.existsWorkspaceByUrl(newUrl)).isFalse();
+        final var newWks = new CreateWorkspace("wks-name-1", "wks desc", newUrl);
+        WorkspaceInfo workspaceInfo = service.updateWorkspace(newWks, "wks-test");
         assertThat(Objects.requireNonNull(workspaceInfo).name()).isEqualTo(newWks.name());
+        assertThat(workspaceInfo.url()).isEqualTo(newWks.url());
+        assertThat(workspaceInfo.description()).isEqualTo(newWks.description());
     }
 
     @ParameterizedTest

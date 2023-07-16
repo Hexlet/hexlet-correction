@@ -13,6 +13,7 @@ import io.hexlet.typoreporter.service.dto.workspace.CreateWorkspace;
 import io.hexlet.typoreporter.service.dto.workspace.WorkspaceInfo;
 import io.hexlet.typoreporter.service.mapper.WorkspaceMapper;
 import io.hexlet.typoreporter.web.exception.WorkspaceAlreadyExistException;
+import io.hexlet.typoreporter.web.exception.WorkspaceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,7 +29,7 @@ import static java.util.Objects.requireNonNull;
 @RequiredArgsConstructor
 public class WorkspaceService {
 
-    private final WorkspaceRepository repository;
+    private final WorkspaceRepository workspaceRepository;
 
     private final WorkspaceSettingsRepository settingsRepository;
 
@@ -38,7 +39,7 @@ public class WorkspaceService {
 
     @Transactional(readOnly = true)
     public List<WorkspaceInfo> getAllWorkspacesInfo() {
-        return repository.findAll()
+        return workspaceRepository.findAll()
             .stream()
             .map(workspaceMapper::toWorkspaceInfo)
             .toList();
@@ -46,26 +47,26 @@ public class WorkspaceService {
 
     @Transactional(readOnly = true)
     public Optional<WorkspaceInfo> getWorkspaceInfoByName(final String wksName) {
-        return repository.getWorkspaceByName(wksName)
+        return workspaceRepository.getWorkspaceByName(wksName)
             .map(workspaceMapper::toWorkspaceInfo);
     }
 
     @Transactional(readOnly = true)
     public boolean existsWorkspaceByName(final String wksName) {
-        return repository.existsWorkspaceByName(wksName);
+        return workspaceRepository.existsWorkspaceByName(wksName);
     }
 
     @Transactional(readOnly = true)
     public boolean existsWorkspaceByUrl(final String wksUrl) {
-        return repository.existsWorkspaceByName(wksUrl);
+        return workspaceRepository.existsWorkspaceByName(wksUrl);
     }
 
     @Transactional
     public WorkspaceInfo createWorkspace(final CreateWorkspace createWks, final String userName) {
-        if (repository.existsWorkspaceByName(createWks.name())) {
+        if (workspaceRepository.existsWorkspaceByName(createWks.name())) {
             throw new WorkspaceAlreadyExistException("name", createWks.name());
         }
-        if (repository.existsWorkspaceByUrl(createWks.url())) {
+        if (workspaceRepository.existsWorkspaceByUrl(createWks.url())) {
             throw new WorkspaceAlreadyExistException("url", createWks.url());
         }
 
@@ -85,26 +86,30 @@ public class WorkspaceService {
     }
 
     @Transactional
-    public Optional<WorkspaceInfo> updateWorkspace(final CreateWorkspace updateWks, final String oldWksName) {
-        if (!oldWksName.equals(updateWks.name()) && repository.existsWorkspaceByName(updateWks.name())) {
+    public WorkspaceInfo updateWorkspace(final CreateWorkspace updateWks, final String oldWksName) {
+        final Workspace workspace = workspaceRepository.getWorkspaceByName(oldWksName)
+            .orElseThrow(() -> new WorkspaceNotFoundException(oldWksName));
+        if (!oldWksName.equals(updateWks.name()) && workspaceRepository.existsWorkspaceByName(updateWks.name())) {
             throw new WorkspaceAlreadyExistException("name", updateWks.name());
         }
-        //TODO add update wks url, need check if it's not the same url and if it doesn't exist
-        return repository.getWorkspaceByName(oldWksName)
-            .map(oldWks -> oldWks.setName(updateWks.name()))
-            .map(oldWks -> oldWks.setDescription(updateWks.description()))
-            .map(repository::save)
-            .map(workspaceMapper::toWorkspaceInfo);
+        final String updatedUrlValue = updateWks.url();
+        if (!workspace.getUrl().equals(updatedUrlValue) && workspaceRepository.existsWorkspaceByUrl(updatedUrlValue)) {
+            throw new WorkspaceAlreadyExistException("url", updatedUrlValue);
+        }
+        workspace.setName(updateWks.name());
+        workspace.setDescription(updateWks.description());
+        workspace.setUrl(updateWks.url());
+        return workspaceMapper.toWorkspaceInfo(workspace);
     }
 
     @Transactional
     public Integer deleteWorkspaceByName(final String wksName) {
-        return repository.deleteWorkspaceByName(wksName);
+        return workspaceRepository.deleteWorkspaceByName(wksName);
     }
 
     @Transactional(readOnly = true)
     public Optional<Workspace> getWorkspaceByName(final String name) {
-        return repository.getWorkspaceByName(name);
+        return workspaceRepository.getWorkspaceByName(name);
     }
 
     @Transactional(readOnly = true)

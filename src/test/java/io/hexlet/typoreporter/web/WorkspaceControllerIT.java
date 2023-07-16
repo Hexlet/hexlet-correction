@@ -201,7 +201,7 @@ class WorkspaceControllerIT {
         String wksDescription = "Wks description";
         String wksUrl = "https://other.com";
 
-        LocalDateTime previosModifiedDate = repository.getWorkspaceByName(wksName).orElse(null).getModifiedDate();
+        LocalDateTime previousModifiedDate = repository.getWorkspaceByName(wksName).orElse(null).getModifiedDate();
 
         var createWks = new CreateWorkspace(newWksName, wksDescription, wksUrl);
         final var wksToCreate = requireNonNull(workspaceMapper.toWorkspace(createWks));
@@ -220,7 +220,37 @@ class WorkspaceControllerIT {
             .andExpect(model().attributeExists("createWorkspace"));
 
         LocalDateTime newModifiedDate = repository.getWorkspaceByName(wksName).orElse(null).getModifiedDate();
-        assertThat(previosModifiedDate).isEqualTo(newModifiedDate);
+        assertThat(previousModifiedDate).isEqualTo(newModifiedDate);
+    }
+
+    @ParameterizedTest
+    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspacesAndUsersRelated")
+    void putWorkspaceUpdateWithExistingWksUpdateUrl(final String wksName, final String username) throws Exception {
+        String newWksName = "createWksName01";
+        String wksDescription = "Wks description";
+        String newWksUrl = "https://other.com";
+
+        LocalDateTime previousModifiedDate = repository.getWorkspaceByName(wksName).orElse(null).getModifiedDate();
+
+        var createWks = new CreateWorkspace(newWksName, wksDescription, newWksUrl);
+        final var wksToCreate = requireNonNull(workspaceMapper.toWorkspace(createWks));
+        final var wksSettings = new WorkspaceSettings();
+        wksSettings.setWorkspace(wksToCreate);
+        wksSettings.setApiAccessToken(UUID.randomUUID());
+        workspaceRepository.save(wksToCreate);
+
+        assertThat(repository.existsWorkspaceByName(newWksName)).isTrue();
+
+        mockMvc.perform(put("/workspace/{wksName}/update", wksName)
+                .param("name", wksName)
+                .param("description", wksDescription)
+                .param("url", newWksUrl)
+                .with(user(username))
+                .with(csrf()))
+            .andExpect(model().attributeExists("createWorkspace"));
+
+        LocalDateTime newModifiedDate = repository.getWorkspaceByName(wksName).orElse(null).getModifiedDate();
+        assertThat(previousModifiedDate).isEqualTo(newModifiedDate);
     }
 
     //TODO tests for concurrency transactions in putWorkspaceUpdate() try-catch block
