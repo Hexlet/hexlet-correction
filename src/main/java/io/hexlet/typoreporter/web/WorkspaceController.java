@@ -228,12 +228,6 @@ public class WorkspaceController {
         getLastTypoDataToModel(model, wksName);
 
         Optional<Workspace> workspaceOptional = workspaceService.getWorkspaceByName(wksName);
-        if (workspaceOptional.isEmpty()) {
-            //TODO send error page
-            log.error("Workspace with name {} not found", wksName);
-            return "redirect:/workspaces";
-        }
-
         Set<WorkspaceRole> workspaceRoles = workspaceOptional.get().getWorkspaceRoles();
         List<Account> linkedAccounts = workspaceRoles.stream()
             .map(WorkspaceRole::getAccount)
