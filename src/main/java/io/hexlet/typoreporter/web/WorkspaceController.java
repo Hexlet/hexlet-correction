@@ -3,7 +3,7 @@ package io.hexlet.typoreporter.web;
 import io.hexlet.typoreporter.domain.account.Account;
 import io.hexlet.typoreporter.domain.workspace.Workspace;
 import io.hexlet.typoreporter.domain.workspace.WorkspaceRole;
-import io.hexlet.typoreporter.repository.AccountRepository;
+import io.hexlet.typoreporter.service.AccountService;
 import io.hexlet.typoreporter.service.TypoService;
 import io.hexlet.typoreporter.service.WorkspaceRoleService;
 import io.hexlet.typoreporter.service.WorkspaceService;
@@ -40,7 +40,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -69,7 +68,7 @@ public class WorkspaceController {
 
     private final WorkspaceService workspaceService;
 
-    private final AccountRepository accountRepository;
+    private final AccountService accountService;
 
     private final WorkspaceRoleService workspaceRoleService;
 
@@ -236,21 +235,18 @@ public class WorkspaceController {
         }
 
         Set<WorkspaceRole> workspaceRoles = workspaceOptional.get().getWorkspaceRoles();
-        List<Account> lindkedAccounts = new ArrayList<>();
-        if (!workspaceRoles.isEmpty()) {
-            lindkedAccounts = workspaceRoles.stream()
-                .map(WorkspaceRole::getAccount)
-                .collect(Collectors.toList());
-        }
-        List<Account> allAccounts = accountRepository.findAll();
-        List<Account> nonLinkedAccounts = getNonLinkedAccounts(allAccounts, lindkedAccounts);
+        List<Account> linkedAccounts = workspaceRoles.stream()
+            .map(WorkspaceRole::getAccount)
+            .collect(Collectors.toList());
+        List<Account> allAccounts = accountService.findAll();
+        List<Account> nonLinkedAccounts = getNonLinkedAccounts(allAccounts, linkedAccounts);
         final Account authenticatedAccount = getAccountFromAuthentication();
         final boolean accountIsAdminRole = workspaceService.isAdminRoleUserInWorkspace(wksName,
             authenticatedAccount.getUsername());
-        List<Account> linkedAccountsWithoutCurrentAccount = lindkedAccounts.stream()
+        List<Account> linkedAccountsWithoutCurrentAccount = linkedAccounts.stream()
             .filter(account -> !account.getId().equals(authenticatedAccount.getId()))
             .toList();
-        Page<Account> userPage = new PageImpl<>(lindkedAccounts, pageable, lindkedAccounts.size());
+        Page<Account> userPage = new PageImpl<>(linkedAccounts, pageable, linkedAccounts.size());
         var sort = userPage.getSort()
             .stream()
             .findFirst()
@@ -324,6 +320,6 @@ public class WorkspaceController {
 
     private Account getAccountFromAuthentication() {
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return accountRepository.findAccountByUsername(authentication.getName()).get();
+        return accountService.findByUsername(authentication.getName());
     }
 }

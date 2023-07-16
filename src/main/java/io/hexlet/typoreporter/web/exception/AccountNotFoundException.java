@@ -8,9 +8,10 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 public class AccountNotFoundException extends ErrorResponseException {
 
-    private static final String NOT_FOUND_MSG = "Account with email=''{0}'' not found";
+    private static final String NOT_FOUND_MSG = "Account with email or userName=''{0}'' not found";
 
-    public AccountNotFoundException(final String email) {
-        super(NOT_FOUND, ProblemDetail.forStatusAndDetail(NOT_FOUND, "Account not found"), null, format(NOT_FOUND_MSG, email), new Object[]{email});
+    public AccountNotFoundException(final String emailOrUserName) {
+        super(NOT_FOUND, ProblemDetail.forStatusAndDetail(NOT_FOUND, "Account not found"), null,
+            format(NOT_FOUND_MSG, emailOrUserName), new Object[]{emailOrUserName});
     }
 }
