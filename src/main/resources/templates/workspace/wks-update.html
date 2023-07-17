@@ -45,7 +45,7 @@
                             <label for="inWksDesc" th:text="#{wks.placeholder.descr}"></label>
                             <div class="invalid-feedback" th:each="err : ${#fields.errors('description')}" th:text="${err}"></div>
                         </div>
-                        <button class="btn btn-primary" type="submit" th:text="#{btn.create}"></button>
+                        <button class="btn btn-primary" type="submit" th:text="#{btn.edit}"></button>
                         <a class="btn btn-secondary" th:href="@{'/workspace/' + ${wksName}}" th:text="#{btn.close}"></a>
                     </form>
                 </div>
