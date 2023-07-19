@@ -73,7 +73,7 @@ public class SecurityConfig {
         http.exceptionHandling().accessDeniedHandler(accessDeniedHandler());
 
         http.authorizeHttpRequests(authz -> authz
-                .requestMatchers(GET, "/webjars/**", "/widget/**", "/fragments/**", "/img/**").permitAll()
+                .requestMatchers(GET, "/webjars/**", "/widget/**", "/fragments/**", "/css/**", "/img/**").permitAll()
                 .requestMatchers("/", "/login", "/signup", "/error").permitAll()
                 .anyRequest().authenticated()
             )

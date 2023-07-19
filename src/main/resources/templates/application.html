@@ -4,10 +4,12 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head th:replace="~{fragments/header :: head}"></head>
 <body>
-    <nav th:replace="~{fragments/panels :: mainNavbarTop}"></nav>
+    <div class="super-container">
+        <nav th:replace="~{fragments/panels :: mainNavbarTop}"></nav>
 
-    <main layout:fragment="content"></main>
+        <main layout:fragment="content"></main>
 
-    <footer th:replace="~{fragments/footer :: mainFooter}"></footer>
+        <footer th:replace="~{fragments/footer :: mainFooter}"></footer>
+    </div>
 </body>
 </html>
