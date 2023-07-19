@@ -248,7 +248,7 @@ public class WorkspaceController {
 
         model.addAttribute("nonLinkedAccounts", nonLinkedAccounts);
         model.addAttribute("isAdmin", accountIsAdminRole);
-        model.addAttribute("linkedAccounts", linkedAccountsWithoutCurrentAccount);
+        model.addAttribute("linkedAccountsWithoutCurrentAccount", linkedAccountsWithoutCurrentAccount);
         model.addAttribute("userPage", userPage);
         model.addAttribute("availableSizes", availableSizes);
         model.addAttribute("sortProp", sort.getProperty());

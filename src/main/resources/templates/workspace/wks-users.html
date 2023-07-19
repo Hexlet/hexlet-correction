@@ -23,25 +23,12 @@
                     <div class="form-group">
                         <label for="selectUserEmail" th:text="#{email}"></label>
                         <select name="email" class="form-control" id="selectUserEmail">
-                            <option th:each="account : ${nonLinkedAccounts}" th:object="${account}" th:text="*{email}"></option>
+                            <option th:each="account : ${nonLinkedAccounts}" th:object="${account}"
+                                    th:text="*{email}"></option>
                         </select>
                         <small id="emailHelp" class="form-text text-muted" th:text="#{text.hint-choose-a-user}"></small>
                     </div>
                     <button type="submit" class="btn btn-secondary" th:text="#{btn.add-to-wks}"></button>
-                </form>
-            </div>
-            <!-- Delete a user from workspace -->
-            <div class="row my-3" th:if="${!linkedAccounts.isEmpty()} and ${isAdmin}">
-                <p th:text="#{text.delete-user-wks}"></p>
-                <form th:method="DELETE" th:action="@{'/workspace/' + ${wksName} + '/users'}">
-                    <div class="form-group">
-                        <label for="selectUserEmail" th:text="#{email}"></label>
-                        <select name="email" class="form-control" id="selectDeleteEmailUser">
-                            <option th:each="linkedAccount : ${linkedAccounts}" th:object="${linkedAccount}" th:text="*{email}"></option>
-                        </select>
-                        <small id="emailDelete" class="form-text text-muted" th:text="#{text.hint-choose-a-user}"></small>
-                    </div>
-                    <button type="submit" class="btn btn-secondary" th:text="#{btn.delete-from-wks}"></button>
                 </form>
             </div>
             <!-- Workspace last typo date -->
@@ -109,6 +96,8 @@
                                             <span th:text="#{email}"></span> <span>[[${sortProp == 'email' && sortDir.isAscending() ? '&uArr;' : '&dArr;'}]]</span>
                                         </a>
                                     </th>
+                                    <th scope="col">
+                                    </th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -119,6 +108,15 @@
                                         <td th:text="*{firstName}"></td>
                                         <td th:text="*{lastName}"></td>
                                         <td th:text="*{email}"></td>
+                                        <td>
+                                            <form th:method="DELETE"
+                                                  th:if="${isAdmin} and ${linkedAccountsWithoutCurrentAccount.contains(userInfo)}"
+                                                  th:action="@{'/workspace/' + ${wksName} + '/users'}">
+                                                <input type="hidden" th:value="*{email}" name="email">
+                                                <button type="submit" class="btn btn-secondary"
+                                                        th:text="#{btn.delete-from-wks}"></button>
+                                            </form>
+                                        </td>
                                     </tr>
                                     <!-- Workspace user table row collapsed part -->
                                     <tr>
