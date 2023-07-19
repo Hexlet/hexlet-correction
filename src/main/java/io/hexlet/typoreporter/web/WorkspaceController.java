@@ -41,6 +41,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -237,9 +238,7 @@ public class WorkspaceController {
         final Account authenticatedAccount = getAccountFromAuthentication();
         final boolean accountIsAdminRole = workspaceService.isAdminRoleUserInWorkspace(wksName,
             authenticatedAccount.getUsername());
-        List<Account> linkedAccountsWithoutCurrentAccount = linkedAccounts.stream()
-            .filter(account -> !account.getId().equals(authenticatedAccount.getId()))
-            .toList();
+        List<Account> excludeDeleteAccounts = Collections.singletonList(authenticatedAccount);
         Page<Account> userPage = new PageImpl<>(linkedAccounts, pageable, linkedAccounts.size());
         var sort = userPage.getSort()
             .stream()
@@ -248,7 +247,7 @@ public class WorkspaceController {
 
         model.addAttribute("nonLinkedAccounts", nonLinkedAccounts);
         model.addAttribute("isAdmin", accountIsAdminRole);
-        model.addAttribute("linkedAccountsWithoutCurrentAccount", linkedAccountsWithoutCurrentAccount);
+        model.addAttribute("excludeDeleteAccounts", excludeDeleteAccounts);
         model.addAttribute("userPage", userPage);
         model.addAttribute("availableSizes", availableSizes);
         model.addAttribute("sortProp", sort.getProperty());

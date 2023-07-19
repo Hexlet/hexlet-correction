@@ -110,11 +110,13 @@
                                         <td th:text="*{email}"></td>
                                         <td>
                                             <form th:method="DELETE"
-                                                  th:if="${isAdmin} and ${linkedAccountsWithoutCurrentAccount.contains(userInfo)}"
+                                                  th:if="${isAdmin} and ${!excludeDeleteAccounts.contains(userInfo)}"
                                                   th:action="@{'/workspace/' + ${wksName} + '/users'}">
                                                 <input type="hidden" th:value="*{email}" name="email">
-                                                <button type="submit" class="btn btn-secondary"
-                                                        th:text="#{btn.delete-from-wks}"></button>
+                                                <button type="submit" class="btn btn-danger"
+                                                        th:text="#{btn.delete-from-wks}"
+                                                        th:onclick="return confirm(/*[[#{text.confirm-delete-user-wks}]]*/)"
+                                                ></button>
                                             </form>
                                         </td>
                                     </tr>
