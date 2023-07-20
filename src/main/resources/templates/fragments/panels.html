@@ -3,82 +3,82 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <body>
-<nav aria-label="Main navbar" class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark" th:fragment="mainNavbarTop">
-    <div class="container-fluid">
-        <a class="navbar-brand" th:href="@{/workspaces}">Hexlet Typo Reporter</a>
-        <button aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler"
-                data-bs-target="#mainNavbar" data-bs-toggle="collapse" type="button">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="mainNavbar">
-            <ul class="navbar-nav me-auto mb-2 mb-md-0" sec:authorize="isAuthenticated()">
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/workspace}" th:text="#{navbar.create-workspace}"></a>
-                </li>
-                <li sec:authorize="isAuthenticated()" class="nav-item">
-                    <a class="nav-link" th:href="@{/account}" th:text="#{navbar.account-info}"></a>
-                </li>
-            </ul>
-            <ul class="navbar-nav mr-2 ms-auto">
-                <!-- Begin Switcher -->
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Select Language</a>
-                    <ul class="dropdown-menu" aria-labelledby="languageDropdown">
-                        <li><a class="dropdown-item" href="javascript:void(0)" onclick="switchLanguage('en')">English</a></li>
-                        <li><a class="dropdown-item" href="javascript:void(0)" onclick="switchLanguage('ru')">Русский</a></li>
-                    </ul>
-                </li>
-                <!-- End Switcher -->
-                <div class="navbar-nav" sec:authorize="isAuthenticated()">
+    <nav aria-label="Main navbar" class="navbar navbar-expand-lg navbar-dark bg-dark" th:fragment="mainNavbarTop">
+        <div class="container-fluid">
+            <a class="navbar-brand" th:href="@{/workspaces}">Hexlet Typo Reporter</a>
+            <button aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler"
+                    data-bs-target="#mainNavbar" data-bs-toggle="collapse" type="button">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="mainNavbar">
+                <ul class="navbar-nav me-auto mb-2 mb-md-0" sec:authorize="isAuthenticated()">
                     <li class="nav-item">
-                        <a class="nav-link" href="/" th:text="${#authentication.getName()}"></a>
+                        <a class="nav-link" th:href="@{/workspace}" th:text="#{navbar.create-workspace}"></a>
                     </li>
-                    <li class="nav-item">
-                        <form th:action="@{/logout}" th:method="post">
-                            <button class="btn btn-link nav-link" type="submit" th:text="#{navbar.logout}">Logout</button>
-                        </form>
+                    <li sec:authorize="isAuthenticated()" class="nav-item">
+                        <a class="nav-link" th:href="@{/account}" th:text="#{navbar.account-info}"></a>
                     </li>
-                </div>
-                <div class="navbar-nav" sec:authorize="isAnonymous()">
-                    <li class="nav-item">
-                        <a class="nav-link" th:href="@{/login}" th:text="#{navbar.login}"></a>
+                </ul>
+                <ul class="navbar-nav mr-2 ms-auto">
+                    <!-- Begin Switcher -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Select Language</a>
+                        <ul class="dropdown-menu" aria-labelledby="languageDropdown">
+                            <li><a class="dropdown-item" href="javascript:void(0)" onclick="switchLanguage('en')">English</a></li>
+                            <li><a class="dropdown-item" href="javascript:void(0)" onclick="switchLanguage('ru')">Русский</a></li>
+                        </ul>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" th:href="@{/signup}" th:text="#{navbar.signup}"></a>
-                    </li>
-                </div>
-            </ul>
+                    <!-- End Switcher -->
+                    <div class="navbar-nav" sec:authorize="isAuthenticated()">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/" th:text="${#authentication.getName()}"></a>
+                        </li>
+                        <li class="nav-item">
+                            <form th:action="@{/logout}" th:method="post">
+                                <button class="btn btn-link nav-link" type="submit" th:text="#{navbar.logout}">Logout</button>
+                            </form>
+                        </li>
+                    </div>
+                    <div class="navbar-nav" sec:authorize="isAnonymous()">
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/login}" th:text="#{navbar.login}"></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/signup}" th:text="#{navbar.signup}"></a>
+                        </li>
+                    </div>
+                </ul>
+            </div>
         </div>
-    </div>
-</nav>
-<th:block th:fragment="workspaceSideBar (wksName, itemActive)">
-    <ul class="list-group list-group-flush">
-        <li class="list-group-item" th:text="${wksName}"></li>
-    </ul>
-    <hr>
-    <div class="list-group list-group-flush">
-        <a class="list-group-item list-group-item-action"
-           th:aria-current="${itemActive} == 'info'"
-           th:classappend="${itemActive} == 'info' ? 'active' : ''"
-           th:href="@{'/workspace/' + ${wksName}}"
-           th:text="#{wks.info}"></a>
-        <a class="list-group-item list-group-item-action"
-           th:aria-current="${itemActive} == 'typos'"
-           th:classappend="${itemActive} == 'typos' ? 'active' : ''"
-           th:href="@{'/workspace/' + ${wksName} + '/typos'}"
-           th:text="#{wks.typos}"></a>
-        <a class="list-group-item list-group-item-action"
-           th:aria-current="${itemActive} == 'settings'"
-           th:classappend="${itemActive} == 'settings' ? 'active' : ''"
-           th:href="@{'/workspace/' + ${wksName} + '/settings'}"
-           th:text="#{wks.settings}"></a>
-        <a class="list-group-item list-group-item-action"
-           th:aria-current="${itemActive} == 'users'"
-           th:classappend="${itemActive} == 'users' ? 'active' : ''"
-           th:href="@{'/workspace/' + ${wksName} + '/users'}"
-           th:text="#{wks.users}"></a>
-        <a aria-disabled="true" class="list-group-item list-group-item-action disabled" href="#" tabindex="-1">Integration</a>
-    </div>
-</th:block>
+    </nav>
+    <th:block th:fragment="workspaceSideBar (wksName, itemActive)">
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item" th:text="${wksName}"></li>
+        </ul>
+        <hr>
+        <div class="list-group list-group-flush">
+            <a class="list-group-item list-group-item-action"
+               th:aria-current="${itemActive} == 'info'"
+               th:classappend="${itemActive} == 'info' ? 'active' : ''"
+               th:href="@{'/workspace/' + ${wksName}}"
+               th:text="#{wks.info}"></a>
+            <a class="list-group-item list-group-item-action"
+               th:aria-current="${itemActive} == 'typos'"
+               th:classappend="${itemActive} == 'typos' ? 'active' : ''"
+               th:href="@{'/workspace/' + ${wksName} + '/typos'}"
+               th:text="#{wks.typos}"></a>
+            <a class="list-group-item list-group-item-action"
+               th:aria-current="${itemActive} == 'settings'"
+               th:classappend="${itemActive} == 'settings' ? 'active' : ''"
+               th:href="@{'/workspace/' + ${wksName} + '/settings'}"
+               th:text="#{wks.settings}"></a>
+            <a class="list-group-item list-group-item-action"
+               th:aria-current="${itemActive} == 'users'"
+               th:classappend="${itemActive} == 'users' ? 'active' : ''"
+               th:href="@{'/workspace/' + ${wksName} + '/users'}"
+               th:text="#{wks.users}"></a>
+            <a aria-disabled="true" class="list-group-item list-group-item-action disabled" href="#" tabindex="-1">Integration</a>
+        </div>
+    </th:block>
 </body>
 </html>

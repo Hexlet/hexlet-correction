@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+    <footer class="d-flex p-3 bg-dark text-light" th:fragment="mainFooter">
+        <div class="container-xl">
+            <div class="row justify-content-lg-around">
+                <div class="col-sm-6 col-md-3 col-lg-auto">
+                    <a class="text-dark px-0 py-0 text-decoration-none " href="https://ru.hexlet.io">
+                        <p class="h3 mb-2 text-light">© Hexlet</p>
+                    </a>
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link px-0 py-1 text-light"
+                               href="https://sicp.hexlet.io/ru/pages/about" th:text="#{about}"></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link px-0 py-1 text-light" href="https://github.com/Hexlet/hexlet-correction"
+                               target="_blank"
+                               th:text="#{source-code}"></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link px-0 py-1 text-light" href="https://t.me/hexletcommunity/12"
+                               target="_blank"
+                               th:text="#{telegram}"></a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-sm-6 col-md-3 col-lg-auto">
+                    <p class="h5 mb-3" th:text="#{help}"></p>
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link px-0 py-1 text-light"
+                               href="https://ru.hexlet.io/blog"
+                               th:text="#{blog}"></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link px-0 py-1 text-light"
+                               href="https://ru.hexlet.io/knowledge"
+                               th:text="#{knowledge-base}"></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link px-0 py-1 text-light"
+                               href="https://ru.hexlet.io/pages/recommended-books"
+                               th:text="#{recommended-books}"></a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-sm-6 col-md-3 col-lg-auto">
+                    <p class="h5 mb-3" th:text="#{other-opensource-projects}"></p>
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link px-0 py-1 text-light"
+                               href="https://github.com/Hexlet/hexlet-cv"
+                            th:text="#{hexlet.cv}"></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link px-0 py-1 text-light"
+                               href="https://github.com/Hexlet/hexlet-editor"
+                               th:text="#{hexlet.editor}"></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link px-0 py-1 text-light"
+                               href="https://github.com/Hexlet/hexlet-friends"
+                               th:text="#{hexlet.friends}"></a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-sm-6 col-md-3 col-lg-auto">
+                    <p class="h5 mb-3" th:text="#{miscellaneous}"></p>
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link px-0 py-1 text-light"
+                               href="https://ru.code-basics.com/"
+                               th:text="#{code-basics}"></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link px-0 py-1 text-light"
+                               href="https://codebattle.hexlet.io/"
+                               th:text="#{codebattle}"></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link px-0 py-1 text-light"
+                               href="https://guides.hexlet.io/"
+                               th:text="#{hexlet.editor}"></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
