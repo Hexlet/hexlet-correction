@@ -84,9 +84,9 @@ const renderModalStyleEl = () => {
     background-color: #0d6efd;
     color: #fff;
     border: none;
-    padding: 10px 20px;
     border-radius: 5px;
     margin-right: 15px;
+    padding: 0;
   }
 
   #hexlet-correction-modal_ReportTypo-cancel {
@@ -96,8 +96,8 @@ const renderModalStyleEl = () => {
     color: #212529;
     border-color: #dee2e6;
     border: none;
-    padding: 10px 20px;
     border-radius: 5px;
+    padding: 0;
   }
 
   #hexlet-correction-modal_ReportTypo-submit:hover {
@@ -113,10 +113,12 @@ const renderModalStyleEl = () => {
   return modalStyleEl;
 }
 
-const renderModal = (state) => {
+const initialRenderModal = (state) => {
+  renderModalStyleEl();
+
   const modalEl = document.createElement('div');
   modalEl.id = 'hexlet-correction-modal_modal';
-  modalEl.style.display = 'block';
+  modalEl.style.display = 'none';
 
   const divContent = document.createElement('div');
   divContent.id = 'hexlet-correction-modal_modal-content';
@@ -137,18 +139,18 @@ const renderModal = (state) => {
   const selectedTextEl = document.createElement('div');
   selectedTextEl.id = 'hexlet-correction-modal_ReportTypo-message';
 
-  const { textBeforeTypo, textTypo, textAfterTypo } = state.data;
-  selectedTextEl.innerHTML = `${textBeforeTypo}<u id="hexlet-correction-modal_ReportTypo-highlight">${textTypo}</u>${textAfterTypo}`;
-
   const inputName = document.createElement('input');
   inputName.type = 'text';
   inputName.placeholder = 'Введите свое имя или email';
-  inputName.value = state.options.userName === null ? '' : state.options.userName;
   inputName.id = 'hexlet-correction-modal_ReportTypo-name';
+  inputName.value = state.options.userName === null ? '' : state.options.userName;
 
   const commentEl = document.createElement('textarea');
   commentEl.id = 'hexlet-correction-modal_ReportTypo-comment';
   commentEl.placeholder = 'Опишите ошибку';
+  commentEl.addEventListener('input', (e) => {
+    state.data.reporterComment = e.target.value;
+  });
 
   const divSecondLabel = document.createElement('div');
   divSecondLabel.classList.add('hexlet-correction-modal_ReportTypo-label');
@@ -172,6 +174,7 @@ const renderModal = (state) => {
 
   divButtons.append(submitBtn, cancelBtn);
   divTypoReporter.append(divHeader, divFirstLabel, selectedTextEl, inputName, commentEl, divSecondLabel, divButtons);
+
   const body = document.querySelector('body');
   body.append(modalEl);
 
@@ -179,50 +182,95 @@ const renderModal = (state) => {
     modalEl,
     selectedTextEl,
     commentEl,
+    inputName,
     submitBtn,
     cancelBtn,
-    inputName,
-    modalStyleEl: renderModalStyleEl(),
   };
 };
 
-const runModal = (dataForModal) => {
-  const textTypo = dataForModal.selection.toString();
-  const anchorNode = dataForModal.selection.anchorNode;
-  const anchorOffset = dataForModal.selection.anchorOffset;
-  const focusOffset = dataForModal.selection.focusOffset;
-  const maxLength = 50;
-  const end = Math.min(focusOffset + maxLength, anchorNode.length);
-  const start = Math.max(anchorOffset - maxLength, 0);
-  const textBeforeTypo = anchorNode.textContent.substring(start, anchorOffset);
-  const textAfterTypo = anchorNode.substringData(focusOffset, end - focusOffset);
+const nullState = (state) => {
+  state.modalShown = false;
+  state.data.reporterComment = '';
+  state.data.textBeforeTypo = '';
+  state.data.textTypo = '';
+  state.data.textAfterTypo = '';
+};
+
+const renderModal = (elements, state) => {
+  if (state.modalShown) {
+    elements.modalEl.style.display = 'block';
+    const { textBeforeTypo, textTypo, textAfterTypo } = state.data;
+    elements.selectedTextEl.innerHTML = `${textBeforeTypo}<u id="hexlet-correction-modal_ReportTypo-highlight">${textTypo}</u>${textAfterTypo}`;
+    elements.inputName.value = state.data.reporterName !== '' ? state.data.reporterName : state.options.userName;
+    elements.commentEl.value = state.data.reporterComment;
+    elements.commentEl.focus();
+
+    const handlerСlickPastModal = (event) => {
+      if (event.target === elements.modalEl) {
+        nullState(state);
+        renderModal(elements, state);
+        document.removeEventListener('click', handlerСlickPastModal);
+      }
+    };
+    document.addEventListener('click', handlerСlickPastModal);
+    return;
+  }
+
+  elements.modalEl.style.display = 'none';
+  elements.selectedTextEl.innerHTML = '';
+  elements.commentEl.value = '';
+};
+
+const handleTypoReporter = (options) => {
+  if (!options || !options.authorizationToken && !options.workSpaceId) {
+    throw new Error('Для работы модуля требуется указать workSpaceId и authorizationToken');
+  }
 
   const state = {
+    modalShown: false,
     options: {
       workSpaceUrl: 'https://hexlet-correction.herokuapp.com/api/workspaces',
       userName: null,
-      ...dataForModal.options,
+      ...options,
     },
     data: {
-      pageUrl: dataForModal.pageUrl,
-      reporterName: null,
-      reporterComment: null,
-      textBeforeTypo,
-      textTypo,
-      textAfterTypo,
+      pageUrl: '',
+      reporterName: '',
+      reporterComment: '',
+      textBeforeTypo: '',
+      textTypo: '',
+      textAfterTypo: '',
     },
   };
 
-  const elements = renderModal(state);
+  const elements = initialRenderModal(state);
 
-  const removeModal = () => {
-    elements.modalEl.remove();
-    elements.modalStyleEl.remove();
-  };
+  document.addEventListener('keydown', (event) => {
+    const selection = window.getSelection();
+    if (selection.isCollapsed) {
+      return;
+    }
+    if (event.ctrlKey && event.key === 'Enter') {
+      state.modalShown = true;
+      state.data.pageUrl = window.location.href;
+
+      const anchorNode = selection.anchorNode;
+      const anchorOffset = selection.anchorOffset;
+      const focusOffset = selection.focusOffset;
+      const maxLength = 50;
+      const end = Math.min(focusOffset + maxLength, anchorNode.length);
+      const start = Math.max(anchorOffset - maxLength, 0);
+
+      state.data.textTypo = selection.toString();
+      state.data.textBeforeTypo = anchorNode.textContent.substring(start, anchorOffset);
+      state.data.textAfterTypo = anchorNode.substringData(focusOffset, end - focusOffset);
+
+      renderModal(elements, state);
+    }
+  });
 
   const sendData = async (event) => {
     event.preventDefault();
-    state.data.pageUrl = window.location.href;
     const value = elements.inputName.value;
     state.data.reporterName = value === '' ? 'Anonymous' : value;
     state.data.reporterComment = elements.commentEl.value;
@@ -235,43 +283,16 @@ const runModal = (dataForModal) => {
         },
         body: JSON.stringify(state.data)
       });
-      removeModal();
+      nullState(state);
+      renderModal(elements, state);
     } catch (error) {
-      console.error(error);
       throw new Error('Произошла ошибка:', error);
     }
   };
-
-  elements.commentEl.focus();
-  elements.cancelBtn.addEventListener('click', removeModal);
   elements.submitBtn.addEventListener('click', sendData);
 
-  const handlerСlickPastModal = (event) => {
-    if (event.target === elements.modalEl) {
-      removeModal();
-      document.removeEventListener('click', handlerСlickPastModal);
-    }
-  };
-  document.addEventListener('click', handlerСlickPastModal);
-};
-
-const handleTypoReporter = (options) => {
-  if (!options || !options.authorizationToken && !options.workSpaceId) {
-    throw new Error('Для работы модуля требуется указать workSpaceId и authorizationToken');
-  }
-
-  document.addEventListener('keydown', (event) => {
-    const selection = window.getSelection();
-    if (selection.isCollapsed) {
-      return;
-    }
-    if (event.ctrlKey && event.key === 'Enter') {
-      const dataForModal = {
-        selection,
-        pageUrl: window.location.href,
-        options,
-      }
-      runModal(dataForModal);
-    }
+  elements.cancelBtn.addEventListener('click', () => {
+    nullState(state);
+    renderModal(elements, state);
   });
 };
