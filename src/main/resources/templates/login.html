@@ -4,7 +4,7 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="application.html">
 
-    <main layout:fragment="content" class="container">
+    <main layout:fragment="content">
         <div class="row">
             <div class="col">
                 <div class="alert alert-danger" role="alert" th:if="${param.error}" th:text="#{alert.bad-credential}"></div>

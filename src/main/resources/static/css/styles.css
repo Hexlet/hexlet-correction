@@ -1,10 +1,4 @@
-.super-container {
-  padding-top: 4.5rem;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
-main {
+.main-content {
   flex: 1;
+  padding-top: 2rem;
 }

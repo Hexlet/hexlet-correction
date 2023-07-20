@@ -3,7 +3,7 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="application.html">
 
-    <main layout:fragment="content" class="container">
+    <main layout:fragment="content">
         <div class="row row-cols-1 row-cols-md-3 g-4">
             <div class="col" th:each="wksInfo : ${wksInfoList}" th:object="${wksInfo}">
                 <div class="card">
