@@ -1,48 +1,48 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/header :: head}"></head>
-<body style="padding-top: 4.5rem">
-<nav th:replace="~{fragments/panels :: mainNavbarTop}"></nav>
-<main class="container-fluid">
-    <div class="row">
-        <div class="col-2" th:insert="fragments/panels :: workspaceSideBar (${wksName}, 'settings')"></div>
-        <div class="col">
-            <div class="row my-3"
-                 th:if="${sumTypoInWks} > 0"
-                 th:insert="~{fragments/workspace :: wksProgressBar (${sumTypoInWks}, ${countTypoByStatus})}"></div>
-            <div class="row">
-                <p th:text="|#{text.number-of-typos(${wksName}, ${sumTypoInWks})}|"></p>
-            </div>
-            <div class="row"
-                 th:if="${lastTypoCreatedDateAgo.isPresent() && lastTypoCreatedDate.isPresent()}"
-                 th:insert="~{fragments/workspace :: wksLastTypoDate (${lastTypoCreatedDateAgo}, ${lastTypoCreatedDate})}"></div>
-            <div class="row my-2">
-                <div aria-label="Re-generate workspace authentication token" class="col">
-                    <form th:action="@{'/workspace/' + ${wksName} + '/token/regenerate'}" th:method="patch">
-                        <button class="btn btn-danger" type="submit" th:text="#{btn.regenerate-token}"></button>
-                    </form>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="application.html">
+
+    <main layout:fragment="content" class="main-content container-fluid">
+        <div class="row">
+            <div class="col-2" th:insert="fragments/panels :: workspaceSideBar (${wksName}, 'settings')"></div>
+            <div class="col">
+                <div class="row my-3"
+                     th:if="${sumTypoInWks} > 0"
+                     th:insert="~{fragments/workspace :: wksProgressBar (${sumTypoInWks}, ${countTypoByStatus})}"></div>
+                <div class="row">
+                    <p th:text="|#{text.number-of-typos(${wksName}, ${sumTypoInWks})}|"></p>
                 </div>
-            </div>
-            <div class="row mt-4">
-                <div class="col">
-                    <p><span th:text="#{text.wks-access-token}"></span>: <code th:text="${wksBasicToken ?: '<Token not generated>'}"></code></p>
-                    <p><span th:text="#{text.use-header}"></span>: <code>Authorization: Basic [[${wksBasicToken}]]</code></p>
+                <div class="row"
+                     th:if="${lastTypoCreatedDateAgo.isPresent() && lastTypoCreatedDate.isPresent()}"
+                     th:insert="~{fragments/workspace :: wksLastTypoDate (${lastTypoCreatedDateAgo}, ${lastTypoCreatedDate})}"></div>
+                <div class="row my-2">
+                    <div aria-label="Re-generate workspace authentication token" class="col">
+                        <form th:action="@{'/workspace/' + ${wksName} + '/token/regenerate'}" th:method="patch">
+                            <button class="btn btn-danger" type="submit" th:text="#{btn.regenerate-token}"></button>
+                        </form>
+                    </div>
                 </div>
-            </div>
-            <div class="row my-4">
-                <div class="col">
-                    <p class="fw-bold" th:text="#{text.script-descr('<code>script</code>')}"></p>
-                    <pre><code>
-&lt;script&gt;
-    handleTypoReporter({ authorizationToken: [[${wksBasicToken}]],
-    workSpaceUrl: [[${rootUrl}]], workSpaceId: [[${wksId}]]})
-&lt;/script&gt;
-    </code></pre>
+                <div class="row mt-4">
+                    <div class="col">
+                        <p><span th:text="#{text.wks-access-token}"></span>: <code th:text="${wksBasicToken ?: '<Token not generated>'}"></code></p>
+                        <p><span th:text="#{text.use-header}"></span>: <code>Authorization: Basic [[${wksBasicToken}]]</code></p>
+                    </div>
+                </div>
+                <div class="row my-4">
+                    <div class="col">
+                        <p class="fw-bold" th:text="#{text.script-descr('<code>script</code>')}"></p>
+                        <pre><code>
+    &lt;script&gt;
+        handleTypoReporter({ authorizationToken: [[${wksBasicToken}]],
+        workSpaceUrl: [[${rootUrl}]], workSpaceId: [[${wksId}]]})
+    &lt;/script&gt;
+        </code></pre>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</main>
-<footer th:replace="~{fragments/footer :: mainFooter}"></footer>
-</body>
+    </main>
+
 </html>

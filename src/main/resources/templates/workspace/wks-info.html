@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/header :: head}"></head>
-<body style="padding-top: 4.5rem">
-<nav th:replace="~{fragments/panels :: mainNavbarTop}"></nav>
-    <main class="container-fluid">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="application.html">
+
+    <main layout:fragment="content" class="main-content container-fluid">
         <div class="row">
             <div class="col-2" th:insert="fragments/panels :: workspaceSideBar (${wksName}, 'info')"></div>
             <div class="col">
@@ -57,6 +58,5 @@
             </div>
         </div>
     </main>
-    <footer th:replace="~{fragments/footer :: mainFooter}"></footer>
-</body>
+
 </html>
