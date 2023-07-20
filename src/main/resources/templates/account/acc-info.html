@@ -1,59 +1,59 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/header :: head}"></head>
-<body style="padding-top: 4.5rem">
-<nav th:replace="~{fragments/panels :: mainNavbarTop}"></nav>
-<main class="container" th:object="${accInfo}">
-    <div class="card mb-3">
-        <div class="card-body">
-            <h5 class="card-title mb-1" th:text="#{acc-info.card-title.general}"></h5>
-            <div class="row mb-1">
-                <div class="col" th:text="#{firstname}"></div>
-                <div class="col" th:text="*{firstName}"></div>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="application.html">
+
+    <main layout:fragment="content" th:object="${accInfo}">
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title mb-1" th:text="#{acc-info.card-title.general}"></h5>
+                <div class="row mb-1">
+                    <div class="col" th:text="#{firstname}"></div>
+                    <div class="col" th:text="*{firstName}"></div>
+                </div>
+                <div class="row mb-1">
+                    <div class="col" th:text="#{lastname}"></div>
+                    <div class="col" th:text="*{lastName}"></div>
+                </div>
+                <div class="row mb-1">
+                    <div class="col" th:text="#{username}"></div>
+                    <div class="col" th:text="*{username}"></div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col" th:text="#{email}"></div>
+                    <div class="col" th:text="*{email}"></div>
+                </div>
+                <a class="btn btn-primary" th:href="@{/account/update}" th:text="#{btn.edit}"></a>
             </div>
-            <div class="row mb-1">
-                <div class="col" th:text="#{lastname}"></div>
-                <div class="col" th:text="*{lastName}"></div>
-            </div>
-            <div class="row mb-1">
-                <div class="col" th:text="#{username}"></div>
-                <div class="col" th:text="*{username}"></div>
-            </div>
-            <div class="row mb-3">
-                <div class="col" th:text="#{email}"></div>
-                <div class="col" th:text="*{email}"></div>
-            </div>
-            <a class="btn btn-primary" th:href="@{/account/update}" th:text="#{btn.edit}"></a>
         </div>
-    </div>
-    <div class="card mb-3">
-        <div class="card-body">
-            <h5 class="card-title mb-3" th:text="#{password}"></h5>
-            <a class="btn btn-primary" th:href="@{/account/password}" th:text="#{btn.edit}"></a>
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title mb-3" th:text="#{password}"></h5>
+                <a class="btn btn-primary" th:href="@{/account/password}" th:text="#{btn.edit}"></a>
+            </div>
         </div>
-    </div>
-    <h5 class="card-title mb-1" th:text="#{acc-info.card-title.workspaces}"></h5>
-    <table class="table table-bordered table-hover mt-3">
-        <thead>
-        <tr>
-            <th class="col-1" th:text="#{acc-info.wks.name}"></th>
-            <th class="col-1" th:text="#{acc-info.wks.url}"></th>
-            <th class="col-1" th:text="#{acc-info.wks.descr}"></th>
-            <th class="col-1" th:text="#{username}"></th>
-            <th class="col-1" th:text="#{acc-info.wks.role}"></th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="workspaceRoleInfo : ${workspaceRoleInfoList}" th:object="${workspaceRoleInfo}">
-            <td th:text="*{workspaceName}"></td>
-            <td th:text="*{workspaceUrl}"></td>
-            <td th:text="*{workspaceDescription}"></td>
-            <td th:text="*{username}"></td>
-            <td th:text="*{role}"></td>
-        </tr>
-        </tbody>
-    </table>
-</main>
-<footer th:replace="~{fragments/footer :: mainFooter}"></footer>
-</body>
+        <h5 class="card-title mb-1" th:text="#{acc-info.card-title.workspaces}"></h5>
+        <table class="table table-bordered table-hover mt-3">
+            <thead>
+            <tr>
+                <th class="col-1" th:text="#{acc-info.wks.name}"></th>
+                <th class="col-1" th:text="#{acc-info.wks.url}"></th>
+                <th class="col-1" th:text="#{acc-info.wks.descr}"></th>
+                <th class="col-1" th:text="#{username}"></th>
+                <th class="col-1" th:text="#{acc-info.wks.role}"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="workspaceRoleInfo : ${workspaceRoleInfoList}" th:object="${workspaceRoleInfo}">
+                <td th:text="*{workspaceName}"></td>
+                <td th:text="*{workspaceUrl}"></td>
+                <td th:text="*{workspaceDescription}"></td>
+                <td th:text="*{username}"></td>
+                <td th:text="*{role}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </main>
+
 </html>

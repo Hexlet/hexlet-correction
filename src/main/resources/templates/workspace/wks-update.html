@@ -1,64 +1,64 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/header :: head}"></head>
-<body style="padding-top: 4.5rem">
-<nav th:replace="~{fragments/panels :: mainNavbarTop}"></nav>
-<main class="container-fluid">
-    <div class="row">
-        <div class="col-2" th:insert="fragments/panels :: workspaceSideBar (${wksName}, 'info')"></div>
-        <div class="col">
-            <div class="row my-3"
-                 th:if="${sumTypoInWks} > 0"
-                 th:insert="~{fragments/workspace :: wksProgressBar (${sumTypoInWks}, ${countTypoByStatus})}"></div>
-            <div class="row">
-                <p th:text="|#{text.number-of-typos(${wksName}, ${sumTypoInWks})}|"></p>
-            </div>
-            <div class="row"
-                 th:if="${lastTypoCreatedDateAgo.isPresent() && lastTypoCreatedDate.isPresent()}"
-                 th:insert="~{fragments/workspace :: wksLastTypoDate (${lastTypoCreatedDateAgo}, ${lastTypoCreatedDate})}"></div>
-            <div class="row row-cols-1 row-cols-md-2 g-4">
-                <div class="col">
-                    <form th:action="@{'/workspace/' + ${wksName} + '/update'}" th:method="put" th:object="${createWorkspace}">
-                        <input hidden="hidden" th:field="*{url}">
-                        <div class="form-floating mb-3">
-                            <input class="form-control" id="inputWksName" placeholder="p"
-                                   th:classappend="${!#fields.hasErrors('name') && formModified ? 'is-valid' : ''}"
-                                   th:errorclass="is-invalid"
-                                   th:field="*{name}"
-                                   type="text">
-                            <label for="inputWksName" th:text="#{wks.placeholder.name}"></label>
-                            <div class="invalid-feedback" th:each="err : ${#fields.errors('name')}" th:text="${err}"></div>
-                        </div>
-                        <div class="form-floating mb-3">
-                            <textarea class="form-control" id="inWksDesc" placeholder="p" style="height: 100px"
-                                      th:classappend="${!#fields.hasErrors('description') && formModified ? 'is-valid' : ''}"
-                                      th:errorclass="is-invalid"
-                                      th:field="*{description}"></textarea>
-                            <label for="inWksDesc" th:text="#{wks.placeholder.descr}"></label>
-                            <div class="invalid-feedback" th:each="err : ${#fields.errors('description')}" th:text="${err}"></div>
-                        </div>
-                        <button class="btn btn-primary" type="submit" th:text="#{btn.create}"></button>
-                        <a class="btn btn-secondary" th:href="@{'/workspace/' + ${wksName}}" th:text="#{btn.close}"></a>
-                    </form>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="application.html">
+
+    <main layout:fragment="content" class="main-content container-fluid">
+        <div class="row">
+            <div class="col-2" th:insert="fragments/panels :: workspaceSideBar (${wksName}, 'info')"></div>
+            <div class="col">
+                <div class="row my-3"
+                     th:if="${sumTypoInWks} > 0"
+                     th:insert="~{fragments/workspace :: wksProgressBar (${sumTypoInWks}, ${countTypoByStatus})}"></div>
+                <div class="row">
+                    <p th:text="|#{text.number-of-typos(${wksName}, ${sumTypoInWks})}|"></p>
                 </div>
-                <div class="col">
-                    <ul class="list-group list-group-flush col-6">
-                        <li class="list-group-item d-flex justify-content-between align-items-center fw-bold bg-gradient"
-                            th:classappend="|text-*{key.getStyle()}|"
-                            th:each="pair : ${countTypoByStatus}"
-                            th:object="${pair}">
-                            [[*{key.toString()}]]<span class="badge rounded-pill"
-                                                       th:classappend="|bg-*{key.getStyle()}|">[[*{value}]]</span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center fw-bolder text-primary">
-                            TOTAL<span class="badge rounded-pill bg-primary" th:text="${sumTypoInWks}"></span>
-                        </li>
-                    </ul>
+                <div class="row"
+                     th:if="${lastTypoCreatedDateAgo.isPresent() && lastTypoCreatedDate.isPresent()}"
+                     th:insert="~{fragments/workspace :: wksLastTypoDate (${lastTypoCreatedDateAgo}, ${lastTypoCreatedDate})}"></div>
+                <div class="row row-cols-1 row-cols-md-2 g-4">
+                    <div class="col">
+                        <form th:action="@{'/workspace/' + ${wksName} + '/update'}" th:method="put" th:object="${createWorkspace}">
+                            <input hidden="hidden" th:field="*{url}">
+                            <div class="form-floating mb-3">
+                                <input class="form-control" id="inputWksName" placeholder="p"
+                                       th:classappend="${!#fields.hasErrors('name') && formModified ? 'is-valid' : ''}"
+                                       th:errorclass="is-invalid"
+                                       th:field="*{name}"
+                                       type="text">
+                                <label for="inputWksName" th:text="#{wks.placeholder.name}"></label>
+                                <div class="invalid-feedback" th:each="err : ${#fields.errors('name')}" th:text="${err}"></div>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <textarea class="form-control" id="inWksDesc" placeholder="p" style="height: 100px"
+                                          th:classappend="${!#fields.hasErrors('description') && formModified ? 'is-valid' : ''}"
+                                          th:errorclass="is-invalid"
+                                          th:field="*{description}"></textarea>
+                                <label for="inWksDesc" th:text="#{wks.placeholder.descr}"></label>
+                                <div class="invalid-feedback" th:each="err : ${#fields.errors('description')}" th:text="${err}"></div>
+                            </div>
+                            <button class="btn btn-primary" type="submit" th:text="#{btn.create}"></button>
+                            <a class="btn btn-secondary" th:href="@{'/workspace/' + ${wksName}}" th:text="#{btn.close}"></a>
+                        </form>
+                    </div>
+                    <div class="col">
+                        <ul class="list-group list-group-flush col-6">
+                            <li class="list-group-item d-flex justify-content-between align-items-center fw-bold bg-gradient"
+                                th:classappend="|text-*{key.getStyle()}|"
+                                th:each="pair : ${countTypoByStatus}"
+                                th:object="${pair}">
+                                [[*{key.toString()}]]<span class="badge rounded-pill"
+                                                           th:classappend="|bg-*{key.getStyle()}|">[[*{value}]]</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center fw-bolder text-primary">
+                                TOTAL<span class="badge rounded-pill bg-primary" th:text="${sumTypoInWks}"></span>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</main>
-<footer th:replace="~{fragments/footer :: mainFooter}"></footer>
-</body>
+    </main>
+
 </html>
