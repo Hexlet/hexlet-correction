@@ -6,10 +6,12 @@
 <main class="container">
     <div class="row row-cols-1 row-cols-md-3 g-4">
         <div class="col" th:each="wksInfo : ${wksInfoList}" th:object="${wksInfo}">
-            <div class="card">
+            <div class="card h-100">
                 <div class="card-body">
                     <h5 class="card-title" th:text="*{name}"></h5>
                     <p class="card-text" th:text="*{description}"></p>
+                </div>
+                <div class="card-footer bg-white border-top-0">
                     <a class="card-link" th:href="@{'/workspace/' + *{name}}" th:text="#{wks.info}"></a>
                     <a class="card-link" th:href="@{'/workspace/' + *{name} + '/typos'}" th:text="#{wks.typos}"></a>
                     <a class="card-link" th:href="@{'/workspace/' + *{name} + '/users'}" th:text="#{wks.users}"></a>
