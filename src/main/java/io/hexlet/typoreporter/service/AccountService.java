@@ -15,6 +15,7 @@ import io.hexlet.typoreporter.service.dto.workspace.WorkspaceRoleInfo;
 import io.hexlet.typoreporter.service.mapper.AccountMapper;
 import io.hexlet.typoreporter.service.mapper.WorkspaceRoleMapper;
 import io.hexlet.typoreporter.web.exception.AccountAlreadyExistException;
+import io.hexlet.typoreporter.web.exception.AccountNotFoundException;
 import io.hexlet.typoreporter.web.exception.NewPasswordTheSameException;
 import io.hexlet.typoreporter.web.exception.OldPasswordWrongException;
 import lombok.RequiredArgsConstructor;
@@ -85,6 +86,17 @@ public class AccountService implements SignupAccountUseCase, QueryAccount {
     public Optional<UpdateProfile> getUpdateProfile(final String name) {
         return accountRepository.findAccountByUsername(name)
             .map(accountMapper::toUpdateProfile);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Account> findAll() {
+        return accountRepository.findAll();
+    }
+
+    @Transactional(readOnly = true)
+    public Account findByUsername(String userName) {
+        return accountRepository.findAccountByUsername(userName)
+            .orElseThrow(() -> new AccountNotFoundException(userName));
     }
 
     public Optional<Account> updateProfile(final UpdateProfile updateProfile, final String name) {

@@ -17,13 +17,14 @@
                 <p th:text="|#{text.number-of-typos(${wksName}, ${sumTypoInWks})}|"></p>
             </div>
             <!-- Adding a user to a workspace -->
-            <div class="row my-3" th:unless="${accounts.isEmpty()}">
+            <div class="row my-3" th:unless="${nonLinkedAccounts.isEmpty()}">
                 <p th:text="#{text.add-user-to-wks}"></p>
                 <form method="POST" th:action="@{'/workspace/' + ${wksName} + '/users'}">
                     <div class="form-group">
                         <label for="selectUserEmail" th:text="#{email}"></label>
                         <select name="email" class="form-control" id="selectUserEmail">
-                            <option th:each="account : ${accounts}" th:object="${account}" th:text="*{email}"></option>
+                            <option th:each="account : ${nonLinkedAccounts}" th:object="${account}"
+                                    th:text="*{email}"></option>
                         </select>
                         <small id="emailHelp" class="form-text text-muted" th:text="#{text.hint-choose-a-user}"></small>
                     </div>
@@ -86,7 +87,7 @@
                                     <th scope="col">
                                         <a class="btn btn-light"
                                            th:href="@{'/workspace/' + ${wksName} + '/users'(size=*{size},sort=|lastName,${sortProp == 'lastName' && sortDir.isAscending() ? DESC : ASC}|)}">
-                                           <span th:text="#{lastname}"></span> <span>[[${sortProp == 'lastName' && sortDir.isAscending() ? '&uArr;' : '&dArr;'}]]</span>
+                                            <span th:text="#{lastname}"></span> <span>[[${sortProp == 'lastName' && sortDir.isAscending() ? '&uArr;' : '&dArr;'}]]</span>
                                         </a>
                                     </th>
                                     <th scope="col">
@@ -94,6 +95,8 @@
                                            th:href="@{'/workspace/' + ${wksName} + '/users'(size=*{size},sort=|email,${sortProp == 'email' && sortDir.isAscending() ? DESC : ASC}|)}">
                                             <span th:text="#{email}"></span> <span>[[${sortProp == 'email' && sortDir.isAscending() ? '&uArr;' : '&dArr;'}]]</span>
                                         </a>
+                                    </th>
+                                    <th scope="col">
                                     </th>
                                 </tr>
                                 </thead>
@@ -105,6 +108,17 @@
                                         <td th:text="*{firstName}"></td>
                                         <td th:text="*{lastName}"></td>
                                         <td th:text="*{email}"></td>
+                                        <td>
+                                            <form th:method="DELETE"
+                                                  th:if="${isAdmin} and ${!excludeDeleteAccounts.contains(userInfo)}"
+                                                  th:action="@{'/workspace/' + ${wksName} + '/users'}">
+                                                <input type="hidden" th:value="*{email}" name="email">
+                                                <button type="submit" class="btn btn-danger"
+                                                        th:text="#{btn.delete-from-wks}"
+                                                        th:onclick="return confirm(/*[[#{text.confirm-delete-user-wks}]]*/)"
+                                                ></button>
+                                            </form>
+                                        </td>
                                     </tr>
                                     <!-- Workspace user table row collapsed part -->
                                     <tr>

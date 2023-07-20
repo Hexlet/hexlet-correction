@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface WorkspaceRoleRepository extends JpaRepository<WorkspaceRole, Long> {
@@ -18,4 +19,7 @@ public interface WorkspaceRoleRepository extends JpaRepository<WorkspaceRole, Lo
 
     @EntityGraph(attributePaths = {"account", "workspace"})
     List<WorkspaceRole> getWorkspaceRolesByWorkspaceId(Long workspaceId);
+
+    @EntityGraph(attributePaths = {"account", "workspace"})
+    Optional<WorkspaceRole> getWorkspaceRoleByAccountIdAndWorkspaceId(Long accountId, Long workspaceId);
 }
