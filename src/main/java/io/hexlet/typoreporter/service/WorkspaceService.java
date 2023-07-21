@@ -137,7 +137,7 @@ public class WorkspaceService {
     public boolean isAdminRoleUserInWorkspace(String wksName, String username) {
         final var account = accountRepository.findAccountByUsername(username).
             orElseThrow(() -> new AccountNotFoundException(username));
-        final var workspace = repository.getWorkspaceByName(wksName).
+        final var workspace = workspaceRepository.getWorkspaceByName(wksName).
             orElseThrow(() -> new WorkspaceNotFoundException(wksName));
         final var workSpaceRoleOptional = workspaceRoleRepository.getWorkspaceRoleByAccountIdAndWorkspaceId(
             account.getId(),
