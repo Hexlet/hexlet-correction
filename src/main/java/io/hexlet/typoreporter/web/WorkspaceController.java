@@ -188,16 +188,15 @@ public class WorkspaceController {
             return "workspace/wks-update";
         }
         try {
-            if (workspaceService.updateWorkspace(wksUpdate, wksName).isEmpty()) {
-                //TODO send to error page
-                log.error("Workspace with name {} not found", wksName);
-                return "redirect:/workspaces";
-            }
+            workspaceService.updateWorkspace(wksUpdate, wksName);
+            return ("redirect:/workspace/") + wksUpdate.name();
         } catch (WorkspaceAlreadyExistException e) {
             bindingResult.addError(e.toFieldError("createWorkspace"));
             return "workspace/wks-update";
+        } catch (WorkspaceNotFoundException e) {
+            log.error("Workspace with name {} not found", wksName);
+            return "redirect:/workspaces";
         }
-        return ("redirect:/workspace/") + wksUpdate.name();
     }
 
     @DeleteMapping("/{wksName}")
