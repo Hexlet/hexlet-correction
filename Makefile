@@ -22,7 +22,7 @@ test-integration-only:
 	./mvnw -B -ntp -Dtest=noTest -Dsurefire.failIfNoSpecifiedTests=false verify
 
 run-dev:
-	java -jar -Dspring.profiles.active=dev ./target/typoreporter-*.jar
+	./mvnw spring-boot:run -Dspring-boot.run.profiles=dev
 
 run-dev-docker-db: docker-infra-start run-dev
 
