@@ -1,4 +1,4 @@
-const renderModalStyleEl = () => {
+const generateModalStyles = () => {
   const modalStyleEl = document.createElement('style');
   modalStyleEl.textContent = `
   #hexlet-correction-modal_modal {
@@ -113,12 +113,12 @@ const renderModalStyleEl = () => {
   return modalStyleEl;
 }
 
-const initialRenderModal = (state) => {
-  renderModalStyleEl();
+const generateModal = (state) => {
+  generateModalStyles();
 
   const modalEl = document.createElement('div');
   modalEl.id = 'hexlet-correction-modal_modal';
-  modalEl.style.display = 'none';
+  modalEl.style.display = state.modalShown ? 'block' : 'none';
 
   const divContent = document.createElement('div');
   divContent.id = 'hexlet-correction-modal_modal-content';
@@ -188,8 +188,7 @@ const initialRenderModal = (state) => {
   };
 };
 
-const nullState = (state) => {
-  state.modalShown = false;
+const resetModalState = (state) => {
   state.data.reporterComment = '';
   state.data.textBeforeTypo = '';
   state.data.textTypo = '';
@@ -205,20 +204,42 @@ const renderModal = (elements, state) => {
     elements.commentEl.value = state.data.reporterComment;
     elements.commentEl.focus();
 
-    const handlerСlickPastModal = (event) => {
+    const handleModalClose = (event) => {
       if (event.target === elements.modalEl) {
-        nullState(state);
+        state.modalShown = false;
         renderModal(elements, state);
-        document.removeEventListener('click', handlerСlickPastModal);
+        document.removeEventListener('click', handleModalClose);
       }
     };
-    document.addEventListener('click', handlerСlickPastModal);
+    document.addEventListener('click', handleModalClose);
     return;
   }
 
   elements.modalEl.style.display = 'none';
   elements.selectedTextEl.innerHTML = '';
   elements.commentEl.value = '';
+  resetModalState(state);
+};
+
+const sendData = (elements, state) => async (event) => {
+  event.preventDefault();
+  const value = elements.inputName.value;
+  state.data.reporterName = value === '' ? 'Anonymous' : value;
+  state.data.reporterComment = elements.commentEl.value;
+  try {
+    await fetch(`${state.options.workSpaceUrl}/api/workspaces/${state.options.workSpaceId}/typos`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Basic ${state.options.authorizationToken}`
+      },
+      body: JSON.stringify(state.data)
+    });
+    state.modalShown = false;
+    renderModal(elements, state);
+  } catch (error) {
+    throw new Error('Произошла ошибка:', error);
+  }
 };
 
 const handleTypoReporter = (options) => {
@@ -243,7 +264,7 @@ const handleTypoReporter = (options) => {
     },
   };
 
-  const elements = initialRenderModal(state);
+  const elements = generateModal(state);
 
   document.addEventListener('keydown', (event) => {
     const selection = window.getSelection();
@@ -269,30 +290,10 @@ const handleTypoReporter = (options) => {
     }
   });
 
-  const sendData = async (event) => {
-    event.preventDefault();
-    const value = elements.inputName.value;
-    state.data.reporterName = value === '' ? 'Anonymous' : value;
-    state.data.reporterComment = elements.commentEl.value;
-    try {
-      await fetch(`${state.options.workSpaceUrl}/api/workspaces/${state.options.workSpaceId}/typos`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Basic ${state.options.authorizationToken}`
-        },
-        body: JSON.stringify(state.data)
-      });
-      nullState(state);
-      renderModal(elements, state);
-    } catch (error) {
-      throw new Error('Произошла ошибка:', error);
-    }
-  };
-  elements.submitBtn.addEventListener('click', sendData);
+  elements.submitBtn.addEventListener('click', sendData(elements, state));
 
   elements.cancelBtn.addEventListener('click', () => {
-    nullState(state);
+    state.modalShown = false;
     renderModal(elements, state);
   });
 };
