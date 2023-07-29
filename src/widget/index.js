@@ -107,11 +107,11 @@ const generateModalStyles = () => {
   #hexlet-correction-modal_ReportTypo-cancel:hover {
     background-color: #e2e6ea;
   }
-  `
+  `;
   document.head.append(modalStyleEl);
 
   return modalStyleEl;
-}
+};
 
 const generateModal = (state) => {
   generateModalStyles();
@@ -148,9 +148,6 @@ const generateModal = (state) => {
   const commentEl = document.createElement('textarea');
   commentEl.id = 'hexlet-correction-modal_ReportTypo-comment';
   commentEl.placeholder = 'Опишите ошибку';
-  commentEl.addEventListener('input', (e) => {
-    state.data.reporterComment = e.target.value;
-  });
 
   const divSecondLabel = document.createElement('div');
   divSecondLabel.classList.add('hexlet-correction-modal_ReportTypo-label');
@@ -164,12 +161,12 @@ const generateModal = (state) => {
 
   const submitBtn = document.createElement('button');
   submitBtn.type = 'button';
-  submitBtn.id = 'hexlet-correction-modal_ReportTypo-submit'
+  submitBtn.id = 'hexlet-correction-modal_ReportTypo-submit';
   submitBtn.textContent = 'Отправить';
 
   const cancelBtn = document.createElement('button');
   cancelBtn.type = 'button';
-  cancelBtn.id = 'hexlet-correction-modal_ReportTypo-cancel'
+  cancelBtn.id = 'hexlet-correction-modal_ReportTypo-cancel';
   cancelBtn.textContent = 'Отмена';
 
   divButtons.append(submitBtn, cancelBtn);
@@ -189,6 +186,7 @@ const generateModal = (state) => {
 };
 
 const resetModalState = (state) => {
+  state.modalShown = false;
   state.data.reporterComment = '';
   state.data.textBeforeTypo = '';
   state.data.textTypo = '';
@@ -206,8 +204,7 @@ const renderModal = (elements, state) => {
 
     const handleModalClose = (event) => {
       if (event.target === elements.modalEl) {
-        state.modalShown = false;
-        renderModal(elements, state);
+        resetModalState(state);
         document.removeEventListener('click', handleModalClose);
       }
     };
@@ -218,12 +215,11 @@ const renderModal = (elements, state) => {
   elements.modalEl.style.display = 'none';
   elements.selectedTextEl.innerHTML = '';
   elements.commentEl.value = '';
-  resetModalState(state);
 };
 
 const sendData = (elements, state) => async (event) => {
   event.preventDefault();
-  const value = elements.inputName.value;
+  const { value } = elements.inputName;
   state.data.reporterName = value === '' ? 'Anonymous' : value;
   state.data.reporterComment = elements.commentEl.value;
   try {
@@ -231,15 +227,35 @@ const sendData = (elements, state) => async (event) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Basic ${state.options.authorizationToken}`
+        'Authorization': `Basic ${state.options.authorizationToken}`,
       },
-      body: JSON.stringify(state.data)
+      body: JSON.stringify(state.data),
     });
-    state.modalShown = false;
-    renderModal(elements, state);
+    resetModalState(state);
   } catch (error) {
     throw new Error('Произошла ошибка:', error);
   }
+};
+
+const watch = (state, callback) => {
+  const proxify = (obj, path = []) => new Proxy(obj, {
+    get(target, prop, receiver) {
+      if (typeof target[prop] === 'object' && target[prop] !== null) {
+        return proxify(target[prop], [...path, prop]);
+      }
+      return Reflect.get(target, prop, receiver);
+    },
+
+    set(target, prop, value, receiver) {
+      const prevValue = target[prop];
+      const result = Reflect.set(target, prop, value, receiver);
+      callback([...path, prop].join('.'), value, prevValue);
+      path = [];
+      return result;
+    },
+  });
+
+  return proxify(state);
 };
 
 const handleTypoReporter = (options) => {
@@ -247,7 +263,7 @@ const handleTypoReporter = (options) => {
     throw new Error('Для работы модуля требуется указать workSpaceId и authorizationToken');
   }
 
-  const state = {
+  const initialState = {
     modalShown: false,
     options: {
       workSpaceUrl: 'https://hexlet-correction.herokuapp.com/api/workspaces',
@@ -264,7 +280,17 @@ const handleTypoReporter = (options) => {
     },
   };
 
-  const elements = generateModal(state);
+  const elements = generateModal(initialState);
+
+  const state = watch(initialState, (path, value, prevValue) => {
+    switch (path) {
+      case 'modalShown':
+        renderModal(elements, state);
+        break;
+      default:
+        break;
+    }
+  });
 
   document.addEventListener('keydown', (event) => {
     const selection = window.getSelection();
@@ -272,12 +298,11 @@ const handleTypoReporter = (options) => {
       return;
     }
     if (event.ctrlKey && event.key === 'Enter') {
-      state.modalShown = true;
       state.data.pageUrl = window.location.href;
 
-      const anchorNode = selection.anchorNode;
-      const anchorOffset = selection.anchorOffset;
-      const focusOffset = selection.focusOffset;
+      const { anchorNode } = selection;
+      const { anchorOffset } = selection;
+      const { focusOffset } = selection;
       const maxLength = 50;
       const end = Math.min(focusOffset + maxLength, anchorNode.length);
       const start = Math.max(anchorOffset - maxLength, 0);
@@ -285,15 +310,10 @@ const handleTypoReporter = (options) => {
       state.data.textTypo = selection.toString();
       state.data.textBeforeTypo = anchorNode.textContent.substring(start, anchorOffset);
       state.data.textAfterTypo = anchorNode.substringData(focusOffset, end - focusOffset);
-
-      renderModal(elements, state);
+      state.modalShown = true;
     }
   });
 
   elements.submitBtn.addEventListener('click', sendData(elements, state));
-
-  elements.cancelBtn.addEventListener('click', () => {
-    state.modalShown = false;
-    renderModal(elements, state);
-  });
+  elements.cancelBtn.addEventListener('click', () => resetModalState(state));
 };
