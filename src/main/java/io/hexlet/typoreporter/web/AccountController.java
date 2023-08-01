@@ -67,7 +67,7 @@ public class AccountController {
             final var authenticated = UsernamePasswordAuthenticationToken.authenticated(updatedAccount.getUsername(),
                 updatedAccount.getPassword(), List.of(() -> "ROLE_USER"));
             SecurityContextHolder.getContext().setAuthentication(authenticated);
-            return "redirect:/account/";
+            return "redirect:/account";
         } catch (AccountAlreadyExistException e) {
             bindingResult.addError(e.toFieldError("updateProfile"));
             return "account/prof-update";
@@ -96,7 +96,7 @@ public class AccountController {
             final var authenticated = UsernamePasswordAuthenticationToken.authenticated(updatedAccount.getUsername(),
                 updatedAccount.getPassword(), List.of(() -> "ROLE_USER"));
             SecurityContextHolder.getContext().setAuthentication(authenticated);
-            return "redirect:/account/";
+            return "redirect:/account";
         } catch (OldPasswordWrongException | NewPasswordTheSameException e) {
             bindingResult.addError(e.toFieldError("updatePassword"));
             return "account/pass-update";

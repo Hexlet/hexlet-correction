@@ -101,11 +101,11 @@ public class AccountService implements SignupAccountUseCase, QueryAccount {
         final var sourceAccount = accountRepository.findAccountByUsernameIgnoreCase(name)
             .orElseThrow(() -> new AccountNotFoundException(name));
         final String username = sourceAccount.getUsername();
-        if (!username.equals(updateProfile.getUsername()) && existsByUsername(updateProfile.getUsername())) {
+        if (!username.equalsIgnoreCase(updateProfile.getUsername()) && existsByUsername(updateProfile.getUsername())) {
             throw new AccountAlreadyExistException("username", updateProfile.getUsername());
         }
         final String email = sourceAccount.getEmail();
-        if (!email.equals(updateProfile.getEmail()) && existsByEmail(updateProfile.getEmail())) {
+        if (!email.equalsIgnoreCase(updateProfile.getEmail()) && existsByEmail(updateProfile.getEmail())) {
             throw new AccountAlreadyExistException("email", updateProfile.getEmail());
         }
         Account updAccount = accountMapper.toAccount(updateProfile, sourceAccount);
