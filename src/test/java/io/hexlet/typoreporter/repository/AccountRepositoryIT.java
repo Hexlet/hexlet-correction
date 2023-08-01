@@ -56,7 +56,7 @@ public class AccountRepositoryIT {
     @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getAccountEmailExist")
     void getAccountByEmail(final String email) {
-        final var account = accountRepository.findAccountByEmail(email);
+        final var account = accountRepository.findAccountByEmailIgnoreCase(email);
         assertThat(account).isNotEmpty();
         assertThat(account.map(Account::getEmail).orElseThrow()).isEqualTo(email);
     }
@@ -65,13 +65,13 @@ public class AccountRepositoryIT {
     @NullAndEmptySource
     @ValueSource(strings = "invalid-email")
     void getAccountByEmailNotExist(final String email) {
-        assertThat(accountRepository.findAccountByEmail(email)).isEmpty();
+        assertThat(accountRepository.findAccountByEmailIgnoreCase(email)).isEmpty();
     }
 
     @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getAccountUsernameExist")
     void getAccountByUsername(final String username) {
-        final var account = accountRepository.findAccountByUsername(username);
+        final var account = accountRepository.findAccountByUsernameIgnoreCase(username);
         assertThat(account).isNotEmpty();
         assertThat(account.map(Account::getUsername).orElseThrow()).isEqualTo(username);
     }

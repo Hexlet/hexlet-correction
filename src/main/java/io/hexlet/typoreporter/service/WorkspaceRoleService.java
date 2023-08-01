@@ -28,7 +28,7 @@ public class WorkspaceRoleService {
 
     @Transactional
     public WorkspaceRole addAccountToWorkspace(String wksName, String accEmail) {
-        final var accId = accountRepository.findAccountByEmail(accEmail)
+        final var accId = accountRepository.findAccountByEmailIgnoreCase(accEmail)
             .map(Account::getId)
             .orElseThrow(() -> new AccountNotFoundException(accEmail));
 
@@ -47,7 +47,7 @@ public class WorkspaceRoleService {
 
     @Transactional
     public void deleteAccountFromWorkspace(String workspaceName, String accountEmail) {
-        final var account = accountRepository.findAccountByEmail(accountEmail)
+        final var account = accountRepository.findAccountByEmailIgnoreCase(accountEmail)
             .orElseThrow(() -> new AccountNotFoundException(accountEmail));
         final var workspace = workspaceRepository.getWorkspaceByName(workspaceName)
             .orElseThrow(() -> new WorkspaceNotFoundException(workspaceName));
