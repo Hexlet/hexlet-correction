@@ -201,14 +201,6 @@ const renderModal = (elements, state) => {
     elements.inputName.value = state.data.reporterName !== '' ? state.data.reporterName : state.options.userName;
     elements.commentEl.value = state.data.reporterComment;
     elements.commentEl.focus();
-
-    const handleModalClose = (event) => {
-      if (event.target === elements.modalEl) {
-        resetModalState(state);
-        document.removeEventListener('click', handleModalClose);
-      }
-    };
-    document.addEventListener('click', handleModalClose);
     return;
   }
 
@@ -237,26 +229,40 @@ const sendData = (elements, state) => async (event) => {
   }
 };
 
-const watch = (state, callback) => {
-  const proxify = (obj, path = []) => new Proxy(obj, {
-    get(target, prop, receiver) {
-      if (typeof target[prop] === 'object' && target[prop] !== null) {
-        return proxify(target[prop], [...path, prop]);
-      }
-      return Reflect.get(target, prop, receiver);
-    },
+const view = (elements, state) => {
+  const watch = (state, callback) => {
+    const proxify = (obj, path) => new Proxy(obj, {
+      get(target, prop, receiver) {
+        if (typeof target[prop] === 'object' && target[prop] !== null) {
+          return proxify(target[prop], [...path, prop]);
+        }
+        return Reflect.get(target, prop, receiver);
+      },
 
-    set(target, prop, value, receiver) {
-      const prevValue = target[prop];
-      const result = Reflect.set(target, prop, value, receiver);
-      callback([...path, prop].join('.'), value, prevValue);
-      path = [];
-      return result;
-    },
+      set(target, prop, value, receiver) {
+        const prevValue = target[prop];
+        const result = Reflect.set(target, prop, value, receiver);
+        callback([...path, prop].join('.'), value, prevValue);
+        path = [];
+        return result;
+      },
+    });
+
+    return proxify(state, []);
+  };
+
+  const watchedState = watch(state, (path) => {
+    switch (path) {
+      case 'modalShown':
+        renderModal(elements, state);
+        break;
+      default:
+        break;
+    }
   });
 
-  return proxify(state);
-};
+  return watchedState;
+}
 
 const handleTypoReporter = (options) => {
   if (!options || !options.authorizationToken && !options.workSpaceId) {
@@ -281,16 +287,7 @@ const handleTypoReporter = (options) => {
   };
 
   const elements = generateModal(initialState);
-
-  const state = watch(initialState, (path, value, prevValue) => {
-    switch (path) {
-      case 'modalShown':
-        renderModal(elements, state);
-        break;
-      default:
-        break;
-    }
-  });
+  const state = view(elements, initialState);
 
   document.addEventListener('keydown', (event) => {
     const selection = window.getSelection();
@@ -316,4 +313,16 @@ const handleTypoReporter = (options) => {
 
   elements.submitBtn.addEventListener('click', sendData(elements, state));
   elements.cancelBtn.addEventListener('click', () => resetModalState(state));
+
+  elements.modalEl.addEventListener('click', (event) => {
+    if (event.target === elements.modalEl) {
+      resetModalState(state);
+    }
+  });
+
+  elements.modalEl.addEventListener('keydown', (event) => {
+    if (state.modalShown && event.key === 'Escape') {
+      resetModalState(state);
+    }
+  });
 };
