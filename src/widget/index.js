@@ -230,26 +230,14 @@ const sendData = (elements, state) => async (event) => {
 };
 
 const view = (elements, state) => {
-  const watch = (state, callback) => {
-    const proxify = (obj, path) => new Proxy(obj, {
-      get(target, prop, receiver) {
-        if (typeof target[prop] === 'object' && target[prop] !== null) {
-          return proxify(target[prop], [...path, prop]);
-        }
-        return Reflect.get(target, prop, receiver);
-      },
-
-      set(target, prop, value, receiver) {
-        const prevValue = target[prop];
-        const result = Reflect.set(target, prop, value, receiver);
-        callback([...path, prop].join('.'), value, prevValue);
-        path = [];
-        return result;
-      },
-    });
-
-    return proxify(state, []);
-  };
+  const watch = (state, callback) => new Proxy(state, {
+    set(target, prop, value) {
+      const prevValue = target[prop];
+      const result = Reflect.set(target, prop, value);
+      callback(prop, value, prevValue);
+      return result;
+    },
+  });
 
   const watchedState = watch(state, (path) => {
     switch (path) {
