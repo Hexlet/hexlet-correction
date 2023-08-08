@@ -43,9 +43,6 @@ public class AccountRepositoryIT {
     @Autowired
     private AccountRepository accountRepository;
 
-    @Autowired
-    private WorkspaceRepository workspaceRepository;
-
     @DynamicPropertySource
     static void datasourceProperties(DynamicPropertyRegistry registry) {
         registry.add("spring.datasource.url", postgreSQLContainer::getJdbcUrl);
@@ -56,7 +53,7 @@ public class AccountRepositoryIT {
     @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getAccountEmailExist")
     void getAccountByEmail(final String email) {
-        final var account = accountRepository.findAccountByEmailIgnoreCase(email);
+        final var account = accountRepository.findAccountByEmail(email);
         assertThat(account).isNotEmpty();
         assertThat(account.map(Account::getEmail).orElseThrow()).isEqualTo(email);
     }
@@ -65,13 +62,13 @@ public class AccountRepositoryIT {
     @NullAndEmptySource
     @ValueSource(strings = "invalid-email")
     void getAccountByEmailNotExist(final String email) {
-        assertThat(accountRepository.findAccountByEmailIgnoreCase(email)).isEmpty();
+        assertThat(accountRepository.findAccountByEmail(email)).isEmpty();
     }
 
     @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getAccountUsernameExist")
     void getAccountByUsername(final String username) {
-        final var account = accountRepository.findAccountByUsernameIgnoreCase(username);
+        final var account = accountRepository.findAccountByUsername(username);
         assertThat(account).isNotEmpty();
         assertThat(account.map(Account::getUsername).orElseThrow()).isEqualTo(username);
     }

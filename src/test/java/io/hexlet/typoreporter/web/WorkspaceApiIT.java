@@ -14,7 +14,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.DynamicPropertyRegistry;
@@ -54,8 +53,6 @@ class WorkspaceApiIT {
         .withPassword("inmemory")
         .withUsername("inmemory");
 
-    @Autowired
-    private SpringDataWebProperties dataWebProperties;
 
     @Autowired
     private TypoRepository repository;
@@ -84,7 +81,6 @@ class WorkspaceApiIT {
                 .header("Authorization", "Basic " + basicEncodedStr)
                 .contentType(APPLICATION_JSON)
             )
-//            .andDo(print())
             .andExpect(status().isCreated())
             .andExpect(content().contentType(APPLICATION_JSON))
             .andExpect(header().exists("Location"))
