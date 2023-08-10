@@ -54,17 +54,17 @@ public class AccountService implements SignupAccountUseCase, QueryAccount {
     @Override
     public InfoAccount signup(SignupAccount signupAccount) throws UsernameAlreadyExistException,
         EmailAlreadyExistException {
-        final String lowerCaseEmail = TextUtils.toLowerCaseData(signupAccount.email());
-        final String lowerCaseUserName = TextUtils.toLowerCaseData(signupAccount.username());
-        if (existsByEmail(lowerCaseEmail)) {
-            throw new EmailAlreadyExistException(lowerCaseEmail);
+        final String normalizedEmail = TextUtils.toLowerCaseData(signupAccount.email());
+        final String normalizedUsername = TextUtils.toLowerCaseData(signupAccount.username());
+        if (existsByEmail(normalizedEmail)) {
+            throw new EmailAlreadyExistException(normalizedEmail);
         }
-        if (existsByUsername(lowerCaseUserName)) {
-            throw new UsernameAlreadyExistException(lowerCaseUserName);
+        if (existsByUsername(normalizedUsername)) {
+            throw new UsernameAlreadyExistException(normalizedUsername);
         }
         final var accToSave = accountMapper.toAccount(signupAccount);
-        accToSave.setEmail(lowerCaseEmail);
-        accToSave.setUsername(lowerCaseUserName);
+        accToSave.setEmail(normalizedEmail);
+        accToSave.setUsername(normalizedUsername);
         accToSave.setPassword(passwordEncoder.encode(signupAccount.password()));
         accToSave.setAuthProvider(AuthProvider.EMAIL);
         accountRepository.save(accToSave);
@@ -107,18 +107,18 @@ public class AccountService implements SignupAccountUseCase, QueryAccount {
         final var sourceAccount = accountRepository.findAccountByUsername(name)
             .orElseThrow(() -> new AccountNotFoundException(name));
         final String sourceUserName = sourceAccount.getUsername();
-        final String updatedUserName = TextUtils.toLowerCaseData(updateProfile.getUsername());
-        final String updatedEmail = TextUtils.toLowerCaseData(updateProfile.getEmail());
-        if (!sourceUserName.equals(updatedUserName) && existsByUsername(updatedUserName)) {
-            throw new AccountAlreadyExistException("username", updatedUserName);
+        final String normalizedUserName = TextUtils.toLowerCaseData(updateProfile.getUsername());
+        final String normalizedEmail = TextUtils.toLowerCaseData(updateProfile.getEmail());
+        if (!sourceUserName.equals(normalizedUserName) && existsByUsername(normalizedUserName)) {
+            throw new AccountAlreadyExistException("username", normalizedUserName);
         }
         final String sourceEmail = sourceAccount.getEmail();
-        if (!sourceEmail.equals(updatedEmail) && existsByEmail(updatedEmail)) {
-            throw new AccountAlreadyExistException("email", updatedEmail);
+        if (!sourceEmail.equals(normalizedEmail) && existsByEmail(normalizedEmail)) {
+            throw new AccountAlreadyExistException("email", normalizedEmail);
         }
         Account updAccount = accountMapper.toAccount(updateProfile, sourceAccount);
-        updAccount.setUsername(updatedUserName);
-        updAccount.setEmail(updatedEmail);
+        updAccount.setUsername(normalizedUserName);
+        updAccount.setEmail(normalizedEmail);
         accountRepository.save(updAccount);
         return updAccount;
     }

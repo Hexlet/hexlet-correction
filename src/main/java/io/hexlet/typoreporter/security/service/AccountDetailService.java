@@ -17,8 +17,8 @@ public class AccountDetailService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        final String userNameLowerCase = TextUtils.toLowerCaseData(username);
-        return accountRepository.findAccountByUsername(userNameLowerCase)
+        final String normalizedUsername = TextUtils.toLowerCaseData(username);
+        return accountRepository.findAccountByUsername(normalizedUsername)
             .map(acc -> User.withUsername(acc.getUsername())
                 .password(acc.getPassword())
                 .authorities("USER")

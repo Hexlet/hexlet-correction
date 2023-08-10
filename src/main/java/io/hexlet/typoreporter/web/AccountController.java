@@ -105,7 +105,7 @@ public class AccountController {
 
     @ExceptionHandler(value = AccountNotFoundException.class)
     public String accountNotFoundException(AccountNotFoundException e) {
-        log.error("Error during getting updated account with new password. Updated account not found", e);
+        log.error("Account not found", e);
         return "/error-general";
     }
 
