@@ -43,9 +43,6 @@ public class AccountRepositoryIT {
     @Autowired
     private AccountRepository accountRepository;
 
-    @Autowired
-    private WorkspaceRepository workspaceRepository;
-
     @DynamicPropertySource
     static void datasourceProperties(DynamicPropertyRegistry registry) {
         registry.add("spring.datasource.url", postgreSQLContainer::getJdbcUrl);

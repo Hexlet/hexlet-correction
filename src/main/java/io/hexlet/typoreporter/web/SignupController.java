@@ -1,5 +1,6 @@
 package io.hexlet.typoreporter.web;
 
+import io.hexlet.typoreporter.domain.workspace.AccountRole;
 import io.hexlet.typoreporter.service.account.EmailAlreadyExistException;
 import io.hexlet.typoreporter.service.account.UsernameAlreadyExistException;
 import io.hexlet.typoreporter.service.account.signup.SignupAccountMapper;
@@ -11,6 +12,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -27,8 +29,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 
-import static io.hexlet.typoreporter.domain.workspace.AccountRole.ROLE_GUEST;
-import static org.springframework.security.authentication.UsernamePasswordAuthenticationToken.authenticated;
 
 @Slf4j
 @Controller
@@ -61,7 +61,8 @@ public class SignupController {
         final InfoAccount newAccount;
         try {
             newAccount = signupAccountUseCase.signup(signupAccountMapper.toSignupAccount(signupAccountModel));
-            final var authentication = authenticated(newAccount.username(), null, List.of(ROLE_GUEST::name));
+            final var authentication = UsernamePasswordAuthenticationToken.
+                authenticated(newAccount.username(), null, List.of(AccountRole.ROLE_GUEST::name));
             autoLoginAfterSignup(request, response, authentication);
             return "redirect:/workspaces";
         } catch (UsernameAlreadyExistException e) {
