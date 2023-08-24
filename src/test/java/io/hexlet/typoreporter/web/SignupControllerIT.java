@@ -31,9 +31,6 @@ import static io.hexlet.typoreporter.test.Constraints.POSTGRES_IMAGE;
 @DBUnit(caseInsensitiveStrategy = LOWERCASE, dataTypeFactoryClass = DBUnitEnumPostgres.class, cacheConnection = false)
 class SignupControllerIT {
 
-    private final String EMAIL_IN_UPPER_CASE = "USERNAME@google.com";
-    private final String EMAIL_IN_LOWER_CASE = "username@google.com";
-
     @Container
     static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>(POSTGRES_IMAGE)
         .withPassword("inmemory")
@@ -52,40 +49,45 @@ class SignupControllerIT {
     @Autowired
     private AccountRepository accountRepository;
 
+    private final String EMAIL_UPPER_CASE = "EMAIL_ADDRESS@GOOGLE.COM";
+    private final String EMAIL_LOWER_CASE = EMAIL_UPPER_CASE.toLowerCase();
+
     private SignupAccountModel model = new SignupAccountModel(
-        "username",
-        EMAIL_IN_UPPER_CASE, EMAIL_IN_UPPER_CASE,
+        "model_upper_case",
+        EMAIL_UPPER_CASE, EMAIL_UPPER_CASE,
         "password","password",
         "firstName", "lastName");
 
     private SignupAccountModel anotherModelWithSameButLowerCaseEmail = new SignupAccountModel(
-        "ANOTHER_username",
-        EMAIL_IN_LOWER_CASE, EMAIL_IN_LOWER_CASE,
-        "ANOTHER_password", "ANOTHER_password",
-        "ANOTHER_firstName", "ANOTHER_lastName");
+        "model_lower_case",
+        EMAIL_LOWER_CASE, EMAIL_LOWER_CASE,
+        "another_password", "another_password",
+        "another_firstName", "another_lastName");
 
     @Test
     void createAccountWithIgnoreEmailCase() throws Exception {
         mockMvc.perform(post("/signup")
             .param("username", model.getUsername())
-            .param("email", EMAIL_IN_UPPER_CASE)
-            .param("confirmEmail", EMAIL_IN_UPPER_CASE)
+            .param("email", model.getEmail())
+            .param("confirmEmail", model.getEmail())
             .param("password", model.getPassword())
             .param("confirmPassword", model.getConfirmPassword())
             .param("firstName", model.getFirstName())
             .param("lastName", model.getLastName())
             .with(csrf()));
-        assertThat(accountRepository.findAccountByUsername("username")).isNotEmpty();
+        assertThat(accountRepository.findAccountByUsername("model_upper_case")).isNotEmpty();
+        assertThat(accountRepository.findAccountByUsername("model_upper_case").orElseThrow().getEmail())
+            .isEqualTo(EMAIL_LOWER_CASE);
 
         mockMvc.perform(post("/signup")
             .param("username", anotherModelWithSameButLowerCaseEmail.getUsername())
-            .param("email", EMAIL_IN_LOWER_CASE)
-            .param("confirmEmail", EMAIL_IN_LOWER_CASE)
+            .param("email", anotherModelWithSameButLowerCaseEmail.getEmail())
+            .param("confirmEmail", anotherModelWithSameButLowerCaseEmail.getEmail())
             .param("password", anotherModelWithSameButLowerCaseEmail.getPassword())
             .param("confirmPassword", anotherModelWithSameButLowerCaseEmail.getConfirmPassword())
             .param("firstName", anotherModelWithSameButLowerCaseEmail.getFirstName())
             .param("lastName", anotherModelWithSameButLowerCaseEmail.getLastName())
             .with(csrf()));
-        assertThat(accountRepository.findAccountByUsername("ANOTHER_username")).isEmpty();
+        assertThat(accountRepository.findAccountByUsername("model_lower_case")).isEmpty();
     }
 }
