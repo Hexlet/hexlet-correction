@@ -26,10 +26,10 @@ public class SignupAccountModel {
     @AccountUsername
     private String username;
 
-    @Email
+    @Email(regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", message = "The email \"{0}\" incorrect")
     private String email;
 
-    @Email
+    @Email(regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", message = "The email \"{0}\" incorrect")
     private String confirmEmail;
 
     @AccountPassword
