@@ -90,4 +90,21 @@ class SignupControllerIT {
             .with(csrf()));
         assertThat(accountRepository.findAccountByUsername("model_lower_case")).isEmpty();
     }
+
+    @Test
+    void createAccountWithWrongEmailDomain() throws Exception {
+        String userName = "testUser";
+        String password = "_Qwe1234";
+        String wrongEmailDomain = "test@test";
+        mockMvc.perform(post("/signup")
+            .param("username", userName)
+            .param("email", wrongEmailDomain)
+            .param("confirmEmail", wrongEmailDomain)
+            .param("password", password)
+            .param("confirmPassword", password)
+            .param("firstName", userName)
+            .param("lastName", userName)
+            .with(csrf()));
+        assertThat(accountRepository.findAccountByEmail(wrongEmailDomain)).isEmpty();
+    }
 }
