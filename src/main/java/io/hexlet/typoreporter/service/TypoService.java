@@ -70,6 +70,22 @@ public class TypoService {
             .map(typoMapper::toTypoInfo);
     }
 
+    @Transactional(readOnly = true)
+    public Page<TypoInfo> getTypoPageFiltered(final Pageable pageable, final String wksName, final String typoStatus) {
+        if (!workspaceService.existsWorkspaceByName(wksName)) {
+            throw new WorkspaceNotFoundException(wksName);
+        }
+
+        TypoStatus typoStatusEnum;
+        try {
+            typoStatusEnum = TypoStatus.valueOf(typoStatus);
+        } catch (IllegalArgumentException e) {
+            typoStatusEnum = null;
+        }
+
+        return repository.findPageTypoByWorkspaceNameAndTypoStatus(pageable, wksName, typoStatusEnum)
+            .map(typoMapper::toTypoInfo);
+    }
 
     @Transactional(readOnly = true)
     public List<Pair<TypoStatus, Long>> getCountTypoByStatusForWorkspaceName(final String wksName) {

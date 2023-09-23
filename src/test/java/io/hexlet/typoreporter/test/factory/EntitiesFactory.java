@@ -59,6 +59,15 @@ public class EntitiesFactory {
         );
     }
 
+    public static Stream<Arguments> getWorkspacesAndUsersAndTypoStatusRelated() {
+        return Stream.of(
+            Arguments.of(WORKSPACE_102_NAME, ACCOUNT_102_USERNAME, "REPORTED"),
+            Arguments.of(WORKSPACE_102_NAME, ACCOUNT_102_USERNAME, "IN_PROGRESS"),
+            Arguments.of(WORKSPACE_102_NAME, ACCOUNT_102_USERNAME, "RESOLVED"),
+            Arguments.of(WORKSPACE_102_NAME, ACCOUNT_102_USERNAME, "CANCELED")
+        );
+    }
+
     public static Stream<Arguments> getWorkspacesAndUsersNotRelated() {
         return Stream.of(
             Arguments.of(WORKSPACE_101_NAME, ACCOUNT_103_USERNAME),
