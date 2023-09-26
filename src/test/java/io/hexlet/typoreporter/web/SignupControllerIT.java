@@ -22,6 +22,7 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.assertj.core.api.Assertions.assertThat;
 import static io.hexlet.typoreporter.test.Constraints.POSTGRES_IMAGE;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -107,4 +108,22 @@ class SignupControllerIT {
             .with(csrf()));
         assertThat(accountRepository.findAccountByEmail(wrongEmailDomain)).isEmpty();
     }
+
+    void createAccountWithWrongPassword() throws Exception {
+        String userName = "testUser";
+        String wrongPass = "pass";
+        String email = "test@test.ru";
+        mockMvc.perform(post("/signup")
+            .param("username", userName)
+            .param("email", email)
+            .param("confirmEmail", email)
+            .param("password", wrongPass)
+            .param("confirmPassword", wrongPass)
+            .param("firstName", userName)
+            .param("lastName", userName)
+            .with(csrf())).andExpect((status().isFound()));
+        assertThat(accountRepository.findAccountByEmail(email)).isEmpty();
+
+    }
+
 }
