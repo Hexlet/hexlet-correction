@@ -152,7 +152,7 @@
                                         <td th:text="*{reporterName}"></td>
                                         <td th:text="*{createdDateAgo}"></td>
                                         <td th:text="*{modifiedDateAgo}"></td>
-                                        <td th:text="*{modifiedBy}"></td>
+                                        <td th:text="*{modifiedBy} != ${wksInfo.id} ? *{modifiedBy} : ''"></td>
                                         <td th:text="#{*{typoStatus}}"></td>
                                     </tr>
                                     <!-- Workspace typo table row collapsed part -->
