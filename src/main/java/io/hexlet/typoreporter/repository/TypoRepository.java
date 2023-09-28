@@ -17,6 +17,8 @@ public interface TypoRepository extends JpaRepository<Typo, Long> {
 
     Page<Typo> findPageTypoByWorkspaceName(Pageable pageable, String name);
 
+    Page<Typo> findPageTypoByWorkspaceNameAndTypoStatus(Pageable pageable, String name, TypoStatus status);
+
     Integer deleteTypoById(Long id);
 
     @Query("""

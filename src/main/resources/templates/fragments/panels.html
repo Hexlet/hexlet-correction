@@ -65,7 +65,7 @@
         <a class="list-group-item list-group-item-action"
            th:aria-current="${itemActive} == 'typos'"
            th:classappend="${itemActive} == 'typos' ? 'active' : ''"
-           th:href="@{'/workspace/' + ${wksName} + '/typos'}"
+           th:href="@{'/workspace/' + ${wksName} + '/typos'(typoStatus=REPORTED)}"
            th:text="#{wks.typos}"></a>
         <a class="list-group-item list-group-item-action"
            th:aria-current="${itemActive} == 'settings'"

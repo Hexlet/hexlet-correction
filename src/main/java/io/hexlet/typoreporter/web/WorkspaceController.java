@@ -1,6 +1,7 @@
 package io.hexlet.typoreporter.web;
 
 import io.hexlet.typoreporter.domain.account.Account;
+import io.hexlet.typoreporter.domain.typo.TypoStatus;
 import io.hexlet.typoreporter.domain.workspace.Workspace;
 import io.hexlet.typoreporter.domain.workspace.WorkspaceRole;
 import io.hexlet.typoreporter.service.AccountService;
@@ -40,6 +41,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -64,6 +66,11 @@ public class WorkspaceController {
         "@workspaceService.isAdminRoleUserInWorkspace(#wksName, authentication.name)";
 
     private final TreeSet<Integer> availableSizes = new TreeSet<>(List.of(2, 5, 10, 15, 25));
+
+    private final List<TypoStatus> availableStatuses = Arrays.asList(TypoStatus.values());
+//        .stream()
+//        .map(status -> status.name().replace("_"," "))
+//        .collect(Collectors.toList());
 
     private final TypoService typoService;
 
@@ -121,6 +128,7 @@ public class WorkspaceController {
     @PreAuthorize(IS_USER_RELATED_TO_WKS)
     public String getWorkspaceTyposPage(Model model,
                                         @PathVariable String wksName,
+                                        @RequestParam(required = false) String typoStatus,
                                         @SortDefault("createdDate") Pageable pageable) {
         var wksOptional = workspaceService.getWorkspaceInfoByName(wksName);
         if (wksOptional.isEmpty()) {
@@ -128,14 +136,22 @@ public class WorkspaceController {
             log.error("Workspace with name {} not found", wksName);
             return "redirect:/workspaces";
         }
+
         model.addAttribute("wksName", wksName);
         model.addAttribute("wksInfo", wksOptional.get());
         getStatisticDataToModel(model, wksName);
         getLastTypoDataToModel(model, wksName);
 
-        var size = Optional.ofNullable(availableSizes.floor(pageable.getPageSize())).orElseGet(availableSizes::first);
+                var size = Optional.ofNullable(availableSizes.floor(pageable.getPageSize())).orElseGet(availableSizes::first);
         var pageRequest = PageRequest.of(pageable.getPageNumber(), size, pageable.getSort());
-        var typoPage = typoService.getTypoPage(pageRequest, wksName);
+        Page<TypoInfo> typoPage;
+        if (typoStatus == null) {
+            typoPage = typoService.getTypoPage(pageRequest, wksName);
+        } else {
+            typoPage = typoService.getTypoPageFiltered(pageRequest, wksName, typoStatus);
+            model.addAttribute("typoStatus", typoStatus);
+            model.addAttribute("typoStatusStyle", TypoStatus.valueOf(typoStatus).getStyle());
+        }
 
         var sort = typoPage.getSort()
             .stream()
@@ -144,6 +160,7 @@ public class WorkspaceController {
 
         model.addAttribute("typoPage", typoPage);
         model.addAttribute("availableSizes", availableSizes);
+        model.addAttribute("availableStatuses", availableStatuses);
         model.addAttribute("sortProp", sort.getProperty());
         model.addAttribute("sortDir", sort.getDirection());
         model.addAttribute("DESC", DESC);

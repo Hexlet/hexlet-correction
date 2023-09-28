@@ -6,6 +6,7 @@ import com.github.database.rider.spring.api.DBRider;
 import io.hexlet.typoreporter.domain.AbstractAuditingEntity;
 import io.hexlet.typoreporter.domain.account.Account;
 import io.hexlet.typoreporter.domain.typo.Typo;
+import io.hexlet.typoreporter.domain.typo.TypoStatus;
 import io.hexlet.typoreporter.domain.workspace.AccountRole;
 import io.hexlet.typoreporter.domain.workspace.Workspace;
 import io.hexlet.typoreporter.domain.workspace.WorkspaceRoleId;
@@ -40,6 +41,7 @@ import io.hexlet.typoreporter.service.WorkspaceRoleService;
 import static io.hexlet.typoreporter.test.Constraints.POSTGRES_IMAGE;
 import static java.util.Objects.requireNonNull;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -56,7 +58,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Transactional
 @DBRider
 @DBUnit(caseInsensitiveStrategy = LOWERCASE, dataTypeFactoryClass = DBUnitEnumPostgres.class, cacheConnection = false)
-@DataSet(value = {"workspaces.yml", "workspaceRoles.yml", "accounts.yml"})
+@DataSet(value = {"workspaces.yml", "workspaceRoles.yml", "accounts.yml", "typos.yml"})
 class WorkspaceControllerIT {
 
     @Container
@@ -148,6 +150,31 @@ class WorkspaceControllerIT {
             assertThat(response.getContentAsString()).contains(
                 typo.getPageUrl(), typo.getReporterName(), typo.getModifiedBy()
             );
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspacesAndUsersAndTypoStatusRelated")
+    void getWorkspaceTyposPageFilteredIsSuccessful(final String wksName, final String username, final String typoStatus) throws Exception {
+        Workspace workspace = repository.getWorkspaceByName(wksName).orElse(null);
+
+        var request = get("/workspace/{wksName}/typos", wksName).queryParam("typoStatus", typoStatus);
+
+        MockHttpServletResponse response = mockMvc.perform(request
+                .with(user(username)))
+            .andExpect(model().attributeExists("wksInfo", "wksName", "typoPage", "availableSizes", "sortProp", "sortDir", "DESC", "ASC", "typoStatus"))
+            .andReturn().getResponse();
+
+        Typo typo = workspace.getTypos().stream()
+            .filter(t -> !t.getTypoStatus().equals(TypoStatus.valueOf(typoStatus)))
+            .findFirst().orElse(null);
+
+        if (typo != null) {
+            assertThat(response.getContentAsString()).contains(
+                typo.getPageUrl(), typo.getReporterName(), typo.getModifiedBy()
+            );
+        } else {
+            fail("No typos without status " + typoStatus);
         }
     }
 

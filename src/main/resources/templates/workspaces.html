@@ -13,7 +13,7 @@
                 </div>
                 <div class="card-footer bg-white border-top-0">
                     <a class="card-link" th:href="@{'/workspace/' + *{name}}" th:text="#{wks.info}"></a>
-                    <a class="card-link" th:href="@{'/workspace/' + *{name} + '/typos'}" th:text="#{wks.typos}"></a>
+                    <a class="card-link" th:href="@{'/workspace/' + *{name} + '/typos'(typoStatus=REPORTED)}" th:text="#{wks.typos}"></a>
                     <a class="card-link" th:href="@{'/workspace/' + *{name} + '/users'}" th:text="#{wks.users}"></a>
                 </div>
             </div>
