@@ -45,7 +45,7 @@
                                     </li>
                                     <li th:each="status : ${availableStatuses}">
                                         <a class="dropdown-item"
-                                           th:classappend="(${typoStatus} == ${#strings.replace(status, '_', ' ')} ? 'disabled' : '')"
+                                           th:classappend="(${typoStatus} == ${#strings.replace(status, ' ', '_')} ? 'disabled' : '')"
                                            th:href="@{'/workspace/' + ${wksName} + '/typos'(page=0,size=${typoPage.size},sort=|${sortProp},${sortDir}|, typoStatus=${#strings.replace(status, ' ', '_')})}"
                                            th:text="#{${status}}">
                                         </a>
