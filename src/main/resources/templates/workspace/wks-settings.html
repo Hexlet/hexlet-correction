@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head th:replace="~{fragments/header :: head}"></head>
 <body style="padding-top: 4.5rem">
 <nav th:replace="~{fragments/panels :: mainNavbarTop}"></nav>
@@ -25,23 +25,18 @@
             </div>
             <div class="row mt-4">
                 <div class="col">
-                    <p><span th:text="#{text.wks-access-token}"></span>: <code th:text="${wksBasicToken ?: '<Token not generated>'}"></code></p>
-                    <p><span th:text="#{text.use-header}"></span>: <code>Authorization: Basic [[${wksBasicToken}]]</code></p>
-                </div>
-            </div>
-            <div class="row my-4">
-                <div class="col">
-                    <p class="fw-bold" th:text="#{text.script-descr('<code>script</code>')}"></p>
-                    <pre>
-                        <code>
-&lt;script src="https://cdn.jsdelivr.net/gh/hexlet/hexlet-correction@main/src/widget/index.js"&gt;&lt;/script&gt;
+                    <p class="fw-bold mb-2">Токен доступа для API Пространства:</p>
+                    <p class="form-control user-select-all d-inline-flex mb-3" readonly>[[${wksBasicToken} ?: '&lt;Token not generated&gt;']]</p>
+                    <p class="fw-bold mb-2">Используйте заголовок Authorization:</p>
+                    <p class="form-control user-select-all  d-inline-flex mb-3" readonly>Basic [[${wksBasicToken}]]</p>
+                    <p class="fw-bold mb-2">Установите этот скрипт на ваш сайт:</p>
+                    <pre style="font-size:18px" class="form-control user-select-all d-inline-flex mb-3" readonly>
+&lt;script src="https://cdn.jsdelivr.net/gh/hexlet/hexlet-correction@main/src/widget/index.js"&gt;&lt;/script&gt;;
 
 &lt;script&gt;
     handleTypoReporter({ authorizationToken: '[[${wksBasicToken}]]',
     workSpaceUrl: '[[${rootUrl}]]', workSpaceId: '[[${wksId}]]'})
-&lt;/script&gt;
-                        </code>
-                    </pre>
+&lt;/script&gt;</pre>
                 </div>
             </div>
         </div>
