@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head}"></head>
+<body>
+<div class="container-fluid d-flex flex-column p-0 m-0">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark text-light mb-5 mt-0">
+        <div class="container-fluid">Hexlet Typo Reporter</div>
+    </nav>
+    <div class=" bg-light mx-auto mt-0">
+        <main class="bg-light p-3">
+            <div class="container p-0">
+            <h1 class="my-4">О проекте</h1>
+            <p class="display-6">Добро пожаловать в open-source проект Hexlet-Correction</p>
+                <p class="fs-4 m-2 p-2">
+                    Сервис для уведомления владельцев сайтов об ошибках и опечатках.
+                    После интеграции с сайтом посетители имеют возможность выделить ошибку
+                    или опечатку и сообщить об этом администратору. Проект работает на Java.
+                </p>
+                <p class="fs-4 m-2 p-2">Задачи можно обсудить в сообществе 
+                    <a class="btn btn-primary border" href="https://t.me/hexletcommunity/12">telegram</a>
+                </p>
+            </div>
+        </main>
+    </div>
+<footer class="d-flex p-3 bg-dark border text-light">
+    <div class="container-xl">
+        <div class="row justify-content-lg-around">
+            <div class="col-sm-6 col-md-3 col-lg-auto">
+                <a class="text-dark px-0 py-0 text-decoration-none " href="https://ru.hexlet.io">
+                    <p class="h3 mb-2 text-light">© Hexlet</p>
+                </a>
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link px-0 py-1 text-light" href="https://sicp.hexlet.io/ru/pages/about">
+                            О проекте
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-0 py-1 text-light" href="https://github.com/Hexlet/hexlet-correction"
+                           target="_blank">
+                            Исходный код
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-0 py-1 text-light" href="https://t.me/hexletcommunity/12"
+                           target="_blank">
+                            Telegram Hexlet канал Волонтеры
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-sm-6 col-md-3 col-lg-auto">
+                <p class="h5 mb-3">Помощь</p>
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link px-0 py-1 text-light" href="https://ru.hexlet.io/blog">
+                            Блог
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-0 py-1 text-light" href="https://ru.hexlet.io/knowledge">
+                            База знаний
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-0 py-1 text-light"
+                           href="https://ru.hexlet.io/pages/recommended-books">
+                            Рекомендуемые книги
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-sm-6 col-md-3 col-lg-auto">
+                <p class="h5 mb-3">Другие open-source проекты</p>
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link px-0 py-1 text-light" href="https://github.com/Hexlet/hexlet-cv">
+                            Хекслет-резюме
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-0 py-1 text-light" href="https://github.com/Hexlet/hexlet-editor">
+                            Хекслет-редактор
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-0 py-1 text-light" href="https://github.com/Hexlet/hexlet-friends">
+                            Друзья Хекслета
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-sm-6 col-md-3 col-lg-auto">
+                <p class="h5 mb-3">Дополнительно</p>
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link px-0 py-1 text-light" href="https://ru.code-basics.com/">
+                            Code Basics
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-0 py-1 text-light" href="https://codebattle.hexlet.io/">
+                            Кодбаттл
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-0 py-1 text-light" href="https://guides.hexlet.io/">
+                            Гайды Хекслета
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</footer>
+</div>
+</body>
+</html>
