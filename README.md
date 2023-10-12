@@ -77,7 +77,7 @@ make clear
 For creating new `typo`:
 
 ```plaintext
-POST http://localhost:8080/api/workspaces/typos
+POST http://localhost:8080/api/workspaces/{workspaceId}/typos
 Content-Type: application/json
 Authorization: Basic base64(workspaceId:api-token)
 
