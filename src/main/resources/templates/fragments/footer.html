@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <body>
-<footer th:fragment="footer" class="d-flex p-3 bg-dark border text-light">
+<footer th:fragment="footer" class="p-3 bg-dark text-light mt-auto">
     <div class="container-xl">
         <div class="row justify-content-lg-around">
             <div class="col-sm-6 col-md-3 col-lg-auto">
@@ -10,7 +10,7 @@
                 </a>
                 <ul class="nav flex-column">
                     <li class="nav-item">
-                        <a class="nav-link px-0 py-1 text-light" href="https://hexlet-correction.herokuapp.com/about">
+                        <a class="nav-link px-0 py-1 text-light" th:href=="@{/about}">
                             О проекте
                         </a>
                     </li>
