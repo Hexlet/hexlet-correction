@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
 import org.ocpsoft.prettytime.PrettyTime;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.Base64;
+import java.util.Locale;
 
 @Slf4j
 @Controller
@@ -71,6 +73,7 @@ public class WorkspaceSettingsController {
     private void getLastTypoDataToModel(final Model model, final String wksName) {
         final var createdDate = typoService.getLastTypoByWorkspaceName(wksName).map(TypoInfo::createdDate);
         model.addAttribute("lastTypoCreatedDate", createdDate);
-        model.addAttribute("lastTypoCreatedDateAgo", createdDate.map(new PrettyTime()::format));
+        Locale locale = LocaleContextHolder.getLocale();
+        model.addAttribute("lastTypoCreatedDateAgo", createdDate.map(new PrettyTime(locale)::format));
     }
 }
