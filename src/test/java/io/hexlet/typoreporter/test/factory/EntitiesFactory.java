@@ -10,7 +10,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
-import static java.time.LocalDateTime.now;
+import static java.time.Instant.now;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
 
 public class EntitiesFactory {
