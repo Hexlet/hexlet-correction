@@ -2,7 +2,7 @@ package io.hexlet.typoreporter.service.dto.typo;
 
 import io.hexlet.typoreporter.domain.typo.TypoStatus;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 public record TypoInfo(
     Long id,
@@ -16,10 +16,10 @@ public record TypoInfo(
     TypoStatus typoStatus,
     String createdBy,
     String createdDateAgo,
-    LocalDateTime createdDate,
+    Instant createdDate,
     String modifiedBy,
     String modifiedDateAgo,
-    LocalDateTime modifiedDate
+    Instant modifiedDate
 ) {
 
 }

@@ -1,6 +1,7 @@
 package io.hexlet.typoreporter.service.dto.workspace;
 
-import java.time.LocalDateTime;
+
+import java.time.Instant;
 
 public record WorkspaceInfo(
     Long id,
@@ -8,10 +9,10 @@ public record WorkspaceInfo(
     String url,
     String description,
     String createdBy,
-    LocalDateTime createdDate,
+    Instant createdDate,
     String createdDateAgo,
     String modifiedBy,
-    LocalDateTime modifiedDate,
+    Instant modifiedDate,
     String modifiedDateAgo
 ) {
 
