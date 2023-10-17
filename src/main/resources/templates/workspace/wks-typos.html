@@ -190,8 +190,16 @@
                                                     </div>
                                                     <div class="row">
                                                         <div class="col">
-                                                            <p th:text="|#{text.created-at} *{#temporals.format(createdDate, 'dd/MM/yyyy hh:mm:ss')}|"></p>
-                                                            <p th:text="|#{text.modified-at} *{#temporals.format(modifiedDate, 'dd/MM/yyyy hh:mm:ss')}|"></p>
+                                                            <p>
+                                                                <span th:text="|#{text.created-at}|"/>
+                                                                <!-- The text will be overwritten by time-converter.js unless JS is disabled -->
+                                                                <span th:text="*{#temporals.format(createdDate, 'dd/MM/yyyy HH:mm:ss')}" th:data-original-date="*{createdDate}"/>
+                                                            </p>
+                                                            <p>
+                                                                <span th:text="|#{text.modified-at}|"/>
+                                                                <!-- The text will be overwritten by time-converter.js unless JS is disabled -->
+                                                                <span th:text="*{#temporals.format(modifiedDate, 'dd/MM/yyyy HH:mm:ss')}" th:data-original-date="*{modifiedDate}"/>
+                                                            </p>
                                                             <hr>
                                                             <p class="fst-italic"
                                                                th:text="|#{text.reported-by} *{reporterName}: *{reporterComment}|"></p>
