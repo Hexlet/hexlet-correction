@@ -78,7 +78,7 @@ public class SecurityConfig {
 
         http.authorizeHttpRequests(authz -> authz
                 .requestMatchers(GET, "/webjars/**", "/widget/**", "/fragments/**", "/img/**").permitAll()
-                .requestMatchers("/", "/login", "/signup", "/error").permitAll()
+                .requestMatchers("/", "/login", "/signup", "/error", "/about").permitAll()
                 .anyRequest().authenticated()
             )
             .formLogin(login -> login
