@@ -33,10 +33,15 @@
                             </form>
                         </div>
                         <div class="card-footer text-muted fst-italic">
-                            <h6 class="card-subtitle m-2"
-                                th:text="|#{text.modified-info(*{modifiedBy}, *{modifiedDateAgo}, *{#temporals.format(modifiedDate, 'hh:mm:ss dd-MM-yyyy')})}|"></h6>
-                            <h6 class="card-subtitle m-2"
-                                th:text="|#{text.created-info(*{createdBy}, *{createdDateAgo}, *{#temporals.format(createdDate, 'hh:mm:ss dd-MM-yyyy')})}|"></h6>
+                            <h6 class="card-subtitle m-2">
+                                <span th:text="|#{text.modified-info(*{modifiedBy}, *{modifiedDateAgo})}|"></span>
+                                <!-- The text will be overwritten by time-converter.js unless JS is disabled -->
+                                <span th:text="*{#temporals.format(modifiedDate, 'HH:mm:ss dd-MM-yyyy')}" th:data-original-date="*{modifiedDate}"></span>
+                            </h6>
+                            <h6 class="card-subtitle m-2">
+                                <span th:text="|#{text.created-info(*{createdBy}, *{createdDateAgo})}|"></span>
+                                <!-- The text will be overwritten by time-converter.js unless JS is disabled -->
+                                <span th:text="*{#temporals.format(createdDate, 'HH:mm:ss dd-MM-yyyy')}" th:data-original-date="*{createdDate}"></span>                            </h6>
                         </div>
                     </div>
                 </div>

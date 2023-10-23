@@ -13,7 +13,11 @@
     </div>
 </div>
 <div class="col" th:fragment="wksLastTypoDate (lastTypoCreatedDateAgo, lastTypoCreatedDate)">
-    <p class="col-6" th:text="|#{text.last-typo-added(${lastTypoCreatedDateAgo.get()}, ${#temporals.format(lastTypoCreatedDate.get(), 'hh:mm:ss dd-MM-yyyy')})}|"></p>
+    <p class="col-6">
+        <span th:text="|#{text.last-typo-added(${lastTypoCreatedDateAgo.get()})}|"></span>
+        <!-- The text will be overwritten by time-converter.js unless JS is disabled -->
+        <span th:text="${#temporals.format(lastTypoCreatedDate.get(), 'HH:mm:ss dd-MM-yyyy')}" th:data-original-date="${lastTypoCreatedDate.get()}"></span>
+    </p>
 </div>
 </body>
 </html>

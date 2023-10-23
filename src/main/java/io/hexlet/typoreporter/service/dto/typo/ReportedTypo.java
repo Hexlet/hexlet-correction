@@ -1,6 +1,6 @@
 package io.hexlet.typoreporter.service.dto.typo;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 public record ReportedTypo(
     Long id,
@@ -11,7 +11,7 @@ public record ReportedTypo(
     String textTypo,
     String textAfterTypo,
     String createdBy,
-    LocalDateTime createdDate
+    Instant createdDate
 ) {
 
 }

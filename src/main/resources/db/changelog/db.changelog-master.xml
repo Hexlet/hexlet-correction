@@ -21,4 +21,6 @@
              relativeToChangelogFile="true" />
     <include file="changesets/2022/12/2022-12-08-create-workspace-settings-table.xml"
              relativeToChangelogFile="true" />
+    <include file="changesets/2023/10/2023-10-16-change-time-format-to-timestamp-with-time-zone.xml"
+             relativeToChangelogFile="true" />
 </databaseChangeLog>

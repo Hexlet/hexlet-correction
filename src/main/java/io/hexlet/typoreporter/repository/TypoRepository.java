@@ -29,5 +29,6 @@ public interface TypoRepository extends JpaRepository<Typo, Long> {
         """)
     List<Pair<TypoStatus, Long>> getCountTypoStatusForWorkspaceName(String wksName);
 
-    Optional<Typo> getTopByWorkspaceNameOrderByCreatedDate(String wksName);
+    Optional<Typo> findFirstByWorkspaceNameOrderByCreatedDateDesc(String wksName);
+
 }

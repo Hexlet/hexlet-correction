@@ -8,8 +8,9 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.ocpsoft.prettytime.PrettyTime;
+import org.springframework.context.i18n.LocaleContextHolder;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Mapper
 public interface TypoMapper {
@@ -26,7 +27,8 @@ public interface TypoMapper {
     ReportedTypo toReportedTypo(Typo source);
 
     @Named(value = "mapToPrettyDateAgo")
-    default String getDateAgoAsString(LocalDateTime date) {
+    default String getDateAgoAsString(Instant date) {
+        prettyTime.setLocale(LocaleContextHolder.getLocale());
         return prettyTime.format(date);
     }
 }

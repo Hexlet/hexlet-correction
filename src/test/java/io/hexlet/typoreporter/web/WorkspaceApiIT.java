@@ -30,7 +30,7 @@ import static com.github.database.rider.core.api.configuration.Orthography.LOWER
 import static io.hexlet.typoreporter.test.Constraints.POSTGRES_IMAGE;
 import static io.hexlet.typoreporter.test.factory.EntitiesFactory.WORKSPACE_101_ID;
 import static io.hexlet.typoreporter.test.factory.EntitiesFactory.WORKSPACE_101_TOKEN;
-import static java.time.LocalDateTime.now;
+import static java.time.Instant.now;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;

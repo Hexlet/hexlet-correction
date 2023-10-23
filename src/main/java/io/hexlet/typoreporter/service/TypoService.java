@@ -103,7 +103,7 @@ public class TypoService {
 
     @Transactional(readOnly = true)
     public Optional<TypoInfo> getLastTypoByWorkspaceName(final String wksName) {
-        return repository.getTopByWorkspaceNameOrderByCreatedDate(wksName)
+        return repository.findFirstByWorkspaceNameOrderByCreatedDateDesc(wksName)
             .map(typoMapper::toTypoInfo);
     }
 

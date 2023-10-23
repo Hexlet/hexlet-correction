@@ -32,7 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.*;
 import org.junit.jupiter.api.Disabled;
 import static com.github.database.rider.core.api.configuration.Orthography.LOWERCASE;
@@ -207,7 +207,7 @@ class WorkspaceControllerIT {
     void putWorkspaceUpdateIsSuccessful(final String wksName, final String username) throws Exception {
         Workspace workspace = repository.getWorkspaceByName(wksName).orElse(null);
         String newWksName = "createWksName01";
-        LocalDateTime previosModifiedDate = workspace.getModifiedDate();
+        Instant previosModifiedDate = workspace.getModifiedDate();
 
         mockMvc.perform(put("/workspace/{wksName}/update", wksName)
                 .param("name", newWksName)
@@ -217,7 +217,7 @@ class WorkspaceControllerIT {
                 .with(csrf()))
             .andExpect(redirectedUrl("/workspace/" + newWksName));
 
-        LocalDateTime newModifiedDate = repository.getWorkspaceByName(newWksName).orElse(null).getModifiedDate();
+        Instant newModifiedDate = repository.getWorkspaceByName(newWksName).orElse(null).getModifiedDate();
         assertThat(previosModifiedDate).isNotEqualTo(newModifiedDate);
     }
 
@@ -228,7 +228,7 @@ class WorkspaceControllerIT {
         String wksDescription = "Wks description";
         String wksUrl = "https://other.com";
 
-        LocalDateTime previousModifiedDate = repository.getWorkspaceByName(wksName).orElse(null).getModifiedDate();
+        Instant previousModifiedDate = repository.getWorkspaceByName(wksName).orElse(null).getModifiedDate();
 
         var createWks = new CreateWorkspace(newWksName, wksDescription, wksUrl);
         final var wksToCreate = requireNonNull(workspaceMapper.toWorkspace(createWks));
@@ -246,7 +246,7 @@ class WorkspaceControllerIT {
                 .with(csrf()))
             .andExpect(model().attributeExists("createWorkspace"));
 
-        LocalDateTime newModifiedDate = repository.getWorkspaceByName(wksName).orElse(null).getModifiedDate();
+        Instant newModifiedDate = repository.getWorkspaceByName(wksName).orElse(null).getModifiedDate();
         assertThat(previousModifiedDate).isEqualTo(newModifiedDate);
     }
 
@@ -257,7 +257,7 @@ class WorkspaceControllerIT {
         String wksDescription = "Wks description";
         String newWksUrl = "https://other.com";
 
-        LocalDateTime previousModifiedDate = repository.getWorkspaceByName(wksName).orElse(null).getModifiedDate();
+        Instant previousModifiedDate = repository.getWorkspaceByName(wksName).orElse(null).getModifiedDate();
 
         var createWks = new CreateWorkspace(newWksName, wksDescription, newWksUrl);
         final var wksToCreate = requireNonNull(workspaceMapper.toWorkspace(createWks));
@@ -276,7 +276,7 @@ class WorkspaceControllerIT {
                 .with(csrf()))
             .andExpect(model().attributeExists("createWorkspace"));
 
-        LocalDateTime newModifiedDate = repository.getWorkspaceByName(wksName).orElse(null).getModifiedDate();
+        Instant newModifiedDate = repository.getWorkspaceByName(wksName).orElse(null).getModifiedDate();
         assertThat(previousModifiedDate).isEqualTo(newModifiedDate);
     }
 

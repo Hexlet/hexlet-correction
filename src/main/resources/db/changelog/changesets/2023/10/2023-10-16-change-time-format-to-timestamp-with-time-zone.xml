@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd"
+    objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+
+    <changeSet id="2023-10-16-change-time-format-to-timestamp-with-time-zone-1" author="biscof">
+        <renameColumn tableName="account" oldColumnName="created_date" newColumnName="created_date_temp"/>
+        <renameColumn tableName="account" oldColumnName="modified_date" newColumnName="modified_date_temp"/>
+
+        <addColumn tableName="account">
+            <column name="created_date" type="TIMESTAMP WITH TIME ZONE"/>
+        </addColumn>
+        <addColumn tableName="account">
+            <column name="modified_date" type="TIMESTAMP WITH TIME ZONE"/>
+        </addColumn>
+
+        <sql>UPDATE account SET created_date = created_date_temp AT TIME ZONE 'UTC';</sql>
+        <sql>UPDATE account SET modified_date = modified_date_temp AT TIME ZONE 'UTC';</sql>
+
+        <addNotNullConstraint tableName="account" columnName="created_date"/>
+        <addNotNullConstraint tableName="account" columnName="modified_date"/>
+
+        <dropColumn tableName="account" columnName="created_date_temp"/>
+        <dropColumn tableName="account" columnName="modified_date_temp"/>
+    </changeSet>
+
+
+    <changeSet id="2023-10-16-change-time-format-to-timestamp-with-time-zone-2" author="biscof">
+        <renameColumn tableName="typo" oldColumnName="created_date" newColumnName="created_date_temp"/>
+        <renameColumn tableName="typo" oldColumnName="modified_date" newColumnName="modified_date_temp"/>
+
+        <addColumn tableName="typo">
+            <column name="created_date" type="TIMESTAMP WITH TIME ZONE"/>
+        </addColumn>
+        <addColumn tableName="typo">
+            <column name="modified_date" type="TIMESTAMP WITH TIME ZONE"/>
+        </addColumn>
+
+        <sql>UPDATE typo SET created_date = created_date_temp AT TIME ZONE 'UTC';</sql>
+        <sql>UPDATE typo SET modified_date = modified_date_temp AT TIME ZONE 'UTC';</sql>
+
+        <addNotNullConstraint tableName="typo" columnName="created_date"/>
+        <addNotNullConstraint tableName="typo" columnName="modified_date"/>
+
+        <dropColumn tableName="typo" columnName="created_date_temp"/>
+        <dropColumn tableName="typo" columnName="modified_date_temp"/>
+    </changeSet>
+
+
+    <changeSet id="2023-10-16-change-time-format-to-timestamp-with-time-zone-3" author="biscof">
+        <renameColumn tableName="workspace" oldColumnName="created_date" newColumnName="created_date_temp"/>
+        <renameColumn tableName="workspace" oldColumnName="modified_date" newColumnName="modified_date_temp"/>
+
+        <addColumn tableName="workspace">
+            <column name="created_date" type="TIMESTAMP WITH TIME ZONE"/>
+        </addColumn>
+        <addColumn tableName="workspace">
+            <column name="modified_date" type="TIMESTAMP WITH TIME ZONE"/>
+        </addColumn>
+
+        <sql>UPDATE workspace SET created_date = created_date_temp AT TIME ZONE 'UTC';</sql>
+        <sql>UPDATE workspace SET modified_date = modified_date_temp AT TIME ZONE 'UTC';</sql>
+
+        <addNotNullConstraint tableName="workspace" columnName="created_date"/>
+        <addNotNullConstraint tableName="workspace" columnName="modified_date"/>
+
+        <dropColumn tableName="workspace" columnName="created_date_temp"/>
+        <dropColumn tableName="workspace" columnName="modified_date_temp"/>
+    </changeSet>
+
+
+    <changeSet id="2023-10-16-change-time-format-to-timestamp-with-time-zone-4" author="biscof">
+        <renameColumn tableName="workspace_settings" oldColumnName="created_date" newColumnName="created_date_temp"/>
+        <renameColumn tableName="workspace_settings" oldColumnName="modified_date" newColumnName="modified_date_temp"/>
+
+        <addColumn tableName="workspace_settings">
+            <column name="created_date" type="TIMESTAMP WITH TIME ZONE"/>
+        </addColumn>
+        <addColumn tableName="workspace_settings">
+            <column name="modified_date" type="TIMESTAMP WITH TIME ZONE"/>
+        </addColumn>
+
+        <sql>UPDATE workspace_settings SET created_date = created_date_temp AT TIME ZONE 'UTC';</sql>
+        <sql>UPDATE workspace_settings SET modified_date = modified_date_temp AT TIME ZONE 'UTC';</sql>
+
+        <addNotNullConstraint tableName="workspace_settings" columnName="created_date"/>
+        <addNotNullConstraint tableName="workspace_settings" columnName="modified_date"/>
+
+        <dropColumn tableName="workspace_settings" columnName="created_date_temp"/>
+        <dropColumn tableName="workspace_settings" columnName="modified_date_temp"/>
+    </changeSet>
+
+</databaseChangeLog>

@@ -12,7 +12,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Getter
 @MappedSuperclass
@@ -28,7 +28,7 @@ public abstract class AbstractAuditingEntity implements Serializable {
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
-    private LocalDateTime createdDate;
+    private Instant createdDate;
 
     @LastModifiedBy
     @Column(nullable = false)
@@ -36,5 +36,5 @@ public abstract class AbstractAuditingEntity implements Serializable {
 
     @LastModifiedDate
     @Column(nullable = false)
-    private LocalDateTime modifiedDate;
+    private Instant modifiedDate;
 }

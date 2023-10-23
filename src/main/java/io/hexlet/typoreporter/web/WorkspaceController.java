@@ -20,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
 import org.ocpsoft.prettytime.PrettyTime;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -45,6 +46,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
@@ -315,7 +317,8 @@ public class WorkspaceController {
     private void getLastTypoDataToModel(final Model model, final String wksName) {
         final var createdDate = typoService.getLastTypoByWorkspaceName(wksName).map(TypoInfo::createdDate);
         model.addAttribute("lastTypoCreatedDate", createdDate);
-        model.addAttribute("lastTypoCreatedDateAgo", createdDate.map(new PrettyTime()::format));
+        Locale locale = LocaleContextHolder.getLocale();
+        model.addAttribute("lastTypoCreatedDateAgo", createdDate.map(new PrettyTime(locale)::format));
     }
 
     private List<Account> getNonLinkedAccounts(Collection<Account> allAccounts, Collection<Account> linkedAccounts) {
