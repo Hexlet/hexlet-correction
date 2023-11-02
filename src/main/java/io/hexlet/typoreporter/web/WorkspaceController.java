@@ -64,8 +64,15 @@ public class WorkspaceController {
 
     private static final String IS_USER_RELATED_TO_WKS =
         "@workspaceService.isUserRelatedToWorkspace(#wksName, authentication.name)";
+
+    private static final String IS_USER_RELATED_TO_WKS_BY_ID =
+        "@workspaceService.isUserRelatedToWorkspace(#wksId, authentication.name)";
+
     private static final String IS_USER_ADMIN_IN_WKS =
         "@workspaceService.isAdminRoleUserInWorkspace(#wksName, authentication.name)";
+
+    private static final String IS_USER_ADMIN_IN_WKS_BY_ID =
+        "@workspaceService.isAdminRoleUserInWorkspace(#wksId, authentication.name)";
 
     private final TreeSet<Integer> availableSizes = new TreeSet<>(List.of(2, 5, 10, 15, 25));
 
@@ -109,20 +116,38 @@ public class WorkspaceController {
         return "redirect:/workspaces";
     }
 
-    @GetMapping("/{wksName}")
-    @PreAuthorize(IS_USER_RELATED_TO_WKS)
-    public String getWorkspaceInfoPage(Model model, @PathVariable String wksName) {
-        var wksOptional = workspaceService.getWorkspaceInfoByName(wksName);
+//    @GetMapping("/{wksName}")
+//    @PreAuthorize(IS_USER_RELATED_TO_WKS)
+//    public String getWorkspaceInfoPage(Model model, @PathVariable String wksName) {
+//        var wksOptional = workspaceService.getWorkspaceInfoByName(wksName);
+//        if (wksOptional.isEmpty()) {
+//            //TODO send to error page
+//            log.error("Workspace with name {} not found", wksName);
+//            return "redirect:/workspaces";
+//        }
+//        model.addAttribute("wksInfo", wksOptional.get());
+//        model.addAttribute("wksName", wksName);
+//
+//        getStatisticDataToModel(model, wksName);
+//        getLastTypoDataToModel(model, wksName);
+//        return "workspace/wks-info";
+//    }
+
+    @GetMapping("/{wksId}")
+    @PreAuthorize(IS_USER_RELATED_TO_WKS_BY_ID)
+    public String getWorkspaceInfoPage(Model model, @PathVariable Long wksId) {
+        var wksOptional = workspaceService.getWorkspaceInfoById(wksId);
         if (wksOptional.isEmpty()) {
             //TODO send to error page
-            log.error("Workspace with name {} not found", wksName);
+            log.error("Workspace with id {} not found", wksId);
             return "redirect:/workspaces";
         }
-        model.addAttribute("wksInfo", wksOptional.get());
-        model.addAttribute("wksName", wksName);
+        WorkspaceInfo wksInfo = wksOptional.get();
+        model.addAttribute("wksInfo", wksInfo);
+        model.addAttribute("wksName", wksInfo.name());
 
-        getStatisticDataToModel(model, wksName);
-        getLastTypoDataToModel(model, wksName);
+        getStatisticDataToModel(model, wksId);
+        getLastTypoDataToModel(model, wksId);
         return "workspace/wks-info";
     }
 
@@ -314,8 +339,23 @@ public class WorkspaceController {
         model.addAttribute("sumTypoInWks", countTypoByStatus.stream().mapToLong(Pair::getValue).sum());
     }
 
+    //top
+    private void getStatisticDataToModel(final Model model, final Long wksId) {
+        final var countTypoByStatus = typoService.getCountTypoByStatusForWorkspaceId(wksId);
+        model.addAttribute("countTypoByStatus", countTypoByStatus);
+        model.addAttribute("sumTypoInWks", countTypoByStatus.stream().mapToLong(Pair::getValue).sum());
+    }
+
     private void getLastTypoDataToModel(final Model model, final String wksName) {
         final var createdDate = typoService.getLastTypoByWorkspaceName(wksName).map(TypoInfo::createdDate);
+        model.addAttribute("lastTypoCreatedDate", createdDate);
+        Locale locale = LocaleContextHolder.getLocale();
+        model.addAttribute("lastTypoCreatedDateAgo", createdDate.map(new PrettyTime(locale)::format));
+    }
+
+    //top
+    private void getLastTypoDataToModel(final Model model, final Long wksId) {
+        final var createdDate = typoService.getLastTypoByWorkspaceId(wksId).map(TypoInfo::createdDate);
         model.addAttribute("lastTypoCreatedDate", createdDate);
         Locale locale = LocaleContextHolder.getLocale();
         model.addAttribute("lastTypoCreatedDateAgo", createdDate.map(new PrettyTime(locale)::format));

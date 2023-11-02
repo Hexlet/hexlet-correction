@@ -55,6 +55,12 @@ public class WorkspaceService {
     }
 
     @Transactional(readOnly = true)
+    public Optional<WorkspaceInfo> getWorkspaceInfoById(final Long wksId) {
+        return workspaceRepository.getWorkspaceById(wksId)
+            .map(workspaceMapper::toWorkspaceInfo);
+    }
+
+    @Transactional(readOnly = true)
     public boolean existsWorkspaceByName(final String wksName) {
         return workspaceRepository.existsWorkspaceByName(wksName);
     }
@@ -133,12 +139,35 @@ public class WorkspaceService {
             .orElse(false);
     }
 
+    @Transactional
+    public boolean isUserRelatedToWorkspace(Long wksId, String username) {
+        final var accountOptional = accountRepository.findAccountByUsername(username);
+        return accountOptional.map(account -> account.getWorkspaceRoles().stream()
+                .map(WorkspaceRole::getWorkspace)
+                .anyMatch(wks -> wks.getId().equals(wksId)))
+            .orElse(false);
+    }
+
     @Transactional(readOnly = true)
     public boolean isAdminRoleUserInWorkspace(String wksName, String username) {
         final var account = accountRepository.findAccountByUsername(username).
             orElseThrow(() -> new AccountNotFoundException(username));
         final var workspace = workspaceRepository.getWorkspaceByName(wksName).
             orElseThrow(() -> new WorkspaceNotFoundException(wksName));
+        final var workSpaceRoleOptional = workspaceRoleRepository.getWorkspaceRoleByAccountIdAndWorkspaceId(
+            account.getId(),
+            workspace.getId()
+        );
+        return workSpaceRoleOptional.filter(workspaceRole -> workspaceRole.getRole() == AccountRole.ROLE_ADMIN).isPresent();
+    }
+
+    //top
+    @Transactional(readOnly = true)
+    public boolean isAdminRoleUserInWorkspace(Long wksId, String username) {
+        final var account = accountRepository.findAccountByUsername(username).
+            orElseThrow(() -> new AccountNotFoundException(username));
+        final var workspace = workspaceRepository.getWorkspaceById(wksId).
+            orElseThrow(() -> new WorkspaceNotFoundException(wksId));
         final var workSpaceRoleOptional = workspaceRoleRepository.getWorkspaceRoleByAccountIdAndWorkspaceId(
             account.getId(),
             workspace.getId()

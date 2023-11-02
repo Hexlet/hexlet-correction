@@ -13,6 +13,9 @@ public interface WorkspaceRepository extends JpaRepository<Workspace, Long> {
     @EntityGraph(attributePaths = {"workspaceRoles.account"})
     Optional<Workspace> getWorkspaceByName(String wksName);
 
+    @EntityGraph(attributePaths = {"workspaceRoles.account"})
+    Optional<Workspace> getWorkspaceById(Long wksId);
+
     boolean existsWorkspaceByName(String wksName);
 
     boolean existsWorkspaceByUrl(String url);

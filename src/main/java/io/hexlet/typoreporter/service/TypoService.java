@@ -101,9 +101,31 @@ public class TypoService {
             .toList();
     }
 
+    //top
+    @Transactional(readOnly = true)
+    public List<Pair<TypoStatus, Long>> getCountTypoByStatusForWorkspaceId(final Long wksId) {
+        final var countTypoByStatus = repository.getCountTypoStatusForWorkspaceId(wksId)
+            .stream()
+            .collect(toMap(Pair::getKey, Pair::getValue));
+        Arrays.stream(TypoStatus.values()).forEach(ts -> countTypoByStatus.putIfAbsent(ts, 0L));
+
+        return countTypoByStatus.entrySet()
+            .stream()
+            .sorted(comparingByKey())
+            .map(Pair::of)
+            .toList();
+    }
+
     @Transactional(readOnly = true)
     public Optional<TypoInfo> getLastTypoByWorkspaceName(final String wksName) {
         return repository.findFirstByWorkspaceNameOrderByCreatedDateDesc(wksName)
+            .map(typoMapper::toTypoInfo);
+    }
+
+    //top
+    @Transactional(readOnly = true)
+    public Optional<TypoInfo> getLastTypoByWorkspaceId(final Long wksId) {
+        return repository.findFirstByWorkspaceIdOrderByCreatedDateDesc(wksId)
             .map(typoMapper::toTypoInfo);
     }
 

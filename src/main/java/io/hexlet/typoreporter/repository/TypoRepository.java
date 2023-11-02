@@ -29,6 +29,18 @@ public interface TypoRepository extends JpaRepository<Typo, Long> {
         """)
     List<Pair<TypoStatus, Long>> getCountTypoStatusForWorkspaceName(String wksName);
 
+    //top
+    @Query("""
+        select new org.apache.commons.lang3.tuple.ImmutablePair(t.typoStatus, count(t))
+        from Typo t
+        where t.workspace.id = :wksId
+        group by t.typoStatus
+        """)
+    List<Pair<TypoStatus, Long>> getCountTypoStatusForWorkspaceId(Long wksId);
+
     Optional<Typo> findFirstByWorkspaceNameOrderByCreatedDateDesc(String wksName);
+
+    //top
+    Optional<Typo> findFirstByWorkspaceIdOrderByCreatedDateDesc(Long wksId);
 
 }
