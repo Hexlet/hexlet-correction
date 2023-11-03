@@ -10,4 +10,7 @@ import java.util.Optional;
 public interface WorkspaceSettingsRepository extends JpaRepository<WorkspaceSettings, Long> {
 
     Optional<WorkspaceSettings> getWorkspaceSettingsByWorkspaceName(String wksName);
+
+    //top
+    Optional<WorkspaceSettings> getWorkspaceSettingsByWorkspaceId(Long wksId);
 }

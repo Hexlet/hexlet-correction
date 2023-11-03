@@ -45,6 +45,26 @@ public class WorkspaceRoleService {
         return workspaceRoleRepository.save(workspaceRole);
     }
 
+    //top
+    @Transactional
+    public WorkspaceRole addAccountToWorkspace(Long wksId, String accEmail) {
+        final var accId = accountRepository.findAccountByEmail(accEmail)
+            .map(Account::getId)
+            .orElseThrow(() -> new AccountNotFoundException(accEmail));
+
+        if (!workspaceRepository.existsWorkspaceById(wksId)) {
+            throw new WorkspaceNotFoundException(wksId);
+        }
+
+        final var workspaceRole = new WorkspaceRole(
+            new WorkspaceRoleId(wksId, accId),
+            ROLE_ANONYMOUS,
+            workspaceRepository.getReferenceById(wksId),
+            accountRepository.getReferenceById(accId)
+        );
+        return workspaceRoleRepository.save(workspaceRole);
+    }
+
     @Transactional
     public void deleteAccountFromWorkspace(String workspaceName, String accountEmail) {
         final var account = accountRepository.findAccountByEmail(accountEmail)
@@ -55,6 +75,23 @@ public class WorkspaceRoleService {
                 account.getId(),
                 workspace.getId())
             .orElseThrow(() -> new WorkspaceRoleNotFoundException(account.getId(), workspace.getId()));
+        account.removeWorkSpaceRole(beingDeleteRole);
+        workspace.removeWorkSpaceRole(beingDeleteRole);
+        accountRepository.save(account);
+        workspaceRepository.save(workspace);
+    }
+
+    //top
+    @Transactional
+    public void deleteAccountFromWorkspace(Long wksId, String accountEmail) {
+        final var account = accountRepository.findAccountByEmail(accountEmail)
+            .orElseThrow(() -> new AccountNotFoundException(accountEmail));
+        final var workspace = workspaceRepository.getWorkspaceById(wksId)
+            .orElseThrow(() -> new WorkspaceNotFoundException(wksId));
+        final var beingDeleteRole = workspaceRoleRepository.getWorkspaceRoleByAccountIdAndWorkspaceId(
+                account.getId(),
+                wksId)
+            .orElseThrow(() -> new WorkspaceRoleNotFoundException(account.getId(), wksId));
         account.removeWorkSpaceRole(beingDeleteRole);
         workspace.removeWorkSpaceRole(beingDeleteRole);
         accountRepository.save(account);

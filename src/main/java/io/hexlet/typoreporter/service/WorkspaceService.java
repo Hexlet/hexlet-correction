@@ -65,6 +65,12 @@ public class WorkspaceService {
         return workspaceRepository.existsWorkspaceByName(wksName);
     }
 
+    //top ???
+    @Transactional(readOnly = true)
+    public boolean existsWorkspaceById(final Long wksId) {
+        return workspaceRepository.existsWorkspaceById(wksId);
+    }
+
     @Transactional(readOnly = true)
     public boolean existsWorkspaceByUrl(final String wksUrl) {
         return workspaceRepository.existsWorkspaceByName(wksUrl);
@@ -94,11 +100,28 @@ public class WorkspaceService {
         return workspaceMapper.toWorkspaceInfo(wksToCreate);
     }
 
+//    @Transactional
+//    public WorkspaceInfo updateWorkspace(final CreateWorkspace updateWks, final String oldWksName) {
+//        final Workspace workspace = workspaceRepository.getWorkspaceByName(oldWksName)
+//            .orElseThrow(() -> new WorkspaceNotFoundException(oldWksName));
+//        if (!oldWksName.equals(updateWks.name()) && workspaceRepository.existsWorkspaceByName(updateWks.name())) {
+//            throw new WorkspaceAlreadyExistException("name", updateWks.name());
+//        }
+//        final String updatedUrlValue = updateWks.url();
+//        if (!workspace.getUrl().equals(updatedUrlValue) && workspaceRepository.existsWorkspaceByUrl(updatedUrlValue)) {
+//            throw new WorkspaceAlreadyExistException("url", updatedUrlValue);
+//        }
+//        workspace.setName(updateWks.name());
+//        workspace.setDescription(updateWks.description());
+//        workspace.setUrl(updateWks.url());
+//        return workspaceMapper.toWorkspaceInfo(workspace);
+//    }
+
     @Transactional
-    public WorkspaceInfo updateWorkspace(final CreateWorkspace updateWks, final String oldWksName) {
-        final Workspace workspace = workspaceRepository.getWorkspaceByName(oldWksName)
-            .orElseThrow(() -> new WorkspaceNotFoundException(oldWksName));
-        if (!oldWksName.equals(updateWks.name()) && workspaceRepository.existsWorkspaceByName(updateWks.name())) {
+    public WorkspaceInfo updateWorkspace(final CreateWorkspace updateWks, final Long oldWksId) {
+        final Workspace workspace = workspaceRepository.getWorkspaceById(oldWksId)
+            .orElseThrow(() -> new WorkspaceNotFoundException(oldWksId));
+        if (!workspace.getName().equals(updateWks.name()) && workspaceRepository.existsWorkspaceByName(updateWks.name())) {
             throw new WorkspaceAlreadyExistException("name", updateWks.name());
         }
         final String updatedUrlValue = updateWks.url();
@@ -116,9 +139,21 @@ public class WorkspaceService {
         return workspaceRepository.deleteWorkspaceByName(wksName);
     }
 
+    //top
+    @Transactional
+    public Integer deleteWorkspaceById(final Long wksId) {
+        return workspaceRepository.deleteWorkspaceById(wksId);
+    }
+
     @Transactional(readOnly = true)
     public Optional<Workspace> getWorkspaceByName(final String name) {
         return workspaceRepository.getWorkspaceByName(name);
+    }
+
+    //top
+    @Transactional(readOnly = true)
+    public Optional<Workspace> getWorkspaceById(final Long wksId) {
+        return workspaceRepository.getWorkspaceById(wksId);
     }
 
     @Transactional(readOnly = true)

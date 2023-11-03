@@ -70,6 +70,16 @@ public class TypoService {
             .map(typoMapper::toTypoInfo);
     }
 
+    //top
+    @Transactional(readOnly = true)
+    public Page<TypoInfo> getTypoPage(final Pageable pageable, final Long wksId) {
+        if (!workspaceService.existsWorkspaceById(wksId)) {
+            throw new WorkspaceNotFoundException(wksId);
+        }
+        return repository.findPageTypoByWorkspaceId(pageable, wksId)
+            .map(typoMapper::toTypoInfo);
+    }
+
     @Transactional(readOnly = true)
     public Page<TypoInfo> getTypoPageFiltered(final Pageable pageable, final String wksName, final String typoStatus) {
         if (!workspaceService.existsWorkspaceByName(wksName)) {
@@ -84,6 +94,24 @@ public class TypoService {
         }
 
         return repository.findPageTypoByWorkspaceNameAndTypoStatus(pageable, wksName, typoStatusEnum)
+            .map(typoMapper::toTypoInfo);
+    }
+
+    //top
+    @Transactional(readOnly = true)
+    public Page<TypoInfo> getTypoPageFiltered(final Pageable pageable, final Long wksId, final String typoStatus) {
+        if (!workspaceService.existsWorkspaceById(wksId)) {
+            throw new WorkspaceNotFoundException(wksId);
+        }
+
+        TypoStatus typoStatusEnum;
+        try {
+            typoStatusEnum = TypoStatus.valueOf(typoStatus);
+        } catch (IllegalArgumentException e) {
+            typoStatusEnum = null;
+        }
+
+        return repository.findPageTypoByWorkspaceIdAndTypoStatus(pageable, wksId, typoStatusEnum)
             .map(typoMapper::toTypoInfo);
     }
 

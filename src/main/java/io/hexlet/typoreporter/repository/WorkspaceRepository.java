@@ -18,7 +18,13 @@ public interface WorkspaceRepository extends JpaRepository<Workspace, Long> {
 
     boolean existsWorkspaceByName(String wksName);
 
+    //top ???
+    boolean existsWorkspaceById(Long wksId);
+
     boolean existsWorkspaceByUrl(String url);
 
     Integer deleteWorkspaceByName(String wksName);
+
+    //top
+    Integer deleteWorkspaceById(Long wksId);
 }
