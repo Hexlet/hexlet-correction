@@ -6,7 +6,7 @@
 <main class="container-fluid">
     <div class="row">
         <!-- Workspace Side Bar -->
-        <div class="col-2" th:include="~{fragments/panels :: workspaceSideBar (${wksName}, 'users')}"></div>
+        <div class="col-2" th:include="~{fragments/panels :: workspaceSideBar (${wksInfo.id()}, ${wksName}, 'users')}"></div>
         <div class="col">
             <!-- Workspace progress typo bar -->
             <div class="row my-3"
@@ -19,7 +19,7 @@
             <!-- Adding a user to a workspace -->
             <div class="row my-3" th:unless="${nonLinkedAccounts.isEmpty()}">
                 <p th:text="#{text.add-user-to-wks}"></p>
-                <form method="POST" th:action="@{'/workspace/' + ${wksName} + '/users'}">
+                <form method="POST" th:action="@{'/workspace/' + ${wksId} + '/users'}">
                     <div class="form-group">
                         <label for="selectUserEmail" th:text="#{email}"></label>
                         <select name="email" class="form-control" id="selectUserEmail">
@@ -111,7 +111,7 @@
                                         <td>
                                             <form th:method="DELETE"
                                                   th:if="${isAdmin} and ${!excludeDeleteAccounts.contains(userInfo)}"
-                                                  th:action="@{'/workspace/' + ${wksName} + '/users'}">
+                                                  th:action="@{'/workspace/' + ${wksId} + '/users'}">
                                                 <input type="hidden" th:value="*{email}" name="email">
                                                 <button type="submit" class="btn btn-danger"
                                                         th:text="#{btn.delete-from-wks}"

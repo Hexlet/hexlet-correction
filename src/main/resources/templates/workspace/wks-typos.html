@@ -6,7 +6,7 @@
 <main class="container-fluid">
     <div class="row">
         <!-- Workspace Side Bar -->
-        <div class="col-2" th:include="fragments/panels :: workspaceSideBar (${wksName}, 'typos')"></div>
+        <div class="col-2" th:include="fragments/panels :: workspaceSideBar (${wksInfo.id()}, ${wksName}, 'typos')"></div>
         <div class="col">
             <!-- Workspace progress typo bar -->
             <div class="row my-3"

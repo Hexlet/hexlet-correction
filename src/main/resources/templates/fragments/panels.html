@@ -51,7 +51,7 @@
         </div>
     </div>
 </nav>
-<th:block th:fragment="workspaceSideBar (wksName, itemActive)">
+<th:block th:fragment="workspaceSideBar (wksId, wksName, itemActive)">
     <ul class="list-group list-group-flush">
         <li class="list-group-item" th:text="${wksName}"></li>
     </ul>
@@ -60,22 +60,22 @@
         <a class="list-group-item list-group-item-action"
            th:aria-current="${itemActive} == 'info'"
            th:classappend="${itemActive} == 'info' ? 'active' : ''"
-           th:href="@{'/workspace/' + ${wksName}}"
+           th:href="@{'/workspace/' + ${wksId}}"
            th:text="#{wks.info}"></a>
         <a class="list-group-item list-group-item-action"
            th:aria-current="${itemActive} == 'typos'"
            th:classappend="${itemActive} == 'typos' ? 'active' : ''"
-           th:href="@{'/workspace/' + ${wksName} + '/typos'(typoStatus=REPORTED)}"
+           th:href="@{'/workspace/' + ${wksId} + '/typos'(typoStatus=REPORTED)}"
            th:text="#{wks.typos}"></a>
         <a class="list-group-item list-group-item-action"
            th:aria-current="${itemActive} == 'settings'"
            th:classappend="${itemActive} == 'settings' ? 'active' : ''"
-           th:href="@{'/workspace/' + ${wksName} + '/settings'}"
+           th:href="@{'/workspace/' + ${wksId} + '/settings'}"
            th:text="#{wks.settings}"></a>
         <a class="list-group-item list-group-item-action"
            th:aria-current="${itemActive} == 'users'"
            th:classappend="${itemActive} == 'users' ? 'active' : ''"
-           th:href="@{'/workspace/' + ${wksName} + '/users'}"
+           th:href="@{'/workspace/' + ${wksId} + '/users'}"
            th:text="#{wks.users}"></a>
         <a aria-disabled="true" class="list-group-item list-group-item-action disabled" href="#" tabindex="-1">Integration</a>
     </div>

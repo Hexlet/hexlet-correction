@@ -54,7 +54,7 @@ public class WorkspaceSettingsController {
 //    }
 
     @GetMapping("/settings")
-    public String getWorkspaceSettingsPage(Model model, @PathVariable long wksId, HttpServletRequest req) {
+    public String getWorkspaceSettingsPage(Model model, @PathVariable Long wksId, HttpServletRequest req) {
         if (!workspaceService.existsWorkspaceById(wksId)) {
             //TODO send to error page
             log.error("Workspace with id {} not found", wksId);
@@ -67,7 +67,8 @@ public class WorkspaceSettingsController {
         model.addAttribute("wksBasicToken", wksBasicToken);
         final var rootUrl = req.getRequestURL().toString().replace(req.getRequestURI(), "");
         model.addAttribute("rootUrl", rootUrl);
-        model.addAttribute("wksName", settings.getWorkspace().getName());
+        String wksName = settings.getWorkspace().getName();
+        model.addAttribute("wksName", wksName);
         model.addAttribute("wksId", wksId);
 
         getStatisticDataToModel(model, wksId);

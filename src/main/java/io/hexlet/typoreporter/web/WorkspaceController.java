@@ -274,6 +274,7 @@ public class WorkspaceController {
             .get();
         model.addAttribute("createWorkspace", wksUpdate);
         model.addAttribute("wksName", wksOptional.get().name());
+        model.addAttribute("wksId", wksId);
         model.addAttribute("formModified", false);
         getStatisticDataToModel(model, wksId);
         getLastTypoDataToModel(model, wksId);
@@ -502,7 +503,7 @@ public class WorkspaceController {
 //    }
 
     @DeleteMapping("/{wksId}/users")
-    @PreAuthorize(IS_USER_ADMIN_IN_WKS)
+    @PreAuthorize(IS_USER_ADMIN_IN_WKS_BY_ID)
     public String deleteUser(@RequestParam String email, @PathVariable Long wksId) {
         try {
             workspaceRoleService.deleteAccountFromWorkspace(wksId, email);
