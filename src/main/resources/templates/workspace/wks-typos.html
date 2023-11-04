@@ -39,14 +39,14 @@
                                     <li>
                                         <a class="dropdown-item"
                                            th:classappend="(${typoStatus} == null ? 'disabled' : '')"
-                                           th:href="@{'/workspace/' + ${wksName} + '/typos'(page=0,size=${typoPage.size},sort=|${sortProp},${sortDir}|)}"
+                                           th:href="@{'/workspace/' + ${wksId} + '/typos'(page=0,size=${typoPage.size},sort=|${sortProp},${sortDir}|)}"
                                            th:text="#{btn.page-empty-filter}">
                                         </a>
                                     </li>
                                     <li th:each="status : ${availableStatuses}">
                                         <a class="dropdown-item"
                                            th:classappend="(${typoStatus} == ${#strings.replace(status, ' ', '_')} ? 'disabled' : '')"
-                                           th:href="@{'/workspace/' + ${wksName} + '/typos'(page=0,size=${typoPage.size},sort=|${sortProp},${sortDir}|, typoStatus=${#strings.replace(status, ' ', '_')})}"
+                                           th:href="@{'/workspace/' + ${wksId} + '/typos'(page=0,size=${typoPage.size},sort=|${sortProp},${sortDir}|, typoStatus=${#strings.replace(status, ' ', '_')})}"
                                            th:text="#{${status}}">
                                         </a>
                                     </li>
@@ -69,8 +69,8 @@
                                         <a class="dropdown-item"
                                            th:classappend="(${typoPage.size} == ${availableSize} ? 'disabled' : '')"
                                            th:href="${typoStatus} != null ?
-                                                @{'/workspace/' + ${wksName} + '/typos'(page=0,size=${availableSize},sort=|${sortProp},${sortDir}|, typoStatus=${typoStatus})}
-                                                : @{'/workspace/' + ${wksName} + '/typos'(page=0,size=${availableSize},sort=|${sortProp},${sortDir}|)}"
+                                                @{'/workspace/' + ${wksId} + '/typos'(page=0,size=${availableSize},sort=|${sortProp},${sortDir}|, typoStatus=${typoStatus})}
+                                                : @{'/workspace/' + ${wksId} + '/typos'(page=0,size=${availableSize},sort=|${sortProp},${sortDir}|)}"
                                            th:text="${availableSize}">
                                         </a>
                                     </li>
@@ -94,48 +94,48 @@
                                     <th scope="col">
                                         <a class="btn btn-light"
                                            th:href="${typoStatus} != null ?
-                                                @{'/workspace/' + ${wksName} + '/typos'(size=*{size},sort=|pageUrl,${sortProp == 'pageUrl' && sortDir.isAscending() ? DESC : ASC}|, typoStatus=${typoStatus})}
-                                                : @{'/workspace/' + ${wksName} + '/typos'(size=*{size},sort=|pageUrl,${sortProp == 'pageUrl' && sortDir.isAscending() ? DESC : ASC}|)}">
+                                                @{'/workspace/' + ${wksId} + '/typos'(size=*{size},sort=|pageUrl,${sortProp == 'pageUrl' && sortDir.isAscending() ? DESC : ASC}|, typoStatus=${typoStatus})}
+                                                : @{'/workspace/' + ${wksId} + '/typos'(size=*{size},sort=|pageUrl,${sortProp == 'pageUrl' && sortDir.isAscending() ? DESC : ASC}|)}">
                                             <span th:text="#{url-page}"></span> <span th:if="${sortProp == 'pageUrl'}">[[${sortDir.isAscending() ? '&uArr;' : '&dArr;'}]]</span>
                                         </a>
                                     </th>
                                     <th scope="col">
                                         <a class="btn btn-light"
                                            th:href="${typoStatus} != null ?
-                                                @{'/workspace/' + ${wksName} + '/typos'(size=*{size},sort=|reporterName,${sortProp == 'reporterName' && sortDir.isAscending() ? DESC : ASC}|, typoStatus=${typoStatus})}
-                                                : @{'/workspace/' + ${wksName} + '/typos'(size=*{size},sort=|reporterName,${sortProp == 'reporterName' && sortDir.isAscending() ? DESC : ASC}|)}">
+                                                @{'/workspace/' + ${wksId} + '/typos'(size=*{size},sort=|reporterName,${sortProp == 'reporterName' && sortDir.isAscending() ? DESC : ASC}|, typoStatus=${typoStatus})}
+                                                : @{'/workspace/' + ${wksId} + '/typos'(size=*{size},sort=|reporterName,${sortProp == 'reporterName' && sortDir.isAscending() ? DESC : ASC}|)}">
                                             <span th:text="#{reporter-name}"></span> <span th:if="${sortProp == 'reporterName'}">[[${sortDir.isAscending() ? '&uArr;' : '&dArr;'}]]</span>
                                         </a>
                                     </th>
                                     <th scope="col">
                                         <a class="btn btn-light"
                                            th:href="${typoStatus} != null ?
-                                                @{'/workspace/' + ${wksName} + '/typos'(size=*{size},sort=|createdDate,${sortProp == 'createdDate' && sortDir.isAscending() ? DESC : ASC}|, typoStatus=${typoStatus})}
-                                                : @{'/workspace/' + ${wksName} + '/typos'(size=*{size},sort=|createdDate,${sortProp == 'createdDate' && sortDir.isAscending() ? DESC : ASC}|)}">
+                                                @{'/workspace/' + ${wksId} + '/typos'(size=*{size},sort=|createdDate,${sortProp == 'createdDate' && sortDir.isAscending() ? DESC : ASC}|, typoStatus=${typoStatus})}
+                                                : @{'/workspace/' + ${wksId} + '/typos'(size=*{size},sort=|createdDate,${sortProp == 'createdDate' && sortDir.isAscending() ? DESC : ASC}|)}">
                                             <span th:text="#{date.created}"></span> <span th:if="${sortProp == 'createdDate'}">[[${sortDir.isAscending() ? '&uArr;' : '&dArr;'}]]</span>
                                         </a>
                                     </th>
                                     <th scope="col">
                                         <a class="btn btn-light"
                                            th:href="${typoStatus} != null ?
-                                                @{'/workspace/' + ${wksName} + '/typos'(size=*{size},sort=|modifiedDate,${sortProp == 'modifiedDate' && sortDir.isAscending() ? DESC : ASC}|, typoStatus=${typoStatus})}
-                                                : @{'/workspace/' + ${wksName} + '/typos'(size=*{size},sort=|modifiedDate,${sortProp == 'modifiedDate' && sortDir.isAscending() ? DESC : ASC}|)}">
+                                                @{'/workspace/' + ${wksId} + '/typos'(size=*{size},sort=|modifiedDate,${sortProp == 'modifiedDate' && sortDir.isAscending() ? DESC : ASC}|, typoStatus=${typoStatus})}
+                                                : @{'/workspace/' + ${wksId} + '/typos'(size=*{size},sort=|modifiedDate,${sortProp == 'modifiedDate' && sortDir.isAscending() ? DESC : ASC}|)}">
                                             <span th:text="#{date.modified}"></span> <span  th:if="${sortProp == 'modifiedDate'}">[[${sortDir.isAscending() ? '&uArr;' : '&dArr;'}]]</span>
                                         </a>
                                     </th>
                                     <th scope="col">
                                         <a class="btn btn-light"
                                            th:href="${typoStatus} != null ?
-                                                @{'/workspace/' + ${wksName} + '/typos'(size=*{size},sort=|modifiedBy,${sortProp == 'modifiedBy' && sortDir.isAscending() ? DESC : ASC}|, typoStatus=${typoStatus})}
-                                                : @{'/workspace/' + ${wksName} + '/typos'(size=*{size},sort=|modifiedBy,${sortProp == 'modifiedBy' && sortDir.isAscending() ? DESC : ASC}|)}">
+                                                @{'/workspace/' + ${wksId} + '/typos'(size=*{size},sort=|modifiedBy,${sortProp == 'modifiedBy' && sortDir.isAscending() ? DESC : ASC}|, typoStatus=${typoStatus})}
+                                                : @{'/workspace/' + ${wksId} + '/typos'(size=*{size},sort=|modifiedBy,${sortProp == 'modifiedBy' && sortDir.isAscending() ? DESC : ASC}|)}">
                                             <span th:text="#{modified-by}"></span> <span th:if="${sortProp == 'modifiedBy'}">[[${sortDir.isAscending() ? '&uArr;' : '&dArr;'}]]</span>
                                         </a>
                                     </th>
                                     <th scope="col">
                                         <a class="btn btn-light"
                                            th:href="${typoStatus} != null ?
-                                                @{'/workspace/' + ${wksName} + '/typos'(size=*{size},sort=|typoStatus,${sortProp == 'typoStatus' && sortDir.isAscending() ? DESC : ASC}|, typoStatus=${typoStatus})}
-                                                : @{'/workspace/' + ${wksName} + '/typos'(size=*{size},sort=|typoStatus,${sortProp == 'typoStatus' && sortDir.isAscending() ? DESC : ASC}|)}">
+                                                @{'/workspace/' + ${wksId} + '/typos'(size=*{size},sort=|typoStatus,${sortProp == 'typoStatus' && sortDir.isAscending() ? DESC : ASC}|, typoStatus=${typoStatus})}
+                                                : @{'/workspace/' + ${wksId} + '/typos'(size=*{size},sort=|typoStatus,${sortProp == 'typoStatus' && sortDir.isAscending() ? DESC : ASC}|)}">
                                             <span th:text="#{typo-status}"></span> <span th:if="${sortProp == 'typoStatus'}">[[${sortDir.isAscending() ? '&uArr;' : '&dArr;'}]]</span>
                                         </a>
                                     </th>
@@ -167,7 +167,7 @@
                                                                  class="btn-group"
                                                                  role="group">
                                                                 <form
-                                                                    th:action="@{|/typos/*{id}/status?wksName=${wksName}&event=${event}|}"
+                                                                    th:action="@{|/typos/*{id}/status?wksId=${wksId}&event=${event}|}"
                                                                     th:each="event : *{typoStatus.getValidEvents()}"
                                                                     th:method="patch">
                                                                     <button class="btn"
@@ -180,7 +180,7 @@
                                                         </div>
                                                         <!-- Workspace typo table row delete buttons -->
                                                         <div class="col-1">
-                                                            <form th:action="@{'/typos/' + *{id}(wksName=${wksName})}"
+                                                            <form th:action="@{'/typos/' + *{id}(wksId=${wksId})}"
                                                                   th:method="delete">
                                                                 <button class="btn btn-danger" type="submit" th:text="#{btn.delete}">
                                                                     Delete
