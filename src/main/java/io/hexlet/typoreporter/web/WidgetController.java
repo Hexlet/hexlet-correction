@@ -24,11 +24,33 @@ public class WidgetController {
 
     private final TypoService typoService;
 
-    @GetMapping("/typo/form/{wksName}")
+//    @GetMapping("/typo/form/{wksName}")
+//    String getWidgetTypoForm(HttpServletResponse response,
+//                             final Model model,
+//                             @PathVariable String wksName) {
+//        final var wks = workspaceService.getWorkspaceByName(wksName);
+//        if (wks.isEmpty()) {
+//            log.error("Error during sending widget typo form. Workspace not found");
+//            return "widget/report-typo-error";
+//        }
+//        final var workspace = wks.get();
+//
+//        response.addHeader("Content-Security-Policy", "frame-ancestors " + workspace.getUrl());
+//        model.addAttribute("trustedOrigin", workspace.getUrl());
+//
+//        model.addAttribute("wksName", workspace.getName());
+//        model.addAttribute("formModified", false);
+//        model.addAttribute("typoReport", TypoReport.empty());
+//
+//        log.info("Send widget typo form to '{}'", workspace.getUrl());
+//        return "widget/typo-form";
+//    }
+
+    @GetMapping("/typo/form/{wksId}")
     String getWidgetTypoForm(HttpServletResponse response,
                              final Model model,
-                             @PathVariable String wksName) {
-        final var wks = workspaceService.getWorkspaceByName(wksName);
+                             @PathVariable Long wksId) {
+        final var wks = workspaceService.getWorkspaceById(wksId);
         if (wks.isEmpty()) {
             log.error("Error during sending widget typo form. Workspace not found");
             return "widget/report-typo-error";

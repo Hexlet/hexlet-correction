@@ -1,6 +1,6 @@
 workspace:
   - id: 101
-    name: wks-name
+    name: Five words name with spaces
     url: https://mysite.com
     description: desc
     created_by: system

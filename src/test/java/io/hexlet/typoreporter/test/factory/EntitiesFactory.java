@@ -51,28 +51,53 @@ public class EntitiesFactory {
         return Stream.of(WORKSPACE_101_NAME, WORKSPACE_102_NAME, WORKSPACE_103_NAME);
     }
 
+//    public static Stream<Arguments> getWorkspacesAndUsersRelated() {
+//        return Stream.of(
+//            Arguments.of(WORKSPACE_101_NAME, ACCOUNT_101_USERNAME),
+//            Arguments.of(WORKSPACE_102_NAME, ACCOUNT_102_USERNAME),
+//            Arguments.of(WORKSPACE_103_NAME, ACCOUNT_103_USERNAME)
+//        );
+//    }
+
     public static Stream<Arguments> getWorkspacesAndUsersRelated() {
         return Stream.of(
-            Arguments.of(WORKSPACE_101_NAME, ACCOUNT_101_USERNAME),
-            Arguments.of(WORKSPACE_102_NAME, ACCOUNT_102_USERNAME),
-            Arguments.of(WORKSPACE_103_NAME, ACCOUNT_103_USERNAME)
+            Arguments.of(WORKSPACE_101_ID, ACCOUNT_101_USERNAME),
+            Arguments.of(WORKSPACE_102_ID, ACCOUNT_102_USERNAME),
+            Arguments.of(WORKSPACE_103_ID, ACCOUNT_103_USERNAME)
         );
     }
+
+//    public static Stream<Arguments> getWorkspacesAndUsersAndTypoStatusRelated() {
+//        return Stream.of(
+//            Arguments.of(WORKSPACE_102_NAME, ACCOUNT_102_USERNAME, "REPORTED"),
+//            Arguments.of(WORKSPACE_102_NAME, ACCOUNT_102_USERNAME, "IN_PROGRESS"),
+//            Arguments.of(WORKSPACE_102_NAME, ACCOUNT_102_USERNAME, "RESOLVED"),
+//            Arguments.of(WORKSPACE_102_NAME, ACCOUNT_102_USERNAME, "CANCELED")
+//        );
+//    }
 
     public static Stream<Arguments> getWorkspacesAndUsersAndTypoStatusRelated() {
         return Stream.of(
-            Arguments.of(WORKSPACE_102_NAME, ACCOUNT_102_USERNAME, "REPORTED"),
-            Arguments.of(WORKSPACE_102_NAME, ACCOUNT_102_USERNAME, "IN_PROGRESS"),
-            Arguments.of(WORKSPACE_102_NAME, ACCOUNT_102_USERNAME, "RESOLVED"),
-            Arguments.of(WORKSPACE_102_NAME, ACCOUNT_102_USERNAME, "CANCELED")
+            Arguments.of(WORKSPACE_102_ID, ACCOUNT_102_USERNAME, "REPORTED"),
+            Arguments.of(WORKSPACE_102_ID, ACCOUNT_102_USERNAME, "IN_PROGRESS"),
+            Arguments.of(WORKSPACE_102_ID, ACCOUNT_102_USERNAME, "RESOLVED"),
+            Arguments.of(WORKSPACE_102_ID, ACCOUNT_102_USERNAME, "CANCELED")
         );
     }
 
+//    public static Stream<Arguments> getWorkspacesAndUsersNotRelated() {
+//        return Stream.of(
+//            Arguments.of(WORKSPACE_101_NAME, ACCOUNT_103_USERNAME),
+//            Arguments.of(WORKSPACE_102_NAME, ACCOUNT_101_USERNAME),
+//            Arguments.of(WORKSPACE_103_NAME, ACCOUNT_102_USERNAME)
+//        );
+//    }
+
     public static Stream<Arguments> getWorkspacesAndUsersNotRelated() {
         return Stream.of(
-            Arguments.of(WORKSPACE_101_NAME, ACCOUNT_103_USERNAME),
-            Arguments.of(WORKSPACE_102_NAME, ACCOUNT_101_USERNAME),
-            Arguments.of(WORKSPACE_103_NAME, ACCOUNT_102_USERNAME)
+            Arguments.of(WORKSPACE_101_ID, ACCOUNT_103_USERNAME),
+            Arguments.of(WORKSPACE_102_ID, ACCOUNT_101_USERNAME),
+            Arguments.of(WORKSPACE_103_ID, ACCOUNT_102_USERNAME)
         );
     }
 

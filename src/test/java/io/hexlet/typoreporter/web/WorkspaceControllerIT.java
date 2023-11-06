@@ -61,6 +61,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @DataSet(value = {"workspaces.yml", "workspaceRoles.yml", "accounts.yml", "typos.yml"})
 class WorkspaceControllerIT {
 
+    private Long NOT_EXISTING_WKS_ID = 9999L;
+
     @Container
     static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>(POSTGRES_IMAGE)
         .withPassword("inmemory")
@@ -94,50 +96,109 @@ class WorkspaceControllerIT {
         registry.add("spring.datasource.username", postgreSQLContainer::getUsername);
     }
 
+//    @ParameterizedTest
+//    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspacesAndUsersRelated")
+//    void getWorkspaceInfoPageIsSuccessful(final String wksName,
+//                                          final String username) throws Exception {
+//        Workspace workspace = repository.getWorkspaceByName(wksName).orElse(null);
+//        assertThat(workspace).isNotNull();
+//
+//        MockHttpServletResponse response = mockMvc.perform(
+//                get("/workspace/{wksName}", wksName)
+//                    .with(user(username)))
+//            .andExpect(model().attributeExists("wksInfo", "wksName"))
+//            .andReturn().getResponse();
+//
+//        assertThat(response.getContentAsString()).contains(wksName, workspace.getCreatedBy());
+//    }
+
     @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspacesAndUsersRelated")
-    void getWorkspaceInfoPageIsSuccessful(final String wksName,
+    void getWorkspaceInfoPageIsSuccessful(final Long wksId,
                                           final String username) throws Exception {
-        Workspace workspace = repository.getWorkspaceByName(wksName).orElse(null);
+        Workspace workspace = repository.getWorkspaceById(wksId).orElse(null);
         assertThat(workspace).isNotNull();
 
         MockHttpServletResponse response = mockMvc.perform(
-                get("/workspace/{wksName}", wksName)
+                get("/workspace/{wksId}", wksId)
                     .with(user(username)))
             .andExpect(model().attributeExists("wksInfo", "wksName"))
             .andReturn().getResponse();
 
-        assertThat(response.getContentAsString()).contains(wksName, workspace.getCreatedBy());
+        assertThat(response.getContentAsString()).contains(workspace.getName(), workspace.getCreatedBy());
     }
+
+//    @ParameterizedTest
+//    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspacesAndUsersNotRelated")
+//    void getWorkspaceInfoPageIsNotSuccessful(final String wksName,
+//                                             final String username) throws Exception {
+//        mockMvc.perform(get("/workspace/{wksName}", wksName))
+//            .andExpect(redirectedUrl("/workspaces"));
+//        mockMvc.perform(get("/workspace/{wksName}", wksName).with(user(username)))
+//            .andExpect(redirectedUrl("/workspaces"));
+//    }
 
     @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspacesAndUsersNotRelated")
-    void getWorkspaceInfoPageIsNotSuccessful(final String wksName,
+    void getWorkspaceInfoPageIsNotSuccessful(final Long wksId,
                                              final String username) throws Exception {
-        mockMvc.perform(get("/workspace/{wksName}", wksName))
+        mockMvc.perform(get("/workspace/{wksId}", wksId))
             .andExpect(redirectedUrl("/workspaces"));
-        mockMvc.perform(get("/workspace/{wksName}", wksName).with(user(username)))
+        mockMvc.perform(get("/workspace/{wksId}", wksId).with(user(username)))
             .andExpect(redirectedUrl("/workspaces"));
     }
+
+//    @Test
+//    void getWorkspaceInfoPageWithoutWks() throws Exception {
+//        mockMvc.perform(get("/workspace/{wksName}", "notExistsWksName"))
+//            .andExpect(redirectedUrl("/workspaces"));
+//    }
 
     @Test
     void getWorkspaceInfoPageWithoutWks() throws Exception {
-        mockMvc.perform(get("/workspace/{wksName}", "notExistsWksName"))
+        mockMvc.perform(get("/workspace/{wksId}", NOT_EXISTING_WKS_ID))
             .andExpect(redirectedUrl("/workspaces"));
     }
+
+//    @Test
+//    void getWorkspaceSettingsPageWithoutWks() throws Exception {
+//        mockMvc.perform(get("/workspace/{wksName}/settings", "notExistsWksName"))
+//            .andExpect(redirectedUrl("/workspaces"));
+//    }
 
     @Test
     void getWorkspaceSettingsPageWithoutWks() throws Exception {
-        mockMvc.perform(get("/workspace/{wksName}/settings", "notExistsWksName"))
+        mockMvc.perform(get("/workspace/{wksId}/settings", NOT_EXISTING_WKS_ID))
             .andExpect(redirectedUrl("/workspaces"));
     }
 
+//    @ParameterizedTest
+//    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspacesAndUsersRelated")
+//    void getWorkspaceTyposPageIsSuccessful(final String wksName, final String username) throws Exception {
+//        Workspace workspace = repository.getWorkspaceByName(wksName).orElse(null);
+//
+//        MockHttpServletResponse response = mockMvc.perform(get("/workspace/{wksName}/typos", wksName)
+//                .with(user(username)))
+//            .andExpect(model().attributeExists("wksInfo", "wksName", "typoPage", "availableSizes", "sortProp", "sortDir", "DESC", "ASC"))
+//            .andReturn().getResponse();
+//
+//        Typo typo = workspace.getTypos().stream()
+//            .sorted(Comparator.comparing(AbstractAuditingEntity::getCreatedDate))
+//            .findFirst().orElse(null);
+//
+//        if (typo != null) {
+//            assertThat(response.getContentAsString()).contains(
+//                typo.getPageUrl(), typo.getReporterName(), typo.getModifiedBy()
+//            );
+//        }
+//    }
+
     @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspacesAndUsersRelated")
-    void getWorkspaceTyposPageIsSuccessful(final String wksName, final String username) throws Exception {
-        Workspace workspace = repository.getWorkspaceByName(wksName).orElse(null);
+    void getWorkspaceTyposPageIsSuccessful(final Long wksId, final String username) throws Exception {
+        Workspace workspace = repository.getWorkspaceById(wksId).orElse(null);
 
-        MockHttpServletResponse response = mockMvc.perform(get("/workspace/{wksName}/typos", wksName)
+        MockHttpServletResponse response = mockMvc.perform(get("/workspace/{wksId}/typos", wksId)
                 .with(user(username)))
             .andExpect(model().attributeExists("wksInfo", "wksName", "typoPage", "availableSizes", "sortProp", "sortDir", "DESC", "ASC"))
             .andReturn().getResponse();
@@ -153,12 +214,37 @@ class WorkspaceControllerIT {
         }
     }
 
+//    @ParameterizedTest
+//    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspacesAndUsersAndTypoStatusRelated")
+//    void getWorkspaceTyposPageFilteredIsSuccessful(final String wksName, final String username, final String typoStatus) throws Exception {
+//        Workspace workspace = repository.getWorkspaceByName(wksName).orElse(null);
+//
+//        var request = get("/workspace/{wksName}/typos", wksName).queryParam("typoStatus", typoStatus);
+//
+//        MockHttpServletResponse response = mockMvc.perform(request
+//                .with(user(username)))
+//            .andExpect(model().attributeExists("wksInfo", "wksName", "typoPage", "availableSizes", "sortProp", "sortDir", "DESC", "ASC", "typoStatus"))
+//            .andReturn().getResponse();
+//
+//        Typo typo = workspace.getTypos().stream()
+//            .filter(t -> !t.getTypoStatus().equals(TypoStatus.valueOf(typoStatus)))
+//            .findFirst().orElse(null);
+//
+//        if (typo != null) {
+//            assertThat(response.getContentAsString()).contains(
+//                typo.getPageUrl(), typo.getReporterName(), typo.getModifiedBy()
+//            );
+//        } else {
+//            fail("No typos without status " + typoStatus);
+//        }
+//    }
+
     @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspacesAndUsersAndTypoStatusRelated")
-    void getWorkspaceTyposPageFilteredIsSuccessful(final String wksName, final String username, final String typoStatus) throws Exception {
-        Workspace workspace = repository.getWorkspaceByName(wksName).orElse(null);
+    void getWorkspaceTyposPageFilteredIsSuccessful(final Long wksId, final String username, final String typoStatus) throws Exception {
+        Workspace workspace = repository.getWorkspaceById(wksId).orElse(null);
 
-        var request = get("/workspace/{wksName}/typos", wksName).queryParam("typoStatus", typoStatus);
+        var request = get("/workspace/{wksId}/typos", wksId).queryParam("typoStatus", typoStatus);
 
         MockHttpServletResponse response = mockMvc.perform(request
                 .with(user(username)))
@@ -178,57 +264,129 @@ class WorkspaceControllerIT {
         }
     }
 
+//    @Test
+//    void getWorkspaceSettingsPageWithoutWksInfo() throws Exception {
+//        mockMvc.perform(get("/workspace/{wksName}/typos", "notExistsWksName"))
+//            .andExpect(redirectedUrl("/workspaces"));
+//    }
+
     @Test
     void getWorkspaceSettingsPageWithoutWksInfo() throws Exception {
-        mockMvc.perform(get("/workspace/{wksName}/typos", "notExistsWksName"))
+        mockMvc.perform(get("/workspace/{wksId}/typos", NOT_EXISTING_WKS_ID))
             .andExpect(redirectedUrl("/workspaces"));
     }
 
+//    @ParameterizedTest
+//    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspacesAndUsersRelated")
+//    void getWorkspaceUpdatePageIsSuccessful(final String wksName, final String username) throws Exception {
+//        Workspace workspace = repository.getWorkspaceByName(wksName).orElse(null);
+//
+//        MockHttpServletResponse response = mockMvc.perform(get("/workspace/{wksName}/update", wksName)
+//                .with(user(username)))
+//            .andExpect(model().attributeExists("wksName", "formModified", "formModified"))
+//            .andReturn().getResponse();
+//        assertThat(response.getContentAsString()).contains(workspace.getDescription());
+//    }
+
     @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspacesAndUsersRelated")
-    void getWorkspaceUpdatePageIsSuccessful(final String wksName, final String username) throws Exception {
-        Workspace workspace = repository.getWorkspaceByName(wksName).orElse(null);
+    void getWorkspaceUpdatePageIsSuccessful(final Long wksId, final String username) throws Exception {
+        Workspace workspace = repository.getWorkspaceById(wksId).orElse(null);
 
-        MockHttpServletResponse response = mockMvc.perform(get("/workspace/{wksName}/update", wksName)
+        MockHttpServletResponse response = mockMvc.perform(get("/workspace/{wksId}/update", wksId)
                 .with(user(username)))
             .andExpect(model().attributeExists("wksName", "formModified", "formModified"))
             .andReturn().getResponse();
         assertThat(response.getContentAsString()).contains(workspace.getDescription());
     }
 
+//    @Test
+//    void getWorkspaceUpdatePageWithoutWks() throws Exception {
+//        mockMvc.perform(get("/workspace/{wksName}/update", "notExistsWksName"))
+//            .andExpect(redirectedUrl("/workspaces"));
+//    }
+
     @Test
     void getWorkspaceUpdatePageWithoutWks() throws Exception {
-        mockMvc.perform(get("/workspace/{wksName}/update", "notExistsWksName"))
+        mockMvc.perform(get("/workspace/{wksId}/update", NOT_EXISTING_WKS_ID))
             .andExpect(redirectedUrl("/workspaces"));
     }
 
+//    @ParameterizedTest
+//    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspacesAndUsersRelated")
+//    void putWorkspaceUpdateIsSuccessful(final String wksName, final String username) throws Exception {
+//        Workspace workspace = repository.getWorkspaceByName(wksName).orElse(null);
+//        String newWksName = "createWksName01";
+//        Instant previosModifiedDate = workspace.getModifiedDate();
+//
+//        mockMvc.perform(put("/workspace/{wksName}/update", wksName)
+//                .param("name", newWksName)
+//                .param("url", "https://other.com")
+//                .param("description", "Wks description 01")
+//                .with(user(username))
+//                .with(csrf()))
+//            .andExpect(redirectedUrl("/workspace/" + newWksName));
+//
+//        Instant newModifiedDate = repository.getWorkspaceByName(newWksName).orElse(null).getModifiedDate();
+//        assertThat(previosModifiedDate).isNotEqualTo(newModifiedDate);
+//    }
+
     @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspacesAndUsersRelated")
-    void putWorkspaceUpdateIsSuccessful(final String wksName, final String username) throws Exception {
-        Workspace workspace = repository.getWorkspaceByName(wksName).orElse(null);
+    void putWorkspaceUpdateIsSuccessful(final Long wksId, final String username) throws Exception {
+        Workspace workspace = repository.getWorkspaceById(wksId).orElse(null);
         String newWksName = "createWksName01";
-        Instant previosModifiedDate = workspace.getModifiedDate();
+        Instant previousModifiedDate = workspace.getModifiedDate();
 
-        mockMvc.perform(put("/workspace/{wksName}/update", wksName)
+        mockMvc.perform(put("/workspace/{wksId}/update", wksId)
                 .param("name", newWksName)
                 .param("url", "https://other.com")
                 .param("description", "Wks description 01")
                 .with(user(username))
                 .with(csrf()))
-            .andExpect(redirectedUrl("/workspace/" + newWksName));
+            .andExpect(redirectedUrl("/workspace/" + wksId));
 
-        Instant newModifiedDate = repository.getWorkspaceByName(newWksName).orElse(null).getModifiedDate();
-        assertThat(previosModifiedDate).isNotEqualTo(newModifiedDate);
+        Instant newModifiedDate = repository.getWorkspaceById(wksId).orElse(null).getModifiedDate();
+        assertThat(previousModifiedDate).isNotEqualTo(newModifiedDate);
     }
+
+//    @ParameterizedTest
+//    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspacesAndUsersRelated")
+//    void putWorkspaceUpdateWithExistingWksUpdateName(final String wksName, final String username) throws Exception {
+//        String newWksName = "createWksName01";
+//        String wksDescription = "Wks description";
+//        String wksUrl = "https://other.com";
+//
+//        Instant previousModifiedDate = repository.getWorkspaceByName(wksName).orElse(null).getModifiedDate();
+//
+//        var createWks = new CreateWorkspace(newWksName, wksDescription, wksUrl);
+//        final var wksToCreate = requireNonNull(workspaceMapper.toWorkspace(createWks));
+//        final var wksSettings = new WorkspaceSettings();
+//        wksSettings.setWorkspace(wksToCreate);
+//        wksSettings.setApiAccessToken(UUID.randomUUID());
+//        workspaceRepository.save(wksToCreate);
+//
+//        assertThat(repository.existsWorkspaceByName(newWksName)).isTrue();
+//
+//        mockMvc.perform(put("/workspace/{wksName}/update", wksName)
+//                .param("name", newWksName)
+//                .param("description", wksDescription)
+//                .with(user(username))
+//                .with(csrf()))
+//            .andExpect(model().attributeExists("createWorkspace"));
+//
+//        Instant newModifiedDate = repository.getWorkspaceByName(wksName).orElse(null).getModifiedDate();
+//        assertThat(previousModifiedDate).isEqualTo(newModifiedDate);
+//    }
 
     @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspacesAndUsersRelated")
-    void putWorkspaceUpdateWithExistingWksUpdateName(final String wksName, final String username) throws Exception {
+    void putWorkspaceUpdateWithExistingWksUpdateName(final Long wksId, final String username) throws Exception {
         String newWksName = "createWksName01";
         String wksDescription = "Wks description";
         String wksUrl = "https://other.com";
 
-        Instant previousModifiedDate = repository.getWorkspaceByName(wksName).orElse(null).getModifiedDate();
+        Instant previousModifiedDate = repository.getWorkspaceById(wksId).orElse(null).getModifiedDate();
 
         var createWks = new CreateWorkspace(newWksName, wksDescription, wksUrl);
         final var wksToCreate = requireNonNull(workspaceMapper.toWorkspace(createWks));
@@ -239,25 +397,56 @@ class WorkspaceControllerIT {
 
         assertThat(repository.existsWorkspaceByName(newWksName)).isTrue();
 
-        mockMvc.perform(put("/workspace/{wksName}/update", wksName)
+        mockMvc.perform(put("/workspace/{wksId}/update", wksId)
                 .param("name", newWksName)
                 .param("description", wksDescription)
                 .with(user(username))
                 .with(csrf()))
             .andExpect(model().attributeExists("createWorkspace"));
 
-        Instant newModifiedDate = repository.getWorkspaceByName(wksName).orElse(null).getModifiedDate();
+        Instant newModifiedDate = repository.getWorkspaceById(wksId).orElse(null).getModifiedDate();
         assertThat(previousModifiedDate).isEqualTo(newModifiedDate);
     }
 
+//    @ParameterizedTest
+//    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspacesAndUsersRelated")
+//    void putWorkspaceUpdateWithExistingWksUpdateUrl(final String wksName, final String username) throws Exception {
+//        String newWksName = "createWksName01";
+//        String wksDescription = "Wks description";
+//        String newWksUrl = "https://other.com";
+//
+//        Instant previousModifiedDate = repository.getWorkspaceByName(wksName).orElse(null).getModifiedDate();
+//
+//        var createWks = new CreateWorkspace(newWksName, wksDescription, newWksUrl);
+//        final var wksToCreate = requireNonNull(workspaceMapper.toWorkspace(createWks));
+//        final var wksSettings = new WorkspaceSettings();
+//        wksSettings.setWorkspace(wksToCreate);
+//        wksSettings.setApiAccessToken(UUID.randomUUID());
+//        workspaceRepository.save(wksToCreate);
+//
+//        assertThat(repository.existsWorkspaceByName(newWksName)).isTrue();
+//
+//        mockMvc.perform(put("/workspace/{wksName}/update", wksName)
+//                .param("name", wksName)
+//                .param("description", wksDescription)
+//                .param("url", newWksUrl)
+//                .with(user(username))
+//                .with(csrf()))
+//            .andExpect(model().attributeExists("createWorkspace"));
+//
+//        Instant newModifiedDate = repository.getWorkspaceByName(wksName).orElse(null).getModifiedDate();
+//        assertThat(previousModifiedDate).isEqualTo(newModifiedDate);
+//    }
+
     @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspacesAndUsersRelated")
-    void putWorkspaceUpdateWithExistingWksUpdateUrl(final String wksName, final String username) throws Exception {
+    void putWorkspaceUpdateWithExistingWksUpdateUrl(final Long wksId, final String username) throws Exception {
         String newWksName = "createWksName01";
         String wksDescription = "Wks description";
         String newWksUrl = "https://other.com";
 
-        Instant previousModifiedDate = repository.getWorkspaceByName(wksName).orElse(null).getModifiedDate();
+        Workspace wks = repository.getWorkspaceById(wksId).orElse(null);
+        Instant previousModifiedDate = wks.getModifiedDate();
 
         var createWks = new CreateWorkspace(newWksName, wksDescription, newWksUrl);
         final var wksToCreate = requireNonNull(workspaceMapper.toWorkspace(createWks));
@@ -268,30 +457,51 @@ class WorkspaceControllerIT {
 
         assertThat(repository.existsWorkspaceByName(newWksName)).isTrue();
 
-        mockMvc.perform(put("/workspace/{wksName}/update", wksName)
-                .param("name", wksName)
+        mockMvc.perform(put("/workspace/{wksId}/update", wksId)
+                .param("name", wks.getName())
                 .param("description", wksDescription)
                 .param("url", newWksUrl)
                 .with(user(username))
                 .with(csrf()))
             .andExpect(model().attributeExists("createWorkspace"));
 
-        Instant newModifiedDate = repository.getWorkspaceByName(wksName).orElse(null).getModifiedDate();
+        Instant newModifiedDate = repository.getWorkspaceById(wksId).orElse(null).getModifiedDate();
         assertThat(previousModifiedDate).isEqualTo(newModifiedDate);
     }
 
     //TODO tests for concurrency transactions in putWorkspaceUpdate() try-catch block
 
+//    @Disabled
+//    @ParameterizedTest
+//    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspacesAndUsersRelated")
+//    void deleteWorkspaceByNameIsSuccessful(final String wksName,
+//                                           final String username) throws Exception {
+//
+//        assertThat(repository.existsWorkspaceByName(wksName)).isTrue();
+//
+//        MockHttpServletResponse response = mockMvc.perform(
+//                delete("/workspace/{wksName}", wksName)
+//                    .with(user(username))
+//                    .with(csrf()))
+//            .andReturn()
+//            .getResponse();
+//
+//        assertThat(response.getRedirectedUrl()).isEqualTo("/workspaces");
+//
+//        // TODO fix: 'repository.existsWorkspaceByName(wksName)' returns true after the wks deleted
+//        // assertThat(repository.existsWorkspaceByName(wksName)).isFalse();
+//    }
+
     @Disabled
     @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspacesAndUsersRelated")
-    void deleteWorkspaceByNameIsSuccessful(final String wksName,
+    void deleteWorkspaceByIdIsSuccessful(final Long wksId,
                                            final String username) throws Exception {
 
-        assertThat(repository.existsWorkspaceByName(wksName)).isTrue();
+        assertThat(repository.existsWorkspaceById(wksId)).isTrue();
 
         MockHttpServletResponse response = mockMvc.perform(
-                delete("/workspace/{wksName}", wksName)
+                delete("/workspace/{wksId}", wksId)
                     .with(user(username))
                     .with(csrf()))
             .andReturn()
@@ -303,10 +513,36 @@ class WorkspaceControllerIT {
         // assertThat(repository.existsWorkspaceByName(wksName)).isFalse();
     }
 
+//    @ParameterizedTest
+//    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspacesAndUsersRelated")
+//    void getWorkspaceUsersPage(final String wksName, final String username) throws Exception {
+//        Workspace workspace = repository.getWorkspaceByName(wksName).orElseThrow();
+//        Set<Account> accounts = new HashSet<>(accountRepository.findAll());
+//
+//        accounts.forEach(account -> {
+//            final var workspaceRoleId = new WorkspaceRoleId(workspace.getId(), account.getId());
+//            final var workspaceRole = new WorkspaceRole(workspaceRoleId, AccountRole.ROLE_ANONYMOUS, workspace, account);
+//            workspace.addWorkspaceRole(workspaceRole);
+//        });
+//
+//        MockHttpServletResponse response = mockMvc.perform(
+//            get("/workspace/{wksName}/users", wksName)
+//                .with(user(username)))
+//            .andExpect(status().isOk())
+//            .andExpect(model().attributeExists("wksInfo", "wksName", "userPage", "availableSizes", "sortProp", "sortDir", "DESC", "ASC"))
+//            .andReturn().getResponse();
+//
+//        var html = response.getContentAsString();
+//        for (var wksRole : workspace.getWorkspaceRoles()) {
+//            var email = wksRole.getAccount().getEmail();
+//            assertThat(html).contains(email);
+//        }
+//    }
+
     @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspacesAndUsersRelated")
-    void getWorkspaceUsersPage(final String wksName, final String username) throws Exception {
-        Workspace workspace = repository.getWorkspaceByName(wksName).orElseThrow();
+    void getWorkspaceUsersPage(final Long wksId, final String username) throws Exception {
+        Workspace workspace = repository.getWorkspaceById(wksId).orElseThrow();
         Set<Account> accounts = new HashSet<>(accountRepository.findAll());
 
         accounts.forEach(account -> {
@@ -316,8 +552,8 @@ class WorkspaceControllerIT {
         });
 
         MockHttpServletResponse response = mockMvc.perform(
-            get("/workspace/{wksName}/users", wksName)
-                .with(user(username)))
+                get("/workspace/{wksId}/users", wksId)
+                    .with(user(username)))
             .andExpect(status().isOk())
             .andExpect(model().attributeExists("wksInfo", "wksName", "userPage", "availableSizes", "sortProp", "sortDir", "DESC", "ASC"))
             .andReturn().getResponse();

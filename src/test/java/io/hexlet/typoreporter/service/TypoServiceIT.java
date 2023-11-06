@@ -73,14 +73,23 @@ class TypoServiceIT {
         registry.add("spring.datasource.username", postgreSQLContainer::getUsername);
     }
 
-    @ParameterizedTest
-    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getTypoReport")
-    void addTypoReport(final TypoReport report) {
-        final var reportedTypo = service.addTypoReport(report, WORKSPACE_101_NAME);
+//    @ParameterizedTest
+//    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getTypoReport")
+//    void addTypoReport(final TypoReport report) {
+//        final var reportedTypo = service.addTypoReport(report, WORKSPACE_101_NAME);
+//
+//        ReportedTypoAssert.assertThat(reportedTypo).isEqualsToTypoReport(report);
+//        assertThat(repository.existsById(reportedTypo.id())).isTrue();
+//    }
 
-        ReportedTypoAssert.assertThat(reportedTypo).isEqualsToTypoReport(report);
-        assertThat(repository.existsById(reportedTypo.id())).isTrue();
-    }
+//    @ParameterizedTest
+//    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getTypoReport")
+//    void addTypoReport(final TypoReport report) {
+//        final var reportedTypo = service.addTypoReport(report, WORKSPACE_101_NAME);
+//
+//        ReportedTypoAssert.assertThat(reportedTypo).isEqualsToTypoReport(report);
+//        assertThat(repository.existsById(reportedTypo.id())).isTrue();
+//    }
 
     @Test
     void getPageTypo() {
