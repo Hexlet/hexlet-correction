@@ -68,13 +68,50 @@ public class WidgetController {
         return "widget/typo-form";
     }
 
-    @PostMapping("/typo/form/{wksName}")
+//    @PostMapping("/typo/form/{wksName}")
+//    String postWidgetTypoForm(HttpServletResponse response,
+//                              Model model,
+//                              @Valid @ModelAttribute TypoReport typoReport,
+//                              BindingResult bindingResult,
+//                              @PathVariable String wksName) {
+//        final var wks = workspaceService.getWorkspaceByName(wksName);
+//
+//        if (wks.isEmpty()) {
+//            log.error("Error during saving typo from widget. Workspace not found");
+//            return "widget/report-typo-error";
+//        }
+//
+//        response.addHeader("Content-Security-Policy", "frame-ancestors " + wks.get().getUrl());
+//
+//        if (bindingResult.hasFieldErrors("reporterComment")) {
+//            log.warn("Validation error during saving typo from widget. Typo not valid. Errors: {}", bindingResult.getAllErrors());
+//            model.addAttribute("typoReport", typoReport);
+//            model.addAttribute("formModified", true);
+//            return "widget/typo-form";
+//        }
+//
+//        if (bindingResult.hasErrors()) {
+//            log.error("Validation error during saving typo from widget. Typo not valid. Errors: {}", bindingResult.getAllErrors());
+//            return "widget/report-typo-error";
+//        }
+//
+//        try {
+//            typoService.addTypoReport(typoReport, wksName);
+//        } catch (Exception e) {
+//            log.error("Error during saving typo from widget.", e);
+//            return "widget/report-typo-error";
+//        }
+//
+//        return "widget/report-typo-success";
+//    }
+
+    @PostMapping("/typo/form/{wksId}")
     String postWidgetTypoForm(HttpServletResponse response,
                               Model model,
                               @Valid @ModelAttribute TypoReport typoReport,
                               BindingResult bindingResult,
-                              @PathVariable String wksName) {
-        final var wks = workspaceService.getWorkspaceByName(wksName);
+                              @PathVariable Long wksId) {
+        final var wks = workspaceService.getWorkspaceById(wksId);
 
         if (wks.isEmpty()) {
             log.error("Error during saving typo from widget. Workspace not found");
@@ -96,7 +133,7 @@ public class WidgetController {
         }
 
         try {
-            typoService.addTypoReport(typoReport, wksName);
+            typoService.addTypoReport(typoReport, wksId);
         } catch (Exception e) {
             log.error("Error during saving typo from widget.", e);
             return "widget/report-typo-error";

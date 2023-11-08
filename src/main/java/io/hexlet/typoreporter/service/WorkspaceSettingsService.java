@@ -15,11 +15,18 @@ public class WorkspaceSettingsService {
 
     private final WorkspaceSettingsRepository repository;
 
+//    @Transactional(readOnly = true)
+//    public UUID getWorkspaceApiAccessTokenByName(String wksName) {
+//        return repository.getWorkspaceSettingsByWorkspaceName(wksName)
+//            .map(WorkspaceSettings::getApiAccessToken)
+//            .orElseThrow(() -> new WorkspaceNotFoundException(wksName));
+//    }
+
     @Transactional(readOnly = true)
-    public UUID getWorkspaceApiAccessTokenByName(String wksName) {
-        return repository.getWorkspaceSettingsByWorkspaceName(wksName)
+    public UUID getWorkspaceApiAccessTokenById(Long wksId) {
+        return repository.getWorkspaceSettingsByWorkspaceId(wksId)
             .map(WorkspaceSettings::getApiAccessToken)
-            .orElseThrow(() -> new WorkspaceNotFoundException(wksName));
+            .orElseThrow(() -> new WorkspaceNotFoundException(wksId));
     }
 
     @Transactional(readOnly = true)
@@ -35,16 +42,16 @@ public class WorkspaceSettingsService {
             .orElseThrow(() -> new WorkspaceNotFoundException(wksName));
     }
 
-    @Transactional
-    public void regenerateWorkspaceApiAccessTokenByName(String wksName) {
-        final var maybeWksSettings = repository.getWorkspaceSettingsByWorkspaceName(wksName);
-        if (maybeWksSettings.isEmpty()) {
-            throw new WorkspaceNotFoundException(wksName);
-        }
-        final var wksSettings = maybeWksSettings.get();
-        wksSettings.setApiAccessToken(UUID.randomUUID());
-        repository.save(wksSettings);
-    }
+//    @Transactional
+//    public void regenerateWorkspaceApiAccessTokenByName(String wksName) {
+//        final var maybeWksSettings = repository.getWorkspaceSettingsByWorkspaceName(wksName);
+//        if (maybeWksSettings.isEmpty()) {
+//            throw new WorkspaceNotFoundException(wksName);
+//        }
+//        final var wksSettings = maybeWksSettings.get();
+//        wksSettings.setApiAccessToken(UUID.randomUUID());
+//        repository.save(wksSettings);
+//    }
 
     //top
     @Transactional

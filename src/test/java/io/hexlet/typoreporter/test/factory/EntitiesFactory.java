@@ -47,8 +47,12 @@ public class EntitiesFactory {
 
     public static final Long WORKSPACE_103_ID = 103L;
 
-    public static Stream<String> getWorkspaceNamesExist() {
-        return Stream.of(WORKSPACE_101_NAME, WORKSPACE_102_NAME, WORKSPACE_103_NAME);
+//    public static Stream<String> getWorkspaceNamesExist() {
+//        return Stream.of(WORKSPACE_101_NAME, WORKSPACE_102_NAME, WORKSPACE_103_NAME);
+//    }
+
+    public static Stream<Long> getWorkspaceIdsExist() {
+        return Stream.of(WORKSPACE_101_ID, WORKSPACE_102_ID, WORKSPACE_103_ID);
     }
 
 //    public static Stream<Arguments> getWorkspacesAndUsersRelated() {
@@ -101,9 +105,9 @@ public class EntitiesFactory {
         );
     }
 
-    public static Stream<Long> getWorkspaceIdsExist() {
-        return Stream.of(101L, 102L, 103L);
-    }
+//    public static Stream<Long> getWorkspaceIdsExist() {
+//        return Stream.of(101L, 102L, 103L);
+//    }
 
     public static Stream<Workspace> getWorkspaces() {
         final var workspace1 = new Workspace()

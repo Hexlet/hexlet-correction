@@ -62,14 +62,14 @@ import static org.springframework.data.domain.Sort.Order.asc;
 @RequiredArgsConstructor
 public class WorkspaceController {
 
-    private static final String IS_USER_RELATED_TO_WKS =
-        "@workspaceService.isUserRelatedToWorkspace(#wksName, authentication.name)";
+//    private static final String IS_USER_RELATED_TO_WKS =
+//        "@workspaceService.isUserRelatedToWorkspace(#wksName, authentication.name)";
 
     private static final String IS_USER_RELATED_TO_WKS_BY_ID =
         "@workspaceService.isUserRelatedToWorkspace(#wksId, authentication.name)";
 
-    private static final String IS_USER_ADMIN_IN_WKS =
-        "@workspaceService.isAdminRoleUserInWorkspace(#wksName, authentication.name)";
+//    private static final String IS_USER_ADMIN_IN_WKS =
+//        "@workspaceService.isAdminRoleUserInWorkspace(#wksName, authentication.name)";
 
     private static final String IS_USER_ADMIN_IN_WKS_BY_ID =
         "@workspaceService.isAdminRoleUserInWorkspace(#wksId, authentication.name)";
@@ -520,11 +520,11 @@ public class WorkspaceController {
         }
     }
 
-    private void getStatisticDataToModel(final Model model, final String wksName) {
-        final var countTypoByStatus = typoService.getCountTypoByStatusForWorkspaceName(wksName);
-        model.addAttribute("countTypoByStatus", countTypoByStatus);
-        model.addAttribute("sumTypoInWks", countTypoByStatus.stream().mapToLong(Pair::getValue).sum());
-    }
+//    private void getStatisticDataToModel(final Model model, final String wksName) {
+//        final var countTypoByStatus = typoService.getCountTypoByStatusForWorkspaceName(wksName);
+//        model.addAttribute("countTypoByStatus", countTypoByStatus);
+//        model.addAttribute("sumTypoInWks", countTypoByStatus.stream().mapToLong(Pair::getValue).sum());
+//    }
 
     //top
     private void getStatisticDataToModel(final Model model, final Long wksId) {
@@ -533,12 +533,12 @@ public class WorkspaceController {
         model.addAttribute("sumTypoInWks", countTypoByStatus.stream().mapToLong(Pair::getValue).sum());
     }
 
-    private void getLastTypoDataToModel(final Model model, final String wksName) {
-        final var createdDate = typoService.getLastTypoByWorkspaceName(wksName).map(TypoInfo::createdDate);
-        model.addAttribute("lastTypoCreatedDate", createdDate);
-        Locale locale = LocaleContextHolder.getLocale();
-        model.addAttribute("lastTypoCreatedDateAgo", createdDate.map(new PrettyTime(locale)::format));
-    }
+//    private void getLastTypoDataToModel(final Model model, final String wksName) {
+//        final var createdDate = typoService.getLastTypoByWorkspaceName(wksName).map(TypoInfo::createdDate);
+//        model.addAttribute("lastTypoCreatedDate", createdDate);
+//        Locale locale = LocaleContextHolder.getLocale();
+//        model.addAttribute("lastTypoCreatedDateAgo", createdDate.map(new PrettyTime(locale)::format));
+//    }
 
     //top
     private void getLastTypoDataToModel(final Model model, final Long wksId) {
