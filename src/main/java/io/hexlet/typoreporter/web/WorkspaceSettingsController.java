@@ -98,27 +98,25 @@ public class WorkspaceSettingsController {
         return ("redirect:/workspace/") + wksId.toString() + "/settings";
     }
 
-    private void getStatisticDataToModel(final Model model, final String wksName) {
-        final var countTypoByStatus = typoService.getCountTypoByStatusForWorkspaceName(wksName);
-        model.addAttribute("countTypoByStatus", countTypoByStatus);
-        model.addAttribute("sumTypoInWks", countTypoByStatus.stream().mapToLong(Pair::getValue).sum());
-    }
+//    private void getStatisticDataToModel(final Model model, final String wksName) {
+//        final var countTypoByStatus = typoService.getCountTypoByStatusForWorkspaceName(wksName);
+//        model.addAttribute("countTypoByStatus", countTypoByStatus);
+//        model.addAttribute("sumTypoInWks", countTypoByStatus.stream().mapToLong(Pair::getValue).sum());
+//    }
 
-    //top
     private void getStatisticDataToModel(final Model model, final Long wksId) {
         final var countTypoByStatus = typoService.getCountTypoByStatusForWorkspaceId(wksId);
         model.addAttribute("countTypoByStatus", countTypoByStatus);
         model.addAttribute("sumTypoInWks", countTypoByStatus.stream().mapToLong(Pair::getValue).sum());
     }
 
-    private void getLastTypoDataToModel(final Model model, final String wksName) {
-        final var createdDate = typoService.getLastTypoByWorkspaceName(wksName).map(TypoInfo::createdDate);
-        model.addAttribute("lastTypoCreatedDate", createdDate);
-        Locale locale = LocaleContextHolder.getLocale();
-        model.addAttribute("lastTypoCreatedDateAgo", createdDate.map(new PrettyTime(locale)::format));
-    }
+//    private void getLastTypoDataToModel(final Model model, final String wksName) {
+//        final var createdDate = typoService.getLastTypoByWorkspaceName(wksName).map(TypoInfo::createdDate);
+//        model.addAttribute("lastTypoCreatedDate", createdDate);
+//        Locale locale = LocaleContextHolder.getLocale();
+//        model.addAttribute("lastTypoCreatedDateAgo", createdDate.map(new PrettyTime(locale)::format));
+//    }
 
-    //top
     private void getLastTypoDataToModel(final Model model, final Long wksId) {
         final var createdDate = typoService.getLastTypoByWorkspaceId(wksId).map(TypoInfo::createdDate);
         model.addAttribute("lastTypoCreatedDate", createdDate);
