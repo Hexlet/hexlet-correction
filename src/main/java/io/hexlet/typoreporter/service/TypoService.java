@@ -42,16 +42,6 @@ public class TypoService {
     @Setter(onMethod_ = {@Autowired})
     private WorkspaceService workspaceService;
 
-//    @Transactional
-//    public ReportedTypo addTypoReport(final TypoReport report, final String wksIdStr) {
-//        final var workspace = workspaceService.getWorkspaceByName(wksIdStr)
-//            .orElseThrow(() -> new WorkspaceNotFoundException(wksIdStr));
-//
-//        final var typo = requireNonNull(typoMapper.toTypo(report));
-//        workspace.addTypo(typo);
-//        return typoMapper.toReportedTypo(repository.save(typo));
-//    }
-
     @Transactional
     public ReportedTypo addTypoReport(final TypoReport report, final Long wksId) {
         final var workspace = workspaceService.getWorkspaceById(wksId)
@@ -62,25 +52,6 @@ public class TypoService {
         return typoMapper.toReportedTypo(repository.save(typo));
     }
 
-//    @Transactional
-//    public ReportedTypo addTypoReport(final TypoReport report, final Long wksId) {
-//        final var wks = workspaceRepository.getReferenceById(wksId);
-//
-//        final var typo = requireNonNull(typoMapper.toTypo(report));
-//        typo.setWorkspace(wks);
-//        return typoMapper.toReportedTypo(repository.save(typo));
-//    }
-
-//    @Transactional(readOnly = true)
-//    public Page<TypoInfo> getTypoPage(final Pageable pageable, final String wksName) {
-//        if (!workspaceService.existsWorkspaceByName(wksName)) {
-//            throw new WorkspaceNotFoundException(wksName);
-//        }
-//        return repository.findPageTypoByWorkspaceName(pageable, wksName)
-//            .map(typoMapper::toTypoInfo);
-//    }
-
-    //top
     @Transactional(readOnly = true)
     public Page<TypoInfo> getTypoPage(final Pageable pageable, final Long wksId) {
         if (!workspaceService.existsWorkspaceById(wksId)) {
@@ -90,24 +61,6 @@ public class TypoService {
             .map(typoMapper::toTypoInfo);
     }
 
-//    @Transactional(readOnly = true)
-//    public Page<TypoInfo> getTypoPageFiltered(final Pageable pageable, final String wksName, final String typoStatus) {
-//        if (!workspaceService.existsWorkspaceByName(wksName)) {
-//            throw new WorkspaceNotFoundException(wksName);
-//        }
-//
-//        TypoStatus typoStatusEnum;
-//        try {
-//            typoStatusEnum = TypoStatus.valueOf(typoStatus);
-//        } catch (IllegalArgumentException e) {
-//            typoStatusEnum = null;
-//        }
-//
-//        return repository.findPageTypoByWorkspaceNameAndTypoStatus(pageable, wksName, typoStatusEnum)
-//            .map(typoMapper::toTypoInfo);
-//    }
-
-    //top
     @Transactional(readOnly = true)
     public Page<TypoInfo> getTypoPageFiltered(final Pageable pageable, final Long wksId, final String typoStatus) {
         if (!workspaceService.existsWorkspaceById(wksId)) {
@@ -125,21 +78,6 @@ public class TypoService {
             .map(typoMapper::toTypoInfo);
     }
 
-//    @Transactional(readOnly = true)
-//    public List<Pair<TypoStatus, Long>> getCountTypoByStatusForWorkspaceName(final String wksName) {
-//        final var countTypoByStatus = repository.getCountTypoStatusForWorkspaceName(wksName)
-//            .stream()
-//            .collect(toMap(Pair::getKey, Pair::getValue));
-//        Arrays.stream(TypoStatus.values()).forEach(ts -> countTypoByStatus.putIfAbsent(ts, 0L));
-//
-//        return countTypoByStatus.entrySet()
-//            .stream()
-//            .sorted(comparingByKey())
-//            .map(Pair::of)
-//            .toList();
-//    }
-
-    //top
     @Transactional(readOnly = true)
     public List<Pair<TypoStatus, Long>> getCountTypoByStatusForWorkspaceId(final Long wksId) {
         final var countTypoByStatus = repository.getCountTypoStatusForWorkspaceId(wksId)
@@ -154,13 +92,6 @@ public class TypoService {
             .toList();
     }
 
-//    @Transactional(readOnly = true)
-//    public Optional<TypoInfo> getLastTypoByWorkspaceName(final String wksName) {
-//        return repository.findFirstByWorkspaceNameOrderByCreatedDateDesc(wksName)
-//            .map(typoMapper::toTypoInfo);
-//    }
-
-    //top
     @Transactional(readOnly = true)
     public Optional<TypoInfo> getLastTypoByWorkspaceId(final Long wksId) {
         return repository.findFirstByWorkspaceIdOrderByCreatedDateDesc(wksId)

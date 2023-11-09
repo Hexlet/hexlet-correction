@@ -61,15 +61,8 @@ import static org.springframework.data.domain.Sort.Order.asc;
 @RequestMapping("/workspace")
 @RequiredArgsConstructor
 public class WorkspaceController {
-
-//    private static final String IS_USER_RELATED_TO_WKS =
-//        "@workspaceService.isUserRelatedToWorkspace(#wksName, authentication.name)";
-
     private static final String IS_USER_RELATED_TO_WKS_BY_ID =
         "@workspaceService.isUserRelatedToWorkspace(#wksId, authentication.name)";
-
-//    private static final String IS_USER_ADMIN_IN_WKS =
-//        "@workspaceService.isAdminRoleUserInWorkspace(#wksName, authentication.name)";
 
     private static final String IS_USER_ADMIN_IN_WKS_BY_ID =
         "@workspaceService.isAdminRoleUserInWorkspace(#wksId, authentication.name)";
@@ -116,23 +109,6 @@ public class WorkspaceController {
         return "redirect:/workspaces";
     }
 
-//    @GetMapping("/{wksName}")
-//    @PreAuthorize(IS_USER_RELATED_TO_WKS)
-//    public String getWorkspaceInfoPage(Model model, @PathVariable String wksName) {
-//        var wksOptional = workspaceService.getWorkspaceInfoByName(wksName);
-//        if (wksOptional.isEmpty()) {
-//            //TODO send to error page
-//            log.error("Workspace with name {} not found", wksName);
-//            return "redirect:/workspaces";
-//        }
-//        model.addAttribute("wksInfo", wksOptional.get());
-//        model.addAttribute("wksName", wksName);
-//
-//        getStatisticDataToModel(model, wksName);
-//        getLastTypoDataToModel(model, wksName);
-//        return "workspace/wks-info";
-//    }
-
     @GetMapping("/{wksId}")
     @PreAuthorize(IS_USER_RELATED_TO_WKS_BY_ID)
     public String getWorkspaceInfoPage(Model model, @PathVariable Long wksId) {
@@ -150,50 +126,6 @@ public class WorkspaceController {
         getLastTypoDataToModel(model, wksId);
         return "workspace/wks-info";
     }
-
-//    @GetMapping("/{wksName}/typos")
-//    @PreAuthorize(IS_USER_RELATED_TO_WKS)
-//    public String getWorkspaceTyposPage(Model model,
-//                                        @PathVariable String wksName,
-//                                        @RequestParam(required = false) String typoStatus,
-//                                        @SortDefault("createdDate") Pageable pageable) {
-//        var wksOptional = workspaceService.getWorkspaceInfoByName(wksName);
-//        if (wksOptional.isEmpty()) {
-//            //TODO send error page
-//            log.error("Workspace with name {} not found", wksName);
-//            return "redirect:/workspaces";
-//        }
-//
-//        model.addAttribute("wksName", wksName);
-//        model.addAttribute("wksInfo", wksOptional.get());
-//        getStatisticDataToModel(model, wksName);
-//        getLastTypoDataToModel(model, wksName);
-//
-//                var size = Optional.ofNullable(availableSizes.floor(pageable.getPageSize())).orElseGet(availableSizes::first);
-//        var pageRequest = PageRequest.of(pageable.getPageNumber(), size, pageable.getSort());
-//        Page<TypoInfo> typoPage;
-//        if (typoStatus == null) {
-//            typoPage = typoService.getTypoPage(pageRequest, wksName);
-//        } else {
-//            typoPage = typoService.getTypoPageFiltered(pageRequest, wksName, typoStatus);
-//            model.addAttribute("typoStatus", typoStatus);
-//            model.addAttribute("typoStatusStyle", TypoStatus.valueOf(typoStatus).getStyle());
-//        }
-//
-//        var sort = typoPage.getSort()
-//            .stream()
-//            .findFirst()
-//            .orElseGet(() -> asc("createdDate"));
-//
-//        model.addAttribute("typoPage", typoPage);
-//        model.addAttribute("availableSizes", availableSizes);
-//        model.addAttribute("availableStatuses", availableStatuses);
-//        model.addAttribute("sortProp", sort.getProperty());
-//        model.addAttribute("sortDir", sort.getDirection());
-//        model.addAttribute("DESC", DESC);
-//        model.addAttribute("ASC", ASC);
-//        return "workspace/wks-typos";
-//    }
 
     @GetMapping("/{wksId}/typos")
     @PreAuthorize(IS_USER_RELATED_TO_WKS_BY_ID)
@@ -240,26 +172,6 @@ public class WorkspaceController {
         return "workspace/wks-typos";
     }
 
-//    @GetMapping("/{wksName}/update")
-//    @PreAuthorize(IS_USER_RELATED_TO_WKS)
-//    public String getWorkspaceUpdatePage(Model model, @PathVariable String wksName) {
-//        var wksOptional = workspaceService.getWorkspaceInfoByName(wksName);
-//        if (wksOptional.isEmpty()) {
-//            //TODO send to error page
-//            log.error("Workspace with name {} not found", wksName);
-//            return "redirect:/workspaces";
-//        }
-//        final var wksUpdate = wksOptional
-//            .map(wksInfo -> new CreateWorkspace(wksInfo.name(), wksInfo.description(), wksInfo.url()))
-//            .get();
-//        model.addAttribute("createWorkspace", wksUpdate);
-//        model.addAttribute("wksName", wksName);
-//        model.addAttribute("formModified", false);
-//        getStatisticDataToModel(model, wksName);
-//        getLastTypoDataToModel(model, wksName);
-//        return "workspace/wks-update";
-//    }
-
     @GetMapping("/{wksId}/update")
     @PreAuthorize(IS_USER_RELATED_TO_WKS_BY_ID)
     public String getWorkspaceUpdatePage(Model model, @PathVariable Long wksId) {
@@ -280,34 +192,6 @@ public class WorkspaceController {
         getLastTypoDataToModel(model, wksId);
         return "workspace/wks-update";
     }
-
-//    //TODO add tests
-//    @PutMapping("/{wksName}/update")
-//    @PreAuthorize(IS_USER_RELATED_TO_WKS)
-//    public String putWorkspaceUpdate(Model model,
-//                                     @PathVariable String wksName,
-//                                     @Valid @ModelAttribute CreateWorkspace wksUpdate,
-//                                     BindingResult bindingResult) {
-//        model.addAttribute("wksName", wksName);
-//        model.addAttribute("formModified", true);
-//        getStatisticDataToModel(model, wksName);
-//        getLastTypoDataToModel(model, wksName);
-//
-//        if (bindingResult.hasErrors()) {
-//            model.addAttribute("createWorkspace", wksUpdate);
-//            return "workspace/wks-update";
-//        }
-//        try {
-//            workspaceService.updateWorkspace(wksUpdate, wksName);
-//            return ("redirect:/workspace/") + wksUpdate.name();
-//        } catch (WorkspaceAlreadyExistException e) {
-//            bindingResult.addError(e.toFieldError("createWorkspace"));
-//            return "workspace/wks-update";
-//        } catch (WorkspaceNotFoundException e) {
-//            log.error("Workspace with name {} not found", wksName);
-//            return "redirect:/workspaces";
-//        }
-//    }
 
     //TODO add tests
     @PutMapping("/{wksId}/update")
@@ -339,17 +223,6 @@ public class WorkspaceController {
         }
     }
 
-//    @DeleteMapping("/{wksName}")
-//    @PreAuthorize(IS_USER_RELATED_TO_WKS)
-//    public String deleteWorkspaceByName(@PathVariable String wksName) {
-//        if (workspaceService.deleteWorkspaceByName(wksName) == 0) {
-//            //TODO send to error page
-//            final var e = new WorkspaceNotFoundException(wksName);
-//            log.error(e.toString(), e);
-//        }
-//        return "redirect:/workspaces";
-//    }
-
     @DeleteMapping("/{wksId}")
     @PreAuthorize(IS_USER_RELATED_TO_WKS_BY_ID)
     public String deleteWorkspaceById(@PathVariable Long wksId) {
@@ -360,52 +233,6 @@ public class WorkspaceController {
         }
         return "redirect:/workspaces";
     }
-
-//    @GetMapping("/{wksName}/users")
-//    @PreAuthorize(IS_USER_RELATED_TO_WKS)
-//    public String getWorkspaceUsersPage(Model model,
-//                                        @PathVariable String wksName,
-//                                        @SortDefault("createdDate") Pageable pageable) {
-//
-//        Optional<WorkspaceInfo> workSpaceInfoOptional = workspaceService.getWorkspaceInfoByName(wksName);
-//        if (workSpaceInfoOptional.isEmpty()) {
-//            //TODO send error page
-//            log.error("Workspace with name {} not found", wksName);
-//            return "redirect:/workspaces";
-//        }
-//        model.addAttribute("wksName", wksName);
-//        model.addAttribute("wksInfo", workSpaceInfoOptional.get());
-//        getStatisticDataToModel(model, wksName);
-//        getLastTypoDataToModel(model, wksName);
-//
-//        Optional<Workspace> workspaceOptional = workspaceService.getWorkspaceByName(wksName);
-//        Set<WorkspaceRole> workspaceRoles = workspaceOptional.get().getWorkspaceRoles();
-//        List<Account> linkedAccounts = workspaceRoles.stream()
-//            .map(WorkspaceRole::getAccount)
-//            .collect(Collectors.toList());
-//        List<Account> allAccounts = accountService.findAll();
-//        List<Account> nonLinkedAccounts = getNonLinkedAccounts(allAccounts, linkedAccounts);
-//        final Account authenticatedAccount = getAccountFromAuthentication();
-//        final boolean accountIsAdminRole = workspaceService.isAdminRoleUserInWorkspace(wksName,
-//            authenticatedAccount.getUsername());
-//        List<Account> excludeDeleteAccounts = Collections.singletonList(authenticatedAccount);
-//        Page<Account> userPage = new PageImpl<>(linkedAccounts, pageable, linkedAccounts.size());
-//        var sort = userPage.getSort()
-//            .stream()
-//            .findFirst()
-//            .orElseGet(() -> asc("createdDate"));
-//
-//        model.addAttribute("nonLinkedAccounts", nonLinkedAccounts);
-//        model.addAttribute("isAdmin", accountIsAdminRole);
-//        model.addAttribute("excludeDeleteAccounts", excludeDeleteAccounts);
-//        model.addAttribute("userPage", userPage);
-//        model.addAttribute("availableSizes", availableSizes);
-//        model.addAttribute("sortProp", sort.getProperty());
-//        model.addAttribute("sortDir", sort.getDirection());
-//        model.addAttribute("DESC", DESC);
-//        model.addAttribute("ASC", ASC);
-//        return "workspace/wks-users";
-//    }
 
     @GetMapping("/{wksId}/users")
     @PreAuthorize(IS_USER_RELATED_TO_WKS_BY_ID)
@@ -454,21 +281,6 @@ public class WorkspaceController {
         return "workspace/wks-users";
     }
 
-//    @PostMapping("/{wksName}/users")
-//    @PreAuthorize(IS_USER_RELATED_TO_WKS)
-//    public String addUser(@RequestParam String email, @PathVariable String wksName) {
-//        try {
-//            workspaceRoleService.addAccountToWorkspace(wksName, email);
-//            return "redirect:/workspace/{wksName}/users";
-//        } catch (WorkspaceNotFoundException e) {
-//            log.error("Workspace with name {} not found", wksName);
-//            return "redirect:/workspaces";
-//        } catch (AccountNotFoundException e) {
-//            log.error("Account with email {} not found", email);
-//            return "redirect:/workspace/{wksName}/users";
-//        }
-//    }
-
     @PostMapping("/{wksId}/users")
     @PreAuthorize(IS_USER_RELATED_TO_WKS_BY_ID)
     public String addUser(@RequestParam String email, @PathVariable Long wksId) {
@@ -483,24 +295,6 @@ public class WorkspaceController {
             return "redirect:/workspace/{wksId}/users";
         }
     }
-
-//    @DeleteMapping("/{wksName}/users")
-//    @PreAuthorize(IS_USER_ADMIN_IN_WKS)
-//    public String deleteUser(@RequestParam String email, @PathVariable String wksName) {
-//        try {
-//            workspaceRoleService.deleteAccountFromWorkspace(wksName, email);
-//            return "redirect:/workspace/{wksName}/users";
-//        } catch (WorkspaceNotFoundException e) {
-//            log.error("Workspace with name {} not found", wksName);
-//            return "redirect:/workspaces";
-//        } catch (AccountNotFoundException e) {
-//            log.error("Account with email {} not found", email);
-//            return "redirect:/workspace/{wksName}/users";
-//        } catch (WorkspaceRoleNotFoundException e) {
-//            log.error("The user with email {} has no role in the workspace {} ", email, wksName, e);
-//            return "redirect:/workspaces";
-//        }
-//    }
 
     @DeleteMapping("/{wksId}/users")
     @PreAuthorize(IS_USER_ADMIN_IN_WKS_BY_ID)
@@ -520,27 +314,12 @@ public class WorkspaceController {
         }
     }
 
-//    private void getStatisticDataToModel(final Model model, final String wksName) {
-//        final var countTypoByStatus = typoService.getCountTypoByStatusForWorkspaceName(wksName);
-//        model.addAttribute("countTypoByStatus", countTypoByStatus);
-//        model.addAttribute("sumTypoInWks", countTypoByStatus.stream().mapToLong(Pair::getValue).sum());
-//    }
-
-    //top
     private void getStatisticDataToModel(final Model model, final Long wksId) {
         final var countTypoByStatus = typoService.getCountTypoByStatusForWorkspaceId(wksId);
         model.addAttribute("countTypoByStatus", countTypoByStatus);
         model.addAttribute("sumTypoInWks", countTypoByStatus.stream().mapToLong(Pair::getValue).sum());
     }
 
-//    private void getLastTypoDataToModel(final Model model, final String wksName) {
-//        final var createdDate = typoService.getLastTypoByWorkspaceName(wksName).map(TypoInfo::createdDate);
-//        model.addAttribute("lastTypoCreatedDate", createdDate);
-//        Locale locale = LocaleContextHolder.getLocale();
-//        model.addAttribute("lastTypoCreatedDateAgo", createdDate.map(new PrettyTime(locale)::format));
-//    }
-
-    //top
     private void getLastTypoDataToModel(final Model model, final Long wksId) {
         final var createdDate = typoService.getLastTypoByWorkspaceId(wksId).map(TypoInfo::createdDate);
         model.addAttribute("lastTypoCreatedDate", createdDate);

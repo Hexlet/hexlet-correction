@@ -72,15 +72,6 @@ class TypoServiceIT {
         registry.add("spring.datasource.username", postgreSQLContainer::getUsername);
     }
 
-//    @ParameterizedTest
-//    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getTypoReport")
-//    void addTypoReport(final TypoReport report) {
-//        final var reportedTypo = service.addTypoReport(report, WORKSPACE_101_NAME);
-//
-//        ReportedTypoAssert.assertThat(reportedTypo).isEqualsToTypoReport(report);
-//        assertThat(repository.existsById(reportedTypo.id())).isTrue();
-//    }
-
     @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getTypoReport")
     void addTypoReport(final TypoReport report) {
@@ -89,25 +80,6 @@ class TypoServiceIT {
         ReportedTypoAssert.assertThat(reportedTypo).isEqualsToTypoReport(report);
         assertThat(repository.existsById(reportedTypo.id())).isTrue();
     }
-
-//    @Test
-//    void getPageTypo() {
-//        final var totalSize = repository.findAll()
-//            .stream()
-//            .map(Typo::getWorkspace)
-//            .map(Workspace::getName)
-//            .filter(WORKSPACE_101_NAME::equals)
-//            .count();
-//        final var page = 1;
-//        final var pageSize = 3;
-//        final var pageReq = PageRequest.of(page, pageSize, Sort.by("createdDate"));
-//        final var pageTypo = service.getTypoPage(pageReq, WORKSPACE_101_NAME);
-//        assertThat(pageTypo.getTotalPages()).isEqualTo(totalSize / pageSize + page);
-//        assertThat(pageTypo.getTotalElements()).isEqualTo(totalSize);
-//        assertThat(pageTypo.getSize()).isEqualTo(pageSize);
-//        assertThat(pageTypo.getNumber()).isEqualTo(page);
-//        assertThat(pageTypo.getNumberOfElements()).isEqualTo(pageSize);
-//    }
 
     @Test
     void getPageTypo() {
@@ -201,50 +173,6 @@ class TypoServiceIT {
         assertThat(repository.existsById(id)).isFalse();
     }
 
-//    @Test
-//    void getCountTypoByStatusForWorkspaceName() {
-//
-//        List<Typo> listAll = repository.findAll();
-//
-//        long uniqTypoStatus = listAll.stream()
-//            .filter(x -> x.getWorkspace().getName().equals(WORKSPACE_101_NAME))
-//            .map(Typo::getTypoStatus)
-//            .distinct()
-//            .count();
-//
-//        Long countReported = listAll.stream()
-//            .filter(x -> x.getWorkspace().getName().equals(WORKSPACE_101_NAME))
-//            .filter(x -> x.getTypoStatus().equals(REPORTED)).count();
-//
-//        Long countInProgress = listAll.stream()
-//            .filter(x -> x.getWorkspace().getName().equals(WORKSPACE_101_NAME))
-//            .filter(x -> x.getTypoStatus().equals(IN_PROGRESS)).count();
-//
-//        Long countResolved = listAll.stream()
-//            .filter(x -> x.getWorkspace().getName().equals(WORKSPACE_101_NAME))
-//            .filter(x -> x.getTypoStatus().equals(RESOLVED)).count();
-//
-//        Long countCanceled = listAll.stream()
-//            .filter(x -> x.getWorkspace().getName().equals(WORKSPACE_101_NAME))
-//            .filter(x -> x.getTypoStatus().equals(CANCELED)).count();
-//
-//        List<Pair<TypoStatus, Long>> listWks = service.getCountTypoByStatusForWorkspaceName(WORKSPACE_101_NAME);
-//        assertThat(listWks.size()).isEqualTo((int) uniqTypoStatus);
-//        assertThat(listWks.stream())
-//            .filteredOn(x -> x.getLeft().equals(REPORTED) && x.getRight().equals(countReported))
-//            .hasSize(1);
-//        assertThat(listWks.stream())
-//            .filteredOn(x -> x.getLeft().equals(IN_PROGRESS) && x.getRight().equals(countInProgress))
-//            .hasSize(1);
-//        assertThat(listWks.stream())
-//            .filteredOn(x -> x.getLeft().equals(RESOLVED) && x.getRight().equals(countResolved))
-//            .hasSize(1);
-//        assertThat(listWks.stream())
-//            .filteredOn(x -> x.getLeft().equals(CANCELED) && x.getRight().equals(countCanceled))
-//            .hasSize(1);
-//
-//    }
-
     @Test
     void getCountTypoByStatusForWorkspaceId() {
 
@@ -288,22 +216,6 @@ class TypoServiceIT {
             .hasSize(1);
 
     }
-
-//    @Test
-//    void getLastTypoByWorkspaceName() {
-//        Optional<Typo> Top = repository.findAll()
-//            .stream()
-//            .filter(x -> x.getWorkspace().getName().equals(WORKSPACE_101_NAME))
-//            .sorted(Comparator.comparing(AbstractAuditingEntity::getCreatedDate))
-//            .limit(1L)
-//            .findFirst();
-//
-//        Optional<TypoInfo> typoInfo = service.getLastTypoByWorkspaceName(WORKSPACE_101_NAME);
-//        assertThat(typoInfo).isNotEmpty();
-//        assertThat(typoInfo.get().id()).isEqualTo(Top.get().getId());
-//        Optional<TypoInfo> typoInfo2 = service.getLastTypoByWorkspaceName(WORKSPACE_103_NAME);
-//        assertThat(typoInfo2).isEmpty();
-//    }
 
     @Test
     void getLastTypoByWorkspaceId() {

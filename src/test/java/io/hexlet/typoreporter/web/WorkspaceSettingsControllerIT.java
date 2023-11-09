@@ -61,22 +61,6 @@ public class WorkspaceSettingsControllerIT {
     @Autowired
     private MockMvc mockMvc;
 
-//    @ParameterizedTest
-//    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspaceNamesExist")
-//    void getWorkspaceSettingsPageIsSuccessful(final String wksName) throws Exception {
-//        final var apiAccessToken = repository.getWorkspaceSettingsByWorkspaceName(wksName)
-//            .map(s -> s.getId() + ":" + s.getApiAccessToken())
-//            .map(String::getBytes)
-//            .map(Base64.getEncoder()::encodeToString)
-//            .orElse(null);
-//
-//        MockHttpServletResponse response = mockMvc.perform(get("/workspace/{wksName}/settings", wksName))
-//            .andExpect(model().attributeExists("wksBasicToken"))
-//            .andReturn().getResponse();
-//
-//        assertThat(response.getContentAsString()).contains(apiAccessToken);
-//    }
-
     @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspaceIdsExist")
     void getWorkspaceSettingsPageIsSuccessful(final Long wksId) throws Exception {
@@ -92,27 +76,6 @@ public class WorkspaceSettingsControllerIT {
 
         assertThat(response.getContentAsString()).contains(apiAccessToken);
     }
-
-//    @ParameterizedTest
-//    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspaceNamesExist")
-//    void patchWorkspaceTokenIsSuccessful(final String wksName) throws Exception {
-//        String previousWksToken = repository.getWorkspaceSettingsByWorkspaceName(wksName)
-//            .map(WorkspaceSettings::getApiAccessToken)
-//            .map(UUID::toString)
-//            .orElse(null);
-//
-//        MockHttpServletResponse response = mockMvc.perform(patch("/workspace/{wksName}/token/regenerate", wksName)
-//                .with(csrf()))
-//            .andReturn().getResponse();
-//
-//        String newWksToken = repository.getWorkspaceSettingsByWorkspaceName(wksName)
-//            .map(WorkspaceSettings::getApiAccessToken)
-//            .map(UUID::toString)
-//            .orElse(null);
-//
-//        assertThat(previousWksToken).isNotEqualTo(newWksToken);
-//        assertThat(response.getRedirectedUrl()).isEqualTo("/workspace/" + wksName + "/settings");
-//    }
 
     @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspaceIdsExist")
@@ -134,13 +97,6 @@ public class WorkspaceSettingsControllerIT {
         assertThat(previousWksToken).isNotEqualTo(newWksToken);
         assertThat(response.getRedirectedUrl()).isEqualTo("/workspace/" + wksId + "/settings");
     }
-
-//    @Test
-//    void patchWorkspaceTokenWithoutWks() throws Exception {
-//        mockMvc.perform(patch("/workspace/{wksName}/token/regenerate", "notExistsWksName")
-//                .with(csrf()))
-//            .andExpect(redirectedUrl("/workspaces"));
-//    }
 
     @Test
     void patchWorkspaceTokenWithoutWks() throws Exception {

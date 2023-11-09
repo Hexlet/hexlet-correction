@@ -46,14 +46,6 @@ class WorkspaceRepositoryIT {
         registry.add("spring.datasource.username", postgreSQLContainer::getUsername);
     }
 
-//    @ParameterizedTest
-//    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspaceNamesExist")
-//    void getWorkspaceByName(final String wksName) {
-//        final var wks = workspaceRepository.getWorkspaceByName(wksName);
-//        assertThat(wks).isNotEmpty();
-//        assertThat(wks.map(Workspace::getName).orElseThrow()).isEqualTo(wksName);
-//    }
-
     @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspaceIdsExist")
     void getWorkspaceById(final Long wksId) {
@@ -62,13 +54,6 @@ class WorkspaceRepositoryIT {
         assertThat(wks.map(Workspace::getId).orElseThrow()).isEqualTo(wksId);
     }
 
-//    @ParameterizedTest
-//    @NullAndEmptySource
-//    @ValueSource(strings = "wks-not-exists")
-//    void getWorkspaceByNameNotExist(final String wksName) {
-//        assertThat(workspaceRepository.getWorkspaceByName(wksName)).isEmpty();
-//    }
-
     @ParameterizedTest
     @NullSource
     @ValueSource(longs = {9999L, 8888L, 7777L})
@@ -76,24 +61,11 @@ class WorkspaceRepositoryIT {
         assertThat(workspaceRepository.getWorkspaceById(wksId)).isEmpty();
     }
 
-//    @ParameterizedTest
-//    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspaceNamesExist")
-//    void existsWorkspaceByName(final String wksName) {
-//        assertThat(workspaceRepository.existsWorkspaceByName(wksName)).isTrue();
-//    }
-
     @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspaceIdsExist")
     void existsWorkspaceById(final Long wksId) {
         assertThat(workspaceRepository.existsWorkspaceById(wksId)).isTrue();
     }
-
-//    @ParameterizedTest
-//    @NullAndEmptySource
-//    @ValueSource(strings = "wks-not-exists")
-//    void existsWorkspaceByNameNotExist(final String wksName) {
-//        assertThat(workspaceRepository.existsWorkspaceByName(wksName)).isFalse();
-//    }
 
     @ParameterizedTest
     @NullSource
@@ -101,13 +73,6 @@ class WorkspaceRepositoryIT {
     void existsWorkspaceByIdNotExist(final Long wksId) {
         assertThat(workspaceRepository.existsWorkspaceById(wksId)).isFalse();
     }
-
-//    @ParameterizedTest
-//    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspaceNamesExist")
-//    void deleteWorkspaceByNameIsSuccessful(final String wksName) {
-//        assertThat(workspaceRepository.deleteWorkspaceByName(wksName)).isEqualTo(SUCCESSFUL_CODE);
-//        assertThat(workspaceRepository.existsWorkspaceByName(wksName)).isFalse();
-//    }
 
     @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspaceIdsExist")

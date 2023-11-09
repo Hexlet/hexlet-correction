@@ -30,29 +30,6 @@ public class WorkspaceSettingsController {
     private final WorkspaceService workspaceService;
     private final WorkspaceSettingsService workspaceSettingsService;
 
-//    @GetMapping("/settings")
-//    public String getWorkspaceSettingsPage(Model model, @PathVariable String wksName, HttpServletRequest req) {
-//        if (!workspaceService.existsWorkspaceByName(wksName)) {
-//            //TODO send to error page
-//            log.error("Workspace with name {} not found", wksName);
-//            return "redirect:/workspaces";
-//        }
-//        model.addAttribute("wksName", wksName);
-//
-//        final var settings = workspaceSettingsService.getWorkspaceSettingsByWorkspaceName(wksName);
-//        final var basicTokenStr = settings.getId() + ":" + settings.getApiAccessToken();
-//        final var wksBasicToken = Base64.getEncoder().encodeToString(basicTokenStr.getBytes());
-//        model.addAttribute("wksBasicToken", wksBasicToken);
-//        final var rootUrl = req.getRequestURL().toString().replace(req.getRequestURI(), "");
-//        model.addAttribute("rootUrl", rootUrl);
-//        final var wksId = settings.getWorkspace().getId();
-//        model.addAttribute("wksId", wksId);
-//
-//        getStatisticDataToModel(model, wksName);
-//        getLastTypoDataToModel(model, wksName);
-//        return "workspace/wks-settings";
-//    }
-
     @GetMapping("/settings")
     public String getWorkspaceSettingsPage(Model model, @PathVariable Long wksId, HttpServletRequest req) {
         if (!workspaceService.existsWorkspaceById(wksId)) {
@@ -76,17 +53,6 @@ public class WorkspaceSettingsController {
         return "workspace/wks-settings";
     }
 
-//    @PatchMapping("/token/regenerate")
-//    public String patchWorkspaceToken(@PathVariable String wksName) {
-//        if (!workspaceService.existsWorkspaceByName(wksName)) {
-//            //TODO send to error page
-//            log.error("Workspace with name {} not found", wksName);
-//            return "redirect:/workspaces";
-//        }
-//        workspaceSettingsService.regenerateWorkspaceApiAccessTokenByName(wksName);
-//        return ("redirect:/workspace/") + wksName + "/settings";
-//    }
-
     @PatchMapping("/token/regenerate")
     public String patchWorkspaceToken(@PathVariable Long wksId) {
         if (!workspaceService.existsWorkspaceById(wksId)) {
@@ -98,24 +64,11 @@ public class WorkspaceSettingsController {
         return ("redirect:/workspace/") + wksId.toString() + "/settings";
     }
 
-//    private void getStatisticDataToModel(final Model model, final String wksName) {
-//        final var countTypoByStatus = typoService.getCountTypoByStatusForWorkspaceName(wksName);
-//        model.addAttribute("countTypoByStatus", countTypoByStatus);
-//        model.addAttribute("sumTypoInWks", countTypoByStatus.stream().mapToLong(Pair::getValue).sum());
-//    }
-
     private void getStatisticDataToModel(final Model model, final Long wksId) {
         final var countTypoByStatus = typoService.getCountTypoByStatusForWorkspaceId(wksId);
         model.addAttribute("countTypoByStatus", countTypoByStatus);
         model.addAttribute("sumTypoInWks", countTypoByStatus.stream().mapToLong(Pair::getValue).sum());
     }
-
-//    private void getLastTypoDataToModel(final Model model, final String wksName) {
-//        final var createdDate = typoService.getLastTypoByWorkspaceName(wksName).map(TypoInfo::createdDate);
-//        model.addAttribute("lastTypoCreatedDate", createdDate);
-//        Locale locale = LocaleContextHolder.getLocale();
-//        model.addAttribute("lastTypoCreatedDateAgo", createdDate.map(new PrettyTime(locale)::format));
-//    }
 
     private void getLastTypoDataToModel(final Model model, final Long wksId) {
         final var createdDate = typoService.getLastTypoByWorkspaceId(wksId).map(TypoInfo::createdDate);

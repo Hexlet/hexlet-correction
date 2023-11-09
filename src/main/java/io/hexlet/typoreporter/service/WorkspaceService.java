@@ -49,31 +49,14 @@ public class WorkspaceService {
     }
 
     @Transactional(readOnly = true)
-    public Optional<WorkspaceInfo> getWorkspaceInfoByName(final String wksName) {
-        return workspaceRepository.getWorkspaceByName(wksName)
-            .map(workspaceMapper::toWorkspaceInfo);
-    }
-
-    @Transactional(readOnly = true)
     public Optional<WorkspaceInfo> getWorkspaceInfoById(final Long wksId) {
         return workspaceRepository.getWorkspaceById(wksId)
             .map(workspaceMapper::toWorkspaceInfo);
     }
 
     @Transactional(readOnly = true)
-    public boolean existsWorkspaceByName(final String wksName) {
-        return workspaceRepository.existsWorkspaceByName(wksName);
-    }
-
-    //top ???
-    @Transactional(readOnly = true)
     public boolean existsWorkspaceById(final Long wksId) {
         return workspaceRepository.existsWorkspaceById(wksId);
-    }
-
-    @Transactional(readOnly = true)
-    public boolean existsWorkspaceByUrl(final String wksUrl) {
-        return workspaceRepository.existsWorkspaceByName(wksUrl);
     }
 
     @Transactional
@@ -100,23 +83,6 @@ public class WorkspaceService {
         return workspaceMapper.toWorkspaceInfo(wksToCreate);
     }
 
-//    @Transactional
-//    public WorkspaceInfo updateWorkspace(final CreateWorkspace updateWks, final String oldWksName) {
-//        final Workspace workspace = workspaceRepository.getWorkspaceByName(oldWksName)
-//            .orElseThrow(() -> new WorkspaceNotFoundException(oldWksName));
-//        if (!oldWksName.equals(updateWks.name()) && workspaceRepository.existsWorkspaceByName(updateWks.name())) {
-//            throw new WorkspaceAlreadyExistException("name", updateWks.name());
-//        }
-//        final String updatedUrlValue = updateWks.url();
-//        if (!workspace.getUrl().equals(updatedUrlValue) && workspaceRepository.existsWorkspaceByUrl(updatedUrlValue)) {
-//            throw new WorkspaceAlreadyExistException("url", updatedUrlValue);
-//        }
-//        workspace.setName(updateWks.name());
-//        workspace.setDescription(updateWks.description());
-//        workspace.setUrl(updateWks.url());
-//        return workspaceMapper.toWorkspaceInfo(workspace);
-//    }
-
     @Transactional
     public WorkspaceInfo updateWorkspace(final CreateWorkspace updateWks, final Long oldWksId) {
         final Workspace workspace = workspaceRepository.getWorkspaceById(oldWksId)
@@ -135,22 +101,10 @@ public class WorkspaceService {
     }
 
     @Transactional
-    public Integer deleteWorkspaceByName(final String wksName) {
-        return workspaceRepository.deleteWorkspaceByName(wksName);
-    }
-
-    //top
-    @Transactional
     public Integer deleteWorkspaceById(final Long wksId) {
         return workspaceRepository.deleteWorkspaceById(wksId);
     }
 
-    @Transactional(readOnly = true)
-    public Optional<Workspace> getWorkspaceByName(final String name) {
-        return workspaceRepository.getWorkspaceByName(name);
-    }
-
-    //top
     @Transactional(readOnly = true)
     public Optional<Workspace> getWorkspaceById(final Long wksId) {
         return workspaceRepository.getWorkspaceById(wksId);
@@ -166,15 +120,6 @@ public class WorkspaceService {
     }
 
     @Transactional
-    public boolean isUserRelatedToWorkspace(String wksName, String username) {
-        final var accountOptional = accountRepository.findAccountByUsername(username);
-        return accountOptional.map(account -> account.getWorkspaceRoles().stream()
-                .map(WorkspaceRole::getWorkspace)
-                .anyMatch(wks -> wks.getName().equals(wksName)))
-            .orElse(false);
-    }
-
-    @Transactional
     public boolean isUserRelatedToWorkspace(Long wksId, String username) {
         final var accountOptional = accountRepository.findAccountByUsername(username);
         return accountOptional.map(account -> account.getWorkspaceRoles().stream()
@@ -183,20 +128,6 @@ public class WorkspaceService {
             .orElse(false);
     }
 
-    @Transactional(readOnly = true)
-    public boolean isAdminRoleUserInWorkspace(String wksName, String username) {
-        final var account = accountRepository.findAccountByUsername(username).
-            orElseThrow(() -> new AccountNotFoundException(username));
-        final var workspace = workspaceRepository.getWorkspaceByName(wksName).
-            orElseThrow(() -> new WorkspaceNotFoundException(wksName));
-        final var workSpaceRoleOptional = workspaceRoleRepository.getWorkspaceRoleByAccountIdAndWorkspaceId(
-            account.getId(),
-            workspace.getId()
-        );
-        return workSpaceRoleOptional.filter(workspaceRole -> workspaceRole.getRole() == AccountRole.ROLE_ADMIN).isPresent();
-    }
-
-    //top
     @Transactional(readOnly = true)
     public boolean isAdminRoleUserInWorkspace(Long wksId, String username) {
         final var account = accountRepository.findAccountByUsername(username).
