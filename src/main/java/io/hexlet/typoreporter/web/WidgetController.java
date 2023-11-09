@@ -24,28 +24,6 @@ public class WidgetController {
 
     private final TypoService typoService;
 
-//    @GetMapping("/typo/form/{wksName}")
-//    String getWidgetTypoForm(HttpServletResponse response,
-//                             final Model model,
-//                             @PathVariable String wksName) {
-//        final var wks = workspaceService.getWorkspaceByName(wksName);
-//        if (wks.isEmpty()) {
-//            log.error("Error during sending widget typo form. Workspace not found");
-//            return "widget/report-typo-error";
-//        }
-//        final var workspace = wks.get();
-//
-//        response.addHeader("Content-Security-Policy", "frame-ancestors " + workspace.getUrl());
-//        model.addAttribute("trustedOrigin", workspace.getUrl());
-//
-//        model.addAttribute("wksName", workspace.getName());
-//        model.addAttribute("formModified", false);
-//        model.addAttribute("typoReport", TypoReport.empty());
-//
-//        log.info("Send widget typo form to '{}'", workspace.getUrl());
-//        return "widget/typo-form";
-//    }
-
     @GetMapping("/typo/form/{wksId}")
     String getWidgetTypoForm(HttpServletResponse response,
                              final Model model,
@@ -60,50 +38,13 @@ public class WidgetController {
         response.addHeader("Content-Security-Policy", "frame-ancestors " + workspace.getUrl());
         model.addAttribute("trustedOrigin", workspace.getUrl());
 
-        model.addAttribute("wksName", workspace.getName());
+        model.addAttribute("wksId", wksId);
         model.addAttribute("formModified", false);
         model.addAttribute("typoReport", TypoReport.empty());
 
         log.info("Send widget typo form to '{}'", workspace.getUrl());
         return "widget/typo-form";
     }
-
-//    @PostMapping("/typo/form/{wksName}")
-//    String postWidgetTypoForm(HttpServletResponse response,
-//                              Model model,
-//                              @Valid @ModelAttribute TypoReport typoReport,
-//                              BindingResult bindingResult,
-//                              @PathVariable String wksName) {
-//        final var wks = workspaceService.getWorkspaceByName(wksName);
-//
-//        if (wks.isEmpty()) {
-//            log.error("Error during saving typo from widget. Workspace not found");
-//            return "widget/report-typo-error";
-//        }
-//
-//        response.addHeader("Content-Security-Policy", "frame-ancestors " + wks.get().getUrl());
-//
-//        if (bindingResult.hasFieldErrors("reporterComment")) {
-//            log.warn("Validation error during saving typo from widget. Typo not valid. Errors: {}", bindingResult.getAllErrors());
-//            model.addAttribute("typoReport", typoReport);
-//            model.addAttribute("formModified", true);
-//            return "widget/typo-form";
-//        }
-//
-//        if (bindingResult.hasErrors()) {
-//            log.error("Validation error during saving typo from widget. Typo not valid. Errors: {}", bindingResult.getAllErrors());
-//            return "widget/report-typo-error";
-//        }
-//
-//        try {
-//            typoService.addTypoReport(typoReport, wksName);
-//        } catch (Exception e) {
-//            log.error("Error during saving typo from widget.", e);
-//            return "widget/report-typo-error";
-//        }
-//
-//        return "widget/report-typo-success";
-//    }
 
     @PostMapping("/typo/form/{wksId}")
     String postWidgetTypoForm(HttpServletResponse response,

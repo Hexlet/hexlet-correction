@@ -61,10 +61,10 @@ import static org.springframework.data.domain.Sort.Order.asc;
 @RequestMapping("/workspace")
 @RequiredArgsConstructor
 public class WorkspaceController {
-    private static final String IS_USER_RELATED_TO_WKS_BY_ID =
+    private static final String IS_USER_RELATED_TO_WKS =
         "@workspaceService.isUserRelatedToWorkspace(#wksId, authentication.name)";
 
-    private static final String IS_USER_ADMIN_IN_WKS_BY_ID =
+    private static final String IS_USER_ADMIN_IN_WKS =
         "@workspaceService.isAdminRoleUserInWorkspace(#wksId, authentication.name)";
 
     private final TreeSet<Integer> availableSizes = new TreeSet<>(List.of(2, 5, 10, 15, 25));
@@ -110,7 +110,7 @@ public class WorkspaceController {
     }
 
     @GetMapping("/{wksId}")
-    @PreAuthorize(IS_USER_RELATED_TO_WKS_BY_ID)
+    @PreAuthorize(IS_USER_RELATED_TO_WKS)
     public String getWorkspaceInfoPage(Model model, @PathVariable Long wksId) {
         var wksOptional = workspaceService.getWorkspaceInfoById(wksId);
         if (wksOptional.isEmpty()) {
@@ -128,7 +128,7 @@ public class WorkspaceController {
     }
 
     @GetMapping("/{wksId}/typos")
-    @PreAuthorize(IS_USER_RELATED_TO_WKS_BY_ID)
+    @PreAuthorize(IS_USER_RELATED_TO_WKS)
     public String getWorkspaceTyposPage(Model model,
                                         @PathVariable Long wksId,
                                         @RequestParam(required = false) String typoStatus,
@@ -173,7 +173,7 @@ public class WorkspaceController {
     }
 
     @GetMapping("/{wksId}/update")
-    @PreAuthorize(IS_USER_RELATED_TO_WKS_BY_ID)
+    @PreAuthorize(IS_USER_RELATED_TO_WKS)
     public String getWorkspaceUpdatePage(Model model, @PathVariable Long wksId) {
         var wksOptional = workspaceService.getWorkspaceInfoById(wksId);
         if (wksOptional.isEmpty()) {
@@ -195,7 +195,7 @@ public class WorkspaceController {
 
     //TODO add tests
     @PutMapping("/{wksId}/update")
-    @PreAuthorize(IS_USER_RELATED_TO_WKS_BY_ID)
+    @PreAuthorize(IS_USER_RELATED_TO_WKS)
     public String putWorkspaceUpdate(Model model,
                                      @PathVariable Long wksId,
                                      @Valid @ModelAttribute CreateWorkspace wksUpdate,
@@ -224,7 +224,7 @@ public class WorkspaceController {
     }
 
     @DeleteMapping("/{wksId}")
-    @PreAuthorize(IS_USER_RELATED_TO_WKS_BY_ID)
+    @PreAuthorize(IS_USER_RELATED_TO_WKS)
     public String deleteWorkspaceById(@PathVariable Long wksId) {
         if (workspaceService.deleteWorkspaceById(wksId) == 0) {
             //TODO send to error page
@@ -235,7 +235,7 @@ public class WorkspaceController {
     }
 
     @GetMapping("/{wksId}/users")
-    @PreAuthorize(IS_USER_RELATED_TO_WKS_BY_ID)
+    @PreAuthorize(IS_USER_RELATED_TO_WKS)
     public String getWorkspaceUsersPage(Model model,
                                         @PathVariable Long wksId,
                                         @SortDefault("createdDate") Pageable pageable) {
@@ -282,7 +282,7 @@ public class WorkspaceController {
     }
 
     @PostMapping("/{wksId}/users")
-    @PreAuthorize(IS_USER_RELATED_TO_WKS_BY_ID)
+    @PreAuthorize(IS_USER_RELATED_TO_WKS)
     public String addUser(@RequestParam String email, @PathVariable Long wksId) {
         try {
             workspaceRoleService.addAccountToWorkspace(wksId, email);
@@ -297,7 +297,7 @@ public class WorkspaceController {
     }
 
     @DeleteMapping("/{wksId}/users")
-    @PreAuthorize(IS_USER_ADMIN_IN_WKS_BY_ID)
+    @PreAuthorize(IS_USER_ADMIN_IN_WKS)
     public String deleteUser(@RequestParam String email, @PathVariable Long wksId) {
         try {
             workspaceRoleService.deleteAccountFromWorkspace(wksId, email);

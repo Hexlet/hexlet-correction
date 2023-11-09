@@ -27,30 +27,6 @@ public class TypoController {
 
     private final WorkspaceService workspaceService;
 
-//    @PatchMapping("/{id}/status")
-//    public String updateTypoStatus(@PathVariable Long id,
-//                                   @RequestParam Optional<String> wksName,
-//                                   @RequestParam Optional<TypoEvent> event) {
-//        if (wksName.isEmpty() || !workspaceService.existsWorkspaceByName(wksName.get())) {
-//            //TODO send to error page
-//            final var e = new WorkspaceNotFoundException(wksName.orElse(""));
-//            log.error(e.toString(), e);
-//            return "redirect:/workspaces";
-//        }
-//        if (event.isEmpty()) {
-//            //TODO send to error page
-//            log.error("TypoEvent={} must not be null", event.orElse(null));
-//            return ("redirect:/workspace/") + wksName.get() + "/typos";
-//        }
-//        final var updatedTypo = typoService.updateTypoStatus(id, event.get());
-//        if (updatedTypo.isEmpty()) {
-//            //TODO send to error page
-//            final var e = new TypoNotFoundException(id);
-//            log.error(e.getMessage(), e);
-//        }
-//        return ("redirect:/workspace/") + wksName.get() + "/typos";
-//    }
-
     @PatchMapping("/{id}/status")
     public String updateTypoStatus(@PathVariable Long id,
                                    @RequestParam Optional<Long> wksId,
@@ -74,23 +50,6 @@ public class TypoController {
         }
         return ("redirect:/workspace/") + wksId.get() + "/typos";
     }
-
-//    @DeleteMapping("/{id}")
-//    public String deleteTypoById(@PathVariable Long id,
-//                                 @RequestParam Optional<String> wksName) {
-//        if (wksName.isEmpty() || !workspaceService.existsWorkspaceByName(wksName.get())) {
-//            //TODO send to error page
-//            final var e = new WorkspaceNotFoundException(wksName.orElse(""));
-//            log.error(e.toString(), e);
-//            return "redirect:/workspaces";
-//        }
-//        if (typoService.deleteTypoById(id) == 0) {
-//            //TODO send to error page
-//            final var e = new TypoNotFoundException(id);
-//            log.error(e.toString(), e);
-//        }
-//        return ("redirect:/workspace/") + wksName.get() + "/typos";
-//    }
 
     @DeleteMapping("/{id}")
     public String deleteTypoById(@PathVariable Long id,
