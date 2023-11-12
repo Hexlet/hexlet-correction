@@ -30,8 +30,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @Testcontainers
 @SpringBootTest
@@ -56,21 +55,21 @@ public class WorkspaceSettingsControllerIT {
     }
 
     @Autowired
-    private WorkspaceSettingsRepository repository;
+    private WorkspaceSettingsRepository workspaceSettingsRepository;
 
     @Autowired
     private MockMvc mockMvc;
 
     @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspaceNamesExist")
-    void getWorkspaceSettingsPageIsSuccessful(final String wksName) throws Exception {
-        final var apiAccessToken = repository.getWorkspaceSettingsByWorkspaceName(wksName)
+    void getWorkspaceIntegrationPageIsSuccessful(final String wksName) throws Exception {
+        final var apiAccessToken = workspaceSettingsRepository.getWorkspaceSettingsByWorkspaceName(wksName)
             .map(s -> s.getId() + ":" + s.getApiAccessToken())
             .map(String::getBytes)
             .map(Base64.getEncoder()::encodeToString)
             .orElse(null);
 
-        MockHttpServletResponse response = mockMvc.perform(get("/workspace/{wksName}/settings", wksName))
+        MockHttpServletResponse response = mockMvc.perform(get("/workspace/{wksName}/integration", wksName))
             .andExpect(model().attributeExists("wksBasicToken"))
             .andReturn().getResponse();
 
@@ -80,7 +79,7 @@ public class WorkspaceSettingsControllerIT {
     @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspaceNamesExist")
     void patchWorkspaceTokenIsSuccessful(final String wksName) throws Exception {
-        String previousWksToken = repository.getWorkspaceSettingsByWorkspaceName(wksName)
+        String previousWksToken = workspaceSettingsRepository.getWorkspaceSettingsByWorkspaceName(wksName)
             .map(WorkspaceSettings::getApiAccessToken)
             .map(UUID::toString)
             .orElse(null);
@@ -89,7 +88,7 @@ public class WorkspaceSettingsControllerIT {
                 .with(csrf()))
             .andReturn().getResponse();
 
-        String newWksToken = repository.getWorkspaceSettingsByWorkspaceName(wksName)
+        String newWksToken = workspaceSettingsRepository.getWorkspaceSettingsByWorkspaceName(wksName)
             .map(WorkspaceSettings::getApiAccessToken)
             .map(UUID::toString)
             .orElse(null);

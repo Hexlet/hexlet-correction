@@ -18,7 +18,9 @@
                  th:insert="~{fragments/workspace :: wksLastTypoDate (${lastTypoCreatedDateAgo}, ${lastTypoCreatedDate})}"></div>
             <div class="row my-2">
                 <div aria-label="Re-generate workspace authentication token" class="col">
-                    <form th:action="@{'/workspace/' + ${wksName} + '/token/regenerate'}" th:method="patch">
+                    <form th:method="patch"
+                          th:if="${isAdmin}"
+                          th:action="@{'/workspace/' + ${wksName} + '/token/regenerate'}">
                         <button class="btn btn-danger" type="submit" th:text="#{btn.regenerate-token}"></button>
                     </form>
                 </div>
@@ -29,14 +31,6 @@
                     <p class="form-control user-select-all d-inline-flex mb-3" readonly>[[${wksBasicToken} ?: '&lt;Token not generated&gt;']]</p>
                     <p class="fw-bold mb-2">Используйте заголовок Authorization:</p>
                     <p class="form-control user-select-all  d-inline-flex mb-3" readonly>Basic [[${wksBasicToken}]]</p>
-                    <p class="fw-bold mb-2">Установите этот скрипт на ваш сайт:</p>
-                    <pre style="font-size:18px" class="form-control user-select-all d-inline-flex mb-3" readonly>
-&lt;script src="https://cdn.jsdelivr.net/gh/hexlet/hexlet-correction@main/src/widget/index.js"&gt;&lt;/script&gt;;
-
-&lt;script&gt;
-    handleTypoReporter({ authorizationToken: '[[${wksBasicToken}]]',
-    workSpaceUrl: '[[${rootUrl}]]', workSpaceId: '[[${wksId}]]'})
-&lt;/script&gt;</pre>
                 </div>
             </div>
         </div>
