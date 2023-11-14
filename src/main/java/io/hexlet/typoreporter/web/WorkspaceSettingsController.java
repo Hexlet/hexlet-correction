@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
 import org.ocpsoft.prettytime.PrettyTime;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -23,6 +24,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.Base64;
 import java.util.Locale;
+
+import static io.hexlet.typoreporter.web.WorkspaceController.IS_USER_ADMIN_IN_WKS;
+import static io.hexlet.typoreporter.web.WorkspaceController.IS_USER_RELATED_TO_WKS;
 
 @Slf4j
 @Controller
@@ -36,6 +40,7 @@ public class WorkspaceSettingsController {
     private final AccountService accountService;
 
     @GetMapping("/settings")
+    @PreAuthorize(IS_USER_RELATED_TO_WKS)
     public String getWorkspaceSettingsPage(Model model, @PathVariable String wksName, HttpServletRequest req) {
         if (!workspaceService.existsWorkspaceByName(wksName)) {
             //TODO send to error page
@@ -57,6 +62,7 @@ public class WorkspaceSettingsController {
     }
 
     @GetMapping("/integration")
+    @PreAuthorize(IS_USER_RELATED_TO_WKS)
     public String getWorkspaceIntegrationPage(Model model, @PathVariable String wksName, HttpServletRequest req) {
         if (!workspaceService.existsWorkspaceByName(wksName)) {
             //TODO send to error page
@@ -73,6 +79,7 @@ public class WorkspaceSettingsController {
     }
 
     @PatchMapping("/token/regenerate")
+    @PreAuthorize(IS_USER_ADMIN_IN_WKS)
     public String patchWorkspaceToken(@PathVariable String wksName) {
         if (!workspaceService.existsWorkspaceByName(wksName)) {
             //TODO send to error page

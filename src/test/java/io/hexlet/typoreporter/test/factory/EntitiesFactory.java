@@ -59,6 +59,18 @@ public class EntitiesFactory {
         );
     }
 
+    public static Stream<Arguments> getWorkspaceAndAdminRelated() {
+        return Stream.of(
+            Arguments.of(WORKSPACE_103_NAME, ACCOUNT_103_USERNAME)
+        );
+    }
+
+    public static Stream<Arguments> getWorkspaceAndNotAdminRelated() {
+        return Stream.of(
+            Arguments.of(WORKSPACE_101_NAME, ACCOUNT_101_USERNAME)
+        );
+    }
+
     public static Stream<Arguments> getWorkspacesAndUsersAndTypoStatusRelated() {
         return Stream.of(
             Arguments.of(WORKSPACE_102_NAME, ACCOUNT_102_USERNAME, "REPORTED"),
