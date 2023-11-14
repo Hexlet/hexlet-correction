@@ -61,9 +61,6 @@ public class WorkspaceService {
 
     @Transactional
     public WorkspaceInfo createWorkspace(final CreateWorkspace createWks, final String userName) {
-        if (workspaceRepository.existsWorkspaceByName(createWks.name())) {
-            throw new WorkspaceAlreadyExistException("name", createWks.name());
-        }
         if (workspaceRepository.existsWorkspaceByUrl(createWks.url())) {
             throw new WorkspaceAlreadyExistException("url", createWks.url());
         }
@@ -84,12 +81,9 @@ public class WorkspaceService {
     }
 
     @Transactional
-    public WorkspaceInfo updateWorkspace(final CreateWorkspace updateWks, final Long oldWksId) {
-        final Workspace workspace = workspaceRepository.getWorkspaceById(oldWksId)
-            .orElseThrow(() -> new WorkspaceNotFoundException(oldWksId));
-        if (!workspace.getName().equals(updateWks.name()) && workspaceRepository.existsWorkspaceByName(updateWks.name())) {
-            throw new WorkspaceAlreadyExistException("name", updateWks.name());
-        }
+    public WorkspaceInfo updateWorkspace(final CreateWorkspace updateWks, final Long wksId) {
+        final Workspace workspace = workspaceRepository.getWorkspaceById(wksId)
+            .orElseThrow(() -> new WorkspaceNotFoundException(wksId));
         final String updatedUrlValue = updateWks.url();
         if (!workspace.getUrl().equals(updatedUrlValue) && workspaceRepository.existsWorkspaceByUrl(updatedUrlValue)) {
             throw new WorkspaceAlreadyExistException("url", updatedUrlValue);
