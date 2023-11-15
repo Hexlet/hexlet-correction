@@ -29,7 +29,7 @@ public class WorkspaceSettings extends AbstractAuditingEntity implements Identif
     private UUID apiAccessToken;
 
     @MapsId
-    @OneToOne//(fetch = LAZY)
+    @OneToOne(fetch = LAZY)
     @JoinColumn(name = "id")
     @ToString.Exclude
     private Workspace workspace;

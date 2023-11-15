@@ -5,6 +5,7 @@ import io.hexlet.typoreporter.service.WorkspaceService;
 import io.hexlet.typoreporter.service.WorkspaceSettingsService;
 import io.hexlet.typoreporter.service.dto.typo.TypoInfo;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
@@ -30,6 +31,7 @@ public class WorkspaceSettingsController {
     private final WorkspaceService workspaceService;
     private final WorkspaceSettingsService workspaceSettingsService;
 
+    @Transactional
     @GetMapping("/settings")
     public String getWorkspaceSettingsPage(Model model, @PathVariable Long wksId, HttpServletRequest req) {
         if (!workspaceService.existsWorkspaceById(wksId)) {
