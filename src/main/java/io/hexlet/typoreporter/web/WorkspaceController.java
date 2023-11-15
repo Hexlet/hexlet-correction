@@ -62,9 +62,9 @@ import static org.springframework.data.domain.Sort.Order.asc;
 @RequiredArgsConstructor
 public class WorkspaceController {
 
-    private static final String IS_USER_RELATED_TO_WKS =
+    protected static final String IS_USER_RELATED_TO_WKS =
         "@workspaceService.isUserRelatedToWorkspace(#wksName, authentication.name)";
-    private static final String IS_USER_ADMIN_IN_WKS =
+    protected static final String IS_USER_ADMIN_IN_WKS =
         "@workspaceService.isAdminRoleUserInWorkspace(#wksName, authentication.name)";
 
     private final TreeSet<Integer> availableSizes = new TreeSet<>(List.of(2, 5, 10, 15, 25));
