@@ -16,23 +16,24 @@ public class WorkspaceSettingsService {
     private final WorkspaceSettingsRepository repository;
 
     @Transactional(readOnly = true)
-    public UUID getWorkspaceApiAccessTokenByName(String wksName) {
-        return repository.getWorkspaceSettingsByWorkspaceName(wksName)
+    public UUID getWorkspaceApiAccessTokenById(Long wksId) {
+        return repository.getWorkspaceSettingsByWorkspaceId(wksId)
             .map(WorkspaceSettings::getApiAccessToken)
-            .orElseThrow(() -> new WorkspaceNotFoundException(wksName));
+            .orElseThrow(() -> new WorkspaceNotFoundException(wksId));
     }
 
     @Transactional(readOnly = true)
-    public WorkspaceSettings getWorkspaceSettingsByWorkspaceName(String wksName) {
-        return repository.getWorkspaceSettingsByWorkspaceName(wksName)
-            .orElseThrow(() -> new WorkspaceNotFoundException(wksName));
+    public WorkspaceSettings getWorkspaceSettingsByWorkspaceId(Long wksId) {
+        return repository.getWorkspaceSettingsByWorkspaceId(wksId)
+            .orElseThrow(() -> new WorkspaceNotFoundException(wksId));
     }
 
+    //top
     @Transactional
-    public void regenerateWorkspaceApiAccessTokenByName(String wksName) {
-        final var maybeWksSettings = repository.getWorkspaceSettingsByWorkspaceName(wksName);
+    public void regenerateWorkspaceApiAccessTokenById(Long wksId) {
+        final var maybeWksSettings = repository.getWorkspaceSettingsByWorkspaceId(wksId);
         if (maybeWksSettings.isEmpty()) {
-            throw new WorkspaceNotFoundException(wksName);
+            throw new WorkspaceNotFoundException(wksId);
         }
         final var wksSettings = maybeWksSettings.get();
         wksSettings.setApiAccessToken(UUID.randomUUID());

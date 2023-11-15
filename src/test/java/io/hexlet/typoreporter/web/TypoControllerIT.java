@@ -62,16 +62,16 @@ public class TypoControllerIT {
     @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getTypoIdsExist")
     void updateTypoStatusIsSuccessful(final Long typoId) throws Exception {
         Typo typo = typoRepository.findById(typoId).orElse(null);
-        String wksName = typo.getWorkspace().getName();
+        Long wksId = typo.getWorkspace().getId();
 
         typo.setTypoStatus(TypoStatus.IN_PROGRESS);
         TypoStatus previousStatus = typo.getTypoStatus(); // IN_PROGRESS
 
         mockMvc.perform(patch("/typos/{id}/status", typoId)
-                .param("wksName", wksName)
+                .param("wksId", wksId.toString())
                 .param("event", CANCEL.name())
                 .with(csrf()))
-            .andExpect(redirectedUrl("/workspace/" + wksName + "/typos"));
+            .andExpect(redirectedUrl("/workspace/" + wksId + "/typos"));
         assertThat(previousStatus).isNotEqualTo(typo.getTypoStatus());
     }
 
@@ -79,61 +79,58 @@ public class TypoControllerIT {
     @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getTypoIdsExist")
     void updateTypoStatusWithEventIsEmpty(final Long typoId) throws Exception {
         Typo typo = typoRepository.findById(typoId).orElse(null);
-        String wksName = typo.getWorkspace().getName();
+        Long wksId = typo.getWorkspace().getId();
 
         typo.setTypoStatus(TypoStatus.IN_PROGRESS);
         TypoStatus previousStatus = typo.getTypoStatus(); // IN_PROGRESS
 
         mockMvc.perform(patch("/typos/{id}/status", typoId)
-                .param("wksName", wksName)
+                .param("wksId", wksId.toString())
                 .param("event", "")
                 .with(csrf()))
-            .andExpect(redirectedUrl("/workspace/" + wksName + "/typos"));
+            .andExpect(redirectedUrl("/workspace/" + wksId + "/typos"));
         assertThat(previousStatus).isEqualTo(typo.getTypoStatus());
     }
 
     @ParameterizedTest
-    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspaceNamesExist")
-    void updateTypoStatusWithUpdatedTypoIsEmpty(final String wksName) throws Exception {
+    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspaceIdsExist")
+    void updateTypoStatusWithUpdatedTypoIsEmpty(final Long wksId) throws Exception {
         final Long NOT_EXIST_TYPO_ID = 11L;
         mockMvc.perform(patch("/typos/{id}/status", NOT_EXIST_TYPO_ID)
-                .param("wksName", wksName)
+                .param("wksId", wksId.toString())
                 .param("event", CANCEL.name())
                 .with(csrf()))
-            .andExpect(redirectedUrl("/workspace/" + wksName + "/typos"));
+            .andExpect(redirectedUrl("/workspace/" + wksId + "/typos"));
     }
-
 
     @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getTypoIdsExist")
     void deleteTypoByIdIsSuccessful(final Long typoId) throws Exception {
         Typo typo = typoRepository.findById(typoId).orElse(null);
-        String wksName = typo.getWorkspace().getName();
+        Long wksId = typo.getWorkspace().getId();
 
         assertThat(typoRepository.existsById(typoId)).isTrue();
 
         mockMvc.perform(delete("/typos/{id}", typoId)
-                .param("wksName", wksName)
+                .param("wksId", wksId.toString())
                 .with(csrf()))
-            .andExpect(redirectedUrl("/workspace/" + wksName + "/typos"));
+            .andExpect(redirectedUrl("/workspace/" + wksId + "/typos"));
 
         assertThat(typoRepository.existsById(typoId)).isFalse();
     }
 
     @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getTypoIdsExist")
-    void deleteTypoByIdWithEmptyAndNotExistWksName(final Long typoId) throws Exception {
+    void deleteTypoByIdWithEmptyAndNotExistWksId(final Long typoId) throws Exception {
         assertThat(typoRepository.existsById(typoId)).isTrue();
 
-        String emptyWksName = "";
         mockMvc.perform(delete("/typos/{id}", typoId)
-                .param("wksName", emptyWksName)
                 .with(csrf()))
             .andExpect(redirectedUrl("/workspaces"));
 
-        String notExistsWksName = "noExistsWks";
+        Long notExistsWksId = -1L;
         mockMvc.perform(delete("/typos/{id}", typoId)
-                .param("wksName", notExistsWksName)
+                .param("wksId", notExistsWksId.toString())
                 .with(csrf()))
             .andExpect(redirectedUrl("/workspaces"));
 

@@ -12,9 +12,9 @@
                     <p class="card-text" th:text="*{description}"></p>
                 </div>
                 <div class="card-footer bg-white border-top-0">
-                    <a class="card-link" th:href="@{'/workspace/' + *{name}}" th:text="#{wks.info}"></a>
-                    <a class="card-link" th:href="@{'/workspace/' + *{name} + '/typos'(typoStatus=REPORTED)}" th:text="#{wks.typos}"></a>
-                    <a class="card-link" th:href="@{'/workspace/' + *{name} + '/users'}" th:text="#{wks.users}"></a>
+                    <a class="card-link" th:href="@{'/workspace/' + *{id}}" th:text="#{wks.info}"></a>
+                    <a class="card-link" th:href="@{'/workspace/' + *{id} + '/typos'(typoStatus=REPORTED)}" th:text="#{wks.typos}"></a>
+                    <a class="card-link" th:href="@{'/workspace/' + *{id} + '/users'}" th:text="#{wks.users}"></a>
                 </div>
             </div>
         </div>

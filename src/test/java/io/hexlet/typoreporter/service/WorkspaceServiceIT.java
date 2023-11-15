@@ -17,7 +17,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,7 +28,7 @@ import java.util.UUID;
 
 import static com.github.database.rider.core.api.configuration.Orthography.LOWERCASE;
 import static io.hexlet.typoreporter.test.Constraints.POSTGRES_IMAGE;
-import static io.hexlet.typoreporter.test.factory.EntitiesFactory.WORKSPACE_101_NAME;
+import static io.hexlet.typoreporter.test.factory.EntitiesFactory.WORKSPACE_101_ID;
 import static java.util.Objects.requireNonNull;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -47,9 +46,6 @@ public class WorkspaceServiceIT {
     public static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>(POSTGRES_IMAGE)
         .withPassword("inmemory")
         .withUsername("inmemory");
-
-    @Autowired
-    private WorkspaceRepository repository;
 
     @Autowired
     private WorkspaceService service;
@@ -71,23 +67,23 @@ public class WorkspaceServiceIT {
     @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspaces")
     void getAllWorkspacesInfoIsSuccessful() {
         WorkspaceInfo workspaceInfo = service.getAllWorkspacesInfo().stream()
-            .filter(wksInfo -> wksInfo.name().equals(WORKSPACE_101_NAME))
+            .filter(wksInfo -> wksInfo.id().equals(WORKSPACE_101_ID))
             .findFirst().orElse(null);
 
         assertThat(Objects.requireNonNull(workspaceInfo).createdDateAgo()).isNotEmpty();
     }
 
     @ParameterizedTest
-    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspaceNamesExist")
-    void getWorkspaceInfoByNameIsSuccessful(final String wksName) {
-        WorkspaceInfo workspaceInfo = service.getWorkspaceInfoByName(wksName).orElse(null);
+    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspaceIdsExist")
+    void getWorkspaceInfoByIdIsSuccessful(final Long wksId) {
+        WorkspaceInfo workspaceInfo = service.getWorkspaceInfoById(wksId).orElse(null);
         assertThat(workspaceInfo != null).isTrue();
     }
 
     @ParameterizedTest
-    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspaceNamesExist")
-    void existsWorkspaceByNameIsSuccessful(final String wksName) {
-        assertThat(service.existsWorkspaceByName(wksName)).isTrue();
+    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspaceIdsExist")
+    void existsWorkspaceByNameIsSuccessful(final Long wksId) {
+        assertThat(service.existsWorkspaceById(wksId)).isTrue();
     }
 
     @Autowired
@@ -115,29 +111,29 @@ public class WorkspaceServiceIT {
     }
 
     @ParameterizedTest
-    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspaceNamesExist")
+    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspaceIdsExist")
     void updateWorkspaceIsSuccessful() {
         final var newUrl = "https://updatemysite.com";
         assertThat(workspaceRepository.existsWorkspaceByUrl(newUrl)).isFalse();
         final var newWks = new CreateWorkspace("wks-name-1", "wks desc", newUrl);
-        WorkspaceInfo workspaceInfo = service.updateWorkspace(newWks, "wks-test");
+        WorkspaceInfo workspaceInfo = service.updateWorkspace(newWks, WORKSPACE_101_ID);
         assertThat(Objects.requireNonNull(workspaceInfo).name()).isEqualTo(newWks.name());
         assertThat(workspaceInfo.url()).isEqualTo(newWks.url());
         assertThat(workspaceInfo.description()).isEqualTo(newWks.description());
     }
 
     @ParameterizedTest
-    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspaceNamesExist")
-    void deleteWorkspaceByNameIsSuccessful(final String wksName) {
+    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspaceIdsExist")
+    void deleteWorkspaceByNameIsSuccessful(final Long wksId) {
         final Integer successfulCode = 1;
-        assertThat(service.deleteWorkspaceByName(wksName)).isEqualTo(successfulCode);
-        assertThat(service.existsWorkspaceByName(wksName)).isFalse();
+        assertThat(service.deleteWorkspaceById(wksId)).isEqualTo(successfulCode);
+        assertThat(service.existsWorkspaceById(wksId)).isFalse();
     }
 
     @ParameterizedTest
-    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspaceNamesExist")
-    void getWorkspaceByNameIsSuccessful(final String wksName) {
-        Workspace workspace = service.getWorkspaceByName(wksName).orElse(null);
+    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspaceIdsExist")
+    void getWorkspaceByNameIsSuccessful(final Long wksId) {
+        Workspace workspace = service.getWorkspaceById(wksId).orElse(null);
         assertThat(workspace != null).isTrue();
     }
 }

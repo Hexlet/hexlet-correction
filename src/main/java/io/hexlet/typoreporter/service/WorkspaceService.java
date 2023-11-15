@@ -49,26 +49,18 @@ public class WorkspaceService {
     }
 
     @Transactional(readOnly = true)
-    public Optional<WorkspaceInfo> getWorkspaceInfoByName(final String wksName) {
-        return workspaceRepository.getWorkspaceByName(wksName)
+    public Optional<WorkspaceInfo> getWorkspaceInfoById(final Long wksId) {
+        return workspaceRepository.getWorkspaceById(wksId)
             .map(workspaceMapper::toWorkspaceInfo);
     }
 
     @Transactional(readOnly = true)
-    public boolean existsWorkspaceByName(final String wksName) {
-        return workspaceRepository.existsWorkspaceByName(wksName);
-    }
-
-    @Transactional(readOnly = true)
-    public boolean existsWorkspaceByUrl(final String wksUrl) {
-        return workspaceRepository.existsWorkspaceByName(wksUrl);
+    public boolean existsWorkspaceById(final Long wksId) {
+        return workspaceRepository.existsWorkspaceById(wksId);
     }
 
     @Transactional
     public WorkspaceInfo createWorkspace(final CreateWorkspace createWks, final String userName) {
-        if (workspaceRepository.existsWorkspaceByName(createWks.name())) {
-            throw new WorkspaceAlreadyExistException("name", createWks.name());
-        }
         if (workspaceRepository.existsWorkspaceByUrl(createWks.url())) {
             throw new WorkspaceAlreadyExistException("url", createWks.url());
         }
@@ -89,12 +81,9 @@ public class WorkspaceService {
     }
 
     @Transactional
-    public WorkspaceInfo updateWorkspace(final CreateWorkspace updateWks, final String oldWksName) {
-        final Workspace workspace = workspaceRepository.getWorkspaceByName(oldWksName)
-            .orElseThrow(() -> new WorkspaceNotFoundException(oldWksName));
-        if (!oldWksName.equals(updateWks.name()) && workspaceRepository.existsWorkspaceByName(updateWks.name())) {
-            throw new WorkspaceAlreadyExistException("name", updateWks.name());
-        }
+    public WorkspaceInfo updateWorkspace(final CreateWorkspace updateWks, final Long wksId) {
+        final Workspace workspace = workspaceRepository.getWorkspaceById(wksId)
+            .orElseThrow(() -> new WorkspaceNotFoundException(wksId));
         final String updatedUrlValue = updateWks.url();
         if (!workspace.getUrl().equals(updatedUrlValue) && workspaceRepository.existsWorkspaceByUrl(updatedUrlValue)) {
             throw new WorkspaceAlreadyExistException("url", updatedUrlValue);
@@ -106,13 +95,13 @@ public class WorkspaceService {
     }
 
     @Transactional
-    public Integer deleteWorkspaceByName(final String wksName) {
-        return workspaceRepository.deleteWorkspaceByName(wksName);
+    public Integer deleteWorkspaceById(final Long wksId) {
+        return workspaceRepository.deleteWorkspaceById(wksId);
     }
 
     @Transactional(readOnly = true)
-    public Optional<Workspace> getWorkspaceByName(final String name) {
-        return workspaceRepository.getWorkspaceByName(name);
+    public Optional<Workspace> getWorkspaceById(final Long wksId) {
+        return workspaceRepository.getWorkspaceById(wksId);
     }
 
     @Transactional(readOnly = true)
@@ -125,20 +114,20 @@ public class WorkspaceService {
     }
 
     @Transactional
-    public boolean isUserRelatedToWorkspace(String wksName, String username) {
+    public boolean isUserRelatedToWorkspace(Long wksId, String username) {
         final var accountOptional = accountRepository.findAccountByUsername(username);
         return accountOptional.map(account -> account.getWorkspaceRoles().stream()
                 .map(WorkspaceRole::getWorkspace)
-                .anyMatch(wks -> wks.getName().equals(wksName)))
+                .anyMatch(wks -> wks.getId().equals(wksId)))
             .orElse(false);
     }
 
     @Transactional(readOnly = true)
-    public boolean isAdminRoleUserInWorkspace(String wksName, String username) {
+    public boolean isAdminRoleUserInWorkspace(Long wksId, String username) {
         final var account = accountRepository.findAccountByUsername(username).
             orElseThrow(() -> new AccountNotFoundException(username));
-        final var workspace = workspaceRepository.getWorkspaceByName(wksName).
-            orElseThrow(() -> new WorkspaceNotFoundException(wksName));
+        final var workspace = workspaceRepository.getWorkspaceById(wksId).
+            orElseThrow(() -> new WorkspaceNotFoundException(wksId));
         final var workSpaceRoleOptional = workspaceRoleRepository.getWorkspaceRoleByAccountIdAndWorkspaceId(
             account.getId(),
             workspace.getId()

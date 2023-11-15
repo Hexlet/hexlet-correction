@@ -16,8 +16,8 @@ import java.lang.annotation.Target;
 @NotNull
 @NotBlank
 @NotEmpty
-@Size(min = 2, max = 20)
-@Pattern(regexp = "^[-_A-Za-z0-9]*$")
+@Size(min = 2, max = 200)
+//@Pattern(regexp = "^[-_A-Za-z0-9]*$")
 @Constraint(validatedBy = {})
 @Target({ElementType.FIELD, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)

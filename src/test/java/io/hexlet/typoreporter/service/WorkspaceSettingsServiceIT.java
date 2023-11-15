@@ -43,18 +43,18 @@ public class WorkspaceSettingsServiceIT {
     private WorkspaceSettingsService service;
 
     @ParameterizedTest
-    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspaceNamesExist")
-    void getWorkspaceApiAccessTokenByNameIsSuccessful(final String wksName) {
-        UUID uuid = service.getWorkspaceApiAccessTokenByName(wksName);
+    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspaceIdsExist")
+    void getWorkspaceApiAccessTokenByIdIsSuccessful(final Long wksId) {
+        UUID uuid = service.getWorkspaceApiAccessTokenById(wksId);
         assertThat(uuid != null).isTrue();
     }
 
     @ParameterizedTest
-    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspaceNamesExist")
-    void regenerateWorkspaceApiAccessTokenByNameIsSuccessful(final String wksName) {
-        UUID previousUuid = service.getWorkspaceApiAccessTokenByName(wksName);
-        service.regenerateWorkspaceApiAccessTokenByName(wksName);
-        UUID newUuid = service.getWorkspaceApiAccessTokenByName(wksName);
+    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspaceIdsExist")
+    void regenerateWorkspaceApiAccessTokenByIdIsSuccessful(final Long wksId) {
+        UUID previousUuid = service.getWorkspaceApiAccessTokenById(wksId);
+        service.regenerateWorkspaceApiAccessTokenById(wksId);
+        UUID newUuid = service.getWorkspaceApiAccessTokenById(wksId);
         assertThat(previousUuid).isNotEqualTo(newUuid);
     }
 }
