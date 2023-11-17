@@ -14,21 +14,20 @@ import java.util.Optional;
 
 @Repository
 public interface TypoRepository extends JpaRepository<Typo, Long> {
+    Page<Typo> findPageTypoByWorkspaceId(Pageable pageable, Long wksId);
 
-    Page<Typo> findPageTypoByWorkspaceName(Pageable pageable, String name);
-
-    Page<Typo> findPageTypoByWorkspaceNameAndTypoStatus(Pageable pageable, String name, TypoStatus status);
+    Page<Typo> findPageTypoByWorkspaceIdAndTypoStatus(Pageable pageable, Long wksId, TypoStatus status);
 
     Integer deleteTypoById(Long id);
 
     @Query("""
         select new org.apache.commons.lang3.tuple.ImmutablePair(t.typoStatus, count(t))
         from Typo t
-        where t.workspace.name = :wksName
+        where t.workspace.id = :wksId
         group by t.typoStatus
         """)
-    List<Pair<TypoStatus, Long>> getCountTypoStatusForWorkspaceName(String wksName);
+    List<Pair<TypoStatus, Long>> getCountTypoStatusForWorkspaceId(Long wksId);
 
-    Optional<Typo> findFirstByWorkspaceNameOrderByCreatedDateDesc(String wksName);
+    Optional<Typo> findFirstByWorkspaceIdOrderByCreatedDateDesc(Long wksId);
 
 }

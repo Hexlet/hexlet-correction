@@ -8,7 +8,7 @@ package:
 
 clear:
 	./mvnw -B -ntp -fae clean
-	docker-compose -f docker/docker-compose.yml down -v
+	docker compose -f docker/docker-compose.yml down -v
 
 setup: build
 
@@ -29,7 +29,7 @@ run-dev-docker-db: docker-infra-start run-dev
 start: run-dev-docker-db
 
 docker-infra-start:
-	docker-compose -f docker/docker-compose.yml up -d -V --remove-orphans
+	docker compose -f docker/docker-compose.yml up -d -V --remove-orphans
 
 update-versions:
 	./mvnw versions:update-properties versions:display-plugin-updates

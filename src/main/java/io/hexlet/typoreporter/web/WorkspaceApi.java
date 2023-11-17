@@ -35,7 +35,7 @@ public class WorkspaceApi {
         try {
             final var authId = Long.parseLong(wksIdStr);
             if (authId != id) {
-                throw new WorkspaceNotFoundException(wksIdStr);
+                throw new WorkspaceNotFoundException(id);
             }
             final var uri = builder.path("/workspace").pathSegment(wksIdStr).path("/typos").build().toUri();
             return created(uri).body(service.addTypoReport(typoReport, id));

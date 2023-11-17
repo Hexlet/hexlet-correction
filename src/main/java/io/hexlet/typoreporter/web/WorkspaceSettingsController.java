@@ -7,6 +7,7 @@ import io.hexlet.typoreporter.service.WorkspaceService;
 import io.hexlet.typoreporter.service.WorkspaceSettingsService;
 import io.hexlet.typoreporter.service.dto.typo.TypoInfo;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
@@ -30,7 +31,7 @@ import static io.hexlet.typoreporter.web.WorkspaceController.IS_USER_RELATED_TO_
 
 @Slf4j
 @Controller
-@RequestMapping("/workspace/{wksName}")
+@RequestMapping("/workspace/{wksId}")
 @RequiredArgsConstructor
 public class WorkspaceSettingsController {
 
@@ -39,78 +40,80 @@ public class WorkspaceSettingsController {
     private final WorkspaceSettingsService workspaceSettingsService;
     private final AccountService accountService;
 
+    @Transactional
     @GetMapping("/settings")
     @PreAuthorize(IS_USER_RELATED_TO_WKS)
-    public String getWorkspaceSettingsPage(Model model, @PathVariable String wksName, HttpServletRequest req) {
-        if (!workspaceService.existsWorkspaceByName(wksName)) {
+    public String getWorkspaceSettingsPage(Model model, @PathVariable Long wksId, HttpServletRequest req) {
+        if (!workspaceService.existsWorkspaceById(wksId)) {
             //TODO send to error page
-            log.error("Workspace with name {} not found", wksName);
+            log.error("Workspace with id {} not found", wksId);
             return "redirect:/workspaces";
         }
+
+        addTokenAndUrlToModel(model, wksId, req);
+
+        String wksName = workspaceService.getWorkspaceById(wksId).get().getName();
         model.addAttribute("wksName", wksName);
 
-        addTokenAndUrlToModel(model, wksName, req);
-
         final Account authenticatedAccount = getAccountFromAuthentication();
-        final boolean accountIsAdminRole = workspaceService.isAdminRoleUserInWorkspace(wksName,
+        final boolean accountIsAdminRole = workspaceService.isAdminRoleUserInWorkspace(wksId,
             authenticatedAccount.getUsername());
         model.addAttribute("isAdmin", accountIsAdminRole);
 
-        getStatisticDataToModel(model, wksName);
-        getLastTypoDataToModel(model, wksName);
+        getStatisticDataToModel(model, wksId);
+        getLastTypoDataToModel(model, wksId);
         return "workspace/wks-settings";
     }
 
     @GetMapping("/integration")
     @PreAuthorize(IS_USER_RELATED_TO_WKS)
-    public String getWorkspaceIntegrationPage(Model model, @PathVariable String wksName, HttpServletRequest req) {
-        if (!workspaceService.existsWorkspaceByName(wksName)) {
+    public String getWorkspaceIntegrationPage(Model model, @PathVariable Long wksId, HttpServletRequest req) {
+        if (!workspaceService.existsWorkspaceById(wksId)) {
             //TODO send to error page
-            log.error("Workspace with name {} not found", wksName);
+            log.error("Workspace with id {} not found", wksId);
             return "redirect:/workspaces";
         }
-        model.addAttribute("wksName", wksName);
 
-        addTokenAndUrlToModel(model, wksName, req);
+        addTokenAndUrlToModel(model, wksId, req);
 
-        getStatisticDataToModel(model, wksName);
-        getLastTypoDataToModel(model, wksName);
+        getStatisticDataToModel(model, wksId);
+        getLastTypoDataToModel(model, wksId);
+
         return "workspace/wks-integration";
     }
 
     @PatchMapping("/token/regenerate")
     @PreAuthorize(IS_USER_ADMIN_IN_WKS)
-    public String patchWorkspaceToken(@PathVariable String wksName) {
-        if (!workspaceService.existsWorkspaceByName(wksName)) {
+    public String patchWorkspaceToken(@PathVariable Long wksId) {
+        if (!workspaceService.existsWorkspaceById(wksId)) {
             //TODO send to error page
-            log.error("Workspace with name {} not found", wksName);
+            log.error("Workspace with id {} not found", wksId);
             return "redirect:/workspaces";
         }
-        workspaceSettingsService.regenerateWorkspaceApiAccessTokenByName(wksName);
-        return ("redirect:/workspace/") + wksName + "/settings";
+        workspaceSettingsService.regenerateWorkspaceApiAccessTokenById(wksId);
+        return ("redirect:/workspace/") + wksId.toString() + "/settings";
     }
 
-    private void getStatisticDataToModel(final Model model, final String wksName) {
-        final var countTypoByStatus = typoService.getCountTypoByStatusForWorkspaceName(wksName);
+    private void getStatisticDataToModel(final Model model, final Long wksId) {
+        final var countTypoByStatus = typoService.getCountTypoByStatusForWorkspaceId(wksId);
         model.addAttribute("countTypoByStatus", countTypoByStatus);
         model.addAttribute("sumTypoInWks", countTypoByStatus.stream().mapToLong(Pair::getValue).sum());
     }
 
-    private void getLastTypoDataToModel(final Model model, final String wksName) {
-        final var createdDate = typoService.getLastTypoByWorkspaceName(wksName).map(TypoInfo::createdDate);
+    private void getLastTypoDataToModel(final Model model, final Long wksId) {
+        final var createdDate = typoService.getLastTypoByWorkspaceId(wksId).map(TypoInfo::createdDate);
         model.addAttribute("lastTypoCreatedDate", createdDate);
         Locale locale = LocaleContextHolder.getLocale();
         model.addAttribute("lastTypoCreatedDateAgo", createdDate.map(new PrettyTime(locale)::format));
     }
 
-    private void addTokenAndUrlToModel(Model model, String wksName, HttpServletRequest req) {
-        final var settings = workspaceSettingsService.getWorkspaceSettingsByWorkspaceName(wksName);
+    private void addTokenAndUrlToModel(Model model, Long wksId, HttpServletRequest req) {
+        final var settings = workspaceSettingsService.getWorkspaceSettingsByWorkspaceId(wksId);
         final var basicTokenStr = settings.getId() + ":" + settings.getApiAccessToken();
         final var wksBasicToken = Base64.getEncoder().encodeToString(basicTokenStr.getBytes());
         model.addAttribute("wksBasicToken", wksBasicToken);
         final var rootUrl = req.getRequestURL().toString().replace(req.getRequestURI(), "");
         model.addAttribute("rootUrl", rootUrl);
-        final var wksId = settings.getWorkspace().getId();
         model.addAttribute("wksId", wksId);
     }
 

@@ -63,14 +63,14 @@ public class WorkspaceSettingsControllerIT {
 
     @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspacesAndUsersRelated")
-    void getWorkspaceIntegrationPageIsSuccessful(final String wksName, final String username) throws Exception {
-        final var apiAccessToken = workspaceSettingsRepository.getWorkspaceSettingsByWorkspaceName(wksName)
+    void getWorkspaceIntegrationPageIsSuccessful(final Long wksId, final String username) throws Exception {
+        final var apiAccessToken = workspaceSettingsRepository.getWorkspaceSettingsByWorkspaceId(wksId)
             .map(s -> s.getId() + ":" + s.getApiAccessToken())
             .map(String::getBytes)
             .map(Base64.getEncoder()::encodeToString)
             .orElse(null);
 
-        MockHttpServletResponse response = mockMvc.perform(get("/workspace/{wksName}/integration", wksName)
+        MockHttpServletResponse response = mockMvc.perform(get("/workspace/{wksId}/integration", wksId.toString())
                 .with(user(username)))
             .andExpect(model().attributeExists("wksBasicToken"))
             .andReturn().getResponse();
@@ -80,14 +80,14 @@ public class WorkspaceSettingsControllerIT {
 
     @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspacesAndUsersRelated")
-    void getWorkspaceSettingsPageIsSuccessful(final String wksName, final String username) throws Exception {
-        final var apiAccessToken = workspaceSettingsRepository.getWorkspaceSettingsByWorkspaceName(wksName)
+    void getWorkspaceSettingsPageIsSuccessful(final Long wksId, final String username) throws Exception {
+        final var apiAccessToken = workspaceSettingsRepository.getWorkspaceSettingsByWorkspaceId(wksId)
             .map(s -> s.getId() + ":" + s.getApiAccessToken())
             .map(String::getBytes)
             .map(Base64.getEncoder()::encodeToString)
             .orElse(null);
 
-        MockHttpServletResponse response = mockMvc.perform(get("/workspace/{wksName}/settings", wksName)
+        MockHttpServletResponse response = mockMvc.perform(get("/workspace/{wksId}/settings", wksId.toString())
                 .with(user(username)))
             .andExpect(model().attributeExists("wksBasicToken"))
             .andReturn().getResponse();
@@ -97,40 +97,40 @@ public class WorkspaceSettingsControllerIT {
 
     @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspaceAndAdminRelated")
-    void patchWorkspaceTokenIsSuccessful(final String wksName, final String username) throws Exception {
-        String previousWksToken = workspaceSettingsRepository.getWorkspaceSettingsByWorkspaceName(wksName)
+    void patchWorkspaceTokenIsSuccessful(final Long wksId, final String username) throws Exception {
+        String previousWksToken = workspaceSettingsRepository.getWorkspaceSettingsByWorkspaceId(wksId)
             .map(WorkspaceSettings::getApiAccessToken)
             .map(UUID::toString)
             .orElse(null);
 
-        MockHttpServletResponse response = mockMvc.perform(patch("/workspace/{wksName}/token/regenerate", wksName)
+        MockHttpServletResponse response = mockMvc.perform(patch("/workspace/{wksId}/token/regenerate", wksId)
                 .with(user(username))
                 .with(csrf()))
             .andReturn().getResponse();
 
-        String newWksToken = workspaceSettingsRepository.getWorkspaceSettingsByWorkspaceName(wksName)
+        String newWksToken = workspaceSettingsRepository.getWorkspaceSettingsByWorkspaceId(wksId)
             .map(WorkspaceSettings::getApiAccessToken)
             .map(UUID::toString)
             .orElse(null);
 
         assertThat(previousWksToken).isNotEqualTo(newWksToken);
-        assertThat(response.getRedirectedUrl()).isEqualTo("/workspace/" + wksName + "/settings");
+        assertThat(response.getRedirectedUrl()).isEqualTo("/workspace/" + wksId.toString() + "/settings");
     }
 
     @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspaceAndNotAdminRelated")
-    void patchWorkspaceTokenWithNoRights(final String wksName, final String username)  throws Exception {
-        String previousWksToken = workspaceSettingsRepository.getWorkspaceSettingsByWorkspaceName(wksName)
+    void patchWorkspaceTokenWithNoRights(final Long wksId, final String username)  throws Exception {
+        String previousWksToken = workspaceSettingsRepository.getWorkspaceSettingsByWorkspaceId(wksId)
             .map(WorkspaceSettings::getApiAccessToken)
             .map(UUID::toString)
             .orElse(null);
 
-        MockHttpServletResponse response = mockMvc.perform(patch("/workspace/{wksName}/token/regenerate", wksName)
+        MockHttpServletResponse response = mockMvc.perform(patch("/workspace/{wksId}/token/regenerate", wksId.toString())
                 .with(user(username))
                 .with(csrf()))
             .andReturn().getResponse();
 
-        String newWksToken = workspaceSettingsRepository.getWorkspaceSettingsByWorkspaceName(wksName)
+        String newWksToken = workspaceSettingsRepository.getWorkspaceSettingsByWorkspaceId(wksId)
             .map(WorkspaceSettings::getApiAccessToken)
             .map(UUID::toString)
             .orElse(null);

@@ -5,7 +5,7 @@
 <nav th:replace="~{fragments/panels :: mainNavbarTop}"></nav>
 <main class="container-fluid">
     <div class="row">
-        <div class="col-2" th:insert="fragments/panels :: workspaceSideBar (${wksName}, 'integration')"></div>
+        <div class="col-2" th:insert="fragments/panels :: workspaceSideBar (${wksId}, ${wksName}, 'integration')"></div>
         <div class="col">
             <div class="row mt-4">
                 <div class="col">

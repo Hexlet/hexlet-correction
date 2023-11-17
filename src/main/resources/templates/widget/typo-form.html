@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{fragments/header :: head}"></head>
 <body>
-<form method="POST" th:action="@{/typo/form/{name}(name=${wksName})}" th:object="${typoReport}">
+<form method="POST" th:action="@{/typo/form/{name}(id=${wksId})}" th:object="${typoReport}">
     <input hidden id="pageUrl" name="pageUrl" type="text" />
     <input hidden id="reporterName" name="reporterName" type="text" />
     <input hidden id="textBeforeTypo" name="textBeforeTypo" type="text" />

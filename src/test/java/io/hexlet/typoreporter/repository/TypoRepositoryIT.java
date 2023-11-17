@@ -73,16 +73,16 @@ class TypoRepositoryIT {
     void findPageTypoByWorkspaceName(final Long wksId) {
         final var wks = workspaceRepository.findById(wksId).orElseThrow();
         final var pageReq = PageRequest.of(0, 10, Sort.by("createdDate"));
-        final var typoPage = typoRepository.findPageTypoByWorkspaceName(pageReq, wks.getName());
+        final var typoPage = typoRepository.findPageTypoByWorkspaceId(pageReq, wksId);
         assertThat(typoPage.getTotalElements()).isEqualTo(wks.getTypos().size());
     }
 
     @ParameterizedTest
-    @NullAndEmptySource
-    @ValueSource(strings = "wks-not-exists")
-    void findPageTypoByWorkspaceNameNotExist(final String wksName) {
+    @NullSource
+    @ValueSource(longs = {9999L, 8888L, 7777L})
+    void findPageTypoByWorkspaceNameNotExist(final Long wksId) {
         final var pageReq = PageRequest.of(0, 10, Sort.by("createdDate"));
-        final var typoPage = typoRepository.findPageTypoByWorkspaceName(pageReq, wksName);
+        final var typoPage = typoRepository.findPageTypoByWorkspaceId(pageReq, wksId);
         assertThat(typoPage.getTotalElements()).isZero();
     }
 
