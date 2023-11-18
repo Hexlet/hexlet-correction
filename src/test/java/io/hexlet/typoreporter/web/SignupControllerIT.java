@@ -93,6 +93,22 @@ class SignupControllerIT {
     }
 
     @Test
+    void createAccountWithDifferentCaseInEmailAndConfirmation() throws Exception {
+        mockMvc.perform(post("/signup")
+            .param("username", model.getUsername())
+            .param("email", model.getEmail())
+            .param("confirmEmail", anotherModelWithSameButLowerCaseEmail.getEmail())
+            .param("password", model.getPassword())
+            .param("confirmPassword", model.getConfirmPassword())
+            .param("firstName", model.getFirstName())
+            .param("lastName", model.getLastName())
+            .with(csrf()));
+        assertThat(accountRepository.findAccountByUsername("model_upper_case")).isNotEmpty();
+        assertThat(accountRepository.findAccountByUsername("model_upper_case").orElseThrow().getEmail())
+            .isEqualTo(anotherModelWithSameButLowerCaseEmail.getEmail());
+    }
+
+    @Test
     void createAccountWithWrongEmailDomain() throws Exception {
         String userName = "testUser";
         String password = "_Qwe1234";
