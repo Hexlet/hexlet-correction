@@ -8,7 +8,7 @@ import java.util.Objects;
 
 import static java.text.MessageFormat.format;
 
-public class FieldMatchValidator implements ConstraintValidator<FieldMatch, Object> {
+public class FieldMatchIgnoreCaseValidator implements ConstraintValidator<FieldMatchIgnoreCase, Object> {
 
     protected String firstFieldName;
 
@@ -17,7 +17,7 @@ public class FieldMatchValidator implements ConstraintValidator<FieldMatch, Obje
     protected String message;
 
     @Override
-    public void initialize(final FieldMatch constraintAnnotation) {
+    public void initialize(final FieldMatchIgnoreCase constraintAnnotation) {
         firstFieldName = constraintAnnotation.first();
         secondFieldName = constraintAnnotation.second();
         message = constraintAnnotation.message();
@@ -28,7 +28,7 @@ public class FieldMatchValidator implements ConstraintValidator<FieldMatch, Obje
         final var beanWrapper = PropertyAccessorFactory.forBeanPropertyAccess(object);
         final var firstObj = beanWrapper.getPropertyValue(firstFieldName);
         final var secondObj = beanWrapper.getPropertyValue(secondFieldName);
-        final var isValid = Objects.equals(firstObj, secondObj);
+        final var isValid = Objects.equals(firstObj.toString().toLowerCase(), secondObj.toString().toLowerCase());
         if (!isValid) {
             context.disableDefaultConstraintViolation();
             context.buildConstraintViolationWithTemplate(format(message, firstObj, secondObj))
