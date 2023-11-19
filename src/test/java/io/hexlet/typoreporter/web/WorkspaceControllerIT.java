@@ -155,15 +155,40 @@ class WorkspaceControllerIT {
         }
     }
 
+    //my add
+//    @ParameterizedTest
+//    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspacesAndUsersAndTypoStatusRelated")
+//    void getWorkspaceTyposPageFilteredIsSuccessful(final Long wksId, final String username, final String typoStatus) throws Exception {
+//        Workspace workspace = repository.getWorkspaceById(wksId).orElse(null);
+//
+//        var request = get("/workspace/{wksId}/typos", wksId).queryParam("typoStatus", typoStatus);
+//
+//        MockHttpServletResponse response = mockMvc.perform(request
+//                .with(user(username)))
+//            .andExpect(model().attributeExists("wksInfo", "wksName", "typoPage", "availableSizes", "sortProp", "sortDir", "DESC", "ASC", "typoStatus"))
+//            .andReturn().getResponse();
+//
+//        Typo typo = workspace.getTypos().stream()
+//            .filter(t -> !t.getTypoStatus().equals(TypoStatus.valueOf(typoStatus)))
+//            .findFirst().orElse(null);
+//
+//        if (typo != null) {
+//            assertThat(response.getContentAsString()).contains(
+//                typo.getPageUrl(), typo.getReporterName(), typo.getModifiedBy()
+//            );
+//        } else {
+//            fail("No typos without status " + typoStatus);
+//        }
+//    }
     @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspacesAndUsersAndTypoStatusRelated")
-    void getWorkspaceTyposPageFilteredIsSuccessful(final Long wksId, final String username, final String typoStatus) throws Exception {
+    void getWorkspaceTyposPageFilteredIsSuccessful(final Long wksId, final String email, final String typoStatus) throws Exception {
         Workspace workspace = repository.getWorkspaceById(wksId).orElse(null);
 
         var request = get("/workspace/{wksId}/typos", wksId).queryParam("typoStatus", typoStatus);
 
         MockHttpServletResponse response = mockMvc.perform(request
-                .with(user(username)))
+                .with(user(email)))
             .andExpect(model().attributeExists("wksInfo", "wksName", "typoPage", "availableSizes", "sortProp", "sortDir", "DESC", "ASC", "typoStatus"))
             .andReturn().getResponse();
 
@@ -179,6 +204,7 @@ class WorkspaceControllerIT {
             fail("No typos without status " + typoStatus);
         }
     }
+    //my add end
 
     @Test
     void getWorkspaceSettingsPageWithoutWksInfo() throws Exception {
@@ -308,7 +334,7 @@ class WorkspaceControllerIT {
 
     @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspacesAndUsersRelated")
-    void getWorkspaceUsersPage(final Long wksId, final String username) throws Exception {
+    void getWorkspaceUsersPage(final Long wksId, final String email) throws Exception {
         Workspace workspace = repository.getWorkspaceById(wksId).orElseThrow();
         Set<Account> accounts = new HashSet<>(accountRepository.findAll());
 
@@ -320,15 +346,22 @@ class WorkspaceControllerIT {
 
         MockHttpServletResponse response = mockMvc.perform(
                 get("/workspace/{wksId}/users", wksId)
-                    .with(user(username)))
+                    //my add
+//                    .with(user(username)))
+                    .with(user(email)))
+                    //my add end
             .andExpect(status().isOk())
             .andExpect(model().attributeExists("wksInfo", "wksName", "userPage", "availableSizes", "sortProp", "sortDir", "DESC", "ASC"))
             .andReturn().getResponse();
 
         var html = response.getContentAsString();
         for (var wksRole : workspace.getWorkspaceRoles()) {
-            var email = wksRole.getAccount().getEmail();
-            assertThat(html).contains(email);
+            //my add
+            //            var email = wksRole.getAccount().getEmail();
+//            assertThat(html).contains(email);
+            var userEmail = wksRole.getAccount().getEmail();
+            assertThat(html).contains(userEmail);
+            //my add end
         }
     }
 }

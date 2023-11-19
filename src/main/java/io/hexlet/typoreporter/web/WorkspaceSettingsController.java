@@ -57,7 +57,10 @@ public class WorkspaceSettingsController {
 
         final Account authenticatedAccount = getAccountFromAuthentication();
         final boolean accountIsAdminRole = workspaceService.isAdminRoleUserInWorkspace(wksId,
-            authenticatedAccount.getUsername());
+            //my add
+//            authenticatedAccount.getUsername());
+            authenticatedAccount.getEmail());
+            //my add end
         model.addAttribute("isAdmin", accountIsAdminRole);
 
         getStatisticDataToModel(model, wksId);
@@ -117,8 +120,14 @@ public class WorkspaceSettingsController {
         model.addAttribute("wksId", wksId);
     }
 
+    //my add
+//    private Account getAccountFromAuthentication() {
+//        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        return accountService.findByUsername(authentication.getName());
+//    }
     private Account getAccountFromAuthentication() {
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return accountService.findByUsername(authentication.getName());
+        return accountService.findByEmail(authentication.getName());
     }
+    //my add end
 }

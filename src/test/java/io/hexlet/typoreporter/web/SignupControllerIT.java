@@ -2,6 +2,7 @@ package io.hexlet.typoreporter.web;
 
 import com.github.database.rider.core.api.configuration.DBUnit;
 import com.github.database.rider.spring.api.DBRider;
+import io.hexlet.typoreporter.domain.account.Account;
 import io.hexlet.typoreporter.repository.AccountRepository;
 import io.hexlet.typoreporter.test.DBUnitEnumPostgres;
 import io.hexlet.typoreporter.web.model.SignupAccountModel;
@@ -16,6 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.containers.PostgreSQLContainer;
+
+import java.util.Optional;
 
 import static com.github.database.rider.core.api.configuration.Orthography.LOWERCASE;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -93,22 +96,6 @@ class SignupControllerIT {
     }
 
     @Test
-    void createAccountWithDifferentCaseInEmailAndConfirmation() throws Exception {
-        mockMvc.perform(post("/signup")
-            .param("username", model.getUsername())
-            .param("email", model.getEmail())
-            .param("confirmEmail", anotherModelWithSameButLowerCaseEmail.getEmail())
-            .param("password", model.getPassword())
-            .param("confirmPassword", model.getConfirmPassword())
-            .param("firstName", model.getFirstName())
-            .param("lastName", model.getLastName())
-            .with(csrf()));
-        assertThat(accountRepository.findAccountByUsername("model_upper_case")).isNotEmpty();
-        assertThat(accountRepository.findAccountByUsername("model_upper_case").orElseThrow().getEmail())
-            .isEqualTo(anotherModelWithSameButLowerCaseEmail.getEmail());
-    }
-
-    @Test
     void createAccountWithWrongEmailDomain() throws Exception {
         String userName = "testUser";
         String password = "_Qwe1234";
@@ -142,4 +129,55 @@ class SignupControllerIT {
 
     }
 
+    //my add
+    @Test
+    void createAccountWithDifferentCaseInEmailAndConfirmation() throws Exception {
+        assertThat(accountRepository.findAccountByUsername(model.getUsername())).isEmpty();
+
+        mockMvc.perform(post("/signup")
+            .param("username", model.getUsername())
+            .param("email", model.getEmail())
+            .param("confirmEmail", anotherModelWithSameButLowerCaseEmail.getEmail())
+            .param("password", model.getPassword())
+            .param("confirmPassword", model.getConfirmPassword())
+            .param("firstName", model.getFirstName())
+            .param("lastName", model.getLastName())
+            .with(csrf()));
+        Optional<Account> addedAcc = accountRepository.findAccountByUsername(model.getUsername());
+        assertThat(addedAcc).isNotEmpty();
+        assertThat(addedAcc.orElseThrow().getEmail())
+            .isEqualTo(anotherModelWithSameButLowerCaseEmail.getEmail());
+    }
+
+    @Test
+    void loginByEmailInAnyCaseSuccess() throws Exception {
+        assertThat(accountRepository.findAccountByEmail(anotherModelWithSameButLowerCaseEmail.getEmail())).isEmpty();
+
+        mockMvc.perform(post("/signup")
+            .param("username", model.getUsername())
+            .param("email", model.getEmail())
+            .param("confirmEmail", model.getEmail())
+            .param("password", model.getPassword())
+            .param("confirmPassword", model.getPassword())
+            .param("firstName", model.getFirstName())
+            .param("lastName", model.getLastName())
+            .with(csrf()));
+        assertThat(accountRepository.findAccountByEmail(anotherModelWithSameButLowerCaseEmail.getEmail())).isNotEmpty();
+
+        mockMvc.perform(post("/login")
+            .param("username", anotherModelWithSameButLowerCaseEmail.getEmail())
+            .param("password", model.getPassword())
+            .with(csrf()))
+            .andExpect(status().isOk());
+
+        mockMvc.perform(post("/logout"))
+            .andExpect(status().isOk());
+
+        mockMvc.perform(post("/login")
+                .param("username", model.getEmail())
+                .param("password", model.getPassword())
+                .with(csrf()))
+            .andExpect(status().isOk());
+    }
+    //my add end
 }

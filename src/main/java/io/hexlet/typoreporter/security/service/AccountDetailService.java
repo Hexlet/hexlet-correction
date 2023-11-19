@@ -18,8 +18,12 @@ public class AccountDetailService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         final String normalizedUsername = TextUtils.toLowerCaseData(username);
-        return accountRepository.findAccountByUsername(normalizedUsername)
-            .map(acc -> User.withUsername(acc.getUsername())
+        //my add
+//        return accountRepository.findAccountByUsername(normalizedUsername)
+//            .map(acc -> User.withUsername(acc.getUsername())
+        return accountRepository.findAccountByEmail(normalizedUsername)
+            .map(acc -> User.withUsername(acc.getEmail())
+        //my add end
                 .password(acc.getPassword())
                 .authorities("USER")
                 .build())

@@ -51,34 +51,67 @@ public class EntitiesFactory {
         return Stream.of(WORKSPACE_101_ID, WORKSPACE_102_ID, WORKSPACE_103_ID);
     }
 
+    //my add
+    //    public static Stream<Arguments> getWorkspacesAndUsersRelated() {
+//        return Stream.of(
+//            Arguments.of(WORKSPACE_101_ID, ACCOUNT_101_USERNAME),
+//            Arguments.of(WORKSPACE_102_ID, ACCOUNT_102_USERNAME),
+//            Arguments.of(WORKSPACE_103_ID, ACCOUNT_103_USERNAME)
+//        );
+//    }
     public static Stream<Arguments> getWorkspacesAndUsersRelated() {
         return Stream.of(
-            Arguments.of(WORKSPACE_101_ID, ACCOUNT_101_USERNAME),
-            Arguments.of(WORKSPACE_102_ID, ACCOUNT_102_USERNAME),
-            Arguments.of(WORKSPACE_103_ID, ACCOUNT_103_USERNAME)
+            Arguments.of(WORKSPACE_101_ID, ACCOUNT_101_EMAIL),
+            Arguments.of(WORKSPACE_102_ID, ACCOUNT_102_EMAIL),
+            Arguments.of(WORKSPACE_103_ID, ACCOUNT_103_EMAIL)
         );
     }
+    //my add end
 
+    //my add
+//    public static Stream<Arguments> getWorkspaceAndAdminRelated() {
+//        return Stream.of(
+//            Arguments.of(WORKSPACE_103_ID, ACCOUNT_103_USERNAME)
+//        );
+//    }
     public static Stream<Arguments> getWorkspaceAndAdminRelated() {
         return Stream.of(
-            Arguments.of(WORKSPACE_103_ID, ACCOUNT_103_USERNAME)
+            Arguments.of(WORKSPACE_103_ID, ACCOUNT_103_EMAIL)
         );
     }
+    //my add end
 
+    //my add
+//    public static Stream<Arguments> getWorkspaceAndNotAdminRelated() {
+//        return Stream.of(
+//            Arguments.of(WORKSPACE_101_ID, ACCOUNT_101_USERNAME)
+//        );
+//    }
     public static Stream<Arguments> getWorkspaceAndNotAdminRelated() {
         return Stream.of(
-            Arguments.of(WORKSPACE_101_ID, ACCOUNT_101_USERNAME)
+            Arguments.of(WORKSPACE_101_ID, ACCOUNT_101_EMAIL)
         );
     }
+    //my add end
 
+    //my add
+//    public static Stream<Arguments> getWorkspacesAndUsersAndTypoStatusRelated() {
+//        return Stream.of(
+//            Arguments.of(WORKSPACE_102_ID, ACCOUNT_102_USERNAME, "REPORTED"),
+//            Arguments.of(WORKSPACE_102_ID, ACCOUNT_102_USERNAME, "IN_PROGRESS"),
+//            Arguments.of(WORKSPACE_102_ID, ACCOUNT_102_USERNAME, "RESOLVED"),
+//            Arguments.of(WORKSPACE_102_ID, ACCOUNT_102_USERNAME, "CANCELED")
+//        );
+//    }
     public static Stream<Arguments> getWorkspacesAndUsersAndTypoStatusRelated() {
         return Stream.of(
-            Arguments.of(WORKSPACE_102_ID, ACCOUNT_102_USERNAME, "REPORTED"),
-            Arguments.of(WORKSPACE_102_ID, ACCOUNT_102_USERNAME, "IN_PROGRESS"),
-            Arguments.of(WORKSPACE_102_ID, ACCOUNT_102_USERNAME, "RESOLVED"),
-            Arguments.of(WORKSPACE_102_ID, ACCOUNT_102_USERNAME, "CANCELED")
+            Arguments.of(WORKSPACE_102_ID, ACCOUNT_102_EMAIL, "REPORTED"),
+            Arguments.of(WORKSPACE_102_ID, ACCOUNT_102_EMAIL, "IN_PROGRESS"),
+            Arguments.of(WORKSPACE_102_ID, ACCOUNT_102_EMAIL, "RESOLVED"),
+            Arguments.of(WORKSPACE_102_ID, ACCOUNT_102_EMAIL, "CANCELED")
         );
     }
+    //my add end
 
     public static Stream<Arguments> getWorkspacesAndUsersNotRelated() {
         return Stream.of(

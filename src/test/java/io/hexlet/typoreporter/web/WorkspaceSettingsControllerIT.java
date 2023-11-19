@@ -95,16 +95,38 @@ public class WorkspaceSettingsControllerIT {
         assertThat(response.getContentAsString()).contains(apiAccessToken);
     }
 
+    //my add
+//    @ParameterizedTest
+//    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspaceAndAdminRelated")
+//    void patchWorkspaceTokenIsSuccessful(final Long wksId, final String username) throws Exception {
+//        String previousWksToken = workspaceSettingsRepository.getWorkspaceSettingsByWorkspaceId(wksId)
+//            .map(WorkspaceSettings::getApiAccessToken)
+//            .map(UUID::toString)
+//            .orElse(null);
+//
+//        MockHttpServletResponse response = mockMvc.perform(patch("/workspace/{wksId}/token/regenerate", wksId)
+//                .with(user(username))
+//                .with(csrf()))
+//            .andReturn().getResponse();
+//
+//        String newWksToken = workspaceSettingsRepository.getWorkspaceSettingsByWorkspaceId(wksId)
+//            .map(WorkspaceSettings::getApiAccessToken)
+//            .map(UUID::toString)
+//            .orElse(null);
+//
+//        assertThat(previousWksToken).isNotEqualTo(newWksToken);
+//        assertThat(response.getRedirectedUrl()).isEqualTo("/workspace/" + wksId.toString() + "/settings");
+//    }
     @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspaceAndAdminRelated")
-    void patchWorkspaceTokenIsSuccessful(final Long wksId, final String username) throws Exception {
+    void patchWorkspaceTokenIsSuccessful(final Long wksId, final String email) throws Exception {
         String previousWksToken = workspaceSettingsRepository.getWorkspaceSettingsByWorkspaceId(wksId)
             .map(WorkspaceSettings::getApiAccessToken)
             .map(UUID::toString)
             .orElse(null);
 
         MockHttpServletResponse response = mockMvc.perform(patch("/workspace/{wksId}/token/regenerate", wksId)
-                .with(user(username))
+                .with(user(email))
                 .with(csrf()))
             .andReturn().getResponse();
 
@@ -116,17 +138,40 @@ public class WorkspaceSettingsControllerIT {
         assertThat(previousWksToken).isNotEqualTo(newWksToken);
         assertThat(response.getRedirectedUrl()).isEqualTo("/workspace/" + wksId.toString() + "/settings");
     }
+    //my add end
 
+    //my add
+//    @ParameterizedTest
+//    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspaceAndNotAdminRelated")
+//    void patchWorkspaceTokenWithNoRights(final Long wksId, final String username)  throws Exception {
+//        String previousWksToken = workspaceSettingsRepository.getWorkspaceSettingsByWorkspaceId(wksId)
+//            .map(WorkspaceSettings::getApiAccessToken)
+//            .map(UUID::toString)
+//            .orElse(null);
+//
+//        MockHttpServletResponse response = mockMvc.perform(patch("/workspace/{wksId}/token/regenerate", wksId.toString())
+//                .with(user(username))
+//                .with(csrf()))
+//            .andReturn().getResponse();
+//
+//        String newWksToken = workspaceSettingsRepository.getWorkspaceSettingsByWorkspaceId(wksId)
+//            .map(WorkspaceSettings::getApiAccessToken)
+//            .map(UUID::toString)
+//            .orElse(null);
+//
+//        assertThat(previousWksToken).isEqualTo(newWksToken);
+//        assertThat(response.getRedirectedUrl()).isEqualTo("/workspaces");
+//    }
     @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspaceAndNotAdminRelated")
-    void patchWorkspaceTokenWithNoRights(final Long wksId, final String username)  throws Exception {
+    void patchWorkspaceTokenWithNoRights(final Long wksId, final String email)  throws Exception {
         String previousWksToken = workspaceSettingsRepository.getWorkspaceSettingsByWorkspaceId(wksId)
             .map(WorkspaceSettings::getApiAccessToken)
             .map(UUID::toString)
             .orElse(null);
 
         MockHttpServletResponse response = mockMvc.perform(patch("/workspace/{wksId}/token/regenerate", wksId.toString())
-                .with(user(username))
+                .with(user(email))
                 .with(csrf()))
             .andReturn().getResponse();
 
@@ -138,4 +183,5 @@ public class WorkspaceSettingsControllerIT {
         assertThat(previousWksToken).isEqualTo(newWksToken);
         assertThat(response.getRedirectedUrl()).isEqualTo("/workspaces");
     }
+    //my add end
 }

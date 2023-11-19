@@ -261,7 +261,10 @@ public class WorkspaceController {
         List<Account> nonLinkedAccounts = getNonLinkedAccounts(allAccounts, linkedAccounts);
         final Account authenticatedAccount = getAccountFromAuthentication();
         final boolean accountIsAdminRole = workspaceService.isAdminRoleUserInWorkspace(wksId,
-            authenticatedAccount.getUsername());
+            //my add
+//            authenticatedAccount.getUsername());
+            authenticatedAccount.getEmail());
+            //my add end
         List<Account> excludeDeleteAccounts = Collections.singletonList(authenticatedAccount);
         Page<Account> userPage = new PageImpl<>(linkedAccounts, pageable, linkedAccounts.size());
         var sort = userPage.getSort()
@@ -338,6 +341,9 @@ public class WorkspaceController {
 
     private Account getAccountFromAuthentication() {
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return accountService.findByUsername(authentication.getName());
+        //my add
+        // return accountService.findByUsername(authentication.getName());
+         return accountService.findByEmail(authentication.getName());
+        //my add end
     }
 }

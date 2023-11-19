@@ -73,7 +73,11 @@ public class AccountService implements SignupAccountUseCase, QueryAccount {
 
     @Transactional(readOnly = true)
     public InfoAccount getInfoAccount(final String name) {
-        return accountRepository.findAccountByUsername(name)
+        //my add
+//        return accountRepository.findAccountByUsername(name)
+        return accountRepository.findAccountByEmail(name)
+        //my add end
+
             .map(accountMapper::toInfoAccount)
             .orElseThrow(() -> new AccountNotFoundException(name));
     }
@@ -102,6 +106,14 @@ public class AccountService implements SignupAccountUseCase, QueryAccount {
         return accountRepository.findAccountByUsername(userName)
             .orElseThrow(() -> new AccountNotFoundException(userName));
     }
+
+    //my add
+    @Transactional(readOnly = true)
+    public Account findByEmail(String email) {
+        return accountRepository.findAccountByEmail(email)
+            .orElseThrow(() -> new AccountNotFoundException(email));
+    }
+    //my add end
 
     public Account updateProfile(final UpdateProfile updateProfile, final String name) {
         final var sourceAccount = accountRepository.findAccountByUsername(name)
