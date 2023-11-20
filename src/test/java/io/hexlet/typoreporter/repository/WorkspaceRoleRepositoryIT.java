@@ -58,14 +58,24 @@ public class WorkspaceRoleRepositoryIT {
         assertThat(workspaceRoles.get(0).getAccount().getId()).isEqualTo(accountId);
     }
 
+    //my add
+//    @ParameterizedTest
+//    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getAccountUsernameExist")
+//    void getWorkspaceRolesByAccountIdIsSuccessful(final String username) {
+//        List<WorkspaceRole> workspaceRoles = workspaceRoleRepository.getWorkspaceRolesByAccountUsername(username);
+//
+//        assertThat(workspaceRoles).isNotEmpty();
+//        assertThat(workspaceRoles.get(0).getAccount().getUsername()).isEqualTo(username);
+//    }
     @ParameterizedTest
-    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getAccountUsernameExist")
-    void getWorkspaceRolesByAccountIdIsSuccessful(final String username) {
-        List<WorkspaceRole> workspaceRoles = workspaceRoleRepository.getWorkspaceRolesByAccountUsername(username);
+    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getAccountEmailExist")
+    void getWorkspaceRolesByAccountIdIsSuccessful(final String email) {
+        List<WorkspaceRole> workspaceRoles = workspaceRoleRepository.getWorkspaceRolesByAccountEmail(email);
 
         assertThat(workspaceRoles).isNotEmpty();
-        assertThat(workspaceRoles.get(0).getAccount().getUsername()).isEqualTo(username);
+        assertThat(workspaceRoles.get(0).getAccount().getEmail()).isEqualTo(email);
     }
+    //my add end
 
     @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspacesIdExist")

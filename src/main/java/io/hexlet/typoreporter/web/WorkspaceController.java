@@ -94,14 +94,14 @@ public class WorkspaceController {
                                           Principal principal,
                                           @Valid @ModelAttribute CreateWorkspace createWorkspace,
                                           BindingResult bindingResult) {
-        String userName = principal.getName();
+        String email = principal.getName();
         model.addAttribute("formModified", true);
         if (bindingResult.hasErrors()) {
             model.addAttribute("createWorkspace", createWorkspace);
             return "create-workspace";
         }
         try {
-            workspaceService.createWorkspace(createWorkspace, userName);
+            workspaceService.createWorkspace(createWorkspace, email);
         } catch (WorkspaceAlreadyExistException e) {
             bindingResult.addError(e.toFieldError("createWorkspace"));
             return "create-workspace";

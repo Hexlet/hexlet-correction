@@ -33,14 +33,24 @@ public class AccountController {
 
     private final AccountService accountService;
 
+    //my add
+    //    @GetMapping
+//    public String getAccountInfoPage(final Model model, final Authentication authentication) {
+//        final var accountInfo = accountService.getInfoAccount(authentication.getName());
+//        final var workspaceInfos = accountService.getWorkspacesInfoListByUsername(accountInfo.username());
+//        model.addAttribute("workspaceRoleInfoList", workspaceInfos);
+//        model.addAttribute("accInfo", accountInfo);
+//        return "account/acc-info";
+//    }
     @GetMapping
     public String getAccountInfoPage(final Model model, final Authentication authentication) {
         final var accountInfo = accountService.getInfoAccount(authentication.getName());
-        final var workspaceInfos = accountService.getWorkspacesInfoListByUsername(accountInfo.username());
+        final var workspaceInfos = accountService.getWorkspacesInfoListByEmail(accountInfo.email());
         model.addAttribute("workspaceRoleInfoList", workspaceInfos);
         model.addAttribute("accInfo", accountInfo);
         return "account/acc-info";
     }
+    //my add end
 
     //my add
 //    @GetMapping("/update")

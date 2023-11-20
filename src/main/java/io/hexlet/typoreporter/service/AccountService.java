@@ -71,23 +71,37 @@ public class AccountService implements SignupAccountUseCase, QueryAccount {
         return accountMapper.toInfoAccount(accToSave);
     }
 
-    @Transactional(readOnly = true)
-    public InfoAccount getInfoAccount(final String name) {
-        //my add
+    //my end
+//    @Transactional(readOnly = true)
+//    public InfoAccount getInfoAccount(final String name) {
 //        return accountRepository.findAccountByUsername(name)
-        return accountRepository.findAccountByEmail(name)
-        //my add end
-
-            .map(accountMapper::toInfoAccount)
-            .orElseThrow(() -> new AccountNotFoundException(name));
-    }
-
+//
+//            .map(accountMapper::toInfoAccount)
+//            .orElseThrow(() -> new AccountNotFoundException(name));
+//    }
     @Transactional(readOnly = true)
-    public List<WorkspaceRoleInfo> getWorkspacesInfoListByUsername(final String username) {
-        return workspaceRoleRepository.getWorkspaceRolesByAccountUsername(username).stream()
+    public InfoAccount getInfoAccount(final String email) {
+        return accountRepository.findAccountByEmail(email)
+            .map(accountMapper::toInfoAccount)
+            .orElseThrow(() -> new AccountNotFoundException(email));
+    }
+    //my end
+
+    //my add
+//    @Transactional(readOnly = true)
+//    public List<WorkspaceRoleInfo> getWorkspacesInfoListByUsername(final String username) {
+//        return workspaceRoleRepository.getWorkspaceRolesByAccountUsername(username).stream()
+//            .map(workspaceRoleMapper::toWorkspaceRoleInfo)
+//            .toList();
+//    }
+    @Transactional(readOnly = true)
+    public List<WorkspaceRoleInfo> getWorkspacesInfoListByEmail(final String email) {
+        return workspaceRoleRepository.getWorkspaceRolesByAccountEmail(email).stream()
             .map(workspaceRoleMapper::toWorkspaceRoleInfo)
             .toList();
     }
+    //my add end
+
 
     //my add
 //    @Transactional(readOnly = true)
