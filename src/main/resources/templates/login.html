@@ -10,9 +10,9 @@
         <div class="alert alert-warning" role="alert" th:if="${param.logout}" th:text="#{alert.logout}"></div>
         <form method="post" th:action="@{/login}">
             <div class="form-floating mb-3">
-                <input autofocus class="form-control" id="inputUsername"
-                       name="username" placeholder="Username" required type="text">
-                <label for="inputUsername" th:text="#{username}"></label>
+                <input autofocus class="form-control" id="inputEmail"
+                       name="email" placeholder="Email" required type="text">
+                <label for="inputEmail" th:text="#{email}"></label>
             </div>
             <div class="form-floating mb-3">
                 <input class="form-control" id="inputPassword" name="password"

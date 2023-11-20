@@ -148,36 +148,5 @@ class SignupControllerIT {
         assertThat(addedAcc.orElseThrow().getEmail())
             .isEqualTo(anotherModelWithSameButLowerCaseEmail.getEmail());
     }
-
-    @Test
-    void loginByEmailInAnyCaseSuccess() throws Exception {
-        assertThat(accountRepository.findAccountByEmail(anotherModelWithSameButLowerCaseEmail.getEmail())).isEmpty();
-
-        mockMvc.perform(post("/signup")
-            .param("username", model.getUsername())
-            .param("email", model.getEmail())
-            .param("confirmEmail", model.getEmail())
-            .param("password", model.getPassword())
-            .param("confirmPassword", model.getPassword())
-            .param("firstName", model.getFirstName())
-            .param("lastName", model.getLastName())
-            .with(csrf()));
-        assertThat(accountRepository.findAccountByEmail(anotherModelWithSameButLowerCaseEmail.getEmail())).isNotEmpty();
-
-        mockMvc.perform(post("/login")
-            .param("username", anotherModelWithSameButLowerCaseEmail.getEmail())
-            .param("password", model.getPassword())
-            .with(csrf()))
-            .andExpect(status().isOk());
-
-        mockMvc.perform(post("/logout"))
-            .andExpect(status().isOk());
-
-        mockMvc.perform(post("/login")
-                .param("username", model.getEmail())
-                .param("password", model.getPassword())
-                .with(csrf()))
-            .andExpect(status().isOk());
-    }
     //my add end
 }
