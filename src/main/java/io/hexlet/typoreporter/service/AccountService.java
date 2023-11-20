@@ -89,12 +89,20 @@ public class AccountService implements SignupAccountUseCase, QueryAccount {
             .toList();
     }
 
+    //my add
+//    @Transactional(readOnly = true)
+//    public UpdateProfile getUpdateProfile(final String name) {
+//        return accountRepository.findAccountByUsername(name)
+//            .map(accountMapper::toUpdateProfile)
+//            .orElseThrow(() -> new AccountNotFoundException(name));
+//    }
     @Transactional(readOnly = true)
-    public UpdateProfile getUpdateProfile(final String name) {
-        return accountRepository.findAccountByUsername(name)
+    public UpdateProfile getUpdateProfile(final String email) {
+        return accountRepository.findAccountByEmail(email)
             .map(accountMapper::toUpdateProfile)
-            .orElseThrow(() -> new AccountNotFoundException(name));
+            .orElseThrow(() -> new AccountNotFoundException(email));
     }
+    //my add end
 
     @Transactional(readOnly = true)
     public List<Account> findAll() {
@@ -115,9 +123,29 @@ public class AccountService implements SignupAccountUseCase, QueryAccount {
     }
     //my add end
 
-    public Account updateProfile(final UpdateProfile updateProfile, final String name) {
-        final var sourceAccount = accountRepository.findAccountByUsername(name)
-            .orElseThrow(() -> new AccountNotFoundException(name));
+    //my add
+//    public Account updateProfile(final UpdateProfile updateProfile, final String name) {
+//        final var sourceAccount = accountRepository.findAccountByUsername(name)
+//            .orElseThrow(() -> new AccountNotFoundException(name));
+//        final String sourceUserName = sourceAccount.getUsername();
+//        final String normalizedUserName = TextUtils.toLowerCaseData(updateProfile.getUsername());
+//        final String normalizedEmail = TextUtils.toLowerCaseData(updateProfile.getEmail());
+//        if (!sourceUserName.equals(normalizedUserName) && existsByUsername(normalizedUserName)) {
+//            throw new AccountAlreadyExistException("username", normalizedUserName);
+//        }
+//        final String sourceEmail = sourceAccount.getEmail();
+//        if (!sourceEmail.equals(normalizedEmail) && existsByEmail(normalizedEmail)) {
+//            throw new AccountAlreadyExistException("email", normalizedEmail);
+//        }
+//        Account updAccount = accountMapper.toAccount(updateProfile, sourceAccount);
+//        updAccount.setUsername(normalizedUserName);
+//        updAccount.setEmail(normalizedEmail);
+//        accountRepository.save(updAccount);
+//        return updAccount;
+//    }
+    public Account updateProfile(final UpdateProfile updateProfile, final String email) {
+        final var sourceAccount = accountRepository.findAccountByEmail(email)
+            .orElseThrow(() -> new AccountNotFoundException(email));
         final String sourceUserName = sourceAccount.getUsername();
         final String normalizedUserName = TextUtils.toLowerCaseData(updateProfile.getUsername());
         final String normalizedEmail = TextUtils.toLowerCaseData(updateProfile.getEmail());
@@ -134,10 +162,27 @@ public class AccountService implements SignupAccountUseCase, QueryAccount {
         accountRepository.save(updAccount);
         return updAccount;
     }
+    //my add end
 
-    public Account updatePassword(final UpdatePassword updatePassword, final String name) {
-        final var sourceAccount = accountRepository.findAccountByUsername(name)
-            .orElseThrow(() -> new AccountNotFoundException(name));
+    //my add
+//    public Account updatePassword(final UpdatePassword updatePassword, final String name) {
+//        final var sourceAccount = accountRepository.findAccountByUsername(name)
+//            .orElseThrow(() -> new AccountNotFoundException(name));
+//        final String password = sourceAccount.getPassword();
+//        if (!passwordEncoder.matches(updatePassword.getOldPassword(), password)) {
+//            throw new OldPasswordWrongException();
+//        }
+//        if (passwordEncoder.matches(updatePassword.getNewPassword(), password)) {
+//            throw new NewPasswordTheSameException();
+//        }
+//        final String newPassword = passwordEncoder.encode(updatePassword.getNewPassword());
+//        sourceAccount.setPassword(newPassword);
+//        accountRepository.save(sourceAccount);
+//        return sourceAccount;
+//    }
+    public Account updatePassword(final UpdatePassword updatePassword, final String email) {
+        final var sourceAccount = accountRepository.findAccountByEmail(email)
+            .orElseThrow(() -> new AccountNotFoundException(email));
         final String password = sourceAccount.getPassword();
         if (!passwordEncoder.matches(updatePassword.getOldPassword(), password)) {
             throw new OldPasswordWrongException();
@@ -150,4 +195,5 @@ public class AccountService implements SignupAccountUseCase, QueryAccount {
         accountRepository.save(sourceAccount);
         return sourceAccount;
     }
+    //my add end
 }
