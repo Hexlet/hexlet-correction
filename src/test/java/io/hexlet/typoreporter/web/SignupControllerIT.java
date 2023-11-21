@@ -2,7 +2,6 @@ package io.hexlet.typoreporter.web;
 
 import com.github.database.rider.core.api.configuration.DBUnit;
 import com.github.database.rider.spring.api.DBRider;
-import io.hexlet.typoreporter.domain.account.Account;
 import io.hexlet.typoreporter.repository.AccountRepository;
 import io.hexlet.typoreporter.test.DBUnitEnumPostgres;
 import io.hexlet.typoreporter.web.model.SignupAccountModel;
@@ -17,9 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.containers.PostgreSQLContainer;
-
-import java.util.Optional;
-
 import static com.github.database.rider.core.api.configuration.Orthography.LOWERCASE;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
