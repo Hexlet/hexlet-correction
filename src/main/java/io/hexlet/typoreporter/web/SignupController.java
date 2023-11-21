@@ -62,10 +62,7 @@ public class SignupController {
         try {
             newAccount = signupAccountUseCase.signup(signupAccountMapper.toSignupAccount(signupAccountModel));
             final var authentication = UsernamePasswordAuthenticationToken.
-                //my add
-//                authenticated(newAccount.username(), null, List.of(AccountRole.ROLE_GUEST::name));
                 authenticated(newAccount.email(), null, List.of(AccountRole.ROLE_GUEST::name));
-            //my add end
             autoLoginAfterSignup(request, response, authentication);
             return "redirect:/workspaces";
         } catch (UsernameAlreadyExistException e) {

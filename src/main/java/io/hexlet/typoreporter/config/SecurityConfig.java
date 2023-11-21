@@ -83,9 +83,7 @@ public class SecurityConfig {
             )
             .formLogin(login -> login
                 .loginPage("/login")
-                //my add
                 .usernameParameter("email")
-                //my add end
                 .defaultSuccessUrl("/workspaces")
                 .permitAll()
             )

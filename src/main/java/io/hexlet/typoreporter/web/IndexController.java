@@ -19,12 +19,8 @@ public class IndexController {
     @GetMapping("/workspaces")
     public String index(final Model model, Principal principal) {
         if (principal != null) {
-            //my add
-//            final var username = principal.getName();
-            //            final var wksInfoList = workspaceService.getAllWorkspacesInfoByUsername(username);
             final var email = principal.getName();
             final var wksInfoList = workspaceService.getAllWorkspacesInfoByEmail(email);
-            //my add end
             model.addAttribute("wksInfoList", wksInfoList);
         }
         return "workspaces";

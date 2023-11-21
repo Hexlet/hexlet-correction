@@ -7,11 +7,7 @@ import static java.text.MessageFormat.format;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 public class AccountNotFoundException extends ErrorResponseException {
-
-    //my add
-//    private static final String NOT_FOUND_MSG = "Account with email or userName=''{0}'' not found";
     private static final String NOT_FOUND_MSG = "Account with email=''{0}'' not found";
-    //my add end
 
     public AccountNotFoundException(final String emailOrUserName) {
         super(NOT_FOUND, ProblemDetail.forStatusAndDetail(NOT_FOUND, "Account not found"), null,

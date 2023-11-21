@@ -13,7 +13,6 @@ import io.hexlet.typoreporter.domain.workspace.WorkspaceRoleId;
 import io.hexlet.typoreporter.domain.workspacesettings.WorkspaceSettings;
 import io.hexlet.typoreporter.repository.AccountRepository;
 import io.hexlet.typoreporter.repository.WorkspaceRepository;
-import io.hexlet.typoreporter.service.WorkspaceService;
 import io.hexlet.typoreporter.service.dto.workspace.CreateWorkspace;
 import io.hexlet.typoreporter.service.mapper.WorkspaceMapper;
 import io.hexlet.typoreporter.test.DBUnitEnumPostgres;
@@ -61,7 +60,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @DataSet(value = {"workspaces.yml", "workspaceRoles.yml", "accounts.yml", "typos.yml"})
 class WorkspaceControllerIT {
 
-    private Long NOT_EXISTING_WKS_ID = 9999L;
+    private final Long NOT_EXISTING_WKS_ID = 9999L;
 
     @Container
     static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>(POSTGRES_IMAGE)
@@ -70,9 +69,6 @@ class WorkspaceControllerIT {
 
     @Autowired
     private WorkspaceRepository repository;
-
-    @Autowired
-    private WorkspaceService service;
 
     @Autowired
     private MockMvc mockMvc;
@@ -99,13 +95,13 @@ class WorkspaceControllerIT {
     @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspacesAndUsersRelated")
     void getWorkspaceInfoPageIsSuccessful(final Long wksId,
-                                          final String username) throws Exception {
+                                          final String email) throws Exception {
         Workspace workspace = repository.getWorkspaceById(wksId).orElse(null);
         assertThat(workspace).isNotNull();
 
         MockHttpServletResponse response = mockMvc.perform(
                 get("/workspace/{wksId}", wksId)
-                    .with(user(username)))
+                    .with(user(email)))
             .andExpect(model().attributeExists("wksInfo", "wksName"))
             .andReturn().getResponse();
 
@@ -115,10 +111,10 @@ class WorkspaceControllerIT {
     @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspacesAndUsersNotRelated")
     void getWorkspaceInfoPageIsNotSuccessful(final Long wksId,
-                                             final String username) throws Exception {
+                                             final String email) throws Exception {
         mockMvc.perform(get("/workspace/{wksId}", wksId))
             .andExpect(redirectedUrl("/workspaces"));
-        mockMvc.perform(get("/workspace/{wksId}", wksId).with(user(username)))
+        mockMvc.perform(get("/workspace/{wksId}", wksId).with(user(email)))
             .andExpect(redirectedUrl("/workspaces"));
     }
 
@@ -136,11 +132,11 @@ class WorkspaceControllerIT {
 
     @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspacesAndUsersRelated")
-    void getWorkspaceTyposPageIsSuccessful(final Long wksId, final String username) throws Exception {
+    void getWorkspaceTyposPageIsSuccessful(final Long wksId, final String email) throws Exception {
         Workspace workspace = repository.getWorkspaceById(wksId).orElse(null);
 
         MockHttpServletResponse response = mockMvc.perform(get("/workspace/{wksId}/typos", wksId)
-                .with(user(username)))
+                .with(user(email)))
             .andExpect(model().attributeExists("wksInfo", "wksName", "typoPage", "availableSizes", "sortProp", "sortDir", "DESC", "ASC"))
             .andReturn().getResponse();
 
@@ -155,31 +151,6 @@ class WorkspaceControllerIT {
         }
     }
 
-    //my add
-//    @ParameterizedTest
-//    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspacesAndUsersAndTypoStatusRelated")
-//    void getWorkspaceTyposPageFilteredIsSuccessful(final Long wksId, final String username, final String typoStatus) throws Exception {
-//        Workspace workspace = repository.getWorkspaceById(wksId).orElse(null);
-//
-//        var request = get("/workspace/{wksId}/typos", wksId).queryParam("typoStatus", typoStatus);
-//
-//        MockHttpServletResponse response = mockMvc.perform(request
-//                .with(user(username)))
-//            .andExpect(model().attributeExists("wksInfo", "wksName", "typoPage", "availableSizes", "sortProp", "sortDir", "DESC", "ASC", "typoStatus"))
-//            .andReturn().getResponse();
-//
-//        Typo typo = workspace.getTypos().stream()
-//            .filter(t -> !t.getTypoStatus().equals(TypoStatus.valueOf(typoStatus)))
-//            .findFirst().orElse(null);
-//
-//        if (typo != null) {
-//            assertThat(response.getContentAsString()).contains(
-//                typo.getPageUrl(), typo.getReporterName(), typo.getModifiedBy()
-//            );
-//        } else {
-//            fail("No typos without status " + typoStatus);
-//        }
-//    }
     @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspacesAndUsersAndTypoStatusRelated")
     void getWorkspaceTyposPageFilteredIsSuccessful(final Long wksId, final String email, final String typoStatus) throws Exception {
@@ -204,7 +175,6 @@ class WorkspaceControllerIT {
             fail("No typos without status " + typoStatus);
         }
     }
-    //my add end
 
     @Test
     void getWorkspaceSettingsPageWithoutWksInfo() throws Exception {
@@ -214,11 +184,11 @@ class WorkspaceControllerIT {
 
     @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspacesAndUsersRelated")
-    void getWorkspaceUpdatePageIsSuccessful(final Long wksId, final String username) throws Exception {
+    void getWorkspaceUpdatePageIsSuccessful(final Long wksId, final String email) throws Exception {
         Workspace workspace = repository.getWorkspaceById(wksId).orElse(null);
 
         MockHttpServletResponse response = mockMvc.perform(get("/workspace/{wksId}/update", wksId)
-                .with(user(username)))
+                .with(user(email)))
             .andExpect(model().attributeExists("wksName", "formModified", "formModified"))
             .andReturn().getResponse();
         assertThat(response.getContentAsString()).contains(workspace.getDescription());
@@ -346,22 +316,15 @@ class WorkspaceControllerIT {
 
         MockHttpServletResponse response = mockMvc.perform(
                 get("/workspace/{wksId}/users", wksId)
-                    //my add
-//                    .with(user(username)))
                     .with(user(email)))
-                    //my add end
             .andExpect(status().isOk())
             .andExpect(model().attributeExists("wksInfo", "wksName", "userPage", "availableSizes", "sortProp", "sortDir", "DESC", "ASC"))
             .andReturn().getResponse();
 
         var html = response.getContentAsString();
         for (var wksRole : workspace.getWorkspaceRoles()) {
-            //my add
-            //            var email = wksRole.getAccount().getEmail();
-//            assertThat(html).contains(email);
             var userEmail = wksRole.getAccount().getEmail();
             assertThat(html).contains(userEmail);
-            //my add end
         }
     }
 }

@@ -71,52 +71,26 @@ public class AccountService implements SignupAccountUseCase, QueryAccount {
         return accountMapper.toInfoAccount(accToSave);
     }
 
-    //my end
-//    @Transactional(readOnly = true)
-//    public InfoAccount getInfoAccount(final String name) {
-//        return accountRepository.findAccountByUsername(name)
-//
-//            .map(accountMapper::toInfoAccount)
-//            .orElseThrow(() -> new AccountNotFoundException(name));
-//    }
     @Transactional(readOnly = true)
     public InfoAccount getInfoAccount(final String email) {
         return accountRepository.findAccountByEmail(email)
             .map(accountMapper::toInfoAccount)
             .orElseThrow(() -> new AccountNotFoundException(email));
     }
-    //my end
 
-    //my add
-//    @Transactional(readOnly = true)
-//    public List<WorkspaceRoleInfo> getWorkspacesInfoListByUsername(final String username) {
-//        return workspaceRoleRepository.getWorkspaceRolesByAccountUsername(username).stream()
-//            .map(workspaceRoleMapper::toWorkspaceRoleInfo)
-//            .toList();
-//    }
     @Transactional(readOnly = true)
     public List<WorkspaceRoleInfo> getWorkspacesInfoListByEmail(final String email) {
         return workspaceRoleRepository.getWorkspaceRolesByAccountEmail(email).stream()
             .map(workspaceRoleMapper::toWorkspaceRoleInfo)
             .toList();
     }
-    //my add end
 
-
-    //my add
-//    @Transactional(readOnly = true)
-//    public UpdateProfile getUpdateProfile(final String name) {
-//        return accountRepository.findAccountByUsername(name)
-//            .map(accountMapper::toUpdateProfile)
-//            .orElseThrow(() -> new AccountNotFoundException(name));
-//    }
     @Transactional(readOnly = true)
     public UpdateProfile getUpdateProfile(final String email) {
         return accountRepository.findAccountByEmail(email)
             .map(accountMapper::toUpdateProfile)
             .orElseThrow(() -> new AccountNotFoundException(email));
     }
-    //my add end
 
     @Transactional(readOnly = true)
     public List<Account> findAll() {
@@ -124,39 +98,11 @@ public class AccountService implements SignupAccountUseCase, QueryAccount {
     }
 
     @Transactional(readOnly = true)
-    public Account findByUsername(String userName) {
-        return accountRepository.findAccountByUsername(userName)
-            .orElseThrow(() -> new AccountNotFoundException(userName));
-    }
-
-    //my add
-    @Transactional(readOnly = true)
     public Account findByEmail(String email) {
         return accountRepository.findAccountByEmail(email)
             .orElseThrow(() -> new AccountNotFoundException(email));
     }
-    //my add end
 
-    //my add
-//    public Account updateProfile(final UpdateProfile updateProfile, final String name) {
-//        final var sourceAccount = accountRepository.findAccountByUsername(name)
-//            .orElseThrow(() -> new AccountNotFoundException(name));
-//        final String sourceUserName = sourceAccount.getUsername();
-//        final String normalizedUserName = TextUtils.toLowerCaseData(updateProfile.getUsername());
-//        final String normalizedEmail = TextUtils.toLowerCaseData(updateProfile.getEmail());
-//        if (!sourceUserName.equals(normalizedUserName) && existsByUsername(normalizedUserName)) {
-//            throw new AccountAlreadyExistException("username", normalizedUserName);
-//        }
-//        final String sourceEmail = sourceAccount.getEmail();
-//        if (!sourceEmail.equals(normalizedEmail) && existsByEmail(normalizedEmail)) {
-//            throw new AccountAlreadyExistException("email", normalizedEmail);
-//        }
-//        Account updAccount = accountMapper.toAccount(updateProfile, sourceAccount);
-//        updAccount.setUsername(normalizedUserName);
-//        updAccount.setEmail(normalizedEmail);
-//        accountRepository.save(updAccount);
-//        return updAccount;
-//    }
     public Account updateProfile(final UpdateProfile updateProfile, final String email) {
         final var sourceAccount = accountRepository.findAccountByEmail(email)
             .orElseThrow(() -> new AccountNotFoundException(email));
@@ -176,24 +122,7 @@ public class AccountService implements SignupAccountUseCase, QueryAccount {
         accountRepository.save(updAccount);
         return updAccount;
     }
-    //my add end
 
-    //my add
-//    public Account updatePassword(final UpdatePassword updatePassword, final String name) {
-//        final var sourceAccount = accountRepository.findAccountByUsername(name)
-//            .orElseThrow(() -> new AccountNotFoundException(name));
-//        final String password = sourceAccount.getPassword();
-//        if (!passwordEncoder.matches(updatePassword.getOldPassword(), password)) {
-//            throw new OldPasswordWrongException();
-//        }
-//        if (passwordEncoder.matches(updatePassword.getNewPassword(), password)) {
-//            throw new NewPasswordTheSameException();
-//        }
-//        final String newPassword = passwordEncoder.encode(updatePassword.getNewPassword());
-//        sourceAccount.setPassword(newPassword);
-//        accountRepository.save(sourceAccount);
-//        return sourceAccount;
-//    }
     public Account updatePassword(final UpdatePassword updatePassword, final String email) {
         final var sourceAccount = accountRepository.findAccountByEmail(email)
             .orElseThrow(() -> new AccountNotFoundException(email));
@@ -209,5 +138,4 @@ public class AccountService implements SignupAccountUseCase, QueryAccount {
         accountRepository.save(sourceAccount);
         return sourceAccount;
     }
-    //my add end
 }
