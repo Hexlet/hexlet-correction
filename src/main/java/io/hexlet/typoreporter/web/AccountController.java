@@ -36,7 +36,7 @@ public class AccountController {
     @GetMapping
     public String getAccountInfoPage(final Model model, final Authentication authentication) {
         final var accountInfo = accountService.getInfoAccount(authentication.getName());
-        final var workspaceInfos = accountService.getWorkspacesInfoListByUsername(accountInfo.username());
+        final var workspaceInfos = accountService.getWorkspacesInfoListByEmail(accountInfo.email());
         model.addAttribute("workspaceRoleInfoList", workspaceInfos);
         model.addAttribute("accInfo", accountInfo);
         return "account/acc-info";
@@ -45,8 +45,8 @@ public class AccountController {
     @GetMapping("/update")
     public String getProfilePage(final Model model,
                                  final Authentication authentication) {
-        final String name = authentication.getName();
-        final var updateProfile = accountService.getUpdateProfile(name);
+        final String email = authentication.getName();
+        final var updateProfile = accountService.getUpdateProfile(email);
         model.addAttribute("formModified", false);
         model.addAttribute("updateProfile", updateProfile);
         return "account/prof-update";
@@ -62,9 +62,9 @@ public class AccountController {
             return "account/prof-update";
         }
         try {
-            final String name = authentication.getName();
-            Account updatedAccount = accountService.updateProfile(updateProfile, name);
-            final var authenticated = UsernamePasswordAuthenticationToken.authenticated(updatedAccount.getUsername(),
+            final String email = authentication.getName();
+            Account updatedAccount = accountService.updateProfile(updateProfile, email);
+            final var authenticated = UsernamePasswordAuthenticationToken.authenticated(updatedAccount.getEmail(),
                 updatedAccount.getPassword(), List.of(() -> "ROLE_USER"));
             SecurityContextHolder.getContext().setAuthentication(authenticated);
             return "redirect:/account";
@@ -91,9 +91,9 @@ public class AccountController {
             return "account/pass-update";
         }
         try {
-            final String name = authentication.getName();
-            Account updatedAccount = accountService.updatePassword(updatePassword, name);
-            final var authenticated = UsernamePasswordAuthenticationToken.authenticated(updatedAccount.getUsername(),
+            final String email = authentication.getName();
+            Account updatedAccount = accountService.updatePassword(updatePassword, email);
+            final var authenticated = UsernamePasswordAuthenticationToken.authenticated(updatedAccount.getEmail(),
                 updatedAccount.getPassword(), List.of(() -> "ROLE_USER"));
             SecurityContextHolder.getContext().setAuthentication(authenticated);
             return "redirect:/account";

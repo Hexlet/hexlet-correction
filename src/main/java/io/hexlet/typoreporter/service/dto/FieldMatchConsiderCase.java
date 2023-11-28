@@ -27,11 +27,8 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * @FieldMatch(first = "email", second = "confirmEmail", message = "The email fields must match")
  * })}
  */
-@Target({TYPE, ANNOTATION_TYPE})
-@Retention(RUNTIME)
-@Constraint(validatedBy = FieldMatchValidator.class)
-@Documented
-public @interface FieldMatch {
+@Constraint(validatedBy = FieldMatchConsiderCaseValidator.class)
+public @interface FieldMatchConsiderCase {
 
     String message() default "The {first} and {second} fields must be equal";
 
@@ -52,13 +49,13 @@ public @interface FieldMatch {
     /**
      * Defines several <code>@FieldMatch</code> annotations on the same element
      *
-     * @see FieldMatch
+     * @see FieldMatchConsiderCase
      */
     @Target({TYPE, ANNOTATION_TYPE})
     @Retention(RUNTIME)
     @Documented
     @interface List {
 
-        FieldMatch[] value();
+        FieldMatchConsiderCase[] value();
     }
 }

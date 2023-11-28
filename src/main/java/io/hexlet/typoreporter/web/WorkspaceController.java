@@ -94,14 +94,14 @@ public class WorkspaceController {
                                           Principal principal,
                                           @Valid @ModelAttribute CreateWorkspace createWorkspace,
                                           BindingResult bindingResult) {
-        String userName = principal.getName();
+        String email = principal.getName();
         model.addAttribute("formModified", true);
         if (bindingResult.hasErrors()) {
             model.addAttribute("createWorkspace", createWorkspace);
             return "create-workspace";
         }
         try {
-            workspaceService.createWorkspace(createWorkspace, userName);
+            workspaceService.createWorkspace(createWorkspace, email);
         } catch (WorkspaceAlreadyExistException e) {
             bindingResult.addError(e.toFieldError("createWorkspace"));
             return "create-workspace";
@@ -261,7 +261,7 @@ public class WorkspaceController {
         List<Account> nonLinkedAccounts = getNonLinkedAccounts(allAccounts, linkedAccounts);
         final Account authenticatedAccount = getAccountFromAuthentication();
         final boolean accountIsAdminRole = workspaceService.isAdminRoleUserInWorkspace(wksId,
-            authenticatedAccount.getUsername());
+            authenticatedAccount.getEmail());
         List<Account> excludeDeleteAccounts = Collections.singletonList(authenticatedAccount);
         Page<Account> userPage = new PageImpl<>(linkedAccounts, pageable, linkedAccounts.size());
         var sort = userPage.getSort()
@@ -338,6 +338,6 @@ public class WorkspaceController {
 
     private Account getAccountFromAuthentication() {
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return accountService.findByUsername(authentication.getName());
+         return accountService.findByEmail(authentication.getName());
     }
 }

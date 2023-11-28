@@ -15,7 +15,7 @@ public interface WorkspaceRoleRepository extends JpaRepository<WorkspaceRole, Lo
     List<WorkspaceRole> getWorkspaceRolesByAccountId(Long accountId);
 
     @EntityGraph(attributePaths = {"account", "workspace"})
-    List<WorkspaceRole> getWorkspaceRolesByAccountUsername(String username);
+    List<WorkspaceRole> getWorkspaceRolesByAccountEmail(String email);
 
     @EntityGraph(attributePaths = {"account", "workspace"})
     List<WorkspaceRole> getWorkspaceRolesByWorkspaceId(Long workspaceId);

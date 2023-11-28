@@ -21,6 +21,7 @@ import static io.hexlet.typoreporter.test.Constraints.POSTGRES_IMAGE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -67,7 +68,7 @@ public class AccountControllerIT {
             .isEqualTo(correctEmailDomain);
 
         String wrongEmailDomain = "test@test";
-        mockMvc.perform(post("/update")
+        mockMvc.perform(post("/account/update")
             .param("username", userName)
             .param("email", wrongEmailDomain)
             .param("confirmEmail", wrongEmailDomain)
@@ -79,5 +80,35 @@ public class AccountControllerIT {
         assertThat(accountRepository.findAccountByEmail(wrongEmailDomain)).isEmpty();
         assertThat(accountRepository.findAccountByEmail(correctEmailDomain).orElseThrow().getEmail())
             .isEqualTo(correctEmailDomain);
+    }
+
+    @Test
+    void updateAccountEmailUsingDifferentCase() throws Exception {
+        final String username = "testUser";
+        final String emailUpperCase = "TEST@TEST.RU";
+        final String emailMixedCase = "TEST@test.Ru";
+        final String emailLowerCase = "test@test.ru";
+        final String password = "_Qwe1234";
+
+        mockMvc.perform(post("/signup")
+            .param("username", username)
+            .param("email", emailMixedCase)
+            .param("confirmEmail", emailMixedCase)
+            .param("password", password)
+            .param("confirmPassword", password)
+            .param("firstName", username)
+            .param("lastName", username)
+            .with(csrf()));
+        assertThat(accountRepository.findAccountByEmail(emailLowerCase)).isNotEmpty();
+
+        mockMvc.perform(put("/account/update")
+            .param("firstName", username)
+            .param("lastName", username)
+            .param("username", username)
+            .param("email", emailUpperCase)
+            .param("confirmEmail", emailUpperCase)
+            .with(csrf()));
+        assertThat(accountRepository.findAccountByEmail(emailUpperCase)).isEmpty();
+        assertThat(accountRepository.findAccountByEmail(emailLowerCase)).isNotEmpty();
     }
 }

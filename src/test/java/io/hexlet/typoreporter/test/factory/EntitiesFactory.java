@@ -14,26 +14,13 @@ import static java.time.Instant.now;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
 
 public class EntitiesFactory {
-
-    public static final String WORKSPACE_101_NAME = "wks-name";
-
     public static final String WORKSPACE_101_TOKEN = "abb4f3ab-1994-4264-bc6f-7cd1aa13dc0a";
-
-    public static final String WORKSPACE_102_NAME = "wks-test";
-
-    public static final String WORKSPACE_103_NAME = "wks-empty";
 
     public static final String ACCOUNT_101_EMAIL = "test101@gmail.com";
 
     public static final String ACCOUNT_102_EMAIL = "test102@gmail.com";
 
     public static final String ACCOUNT_103_EMAIL = "test103@gmail.com";
-
-    public static final String ACCOUNT_101_USERNAME = "test1";
-
-    public static final String ACCOUNT_102_USERNAME = "test2";
-
-    public static final String ACCOUNT_103_USERNAME = "test3";
 
     public static final Long ACCOUNT_101_ID = 101L;
 
@@ -53,38 +40,38 @@ public class EntitiesFactory {
 
     public static Stream<Arguments> getWorkspacesAndUsersRelated() {
         return Stream.of(
-            Arguments.of(WORKSPACE_101_ID, ACCOUNT_101_USERNAME),
-            Arguments.of(WORKSPACE_102_ID, ACCOUNT_102_USERNAME),
-            Arguments.of(WORKSPACE_103_ID, ACCOUNT_103_USERNAME)
+            Arguments.of(WORKSPACE_101_ID, ACCOUNT_101_EMAIL),
+            Arguments.of(WORKSPACE_102_ID, ACCOUNT_102_EMAIL),
+            Arguments.of(WORKSPACE_103_ID, ACCOUNT_103_EMAIL)
         );
     }
 
     public static Stream<Arguments> getWorkspaceAndAdminRelated() {
         return Stream.of(
-            Arguments.of(WORKSPACE_103_ID, ACCOUNT_103_USERNAME)
+            Arguments.of(WORKSPACE_103_ID, ACCOUNT_103_EMAIL)
         );
     }
 
     public static Stream<Arguments> getWorkspaceAndNotAdminRelated() {
         return Stream.of(
-            Arguments.of(WORKSPACE_101_ID, ACCOUNT_101_USERNAME)
+            Arguments.of(WORKSPACE_101_ID, ACCOUNT_101_EMAIL)
         );
     }
 
     public static Stream<Arguments> getWorkspacesAndUsersAndTypoStatusRelated() {
         return Stream.of(
-            Arguments.of(WORKSPACE_102_ID, ACCOUNT_102_USERNAME, "REPORTED"),
-            Arguments.of(WORKSPACE_102_ID, ACCOUNT_102_USERNAME, "IN_PROGRESS"),
-            Arguments.of(WORKSPACE_102_ID, ACCOUNT_102_USERNAME, "RESOLVED"),
-            Arguments.of(WORKSPACE_102_ID, ACCOUNT_102_USERNAME, "CANCELED")
+            Arguments.of(WORKSPACE_102_ID, ACCOUNT_102_EMAIL, "REPORTED"),
+            Arguments.of(WORKSPACE_102_ID, ACCOUNT_102_EMAIL, "IN_PROGRESS"),
+            Arguments.of(WORKSPACE_102_ID, ACCOUNT_102_EMAIL, "RESOLVED"),
+            Arguments.of(WORKSPACE_102_ID, ACCOUNT_102_EMAIL, "CANCELED")
         );
     }
 
     public static Stream<Arguments> getWorkspacesAndUsersNotRelated() {
         return Stream.of(
-            Arguments.of(WORKSPACE_101_ID, ACCOUNT_103_USERNAME),
-            Arguments.of(WORKSPACE_102_ID, ACCOUNT_101_USERNAME),
-            Arguments.of(WORKSPACE_103_ID, ACCOUNT_102_USERNAME)
+            Arguments.of(WORKSPACE_101_ID, ACCOUNT_103_EMAIL),
+            Arguments.of(WORKSPACE_102_ID, ACCOUNT_101_EMAIL),
+            Arguments.of(WORKSPACE_103_ID, ACCOUNT_102_EMAIL)
         );
     }
 
@@ -197,10 +184,6 @@ public class EntitiesFactory {
 
     public static Stream<? extends Identifiable<Long>> getEntities() {
         return Stream.concat(getTypos(), getWorkspaces());
-    }
-
-    public static Stream<String> getAccountUsernameExist() {
-        return Stream.of(ACCOUNT_101_USERNAME, ACCOUNT_102_USERNAME, ACCOUNT_103_USERNAME);
     }
 
     public static Stream<Long> getAccountsIdExist() {

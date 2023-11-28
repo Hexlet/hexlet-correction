@@ -64,12 +64,4 @@ public class AccountRepositoryIT {
     void getAccountByEmailNotExist(final String email) {
         assertThat(accountRepository.findAccountByEmail(email)).isEmpty();
     }
-
-    @ParameterizedTest
-    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getAccountUsernameExist")
-    void getAccountByUsername(final String username) {
-        final var account = accountRepository.findAccountByUsername(username);
-        assertThat(account).isNotEmpty();
-        assertThat(account.map(Account::getUsername).orElseThrow()).isEqualTo(username);
-    }
 }

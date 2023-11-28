@@ -60,7 +60,7 @@ public class WorkspaceService {
     }
 
     @Transactional
-    public WorkspaceInfo createWorkspace(final CreateWorkspace createWks, final String userName) {
+    public WorkspaceInfo createWorkspace(final CreateWorkspace createWks, final String email) {
         if (workspaceRepository.existsWorkspaceByUrl(createWks.url())) {
             throw new WorkspaceAlreadyExistException("url", createWks.url());
         }
@@ -70,7 +70,7 @@ public class WorkspaceService {
         wksSettings.setApiAccessToken(UUID.randomUUID());
         wksSettings.setWorkspace(wksToCreate);
 
-        Account account = accountRepository.findAccountByUsername(userName).orElseThrow();
+        Account account = accountRepository.findAccountByEmail(email).orElseThrow();
 
         final var workspaceRoleId = new WorkspaceRoleId(wksToCreate.getId(), account.getId());
         final var workspaceRole = new WorkspaceRole(workspaceRoleId, AccountRole.ROLE_ADMIN, wksToCreate, account);
@@ -105,8 +105,8 @@ public class WorkspaceService {
     }
 
     @Transactional(readOnly = true)
-    public List<WorkspaceInfo> getAllWorkspacesInfoByUsername(String username) {
-        final var accountOptional = accountRepository.findAccountByUsername(username);
+    public List<WorkspaceInfo> getAllWorkspacesInfoByEmail(String email) {
+        final var accountOptional = accountRepository.findAccountByEmail(email);
         return accountOptional.map(account -> account.getWorkspaceRoles().stream()
             .map(WorkspaceRole::getWorkspace)
             .map(workspaceMapper::toWorkspaceInfo)
@@ -114,8 +114,8 @@ public class WorkspaceService {
     }
 
     @Transactional
-    public boolean isUserRelatedToWorkspace(Long wksId, String username) {
-        final var accountOptional = accountRepository.findAccountByUsername(username);
+    public boolean isUserRelatedToWorkspace(Long wksId, String email) {
+        final var accountOptional = accountRepository.findAccountByEmail(email);
         return accountOptional.map(account -> account.getWorkspaceRoles().stream()
                 .map(WorkspaceRole::getWorkspace)
                 .anyMatch(wks -> wks.getId().equals(wksId)))
@@ -123,9 +123,9 @@ public class WorkspaceService {
     }
 
     @Transactional(readOnly = true)
-    public boolean isAdminRoleUserInWorkspace(Long wksId, String username) {
-        final var account = accountRepository.findAccountByUsername(username).
-            orElseThrow(() -> new AccountNotFoundException(username));
+    public boolean isAdminRoleUserInWorkspace(Long wksId, String email) {
+        final var account = accountRepository.findAccountByEmail(email).
+            orElseThrow(() -> new AccountNotFoundException(email));
         final var workspace = workspaceRepository.getWorkspaceById(wksId).
             orElseThrow(() -> new WorkspaceNotFoundException(wksId));
         final var workSpaceRoleOptional = workspaceRoleRepository.getWorkspaceRoleByAccountIdAndWorkspaceId(

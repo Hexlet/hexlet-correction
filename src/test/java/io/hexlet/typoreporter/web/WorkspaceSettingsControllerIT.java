@@ -63,7 +63,7 @@ public class WorkspaceSettingsControllerIT {
 
     @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspacesAndUsersRelated")
-    void getWorkspaceIntegrationPageIsSuccessful(final Long wksId, final String username) throws Exception {
+    void getWorkspaceIntegrationPageIsSuccessful(final Long wksId, final String email) throws Exception {
         final var apiAccessToken = workspaceSettingsRepository.getWorkspaceSettingsByWorkspaceId(wksId)
             .map(s -> s.getId() + ":" + s.getApiAccessToken())
             .map(String::getBytes)
@@ -71,7 +71,7 @@ public class WorkspaceSettingsControllerIT {
             .orElse(null);
 
         MockHttpServletResponse response = mockMvc.perform(get("/workspace/{wksId}/integration", wksId.toString())
-                .with(user(username)))
+                .with(user(email)))
             .andExpect(model().attributeExists("wksBasicToken"))
             .andReturn().getResponse();
 
@@ -97,14 +97,14 @@ public class WorkspaceSettingsControllerIT {
 
     @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspaceAndAdminRelated")
-    void patchWorkspaceTokenIsSuccessful(final Long wksId, final String username) throws Exception {
+    void patchWorkspaceTokenIsSuccessful(final Long wksId, final String email) throws Exception {
         String previousWksToken = workspaceSettingsRepository.getWorkspaceSettingsByWorkspaceId(wksId)
             .map(WorkspaceSettings::getApiAccessToken)
             .map(UUID::toString)
             .orElse(null);
 
         MockHttpServletResponse response = mockMvc.perform(patch("/workspace/{wksId}/token/regenerate", wksId)
-                .with(user(username))
+                .with(user(email))
                 .with(csrf()))
             .andReturn().getResponse();
 
@@ -119,14 +119,14 @@ public class WorkspaceSettingsControllerIT {
 
     @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspaceAndNotAdminRelated")
-    void patchWorkspaceTokenWithNoRights(final Long wksId, final String username)  throws Exception {
+    void patchWorkspaceTokenWithNoRights(final Long wksId, final String email)  throws Exception {
         String previousWksToken = workspaceSettingsRepository.getWorkspaceSettingsByWorkspaceId(wksId)
             .map(WorkspaceSettings::getApiAccessToken)
             .map(UUID::toString)
             .orElse(null);
 
         MockHttpServletResponse response = mockMvc.perform(patch("/workspace/{wksId}/token/regenerate", wksId.toString())
-                .with(user(username))
+                .with(user(email))
                 .with(csrf()))
             .andReturn().getResponse();
 
