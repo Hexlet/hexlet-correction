@@ -13,6 +13,7 @@ import io.hexlet.typoreporter.domain.workspace.WorkspaceRoleId;
 import io.hexlet.typoreporter.domain.workspacesettings.WorkspaceSettings;
 import io.hexlet.typoreporter.repository.AccountRepository;
 import io.hexlet.typoreporter.repository.WorkspaceRepository;
+import io.hexlet.typoreporter.repository.WorkspaceRoleRepository;
 import io.hexlet.typoreporter.service.dto.workspace.CreateWorkspace;
 import io.hexlet.typoreporter.service.mapper.WorkspaceMapper;
 import io.hexlet.typoreporter.test.DBUnitEnumPostgres;
@@ -37,7 +38,9 @@ import org.junit.jupiter.api.Disabled;
 import static com.github.database.rider.core.api.configuration.Orthography.LOWERCASE;
 import io.hexlet.typoreporter.domain.workspace.WorkspaceRole;
 import io.hexlet.typoreporter.service.WorkspaceRoleService;
+
 import static io.hexlet.typoreporter.test.Constraints.POSTGRES_IMAGE;
+import static io.hexlet.typoreporter.test.factory.EntitiesFactory.*;
 import static java.util.Objects.requireNonNull;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
@@ -45,6 +48,7 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
@@ -75,6 +79,9 @@ class WorkspaceControllerIT {
 
     @Autowired
     private AccountRepository accountRepository;
+
+    @Autowired
+    private WorkspaceRoleRepository workspaceRoleRepository;
 
     @Autowired
     private WorkspaceRoleService workspaceRoleService;
@@ -326,5 +333,28 @@ class WorkspaceControllerIT {
             var userEmail = wksRole.getAccount().getEmail();
             assertThat(html).contains(userEmail);
         }
+    }
+
+    @Test
+    void delUserFromWorkspace() throws Exception {
+        final Long rolesCountBeforeAdding = workspaceRoleRepository.count();
+
+        mockMvc.perform(
+                post("/workspace/{wksId}/users", WORKSPACE_103_ID)
+                    .param("email", ACCOUNT_102_EMAIL)
+                    .with(user(ACCOUNT_103_EMAIL))
+                    .with(csrf()));
+        assertThat(workspaceRoleRepository.count()).isEqualTo(rolesCountBeforeAdding + 1L);
+        Optional<WorkspaceRole> addedWksRoleOptional = workspaceRoleRepository.getWorkspaceRoleByAccountIdAndWorkspaceId(ACCOUNT_102_ID, WORKSPACE_103_ID);
+        assertThat(addedWksRoleOptional).isNotEmpty();
+
+        mockMvc.perform(
+            delete("/workspace/{wksId}/users", WORKSPACE_103_ID)
+                .param("email", ACCOUNT_102_EMAIL)
+                .with(user(ACCOUNT_103_EMAIL))
+                .with(csrf()));
+        assertThat(workspaceRoleRepository.count()).isEqualTo(rolesCountBeforeAdding);
+        Optional<WorkspaceRole> addedWksRoleDeletedOptional = workspaceRoleRepository.getWorkspaceRoleByAccountIdAndWorkspaceId(ACCOUNT_102_ID, WORKSPACE_103_ID);
+        assertThat(addedWksRoleDeletedOptional).isEmpty();
     }
 }
