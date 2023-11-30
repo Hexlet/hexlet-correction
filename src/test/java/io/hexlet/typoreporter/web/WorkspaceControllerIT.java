@@ -358,6 +358,15 @@ class WorkspaceControllerIT {
         mockMvc.perform(
             delete("/workspace/{wksId}/users", WORKSPACE_103_ID)
                 .param("email", ACCOUNT_102_EMAIL)
+                .with(user(ACCOUNT_102_EMAIL))
+                .with(csrf()));
+        assertThat(workspaceRoleRepository.count()).isEqualTo(rolesCountBeforeAdding + 1L);
+        Optional<WorkspaceRole> addedWksRoleStillThereOptional = workspaceRoleRepository.getWorkspaceRoleByAccountIdAndWorkspaceId(ACCOUNT_102_ID, WORKSPACE_103_ID);
+        assertThat(addedWksRoleStillThereOptional).isNotEmpty();
+
+        mockMvc.perform(
+            delete("/workspace/{wksId}/users", WORKSPACE_103_ID)
+                .param("email", ACCOUNT_102_EMAIL)
                 .with(user(ACCOUNT_103_EMAIL))
                 .with(csrf()));
         assertThat(workspaceRoleRepository.count()).isEqualTo(rolesCountBeforeAdding);
