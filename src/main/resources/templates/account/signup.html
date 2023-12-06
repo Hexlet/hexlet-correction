@@ -29,7 +29,7 @@
                     </div>
                 </div>
 
-                <div class="form-floating mb-3">
+                <!--div class="form-floating mb-3">
                     <input id="inputConfirmEmail" placeholder="p" type="email" th:field="*{confirmEmail}"
                            class="form-control"
                            th:classappend="${!#fields.hasErrors('confirmEmail') && formModified}? 'is-valid'"
@@ -38,7 +38,7 @@
                     <div class="alert alert-danger" th:if="${#fields.hasErrors('confirmEmail')}">
                         <p th:each="err : ${#fields.errors('confirmEmail')}" th:text="${err}"></p>
                     </div>
-                </div>
+                </div-->
 
                 <div class="form-floating mb-3">
                     <input id="inputFirstName" placeholder="p" type="text" th:field="*{firstName}"

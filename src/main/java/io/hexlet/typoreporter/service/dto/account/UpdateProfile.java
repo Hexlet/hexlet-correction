@@ -12,7 +12,9 @@ import lombok.experimental.Accessors;
 @Getter
 @Setter
 @Accessors(chain = true)
-@FieldMatchConsiderCase(first = "email", second = "confirmEmail", message = "The email \"{0}\" and it confirmation \"{1}\" must match")
+//my add
+//@FieldMatchConsiderCase(first = "email", second = "confirmEmail", message = "The email \"{0}\" and it confirmation \"{1}\" must match")
+//my add end
 public class UpdateProfile {
 
     @AccountUsername
@@ -21,8 +23,10 @@ public class UpdateProfile {
     @Email(regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", message = "The email \"{0}\" incorrect")
     private String email;
 
-    @Email(regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", message = "The email \"{0}\" incorrect")
-    private String confirmEmail;
+    //my add
+//    @Email(regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", message = "The email \"{0}\" incorrect")
+//    private String confirmEmail;
+    //my add end
 
     @NotBlank
     @Size(min = 1, max = 50)

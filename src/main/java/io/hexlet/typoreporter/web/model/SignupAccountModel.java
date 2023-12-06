@@ -22,7 +22,9 @@ import lombok.ToString;
 //    @FieldMatch(first = "email", second = "confirmEmail", message = "The email \"{0}\" and it confirmation \"{1}\" must match")
 //})
 @FieldMatchConsiderCase(first = "password", second = "confirmPassword", message = "The password and it confirmation must match")
-@FieldMatchIgnoreCase(first = "email", second = "confirmEmail", message = "The email \"{0}\" and it confirmation \"{1}\" must match")
+//my add
+//@FieldMatchIgnoreCase(first = "email", second = "confirmEmail", message = "The email \"{0}\" and it confirmation \"{1}\" must match")
+//my add end
 
 @ToString
 public class SignupAccountModel {
@@ -33,8 +35,10 @@ public class SignupAccountModel {
     @Email(regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", message = "The email \"{0}\" incorrect")
     private String email;
 
-    @Email(regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", message = "The email \"{0}\" incorrect")
-    private String confirmEmail;
+    //my add
+//    @Email(regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", message = "The email \"{0}\" incorrect")
+//    private String confirmEmail;
+    //my add end
 
     @AccountPassword
     @ToString.Exclude

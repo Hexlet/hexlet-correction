@@ -52,17 +52,24 @@ class SignupControllerIT {
     private final String EMAIL_UPPER_CASE = "EMAIL_ADDRESS@GOOGLE.COM";
     private final String EMAIL_LOWER_CASE = EMAIL_UPPER_CASE.toLowerCase();
 
+    //my add
+//    private final SignupAccountModel model = new SignupAccountModel(
+//        "model_upper_case",
+//        EMAIL_UPPER_CASE, EMAIL_UPPER_CASE,
+//        "password","password",
+//        "firstName", "lastName");
     private final SignupAccountModel model = new SignupAccountModel(
         "model_upper_case",
-        EMAIL_UPPER_CASE, EMAIL_UPPER_CASE,
+        EMAIL_UPPER_CASE,
         "password","password",
         "firstName", "lastName");
 
-    private final SignupAccountModel anotherModelWithSameButLowerCaseEmail = new SignupAccountModel(
-        "model_lower_case",
-        EMAIL_LOWER_CASE, EMAIL_LOWER_CASE,
-        "another_password", "another_password",
-        "another_firstName", "another_lastName");
+//    private final SignupAccountModel anotherModelWithSameButLowerCaseEmail = new SignupAccountModel(
+//        "model_lower_case",
+//        EMAIL_LOWER_CASE, EMAIL_LOWER_CASE,
+//        "another_password", "another_password",
+//        "another_firstName", "another_lastName");
+    //my add end
 
     @Test
     void createAccountWithIgnoreEmailCase() throws Exception {
