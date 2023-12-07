@@ -52,24 +52,17 @@ class SignupControllerIT {
     private final String EMAIL_UPPER_CASE = "EMAIL_ADDRESS@GOOGLE.COM";
     private final String EMAIL_LOWER_CASE = EMAIL_UPPER_CASE.toLowerCase();
 
-    //my add
-//    private final SignupAccountModel model = new SignupAccountModel(
-//        "model_upper_case",
-//        EMAIL_UPPER_CASE, EMAIL_UPPER_CASE,
-//        "password","password",
-//        "firstName", "lastName");
     private final SignupAccountModel model = new SignupAccountModel(
         "model_upper_case",
         EMAIL_UPPER_CASE,
         "password","password",
         "firstName", "lastName");
 
-//    private final SignupAccountModel anotherModelWithSameButLowerCaseEmail = new SignupAccountModel(
-//        "model_lower_case",
-//        EMAIL_LOWER_CASE, EMAIL_LOWER_CASE,
-//        "another_password", "another_password",
-//        "another_firstName", "another_lastName");
-    //my add end
+        private final SignupAccountModel anotherModelWithSameButLowerCaseEmail = new SignupAccountModel(
+        "model_lower_case",
+        EMAIL_LOWER_CASE,
+        "another_password", "another_password",
+        "another_firstName", "another_lastName");
 
     @Test
     void createAccountWithIgnoreEmailCase() throws Exception {
@@ -78,7 +71,6 @@ class SignupControllerIT {
         mockMvc.perform(post("/signup")
             .param("username", model.getUsername())
             .param("email", model.getEmail())
-            .param("confirmEmail", model.getEmail())
             .param("password", model.getPassword())
             .param("confirmPassword", model.getConfirmPassword())
             .param("firstName", model.getFirstName())
@@ -91,7 +83,6 @@ class SignupControllerIT {
         mockMvc.perform(post("/signup")
             .param("username", anotherModelWithSameButLowerCaseEmail.getUsername())
             .param("email", anotherModelWithSameButLowerCaseEmail.getEmail())
-            .param("confirmEmail", anotherModelWithSameButLowerCaseEmail.getEmail())
             .param("password", anotherModelWithSameButLowerCaseEmail.getPassword())
             .param("confirmPassword", anotherModelWithSameButLowerCaseEmail.getConfirmPassword())
             .param("firstName", anotherModelWithSameButLowerCaseEmail.getFirstName())
@@ -108,7 +99,6 @@ class SignupControllerIT {
         mockMvc.perform(post("/signup")
             .param("username", userName)
             .param("email", wrongEmailDomain)
-            .param("confirmEmail", wrongEmailDomain)
             .param("password", password)
             .param("confirmPassword", password)
             .param("firstName", userName)
@@ -124,7 +114,6 @@ class SignupControllerIT {
         mockMvc.perform(post("/signup")
             .param("username", userName)
             .param("email", email)
-            .param("confirmEmail", email)
             .param("password", wrongPass)
             .param("confirmPassword", wrongPass)
             .param("firstName", userName)
@@ -132,22 +121,5 @@ class SignupControllerIT {
             .with(csrf())).andExpect((status().isFound()));
         assertThat(accountRepository.findAccountByEmail(email)).isEmpty();
 
-    }
-
-    @Test
-    void createAccountWithDifferentCaseInEmailAndConfirmation() throws Exception {
-        assertThat(accountRepository.findAccountByEmail(EMAIL_LOWER_CASE)).isEmpty();
-
-        mockMvc.perform(post("/signup")
-            .param("username", model.getUsername())
-            .param("email", model.getEmail())
-            .param("confirmEmail", anotherModelWithSameButLowerCaseEmail.getEmail())
-            .param("password", model.getPassword())
-            .param("confirmPassword", model.getConfirmPassword())
-            .param("firstName", model.getFirstName())
-            .param("lastName", model.getLastName())
-            .with(csrf()));
-
-        assertThat(accountRepository.findAccountByEmail(EMAIL_LOWER_CASE)).isNotEmpty();
     }
 }

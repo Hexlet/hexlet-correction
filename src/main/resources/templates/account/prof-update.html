@@ -35,13 +35,6 @@
                     <label for="inputEmail" th:text="#{email}"></label>
                     <div class="invalid-feedback" th:each="err : ${#fields.errors('email')}" th:text="${err}"></div>
                 </div>
-                <div class="form-floating mb-3">
-                    <input class="form-control" id="inputConfirmEmail" placeholder="p"
-                           th:classappend="${!#fields.hasErrors('confirmEmail') && formModified ? 'is-valid' : ''}"
-                           th:errorclass="is-invalid" th:field="*{confirmEmail}" type="email">
-                    <label for="inputConfirmEmail" th:text="#{email.confirm}"></label>
-                    <div class="invalid-feedback" th:each="err : ${#fields.errors('confirmEmail')}" th:text="${err}"></div>
-                </div>
                 <button class="btn btn-primary" type="submit" th:text="#{btn.save}"></button>
                 <a class="btn btn-secondary" th:href="@{/account}" th:text="#{btn.close}"></a>
             </form>
