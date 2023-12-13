@@ -53,7 +53,7 @@ class LoginIT {
 
     private SignupAccountModel model = new SignupAccountModel(
         "model_upper_case",
-        EMAIL_UPPER_CASE, EMAIL_UPPER_CASE,
+        EMAIL_UPPER_CASE,
         "password","password",
         "firstName", "lastName");
 
@@ -64,7 +64,6 @@ class LoginIT {
         mockMvc.perform(post("/signup")
             .param("username", model.getUsername())
             .param("email", model.getEmail())
-            .param("confirmEmail", model.getEmail())
             .param("password", model.getPassword())
             .param("confirmPassword", model.getPassword())
             .param("firstName", model.getFirstName())

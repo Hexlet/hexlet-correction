@@ -57,7 +57,6 @@ public class AccountControllerIT {
         mockMvc.perform(post("/signup")
             .param("username", userName)
             .param("email", correctEmailDomain)
-            .param("confirmEmail", correctEmailDomain)
             .param("password", password)
             .param("confirmPassword", password)
             .param("firstName", userName)
@@ -71,7 +70,6 @@ public class AccountControllerIT {
         mockMvc.perform(post("/account/update")
             .param("username", userName)
             .param("email", wrongEmailDomain)
-            .param("confirmEmail", wrongEmailDomain)
             .param("password", password)
             .param("confirmPassword", password)
             .param("firstName", userName)
@@ -93,7 +91,6 @@ public class AccountControllerIT {
         mockMvc.perform(post("/signup")
             .param("username", username)
             .param("email", emailMixedCase)
-            .param("confirmEmail", emailMixedCase)
             .param("password", password)
             .param("confirmPassword", password)
             .param("firstName", username)
@@ -106,7 +103,6 @@ public class AccountControllerIT {
             .param("lastName", username)
             .param("username", username)
             .param("email", emailUpperCase)
-            .param("confirmEmail", emailUpperCase)
             .with(csrf()));
         assertThat(accountRepository.findAccountByEmail(emailUpperCase)).isEmpty();
         assertThat(accountRepository.findAccountByEmail(emailLowerCase)).isNotEmpty();
