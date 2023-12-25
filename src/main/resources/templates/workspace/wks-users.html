@@ -21,11 +21,8 @@
                 <p th:text="#{text.add-user-to-wks}"></p>
                 <form method="POST" th:action="@{'/workspace/' + ${wksId} + '/users'}">
                     <div class="form-group">
-                        <label for="selectUserEmail" th:text="#{email}"></label>
-                        <select name="email" class="form-control" id="selectUserEmail">
-                            <option th:each="account : ${nonLinkedAccounts}" th:object="${account}"
-                                    th:text="*{email}"></option>
-                        </select>
+                        <label for="inputUserEmail" th:text="#{email}"></label>
+                        <input type="text" name="email" class="form-control" id="inputUserEmail" placeholder="Enter user email">
                         <small id="emailHelp" class="form-text text-muted" th:text="#{text.hint-choose-a-user}"></small>
                     </div>
                     <button type="submit" class="btn btn-secondary" th:text="#{btn.add-to-wks}"></button>
