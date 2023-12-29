@@ -9,14 +9,14 @@ const generateModalStyles = () => {
     display: none;
     width: 100%;
     height: 100%;
-    overflow: hidden;
+    overflow: auto;
     outline: 0;
     background-color: rgba(0, 0, 0, 0.5);
   }
 
   #hexlet-correction-modal_modal-content {
     background-color: #fefefe;
-    margin: 15% auto;
+    margin: 10rem auto;
     padding: 20px;
     border: 1px solid #888;
     width: 80%;
@@ -111,6 +111,14 @@ const generateModalStyles = () => {
   document.head.append(modalStyleEl);
 
   return modalStyleEl;
+};
+
+const handleBodyScroll = (modalIsOpen) => {
+  if (modalIsOpen) {
+    document.body.style.overflow = 'hidden';
+  } else {
+    document.body.style.overflow = 'auto';
+  }
 };
 
 const generateModal = (state) => {
@@ -243,6 +251,7 @@ const view = (elements, state) => {
     switch (path) {
       case 'modalShown':
         renderModal(elements, state);
+        handleBodyScroll(state.modalShown);
         break;
       default:
         break;
