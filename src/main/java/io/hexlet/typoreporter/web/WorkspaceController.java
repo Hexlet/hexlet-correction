@@ -1,5 +1,10 @@
 package io.hexlet.typoreporter.web;
 
+import io.hexlet.typoreporter.utils.*;
+import io.hexlet.typoreporter.web.model.*;
+import jakarta.servlet.http.*;
+import jakarta.validation.constraints.*;
+import org.springframework.ui.Model;
 import io.hexlet.typoreporter.domain.account.Account;
 import io.hexlet.typoreporter.domain.typo.TypoStatus;
 import io.hexlet.typoreporter.domain.workspace.Workspace;
@@ -31,7 +36,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
+import org.springframework.validation.*;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -236,16 +241,19 @@ public class WorkspaceController {
 
     @GetMapping("/{wksId}/users")
     @PreAuthorize(IS_USER_RELATED_TO_WKS)
-    public String getWorkspaceUsersPage(Model model,
+    public String getWorkspaceUsersPage(final Model model,
                                         @PathVariable Long wksId,
                                         @SortDefault("createdDate") Pageable pageable) {
 
+        model.addAttribute("inputEmail", new WorkspaceUserModel());
+        model.addAttribute("formModified", false);
         Optional<WorkspaceInfo> workSpaceInfoOptional = workspaceService.getWorkspaceInfoById(wksId);
         if (workSpaceInfoOptional.isEmpty()) {
             //TODO send error page
             log.error("Workspace with id {} not found", wksId);
             return "redirect:/workspaces";
         }
+
         WorkspaceInfo wksInfo = workSpaceInfoOptional.get();
         model.addAttribute("wksName", wksInfo.name());
         model.addAttribute("wksInfo", wksInfo);
@@ -283,15 +291,23 @@ public class WorkspaceController {
 
     @PostMapping("/{wksId}/users")
     @PreAuthorize(IS_USER_RELATED_TO_WKS)
-    public String addUser(@RequestParam String email, @PathVariable Long wksId) {
+    public String addUser(@ModelAttribute("inputEmail") @Valid WorkspaceUserModel workspaceUserModel,
+                          BindingResult bindingResult,
+                          Model model,
+                          @PathVariable Long wksId) {
+        model.addAttribute("formModified", true);
+        if (bindingResult.hasErrors()) {
+            return "workspace/wks-users";
+        }
         try {
-            workspaceRoleService.addAccountToWorkspace(wksId, email);
+            workspaceRoleService.addAccountToWorkspace(wksId, workspaceUserModel.getEmail());
             return "redirect:/workspace/{wksId}/users";
         } catch (WorkspaceNotFoundException e) {
             log.error("Workspace with id {} not found", wksId);
             return "redirect:/workspaces";
         } catch (AccountNotFoundException e) {
-            log.error("Account with email {} not found", email);
+            bindingResult.addError(new FieldError("inputEmail", "email", e, false, null, null, e.getMessage()));
+            log.error("Account with email {} not found", workspaceUserModel.getEmail());
             return "redirect:/workspace/{wksId}/users";
         }
     }

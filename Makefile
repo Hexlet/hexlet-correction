@@ -31,6 +31,9 @@ start: run-dev-docker-db
 docker-infra-start:
 	docker compose -f docker/docker-compose.yml up -d -V --remove-orphans
 
+run-dev-debug:
+	./mvnw spring-boot:run -Dspring-boot.run.profiles=dev -Dspring-boot.run.jvmArguments="-Xdebug"
+
 update-versions:
 	./mvnw versions:update-properties versions:display-plugin-updates
 

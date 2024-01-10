@@ -7,12 +7,17 @@ import io.hexlet.typoreporter.domain.workspace.WorkspaceRoleId;
 import io.hexlet.typoreporter.repository.AccountRepository;
 import io.hexlet.typoreporter.repository.WorkspaceRepository;
 import io.hexlet.typoreporter.repository.WorkspaceRoleRepository;
+import io.hexlet.typoreporter.utils.*;
 import io.hexlet.typoreporter.web.exception.AccountNotFoundException;
 import io.hexlet.typoreporter.web.exception.WorkspaceNotFoundException;
 import io.hexlet.typoreporter.web.exception.WorkspaceRoleNotFoundException;
+import jakarta.validation.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.*;
+import org.springframework.web.bind.annotation.*;
+
 
 import static io.hexlet.typoreporter.domain.workspace.AccountRole.ROLE_ANONYMOUS;
 
@@ -28,6 +33,7 @@ public class WorkspaceRoleService {
 
     @Transactional
     public WorkspaceRole addAccountToWorkspace(Long wksId, String accEmail) {
+
         final var accId = accountRepository.findAccountByEmail(accEmail)
             .map(Account::getId)
             .orElseThrow(() -> new AccountNotFoundException(accEmail));
