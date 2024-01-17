@@ -11,7 +11,7 @@ import io.hexlet.typoreporter.service.dto.workspace.CreateWorkspace;
 import io.hexlet.typoreporter.service.dto.workspace.WorkspaceInfo;
 import io.hexlet.typoreporter.service.mapper.WorkspaceMapper;
 import io.hexlet.typoreporter.test.DBUnitEnumPostgres;
-import io.hexlet.typoreporter.web.exception.WorkspaceAlreadyExistException;
+import io.hexlet.typoreporter.handler.exception.WorkspaceAlreadyExistException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;

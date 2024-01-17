@@ -2,7 +2,7 @@ package io.hexlet.typoreporter.service;
 
 import io.hexlet.typoreporter.domain.workspacesettings.WorkspaceSettings;
 import io.hexlet.typoreporter.repository.WorkspaceSettingsRepository;
-import io.hexlet.typoreporter.web.exception.WorkspaceNotFoundException;
+import io.hexlet.typoreporter.handler.exception.WorkspaceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

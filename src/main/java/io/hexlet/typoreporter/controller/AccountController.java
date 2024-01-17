@@ -1,13 +1,13 @@
-package io.hexlet.typoreporter.web;
+package io.hexlet.typoreporter.controller;
 
 import io.hexlet.typoreporter.domain.account.Account;
 import io.hexlet.typoreporter.service.AccountService;
 import io.hexlet.typoreporter.service.dto.account.UpdatePassword;
 import io.hexlet.typoreporter.service.dto.account.UpdateProfile;
-import io.hexlet.typoreporter.web.exception.AccountAlreadyExistException;
-import io.hexlet.typoreporter.web.exception.AccountNotFoundException;
-import io.hexlet.typoreporter.web.exception.NewPasswordTheSameException;
-import io.hexlet.typoreporter.web.exception.OldPasswordWrongException;
+import io.hexlet.typoreporter.handler.exception.AccountAlreadyExistException;
+import io.hexlet.typoreporter.handler.exception.AccountNotFoundException;
+import io.hexlet.typoreporter.handler.exception.NewPasswordTheSameException;
+import io.hexlet.typoreporter.handler.exception.OldPasswordWrongException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -1,4 +1,4 @@
-package io.hexlet.typoreporter.web;
+package io.hexlet.typoreporter.controller;
 
 import io.hexlet.typoreporter.domain.account.Account;
 import io.hexlet.typoreporter.service.AccountService;
@@ -26,8 +26,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.Base64;
 import java.util.Locale;
 
-import static io.hexlet.typoreporter.web.WorkspaceController.IS_USER_ADMIN_IN_WKS;
-import static io.hexlet.typoreporter.web.WorkspaceController.IS_USER_RELATED_TO_WKS;
+import static io.hexlet.typoreporter.controller.WorkspaceController.IS_USER_ADMIN_IN_WKS;
+import static io.hexlet.typoreporter.controller.WorkspaceController.IS_USER_RELATED_TO_WKS;
 
 @Slf4j
 @Controller

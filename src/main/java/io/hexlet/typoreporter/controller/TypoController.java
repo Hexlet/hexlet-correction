@@ -1,10 +1,10 @@
-package io.hexlet.typoreporter.web;
+package io.hexlet.typoreporter.controller;
 
 import io.hexlet.typoreporter.domain.typo.TypoEvent;
 import io.hexlet.typoreporter.service.TypoService;
 import io.hexlet.typoreporter.service.WorkspaceService;
-import io.hexlet.typoreporter.web.exception.TypoNotFoundException;
-import io.hexlet.typoreporter.web.exception.WorkspaceNotFoundException;
+import io.hexlet.typoreporter.handler.exception.TypoNotFoundException;
+import io.hexlet.typoreporter.handler.exception.WorkspaceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
