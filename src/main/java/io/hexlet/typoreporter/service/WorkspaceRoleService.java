@@ -1,22 +1,17 @@
 package io.hexlet.typoreporter.service;
 
 import io.hexlet.typoreporter.domain.account.Account;
-import io.hexlet.typoreporter.domain.workspace.Workspace;
 import io.hexlet.typoreporter.domain.workspace.WorkspaceRole;
 import io.hexlet.typoreporter.domain.workspace.WorkspaceRoleId;
 import io.hexlet.typoreporter.repository.AccountRepository;
 import io.hexlet.typoreporter.repository.WorkspaceRepository;
 import io.hexlet.typoreporter.repository.WorkspaceRoleRepository;
-import io.hexlet.typoreporter.utils.*;
-import io.hexlet.typoreporter.web.exception.AccountNotFoundException;
-import io.hexlet.typoreporter.web.exception.WorkspaceNotFoundException;
-import io.hexlet.typoreporter.web.exception.WorkspaceRoleNotFoundException;
-import jakarta.validation.*;
+import io.hexlet.typoreporter.handler.exception.AccountNotFoundException;
+import io.hexlet.typoreporter.handler.exception.WorkspaceNotFoundException;
+import io.hexlet.typoreporter.handler.exception.WorkspaceRoleNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.*;
-import org.springframework.web.bind.annotation.*;
 
 
 import static io.hexlet.typoreporter.domain.workspace.AccountRole.ROLE_ANONYMOUS;

@@ -9,7 +9,7 @@ import io.hexlet.typoreporter.service.dto.typo.ReportedTypo;
 import io.hexlet.typoreporter.service.dto.typo.TypoInfo;
 import io.hexlet.typoreporter.service.dto.typo.TypoReport;
 import io.hexlet.typoreporter.service.mapper.TypoMapper;
-import io.hexlet.typoreporter.web.exception.WorkspaceNotFoundException;
+import io.hexlet.typoreporter.handler.exception.WorkspaceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.apache.commons.lang3.tuple.Pair;

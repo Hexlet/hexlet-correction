@@ -1,4 +1,4 @@
-package io.hexlet.typoreporter.web.exception;
+package io.hexlet.typoreporter.handler.exception;
 
 import org.springframework.http.ProblemDetail;
 import org.springframework.validation.FieldError;

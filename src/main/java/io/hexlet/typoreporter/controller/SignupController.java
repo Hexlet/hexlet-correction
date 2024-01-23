@@ -1,4 +1,4 @@
-package io.hexlet.typoreporter.web;
+package io.hexlet.typoreporter.controller;
 
 import io.hexlet.typoreporter.domain.workspace.AccountRole;
 import io.hexlet.typoreporter.service.account.EmailAlreadyExistException;
