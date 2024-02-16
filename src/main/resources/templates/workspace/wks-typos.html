@@ -158,7 +158,10 @@
                                     <!-- Workspace typo table row collapsed part -->
                                     <tr>
                                         <td class="p-0" colspan="7">
-                                            <div class="accordion-collapse collapse" th:id="|collapseTypoRowId_*{id}|">
+                                            <div class="accordion-collapse collapse" th:id="|collapseTypoRowId_*{id}|"
+                                            th:with="searchUri=${typoStatus} != null ?
+                                                        @{'/typos?'(page=${typoPage.pageable.getPageNumber()},size=${typoPage.size},sort=${sortProp} + ',' + ${sortDir}, typoStatus=${typoStatus})}
+                                                        : @{'/typos?'(page=${typoPage.pageable.getPageNumber()},size=${typoPage.size},sort=${sortProp} + ',' + ${sortDir})}">
                                                 <div class="p-4">
                                                     <div class="row mb-2">
                                                         <!-- Workspace typo table row change status buttons -->
@@ -167,7 +170,7 @@
                                                                  class="btn-group"
                                                                  role="group">
                                                                 <form
-                                                                    th:action="@{|/typos/*{id}/status?wksId=${wksId}&event=${event}|}"
+                                                                    th:action="@{|/typos/*{id}/status?wksId=${wksId}&event=${event}|(next=${searchUri})}"
                                                                     th:each="event : *{typoStatus.getValidEvents()}"
                                                                     th:method="patch">
                                                                     <button class="btn"
@@ -178,9 +181,10 @@
                                                                 </form>
                                                             </div>
                                                         </div>
+
                                                         <!-- Workspace typo table row delete buttons -->
                                                         <div class="col-1">
-                                                            <form th:action="@{'/typos/' + *{id}(wksId=${wksId})}"
+                                                            <form th:action="@{'/typos/' + *{id}(wksId=${wksId},next=${searchUri})}"
                                                                   th:method="delete">
                                                                 <button class="btn btn-danger" type="submit" th:text="#{btn.delete}">
                                                                     Delete

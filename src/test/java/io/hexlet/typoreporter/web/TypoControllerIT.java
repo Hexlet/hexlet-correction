@@ -77,6 +77,25 @@ public class TypoControllerIT {
 
     @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getTypoIdsExist")
+    void updateTypoStatusWithNext(final Long typoId) throws Exception {
+        Typo typo = typoRepository.findById(typoId).orElse(null);
+        Long wksId = typo.getWorkspace().getId();
+        String next = "/typos?page=0&size=2";
+
+        typo.setTypoStatus(TypoStatus.IN_PROGRESS);
+        TypoStatus previousStatus = typo.getTypoStatus(); // IN_PROGRESS
+
+        mockMvc.perform(patch("/typos/{id}/status", typoId)
+                .param("wksId", wksId.toString())
+                .param("event", CANCEL.name())
+                .param("next", next)
+                .with(csrf()))
+            .andExpect(redirectedUrl("/workspace/" + wksId + next));
+        assertThat(previousStatus).isNotEqualTo(typo.getTypoStatus());
+    }
+
+    @ParameterizedTest
+    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getTypoIdsExist")
     void updateTypoStatusWithEventIsEmpty(final Long typoId) throws Exception {
         Typo typo = typoRepository.findById(typoId).orElse(null);
         Long wksId = typo.getWorkspace().getId();
@@ -115,6 +134,24 @@ public class TypoControllerIT {
                 .param("wksId", wksId.toString())
                 .with(csrf()))
             .andExpect(redirectedUrl("/workspace/" + wksId + "/typos"));
+
+        assertThat(typoRepository.existsById(typoId)).isFalse();
+    }
+
+    @ParameterizedTest
+    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getTypoIdsExist")
+    void deleteTypeByIdWithNextPage(final Long typoId) throws Exception {
+        Typo typo = typoRepository.findById(typoId).orElse(null);
+        Long wksId = typo.getWorkspace().getId();
+        String next = "/typos?page=0&size=2";
+
+        assertThat(typoRepository.existsById(typoId)).isTrue();
+
+        mockMvc.perform(delete("/typos/{id}", typoId)
+                .param("wksId", wksId.toString())
+                .param("next", next)
+                .with(csrf()))
+            .andExpect(redirectedUrl("/workspace/" + wksId + next));
 
         assertThat(typoRepository.existsById(typoId)).isFalse();
     }

@@ -30,7 +30,8 @@ public class TypoController {
     @PatchMapping("/{id}/status")
     public String updateTypoStatus(@PathVariable Long id,
                                    @RequestParam Optional<Long> wksId,
-                                   @RequestParam Optional<TypoEvent> event) {
+                                   @RequestParam Optional<TypoEvent> event,
+                                   @RequestParam Optional<String> next) {
         if (wksId.isEmpty() || !workspaceService.existsWorkspaceById(wksId.get())) {
             //TODO send to error page
             final var e = new WorkspaceNotFoundException(wksId.orElse(0L));
@@ -40,7 +41,7 @@ public class TypoController {
         if (event.isEmpty()) {
             //TODO send to error page
             log.error("TypoEvent={} must not be null", event.orElse(null));
-            return ("redirect:/workspace/") + wksId.get() + "/typos";
+            return ("redirect:/workspace/") + wksId.get() + next.orElse("/typos");
         }
         final var updatedTypo = typoService.updateTypoStatus(id, event.get());
         if (updatedTypo.isEmpty()) {
@@ -48,12 +49,13 @@ public class TypoController {
             final var e = new TypoNotFoundException(id);
             log.error(e.getMessage(), e);
         }
-        return ("redirect:/workspace/") + wksId.get() + "/typos";
+        return ("redirect:/workspace/") + wksId.get() + next.orElse("/typos");
     }
 
     @DeleteMapping("/{id}")
     public String deleteTypoById(@PathVariable Long id,
-                                 @RequestParam Optional<Long> wksId) {
+                                 @RequestParam Optional<Long> wksId,
+                                 @RequestParam Optional<String> next) {
         if (wksId.isEmpty() || !workspaceService.existsWorkspaceById(wksId.get())) {
             //TODO send to error page
             final var e = new WorkspaceNotFoundException(wksId.orElse(0L));
@@ -65,6 +67,6 @@ public class TypoController {
             final var e = new TypoNotFoundException(id);
             log.error(e.toString(), e);
         }
-        return ("redirect:/workspace/") + wksId.get() + "/typos";
+        return ("redirect:/workspace/") + wksId.get() + next.orElse("/typos");
     }
 }
