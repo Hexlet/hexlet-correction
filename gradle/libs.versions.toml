@@ -13,7 +13,6 @@ org-projectlombok-lombok-mapstruct-binding = "0.2.0"
 org-spring-gradle-dependency-management = "1.1.4"
 org-testcontainers-junit-jupiter = "1.17.6"
 org-testcontainers-postgresql = "1.17.6"
-org-junit-platform-launcher = "1.10.2"
 org-thymeleaf-extras-thymeleaf-extras-springsecurity6 = "3.1.1.RELEASE"
 org-webjars-bootstrap = "5.2.3"
 org-webjars-webjars-locator = "0.46"
@@ -42,7 +41,7 @@ org-springframework-boot-spring-boot-starter-web = { module = "org.springframewo
 org-springframework-security-spring-security-test = { module = "org.springframework.security:spring-security-test" }
 org-testcontainers-junit-jupiter = { module = "org.testcontainers:junit-jupiter", version.ref = "org-testcontainers-junit-jupiter" }
 org-testcontainers-postgresql = { module = "org.testcontainers:postgresql", version.ref = "org-testcontainers-postgresql" }
-org-junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher", version.ref = "org-junit-platform-launcher" }
+org-junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher"}
 org-thymeleaf-extras-thymeleaf-extras-springsecurity6 = { module = "org.thymeleaf.extras:thymeleaf-extras-springsecurity6", version.ref = "org-thymeleaf-extras-thymeleaf-extras-springsecurity6" }
 org-webjars-bootstrap = { module = "org.webjars:bootstrap", version.ref = "org-webjars-bootstrap" }
 org-webjars-webjars-locator = { module = "org.webjars:webjars-locator", version.ref = "org-webjars-webjars-locator" }
