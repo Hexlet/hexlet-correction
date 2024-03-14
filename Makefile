@@ -1,28 +1,28 @@
 .PHONY: build
 
 build:
-	./mvnw -B -ntp -fae clean verify
+	./gradlew clean check
 
 package:
-	./mvnw -B -ntp -fae clean package -Dmaven.test.skip=true
+	./gradlew clean bootJar -x test
 
 clear:
-	./mvnw -B -ntp -fae clean
+	./gradlew clean
 	docker compose -f docker/docker-compose.yml down -v
 
 setup: build
 
 test:
-	./mvnw -B -ntp -fae test verify
+	./gradlew unitTest integrationTest
 
 test-unit-only:
-	./mvnw -B -ntp -fae test
+	./gradlew unitTest
 
 test-integration-only:
-	./mvnw -B -ntp -Dtest=noTest -Dsurefire.failIfNoSpecifiedTests=false verify
+	./gradlew integrationTest
 
 run-dev:
-	./mvnw spring-boot:run -Dspring-boot.run.profiles=dev
+	./gradlew bootRun --args='--spring.profiles.active=dev'
 
 run-dev-docker-db: docker-infra-start run-dev
 
@@ -32,10 +32,10 @@ docker-infra-start:
 	docker compose -f docker/docker-compose.yml up -d -V --remove-orphans
 
 run-dev-debug:
-	./mvnw spring-boot:run -Dspring-boot.run.profiles=dev -Dspring-boot.run.jvmArguments="-Xdebug"
+	./gradlew bootRun --args='--spring.profiles.active=dev' -Dorg.gradle.jvmargs="-Xdebug"
 
 update-versions:
-	./mvnw versions:update-properties versions:display-plugin-updates
+	./gradlew dependencyUpdates
 
 vagrant-build:
 	vagrant up
