@@ -90,3 +90,10 @@ tasks.create("integrationTest", type = Test::class) {
         includeTestsMatching("${project.group}.${rootProject.name}.web.*")
     }
 }
+
+tasks.register("stage") {
+    dependsOn("clean")
+    finalizedBy("bootJar")
+}
+
+
