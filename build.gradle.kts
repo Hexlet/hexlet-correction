@@ -91,9 +91,13 @@ tasks.create("integrationTest", type = Test::class) {
     }
 }
 
-tasks.register("stage") {
-    dependsOn("clean")
-    finalizedBy("bootJar")
+
+tasks {
+    register("stage") {
+        dependsOn("bootJar", "clean")
+    }
+
+    named("bootJar") {
+        mustRunAfter("clean")
+    }
 }
-
-
