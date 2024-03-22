@@ -2,7 +2,7 @@ FROM eclipse-temurin:21-jdk
 
 # FROM maven:3.9.2-eclipse-temurin-20 AS build
 
-ARG GRADLE_VERSION=8.5
+ARG GRADLE_VERSION=8.6
 
 RUN apt-get update && apt-get install -yq unzip
 
@@ -26,7 +26,7 @@ WORKDIR .
 
 COPY . .
 # RUN mvn clean package -DskipTests
-RUN gradle installDist
+RUN gradle clean build
 
 #
 # Package stage
