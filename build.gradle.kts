@@ -42,12 +42,16 @@ dependencies {
     // Thymeleaf
     implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity6:3.1.1.RELEASE")
     implementation("io.github.jpenren:thymeleaf-spring-data-dialect:3.6.0")
-    implementation("org.webjars:webjars-locator:0.46")
+//    implementation("org.webjars:webjars-locator:0.46")
+//  https://mvnrepository.com/artifact/org.webjars/webjars-locator-core
+    implementation("org.webjars:webjars-locator-core:0.58")
     implementation("org.webjars:bootstrap:5.2.3")
     // Database
     runtimeOnly("org.postgresql:postgresql:42.5.4")
     implementation("io.hypersistence:hypersistence-utils-hibernate-60:3.2.0")
-    implementation("org.liquibase:liquibase-core:4.17.2")
+//    implementation("org.liquibase:liquibase-core:4.17.2")
+//  https://mvnrepository.com/artifact/org.liquibase/liquibase-core
+    implementation("org.liquibase:liquibase-core:4.26.0")
     // Utils
     compileOnly("org.projectlombok:lombok-mapstruct-binding:0.2.0")
     implementation("org.ocpsoft.prettytime:prettytime:5.0.6.Final")
