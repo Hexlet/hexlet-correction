@@ -33,8 +33,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.github.database.rider.core.api.configuration.Orthography.LOWERCASE;
-import static io.hexlet.typoreporter.domain.typo.TypoEvent.OPEN;
-import static io.hexlet.typoreporter.domain.typo.TypoEvent.REOPEN;
+import static io.hexlet.typoreporter.domain.typo.TypoEvent.START;
+import static io.hexlet.typoreporter.domain.typo.TypoEvent.RESTART;
 import static io.hexlet.typoreporter.domain.typo.TypoEvent.RESOLVE;
 import static io.hexlet.typoreporter.domain.typo.TypoStatus.CANCELED;
 import static io.hexlet.typoreporter.domain.typo.TypoStatus.IN_PROGRESS;
@@ -126,7 +126,7 @@ class TypoServiceIT {
 
     @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getTypoIdsExist")
-    void patchTypoEventOpenToReported(final Long id) {
+    void patchTypoEventStartToReported(final Long id) {
         final var typoNotReported = repository.findById(id)
             .map(Typo::getTypoStatus)
             .filter(not(REPORTED::equals))
@@ -134,7 +134,7 @@ class TypoServiceIT {
         if (typoNotReported) {
             return;
         }
-        final var typoStatus = service.updateTypoStatus(id, OPEN)
+        final var typoStatus = service.updateTypoStatus(id, START)
             .map(TypoInfo::typoStatus)
             .orElseThrow();
         assertThat(typoStatus).isEqualTo(IN_PROGRESS);
@@ -142,7 +142,7 @@ class TypoServiceIT {
 
     @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getTypoIdsExist")
-    void patchTypoEventReopenToCanceled(final Long id) {
+    void patchTypoEventRestartToCanceled(final Long id) {
         final var typoNotCanceled = repository.findById(id)
             .map(Typo::getTypoStatus)
             .filter(not(CANCELED::equals))
@@ -150,7 +150,7 @@ class TypoServiceIT {
         if (typoNotCanceled) {
             return;
         }
-        final var typoStatus = service.updateTypoStatus(id, REOPEN)
+        final var typoStatus = service.updateTypoStatus(id, RESTART)
             .map(TypoInfo::typoStatus)
             .orElseThrow();
 
