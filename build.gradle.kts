@@ -13,6 +13,12 @@ plugins {
     id("com.github.ben-manes.versions") version "0.51.0"
 }
 
+tasks.withType<Jar> {
+    manifest {
+        attributes["Main-Class"] = "io.hexlet.typoreporter.HexletTypoReporter"
+    }
+}
+
 repositories {
     mavenLocal()
     mavenCentral()
