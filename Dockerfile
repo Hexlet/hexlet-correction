@@ -26,7 +26,7 @@ WORKDIR .
 
 COPY . .
 # RUN mvn clean package -DskipTests
-RUN gradle clean build
+RUN gradle installBootDist
 
 #
 # Package stage
