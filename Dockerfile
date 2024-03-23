@@ -36,6 +36,6 @@ RUN gradle build -x test
 
 # CMD java -Xmx256m -jar target/typoreporter-*.jar --spring.profiles.active=default,prod --server.port=$PORT
 
-CMD ./gradlew bootRun --args='--spring.profiles.active=dev'
+CMD ./gradlew bootRun --args='--spring.profiles.active=prod'
 
 # CMD java -Xmx256m -jar build/libs/typoreporter-*.jar --spring.profiles.active=default, prod --server.port=$PORT
