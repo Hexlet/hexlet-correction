@@ -5,7 +5,6 @@ java.sourceCompatibility = JavaVersion.VERSION_19
 
 plugins {
     id("java")
-    id("distribution")
     id("maven-publish")
     id("io.freefair.lombok") version "8.6"
     id("io.spring.dependency-management") version "1.1.4"
