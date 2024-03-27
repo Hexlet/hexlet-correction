@@ -1,16 +1,26 @@
 package io.hexlet.typoreporter.domain.typo;
 
 public enum TypoEvent {
-    START,
+    OPEN,
     RESOLVE,
-    RESTART,
+    REOPEN,
     CANCEL;
 
     public String getStyle() {
         return switch (this) {
-            case START, RESTART -> "danger";
+            case OPEN, REOPEN -> "danger";
             case RESOLVE -> "success";
             case CANCEL -> "secondary";
         };
     }
+
+    public String getButtonName() {
+        return switch (this) {
+            case OPEN -> "start";
+            case RESOLVE -> "resolve";
+            case REOPEN -> "restart";
+            case CANCEL -> "cancel";
+        };
+    }
+
 }

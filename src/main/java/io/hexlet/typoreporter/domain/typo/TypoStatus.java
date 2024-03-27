@@ -5,8 +5,8 @@ import java.util.Collection;
 import java.util.List;
 
 import static io.hexlet.typoreporter.domain.typo.TypoEvent.CANCEL;
-import static io.hexlet.typoreporter.domain.typo.TypoEvent.START;
-import static io.hexlet.typoreporter.domain.typo.TypoEvent.RESTART;
+import static io.hexlet.typoreporter.domain.typo.TypoEvent.OPEN;
+import static io.hexlet.typoreporter.domain.typo.TypoEvent.REOPEN;
 import static io.hexlet.typoreporter.domain.typo.TypoEvent.RESOLVE;
 
 
@@ -16,22 +16,22 @@ public enum TypoStatus {
         @Override
         public TypoStatus next(TypoEvent event) {
             return switch (event) {
-                case START -> IN_PROGRESS;
-                case RESOLVE, RESTART -> throw new InvalidTypoEventException(this, event);
+                case OPEN -> IN_PROGRESS;
+                case RESOLVE, REOPEN -> throw new InvalidTypoEventException(this, event);
                 case CANCEL -> CANCELED;
             };
         }
 
         @Override
         public Collection<TypoEvent> getValidEvents() {
-            return List.of(START, CANCEL);
+            return List.of(OPEN, CANCEL);
         }
     },
     IN_PROGRESS {
         @Override
         public TypoStatus next(TypoEvent event) {
             return switch (event) {
-                case START, RESTART -> throw new InvalidTypoEventException(this, event);
+                case OPEN, REOPEN -> throw new InvalidTypoEventException(this, event);
                 case RESOLVE -> RESOLVED;
                 case CANCEL -> CANCELED;
             };
@@ -51,29 +51,29 @@ public enum TypoStatus {
         @Override
         public TypoStatus next(TypoEvent event) {
             return switch (event) {
-                case RESTART -> IN_PROGRESS;
-                case RESOLVE, START -> throw new InvalidTypoEventException(this, event);
+                case REOPEN -> IN_PROGRESS;
+                case RESOLVE, OPEN -> throw new InvalidTypoEventException(this, event);
                 case CANCEL -> CANCELED;
             };
         }
 
         @Override
         public Collection<TypoEvent> getValidEvents() {
-            return List.of(RESTART, CANCEL);
+            return List.of(REOPEN, CANCEL);
         }
     },
     CANCELED {
         @Override
         public TypoStatus next(TypoEvent event) {
             return switch (event) {
-                case RESTART -> IN_PROGRESS;
-                case RESOLVE, START, CANCEL -> throw new InvalidTypoEventException(this, event);
+                case REOPEN -> IN_PROGRESS;
+                case RESOLVE, OPEN, CANCEL -> throw new InvalidTypoEventException(this, event);
             };
         }
 
         @Override
         public Collection<TypoEvent> getValidEvents() {
-            return List.of(RESTART);
+            return List.of(REOPEN);
         }
     };
 
