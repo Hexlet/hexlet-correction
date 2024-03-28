@@ -1,4 +1,4 @@
-FROM 8.7-jdk21-jammy
+FROM --platform=linux/amd64 gradle:8.7-jdk21
 
 WORKDIR .
 
