@@ -13,4 +13,14 @@ public enum TypoEvent {
             case CANCEL -> "secondary";
         };
     }
+
+    public String getButtonName() {
+        return switch (this) {
+            case OPEN -> "start";
+            case RESOLVE -> "resolve";
+            case REOPEN -> "restart";
+            case CANCEL -> "cancel";
+        };
+    }
+
 }

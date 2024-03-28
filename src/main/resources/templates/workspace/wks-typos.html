@@ -175,13 +175,12 @@
                                                                     th:method="patch">
                                                                     <button class="btn"
                                                                             th:classappend="|btn-${event.getStyle()}|"
-                                                                            th:text="#{${event}}"
+                                                                            th:text="#{|btn.${event.getButtonName()}|}"
                                                                             type="submit">
                                                                     </button>
                                                                 </form>
                                                             </div>
                                                         </div>
-
                                                         <!-- Workspace typo table row delete buttons -->
                                                         <div class="col-1">
                                                             <form th:action="@{'/typos/' + *{id}(wksId=${wksId},next=${searchUri})}"

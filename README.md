@@ -98,3 +98,5 @@ Authorization: Basic base64(workspaceId:api-token)
 This repository is created and maintained by the team and the community of Hexlet, an educational project. [Read more about Hexlet](https://hexlet.io/?utm_source=github&utm_medium=link&utm_campaign=hexlet-correction).
 
 See most active contributors on [hexlet-friends](https://friends.hexlet.io/).
+
+Change 1 [Hexlet#177] rename TypoEvent constants to change buttons names
