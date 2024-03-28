@@ -1,4 +1,4 @@
-FROM 8.7.0-jdk21
+FROM 8.7.0-jdk21-alpine
 
 WORKDIR .
 
