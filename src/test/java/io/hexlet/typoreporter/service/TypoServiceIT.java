@@ -157,22 +157,6 @@ class TypoServiceIT {
         assertThat(typoStatus).isEqualTo(IN_PROGRESS);
     }
 
-    @ParameterizedTest
-    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getTypoIdsExist")
-    void deleteTypoById(final Long id) {
-        assertThat(repository.existsById(id)).isTrue();
-        assertThat(service.deleteTypoById(id)).isNotZero();
-        assertThat(repository.existsById(id)).isFalse();
-    }
-
-    @ParameterizedTest
-    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getTypoIdsNotExist")
-    void deleteTypoByIdNotFound(final Long id) {
-        assertThat(repository.existsById(id)).isFalse();
-        assertThat(service.deleteTypoById(id)).isZero();
-        assertThat(repository.existsById(id)).isFalse();
-    }
-
     @Test
     void getCountTypoByStatusForWorkspaceId() {
 

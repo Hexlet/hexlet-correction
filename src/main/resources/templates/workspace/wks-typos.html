@@ -181,15 +181,6 @@
                                                                 </form>
                                                             </div>
                                                         </div>
-                                                        <!-- Workspace typo table row delete buttons -->
-                                                        <div class="col-1">
-                                                            <form th:action="@{'/typos/' + *{id}(wksId=${wksId},next=${searchUri})}"
-                                                                  th:method="delete">
-                                                                <button class="btn btn-danger" type="submit" th:text="#{btn.delete}">
-                                                                    Delete
-                                                                </button>
-                                                            </form>
-                                                        </div>
                                                     </div>
                                                     <div class="row">
                                                         <div class="col">

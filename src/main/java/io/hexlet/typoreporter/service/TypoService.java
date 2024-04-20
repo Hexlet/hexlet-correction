@@ -106,11 +106,6 @@ public class TypoService {
             .map(typoMapper::toTypoInfo);
     }
 
-    @Transactional
-    public Integer deleteTypoById(Long id) {
-        return repository.deleteTypoById(id);
-    }
-
     private UnaryOperator<Typo> updateStatus(TypoEvent typoEvent) {
         return typo -> typo.setTypoStatus(
             ofNullable(typoEvent)
