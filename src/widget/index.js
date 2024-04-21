@@ -54,7 +54,7 @@ const generateModalStyles = () => {
     margin-bottom: 1rem;
     border: 1px solid #ccc;
     flex-shrink: 0;
-    padding-right: 8px;
+    padding: 5px;
   }
 
   #hexlet-correction-modal_ReportTypo-name {
