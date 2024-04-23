@@ -24,7 +24,7 @@
                     <div class="form-group">
                         <input type="email" class="form-control" id="inputUserEmail" placeholder="Enter user email. For example: hexlet@gmail.com" th:field="*{email}"
                                th:classappend="${!#fields.hasErrors('email') && formModified}? 'is-valid'"
-                               th:errorclass="is-invalid">
+                               th:errorclass="is-invalid" required>
                         <label for="inputUserEmail" th:text="#{email}"></label>
                         <div class="alert alert-danger" th:if="${#fields.hasErrors('email')}">
                             <p th:each="err : ${#fields.errors('email')}" th:text="${err}"></p>
