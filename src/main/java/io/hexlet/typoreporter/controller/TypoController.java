@@ -52,21 +52,4 @@ public class TypoController {
         return ("redirect:/workspace/") + wksId.get() + next.orElse("/typos");
     }
 
-    @DeleteMapping("/{id}")
-    public String deleteTypoById(@PathVariable Long id,
-                                 @RequestParam Optional<Long> wksId,
-                                 @RequestParam Optional<String> next) {
-        if (wksId.isEmpty() || !workspaceService.existsWorkspaceById(wksId.get())) {
-            //TODO send to error page
-            final var e = new WorkspaceNotFoundException(wksId.orElse(0L));
-            log.error(e.toString(), e);
-            return "redirect:/workspaces";
-        }
-        if (typoService.deleteTypoById(id) == 0) {
-            //TODO send to error page
-            final var e = new TypoNotFoundException(id);
-            log.error(e.toString(), e);
-        }
-        return ("redirect:/workspace/") + wksId.get() + next.orElse("/typos");
-    }
 }
