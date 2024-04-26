@@ -68,10 +68,9 @@ const generateModalStyles = () => {
   }
 
   #hexlet-correction-modal_ReportTypo-highlight {
-    text-decoration: underline;
-    color: black;
-    font-weight: 700;
-    margin: 0 10px;
+    color: white;
+    background-color: royalblue;
+    padding: 1px 0 3px 0;
   }
 
   #hexlet-correction-modal_question {
@@ -205,7 +204,7 @@ const renderModal = (elements, state) => {
   if (state.modalShown) {
     elements.modalEl.style.display = 'block';
     const { textBeforeTypo, textTypo, textAfterTypo } = state.data;
-    elements.selectedTextEl.innerHTML = `${textBeforeTypo}<u id="hexlet-correction-modal_ReportTypo-highlight">${textTypo}</u>${textAfterTypo}`;
+    elements.selectedTextEl.innerHTML = `${textBeforeTypo}<span id="hexlet-correction-modal_ReportTypo-highlight">${textTypo}</span>${textAfterTypo}`;
     elements.inputName.value = state.data.reporterName !== '' ? state.data.reporterName : state.options.userName;
     elements.commentEl.value = state.data.reporterComment;
     elements.commentEl.focus();
