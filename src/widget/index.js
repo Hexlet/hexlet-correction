@@ -288,7 +288,7 @@ const handleTypoReporter = (options) => {
 
   document.addEventListener('keydown', (event) => {
     const selection = window.getSelection();
-    if (selection.isCollapsed) {
+    if (selection.isCollapsed || state.modalShown) {
       return;
     }
     if (event.ctrlKey && event.key === 'Enter') {
