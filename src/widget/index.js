@@ -261,6 +261,13 @@ const view = (elements, state) => {
   return watchedState;
 }
 
+const isSelectionLeftToRight = (selection) => {
+  const range = document.createRange();
+  range.setStart(selection.focusNode, selection.focusOffset);
+  range.setEnd(selection.anchorNode, selection.anchorOffset);
+  return range.collapsed;
+}
+
 const handleTypoReporter = (options) => {
   if (!options || !options.authorizationToken && !options.workSpaceId) {
     throw new Error('Для работы модуля требуется указать workSpaceId и authorizationToken');
@@ -296,14 +303,21 @@ const handleTypoReporter = (options) => {
 
       const { anchorNode } = selection;
       const { anchorOffset } = selection;
+      const { focusNode } = selection;
       const { focusOffset } = selection;
       const maxLength = 50;
-      const end = Math.min(focusOffset + maxLength, anchorNode.length);
       const start = Math.max(anchorOffset - maxLength, 0);
-
+      const end = Math.min(focusOffset + maxLength, anchorNode.length);
       state.data.textTypo = selection.toString();
-      state.data.textBeforeTypo = anchorNode.textContent.substring(start, anchorOffset);
-      state.data.textAfterTypo = anchorNode.substringData(focusOffset, end - focusOffset);
+
+      if(isSelectionLeftToRight(selection)) {
+        state.data.textBeforeTypo = anchorNode.textContent.substring(start, anchorOffset);
+        state.data.textAfterTypo = anchorNode.substringData(focusOffset, end - focusOffset);
+      } else {
+        state.data.textBeforeTypo = anchorNode.textContent.substring(start, focusOffset);
+        state.data.textAfterTypo = anchorNode.substringData(anchorOffset, end - anchorOffset);
+      }
+
       state.modalShown = true;
     }
   });
