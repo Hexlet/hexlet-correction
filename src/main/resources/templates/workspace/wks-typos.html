@@ -173,7 +173,7 @@
                                                                     th:action="@{|/typos/*{id}/status?wksId=${wksId}&event=${event}|(next=${searchUri})}"
                                                                     th:each="event : *{typoStatus.getValidEvents()}"
                                                                     th:method="patch">
-                                                                    <button class="btn"
+                                                                    <button class="btn me-1"
                                                                             th:classappend="|btn-${event.getStyle()}|"
                                                                             th:text="#{|btn.${event.getButtonName()}|}"
                                                                             type="submit">
