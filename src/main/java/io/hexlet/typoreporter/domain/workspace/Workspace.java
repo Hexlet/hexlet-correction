@@ -9,11 +9,14 @@ import io.hexlet.typoreporter.domain.workspace.constraint.WorkspaceDescription;
 import io.hexlet.typoreporter.domain.workspace.constraint.WorkspaceName;
 import io.hexlet.typoreporter.domain.workspace.constraint.WorkspaceUrl;
 import io.hexlet.typoreporter.domain.workspacesettings.WorkspaceSettings;
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
@@ -52,6 +55,10 @@ public class Workspace extends AbstractAuditingEntity implements Identifiable<Lo
     @Column(unique = true)
     private String url;
 
+    @OneToMany(mappedBy = "workspace", cascade = ALL, orphanRemoval = true)
+    @ToString.Exclude
+    private Set<AllowedUrl> allowedUrls = new HashSet<>();
+
     @WorkspaceDescription
     private String description;
 
@@ -88,6 +95,16 @@ public class Workspace extends AbstractAuditingEntity implements Identifiable<Lo
     public void removeWorkSpaceRole(WorkspaceRole workspaceRole) {
         workspaceRoles.remove(workspaceRole);
         workspaceRole.setWorkspace(null);
+    }
+
+    public Workspace addAllowedUrl(final AllowedUrl url) {
+        allowedUrls.add(url);
+        return this;
+    }
+
+    public Workspace removeAllowedUrl(final AllowedUrl url) {
+        allowedUrls.remove(url);
+        return this;
     }
 
     @Override

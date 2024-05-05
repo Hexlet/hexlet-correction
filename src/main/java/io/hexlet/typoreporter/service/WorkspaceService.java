@@ -2,11 +2,15 @@ package io.hexlet.typoreporter.service;
 
 import io.hexlet.typoreporter.domain.account.Account;
 import io.hexlet.typoreporter.domain.workspace.AccountRole;
+import io.hexlet.typoreporter.domain.workspace.AllowedUrl;
 import io.hexlet.typoreporter.domain.workspace.Workspace;
 import io.hexlet.typoreporter.domain.workspace.WorkspaceRole;
 import io.hexlet.typoreporter.domain.workspace.WorkspaceRoleId;
 import io.hexlet.typoreporter.domain.workspacesettings.WorkspaceSettings;
+import io.hexlet.typoreporter.handler.exception.AllowedUrlAlreadyExistException;
+import io.hexlet.typoreporter.handler.exception.AllowedUrlNotFoundException;
 import io.hexlet.typoreporter.repository.AccountRepository;
+import io.hexlet.typoreporter.repository.AllowedUrlRepository;
 import io.hexlet.typoreporter.repository.WorkspaceRepository;
 import io.hexlet.typoreporter.repository.WorkspaceRoleRepository;
 import io.hexlet.typoreporter.repository.WorkspaceSettingsRepository;
@@ -16,7 +20,10 @@ import io.hexlet.typoreporter.service.mapper.WorkspaceMapper;
 import io.hexlet.typoreporter.handler.exception.AccountNotFoundException;
 import io.hexlet.typoreporter.handler.exception.WorkspaceAlreadyExistException;
 import io.hexlet.typoreporter.handler.exception.WorkspaceNotFoundException;
+import io.hexlet.typoreporter.utils.TextUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,6 +46,7 @@ public class WorkspaceService {
 
     private final AccountRepository accountRepository;
     private final WorkspaceRoleRepository workspaceRoleRepository;
+    private final AllowedUrlRepository allowedUrlRepository;
 
     @Transactional(readOnly = true)
     public List<WorkspaceInfo> getAllWorkspacesInfo() {
@@ -76,6 +84,11 @@ public class WorkspaceService {
         final var workspaceRole = new WorkspaceRole(workspaceRoleId, AccountRole.ROLE_ADMIN, wksToCreate, account);
         wksToCreate.addWorkspaceRole(workspaceRole);
 
+        AllowedUrl url = new AllowedUrl();
+        url.setUrl(TextUtils.trimUrl(wksToCreate.getUrl()));
+        url.setWorkspace(wksToCreate);
+        wksToCreate.addAllowedUrl(url);
+
         settingsRepository.save(wksSettings);
         return workspaceMapper.toWorkspaceInfo(wksToCreate);
     }
@@ -90,7 +103,23 @@ public class WorkspaceService {
         }
         workspace.setName(updateWks.name());
         workspace.setDescription(updateWks.description());
+
+        Optional<AllowedUrl> urlOptional = allowedUrlRepository
+            .findAllowedUrlByUrlAndWorkspaceId(TextUtils.trimUrl(workspace.getUrl()), workspace.getId());
+
+        if(urlOptional.isPresent()) {
+            urlOptional.get().setUrl(TextUtils.trimUrl(updateWks.url()));
+        } else {
+            AllowedUrl allowedUrl = new AllowedUrl();
+            allowedUrl.setUrl(TextUtils.trimUrl(updateWks.url()));
+            allowedUrl.setWorkspace(workspace);
+
+            workspace.addAllowedUrl(allowedUrl);
+        }
+
         workspace.setUrl(updateWks.url());
+
+
         return workspaceMapper.toWorkspaceInfo(workspace);
     }
 
@@ -111,6 +140,58 @@ public class WorkspaceService {
             .map(WorkspaceRole::getWorkspace)
             .map(workspaceMapper::toWorkspaceInfo)
             .toList()).orElseGet(ArrayList::new);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<AllowedUrl> getPagedAllowedUrlsByWorkspaceId(Pageable pageable, Long wksId) {
+        if (!existsWorkspaceById(wksId)) {
+            throw new WorkspaceNotFoundException(wksId);
+        }
+
+        return allowedUrlRepository.findPageAllowedUrlByWorkspaceId(pageable, wksId);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<AllowedUrl> getPagedAllowedUrlsByWorkspaceIdAndUrlNot(Pageable pageable, Long wksId, String url) {
+        if (!existsWorkspaceById(wksId)) {
+            throw new WorkspaceNotFoundException(wksId);
+        }
+
+        return allowedUrlRepository.findPageAllowedUrlByWorkspaceIdAndUrlNot(pageable, wksId, url);
+    }
+
+    @Transactional
+    public void addAllowedUrlToWorkspace(Long wksId, String url) {
+
+        String trimmedUrl = TextUtils.trimUrl(url);
+
+        if(allowedUrlRepository.findAllowedUrlByUrlAndWorkspaceId(trimmedUrl, wksId).isPresent()) {
+            throw new AllowedUrlAlreadyExistException(trimmedUrl, wksId);
+        }
+
+        final Workspace workspace = workspaceRepository.getWorkspaceById(wksId)
+            .orElseThrow(() -> new WorkspaceNotFoundException(wksId));
+
+        AllowedUrl allowedUrl = new AllowedUrl();
+        allowedUrl.setUrl(trimmedUrl);
+        allowedUrl.setWorkspace(workspace);
+
+        allowedUrlRepository.save(allowedUrl);
+    }
+
+    @Transactional
+    public void removeAllowedUrlFromWorkspace(Long wksId, String url) {
+        String trimmedUrl = TextUtils.trimUrl(url);
+
+        final Workspace workspace = workspaceRepository.getWorkspaceById(wksId)
+            .orElseThrow(() -> new WorkspaceNotFoundException(wksId));
+
+        final AllowedUrl allowedUrl = allowedUrlRepository.findAllowedUrlByUrlAndWorkspaceId(url, wksId)
+            .orElseThrow(() -> new AllowedUrlNotFoundException(trimmedUrl, wksId));
+
+        if (!TextUtils.trimUrl(workspace.getUrl()).equals(trimmedUrl)) {
+            allowedUrlRepository.delete(allowedUrl);
+        }
     }
 
     @Transactional
