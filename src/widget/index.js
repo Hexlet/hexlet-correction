@@ -305,14 +305,16 @@ const handleTypoReporter = (options) => {
       const { focusNode } = selection;
       const { focusOffset } = selection;
       const maxLength = 50;
-      const start = Math.max(anchorOffset - maxLength, 0);
-      const end = Math.min(focusOffset + maxLength, anchorNode.length);
       state.data.textTypo = selection.toString();
 
       if(isSelectionLeftToRight(selection)) {
+        const start = Math.max(anchorOffset - maxLength, 0);
+        const end = Math.min(focusOffset + maxLength, anchorNode.length);
         state.data.textBeforeTypo = anchorNode.textContent.substring(start, anchorOffset);
         state.data.textAfterTypo = anchorNode.substringData(focusOffset, end - focusOffset);
       } else {
+        const start = Math.max(focusOffset  - maxLength, 0);
+        const end = Math.min(anchorOffset + maxLength, anchorNode.length);
         state.data.textBeforeTypo = anchorNode.textContent.substring(start, focusOffset);
         state.data.textAfterTypo = anchorNode.substringData(anchorOffset, end - anchorOffset);
       }
