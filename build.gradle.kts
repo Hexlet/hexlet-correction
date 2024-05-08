@@ -10,6 +10,7 @@ plugins {
     id("io.spring.dependency-management") version "1.1.4"
     id("org.springframework.boot") version "3.0.4"
     id("com.github.ben-manes.versions") version "0.51.0"
+    id("checkstyle")
 }
 
 repositories {
