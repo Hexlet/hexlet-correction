@@ -1,7 +1,14 @@
 package io.hexlet.typoreporter.config;
 
+import io.hexlet.typoreporter.handler.exception.ForbiddenDomainException;
+import io.hexlet.typoreporter.handler.exception.WorkspaceNotFoundException;
 import io.hexlet.typoreporter.security.service.AccountDetailService;
 import io.hexlet.typoreporter.security.service.SecuredWorkspaceService;
+import io.hexlet.typoreporter.utils.TextUtils;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,11 +28,13 @@ import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import java.util.List;
+import org.springframework.web.filter.CorsFilter;
+
+import java.io.IOException;
 
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
+import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON;
 
 
 @Configuration
@@ -71,7 +80,8 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http,
-                                           SecurityContextRepository securityContextRepository) throws Exception {
+                                           SecurityContextRepository securityContextRepository,
+                                           DynamicCorsConfigurationSource dynamicCorsConfigurationSource) throws Exception {
         http.httpBasic();
         http.cors();
         http.exceptionHandling().accessDeniedHandler(accessDeniedHandler());
@@ -92,7 +102,8 @@ public class SecurityConfig {
                     new AntPathRequestMatcher("/api/**", POST.name()),
                     new AntPathRequestMatcher("/typo/form/*", POST.name())
                 )
-            );
+            )
+            .addFilterBefore(corsFilter(dynamicCorsConfigurationSource), CorsFilter.class);
 
         http.securityContext().securityContextRepository(securityContextRepository);
 
@@ -106,15 +117,32 @@ public class SecurityConfig {
     }
 
     @Bean
-    CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        // TODO: allow sending a request only from the pages specified in the Workspace settings
-        configuration.addAllowedOriginPattern("*");
-        configuration.addAllowedHeader("*");
-        configuration.setAllowCredentials(true);
-        configuration.setAllowedMethods(List.of("POST", "GET"));
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
+    public CorsFilter corsFilter(DynamicCorsConfigurationSource dynamicCorsConfigurationSource) {
+        return new CorsFilter(new CorsConfigurationSource() {
+            @Override
+            public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
+                if (request.getRequestURI().startsWith("/api/workspaces/")) {
+                    CorsConfiguration config = dynamicCorsConfigurationSource.getCorsConfiguration(request);
+
+                    return config;
+                }
+                return null;
+            }
+
+        })
+        {
+            @Override
+            protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+                throws ServletException, IOException {
+                try {
+                    super.doFilterInternal(request, response, filterChain);
+                } catch (ForbiddenDomainException e) {
+                    response.sendError(HttpServletResponse.SC_FORBIDDEN, e.getMessage());
+                }  catch (WorkspaceNotFoundException e) {
+                    response.sendError(HttpServletResponse.SC_NOT_FOUND, e.getMessage());
+                }
+            }
+        }
+        ;
     }
 }

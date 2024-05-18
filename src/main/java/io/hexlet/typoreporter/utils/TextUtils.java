@@ -20,6 +20,6 @@ public final class TextUtils {
             //TODO: write custom exception
             throw new RuntimeException(e);
         }
-        return url.getProtocol() + "://" + url.getHost();
+        return url.getProtocol() + "://" + url.getHost() + (url.getPort() != -1 ? ":" + url.getPort() : "");
     }
 }

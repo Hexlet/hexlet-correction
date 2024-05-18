@@ -28,6 +28,9 @@ import java.util.Base64;
 
 import static com.github.database.rider.core.api.configuration.Orthography.LOWERCASE;
 import static io.hexlet.typoreporter.test.Constraints.POSTGRES_IMAGE;
+import static io.hexlet.typoreporter.test.factory.EntitiesFactory.ALLOWED_URL_101_URL;
+import static io.hexlet.typoreporter.test.factory.EntitiesFactory.ALLOWED_URL_102_URL;
+import static io.hexlet.typoreporter.test.factory.EntitiesFactory.ALLOWED_URL_105_URL;
 import static io.hexlet.typoreporter.test.factory.EntitiesFactory.WORKSPACE_101_ID;
 import static io.hexlet.typoreporter.test.factory.EntitiesFactory.WORKSPACE_101_TOKEN;
 import static java.time.Instant.now;
@@ -45,7 +48,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Transactional
 @DBRider
 @DBUnit(caseInsensitiveStrategy = LOWERCASE, dataTypeFactoryClass = DBUnitEnumPostgres.class, cacheConnection = false)
-@DataSet(value = {"workspace_settings.yml", "workspaces.yml", "typos.yml"})
+@DataSet(value = {"workspace_settings.yml", "workspaces.yml", "typos.yml", "allowedUrls.yml"})
 class WorkspaceApiIT {
 
     @Container
@@ -79,6 +82,7 @@ class WorkspaceApiIT {
             .perform(post("/api/workspaces/" + WORKSPACE_101_ID + "/typos")
                 .content(objectMapper.writeValueAsString(typoReport))
                 .header("Authorization", "Basic " + basicEncodedStr)
+                .header("Referer", ALLOWED_URL_101_URL)
                 .contentType(APPLICATION_JSON)
             )
             .andExpect(status().isCreated())
@@ -107,6 +111,7 @@ class WorkspaceApiIT {
         mockMvc.perform(post("/api/workspaces/" + WORKSPACE_101_ID + "/typos")
                 .content(typoJson)
                 .header("Authorization", "Basic " + basicEncodedStr)
+                .header("Referer", ALLOWED_URL_101_URL)
                 .contentType(APPLICATION_JSON))
             .andExpect(status().isBadRequest())
             .andExpect(content().contentType(APPLICATION_PROBLEM_JSON))
@@ -127,6 +132,7 @@ class WorkspaceApiIT {
         mockMvc.perform(post("/api/workspaces/" + WORKSPACE_101_ID + "/typos")
                 .content(typoJson)
                 .header("Authorization", "Basic " + basicEncodedStr)
+                .header("Referer", ALLOWED_URL_101_URL)
                 .contentType(APPLICATION_JSON))
             .andExpect(status().isBadRequest())
             .andExpect(content().contentType(APPLICATION_PROBLEM_JSON))
@@ -148,10 +154,63 @@ class WorkspaceApiIT {
         mockMvc.perform(post("/api/workspaces/" + WORKSPACE_101_ID + "/typos")
                 .content(typoJson)
                 .header("Authorization", "Basic " + basicEncodedStr)
+                .header("Referer", ALLOWED_URL_101_URL)
                 .contentType(APPLICATION_JSON))
             .andExpect(status().isBadRequest())
             .andExpect(content().contentType(APPLICATION_PROBLEM_JSON))
             .andExpect(jsonPath("$.title").value("Bad Request"));
+    }
+
+    @ParameterizedTest
+    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getTypoReport")
+    void addTypoReportWithoutRefererHeader(final TypoReport typoReport) throws Exception {
+        final var idTokenBytes = (WORKSPACE_101_ID + ":" + WORKSPACE_101_TOKEN).getBytes();
+        final var basicEncodedStr = Base64.getEncoder().encodeToString(idTokenBytes);
+        final var content = mockMvc
+            .perform(post("/api/workspaces/" + WORKSPACE_101_ID + "/typos")
+                .content(objectMapper.writeValueAsString(typoReport))
+                .header("Authorization", "Basic " + basicEncodedStr)
+                .contentType(APPLICATION_JSON)
+            )
+            .andExpect(status().isForbidden());
+    }
+
+    @ParameterizedTest
+    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getTypoReport")
+    void addTypoReportWithWrongReferer(final TypoReport typoReport) throws Exception {
+        final var idTokenBytes = (WORKSPACE_101_ID + ":" + WORKSPACE_101_TOKEN).getBytes();
+        final var basicEncodedStr = Base64.getEncoder().encodeToString(idTokenBytes);
+        final var content = mockMvc
+            .perform(post("/api/workspaces/" + WORKSPACE_101_ID + "/typos")
+                .content(objectMapper.writeValueAsString(typoReport))
+                .header("Authorization", "Basic " + basicEncodedStr)
+                .header("Referer", ALLOWED_URL_102_URL)
+                .contentType(APPLICATION_JSON)
+            )
+            .andExpect(status().isForbidden());
+    }
+
+    @ParameterizedTest
+    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getTypoReport")
+    void addTypoReportWithAdditionalReferer(final TypoReport typoReport) throws Exception {
+        final var idTokenBytes = (WORKSPACE_101_ID + ":" + WORKSPACE_101_TOKEN).getBytes();
+        final var basicEncodedStr = Base64.getEncoder().encodeToString(idTokenBytes);
+        final var content = mockMvc
+            .perform(post("/api/workspaces/" + WORKSPACE_101_ID + "/typos")
+                .content(objectMapper.writeValueAsString(typoReport))
+                .header("Authorization", "Basic " + basicEncodedStr)
+                .header("Referer", ALLOWED_URL_105_URL)
+                .contentType(APPLICATION_JSON)
+            )
+            .andExpect(status().isCreated())
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(header().exists("Location"))
+            .andReturn().getResponse().getContentAsString();
+        final var reportedTypo = objectMapper.readValue(content, ReportedTypo.class);
+
+        ReportedTypoAssert.assertThat(reportedTypo).isEqualsToTypoReport(typoReport);
+        Assertions.assertThat(reportedTypo.createdDate()).isBeforeOrEqualTo(now());
+        Assertions.assertThat(repository.existsById(reportedTypo.id())).isTrue();
     }
 }
 
