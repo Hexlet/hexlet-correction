@@ -22,3 +22,5 @@ jobs:
         run: make test-unit-only
       - name: Run integration tests
         run: make test-integration-only
+      - name: Run linter check
+        run: make lint
