@@ -3,7 +3,6 @@ package io.hexlet.typoreporter.web.model;
 import io.hexlet.typoreporter.domain.account.constraint.AccountPassword;
 import io.hexlet.typoreporter.domain.account.constraint.AccountUsername;
 import io.hexlet.typoreporter.service.dto.FieldMatchConsiderCase;
-import io.hexlet.typoreporter.service.dto.FieldMatchIgnoreCase;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -17,7 +16,10 @@ import lombok.ToString;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@FieldMatchConsiderCase(first = "password", second = "confirmPassword", message = "The password and it confirmation must match")
+@FieldMatchConsiderCase(
+    first = "password",
+    second = "confirmPassword",
+    message = "The password and it confirmation must match")
 @ToString
 public class SignupAccountModel {
 

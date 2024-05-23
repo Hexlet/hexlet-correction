@@ -13,12 +13,12 @@ public class WorkspaceNotFoundException extends ErrorResponseException {
     private static final String ID_NOT_FOUND_MSG = "Workspace with id=''{0}'' not found";
 
     public WorkspaceNotFoundException(final Long id) {
-        super(NOT_FOUND, ProblemDetail.forStatusAndDetail(NOT_FOUND, "Workspace not found"), null, format(ID_NOT_FOUND_MSG, id), new Object[]{id});
+        super(NOT_FOUND, ProblemDetail.forStatusAndDetail(NOT_FOUND, "Workspace not found"),
+            null, format(ID_NOT_FOUND_MSG, id), new Object[]{id});
     }
 
     public WorkspaceNotFoundException(final String wksIdStr, final Throwable cause) {
         super(NOT_FOUND, ProblemDetail.forStatusAndDetail(NOT_FOUND, "Workspace not found"), cause,
-            "Workspace with id='" + wksIdStr + "' not found"
-            , new Object[]{wksIdStr});
+            "Workspace with id='" + wksIdStr + "' not found", new Object[]{wksIdStr});
     }
 }

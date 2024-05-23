@@ -1,7 +1,10 @@
 package io.hexlet.typoreporter.web.model;
 
-import jakarta.validation.constraints.*;
-import lombok.*;
+import jakarta.validation.constraints.Email;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Setter

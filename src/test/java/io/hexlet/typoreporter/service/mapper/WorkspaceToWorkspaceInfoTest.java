@@ -16,7 +16,8 @@ class WorkspaceToWorkspaceInfoTest {
     void requestWorkspaceToInfo(final Workspace workspace) {
         final var workspaceInfo = workspaceMapper.toWorkspaceInfo(workspace);
         assertThat(workspaceInfo).usingRecursiveComparison()
-            .ignoringFields("createdBy", "createdDate", "createdDateAgo", "modifiedBy", "modifiedDate", "modifiedDateAgo")
+            .ignoringFields("createdBy", "createdDate", "createdDateAgo", "modifiedBy",
+                "modifiedDate", "modifiedDateAgo")
             .isEqualTo(workspace);
     }
 }

@@ -10,6 +10,7 @@ public record SignupAccount(
 
     @Override
     public String toString() {
-        return "SignupAccount(username=%s, email=%s, firstName=%s, lastName=%s)".formatted(username, email, firstName, lastName);
+        return "SignupAccount(username=%s, email=%s, firstName=%s, lastName=%s)"
+            .formatted(username, email, firstName, lastName);
     }
 }

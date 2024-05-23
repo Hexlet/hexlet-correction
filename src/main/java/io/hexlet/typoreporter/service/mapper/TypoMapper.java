@@ -15,7 +15,7 @@ import java.time.Instant;
 @Mapper
 public interface TypoMapper {
 
-    PrettyTime prettyTime = new PrettyTime();
+    PrettyTime PRETTY_TIME = new PrettyTime();
 
     Typo toTypo(TypoReport source);
 
@@ -28,7 +28,7 @@ public interface TypoMapper {
 
     @Named(value = "mapToPrettyDateAgo")
     default String getDateAgoAsString(Instant date) {
-        prettyTime.setLocale(LocaleContextHolder.getLocale());
-        return prettyTime.format(date);
+        PRETTY_TIME.setLocale(LocaleContextHolder.getLocale());
+        return PRETTY_TIME.format(date);
     }
 }

@@ -16,7 +16,8 @@ public class AccountAlreadyExistException extends ErrorResponseException {
     private final String errorValue;
 
     public AccountAlreadyExistException(final String fieldName, final String errorValue) {
-        super(CONFLICT, ProblemDetail.forStatusAndDetail(CONFLICT, "Account already exists"), null, format(MESSAGE_TEMPLATE, fieldName, errorValue), new Object[]{fieldName, errorValue});
+        super(CONFLICT, ProblemDetail.forStatusAndDetail(CONFLICT, "Account already exists"), null,
+            format(MESSAGE_TEMPLATE, fieldName, errorValue), new Object[]{fieldName, errorValue});
         this.fieldName = fieldName;
         this.errorValue = errorValue;
     }
