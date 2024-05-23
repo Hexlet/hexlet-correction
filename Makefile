@@ -45,4 +45,4 @@ vagrant-run:
 	vagrant ssh -c "cd /vagrant && make run-dev-docker-db"
 
 lint:
-	./gradlew checkstyleMain
+	./gradlew checkstyleMain checkstyleTest
