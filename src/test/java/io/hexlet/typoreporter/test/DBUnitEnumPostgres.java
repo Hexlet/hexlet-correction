@@ -1,6 +1,7 @@
 package io.hexlet.typoreporter.test;
 
-import org.dbunit.dataset.datatype.*;
+import org.dbunit.dataset.datatype.DataType;
+import org.dbunit.dataset.datatype.DataTypeException;
 import org.dbunit.ext.postgresql.PostgresqlDataTypeFactory;
 import org.springframework.context.annotation.Configuration;
 

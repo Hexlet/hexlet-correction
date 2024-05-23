@@ -4,7 +4,6 @@ import com.github.database.rider.core.api.configuration.DBUnit;
 import com.github.database.rider.core.api.dataset.DataSet;
 import com.github.database.rider.spring.api.DBRider;
 import io.hexlet.typoreporter.config.audit.AuditConfiguration;
-import io.hexlet.typoreporter.domain.account.Account;
 import io.hexlet.typoreporter.domain.workspace.WorkspaceRole;
 import io.hexlet.typoreporter.test.DBUnitEnumPostgres;
 import org.junit.jupiter.params.ParameterizedTest;

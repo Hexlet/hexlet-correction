@@ -21,7 +21,10 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * <br>
  * Example, compare more than 1 pair of fields:
  * <br>
- * {@code @FieldMatchConsiderCase(first = "password", second = "confirmPassword", message = "The password and it confirmation must match")}
+ * {@code @FieldMatchConsiderCase(
+ * first = "password",
+ * second = "confirmPassword",
+ * message = "The password and it confirmation must match")}
  */
 @Constraint(validatedBy = FieldMatchConsiderCaseValidator.class)
 public @interface FieldMatchConsiderCase {

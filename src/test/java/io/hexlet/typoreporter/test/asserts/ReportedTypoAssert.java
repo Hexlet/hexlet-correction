@@ -1,7 +1,8 @@
 package io.hexlet.typoreporter.test.asserts;
 
 import io.hexlet.typoreporter.domain.typo.Typo;
-import io.hexlet.typoreporter.service.dto.typo.*;
+import io.hexlet.typoreporter.service.dto.typo.ReportedTypo;
+import io.hexlet.typoreporter.service.dto.typo.TypoReport;
 import org.assertj.core.api.ObjectAssert;
 
 public class ReportedTypoAssert extends ObjectAssert<ReportedTypo> {

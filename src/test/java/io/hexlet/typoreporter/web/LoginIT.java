@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+
 import static com.github.database.rider.core.api.configuration.Orthography.LOWERCASE;
 import static io.hexlet.typoreporter.test.Constraints.POSTGRES_IMAGE;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -48,13 +49,13 @@ class LoginIT {
     @Autowired
     private AccountRepository accountRepository;
 
-    private final String EMAIL_UPPER_CASE = "EMAIL_ADDRESS@GOOGLE.COM";
-    private final String EMAIL_LOWER_CASE = EMAIL_UPPER_CASE.toLowerCase();
+    private static final String EMAIL_UPPER_CASE = "EMAIL_ADDRESS@GOOGLE.COM";
+    private static final String EMAIL_LOWER_CASE = EMAIL_UPPER_CASE.toLowerCase();
 
     private SignupAccountModel model = new SignupAccountModel(
         "model_upper_case",
         EMAIL_UPPER_CASE,
-        "password","password",
+        "password", "password",
         "firstName", "lastName");
 
     @Test
@@ -72,20 +73,19 @@ class LoginIT {
         assertThat(accountRepository.findAccountByEmail(EMAIL_LOWER_CASE)).isNotEmpty();
 
         String locationHeaderStrLowerCaseEmail = mockMvc.perform(post("/login")
-            .param("email", EMAIL_LOWER_CASE)
-            .param("password", model.getPassword())
-            .with(csrf()))
-        .andReturn()
-        .getResponse()
-        .getHeader("Location");
+                .param("email", EMAIL_LOWER_CASE)
+                .param("password", model.getPassword())
+                .with(csrf()))
+            .andReturn()
+            .getResponse()
+            .getHeader("Location");
         assertThat(locationHeaderStrLowerCaseEmail).contains("workspaces");
 
         String locationHeaderStrBadEmail = mockMvc.perform(post("/login")
             .param("email", "bad@email.com")
             .param("password", model.getPassword())
-            .with(csrf())
-        ).andReturn().getResponse().getHeader("Location");
-        assertThat(locationHeaderStrBadEmail).doesNotContain ("workspaces");
+            .with(csrf())).andReturn().getResponse().getHeader("Location");
+        assertThat(locationHeaderStrBadEmail).doesNotContain("workspaces");
         assertThat(locationHeaderStrBadEmail).contains("login");
 
         String locationHeaderStrUpperCaseEmail = mockMvc.perform(post("/login")

@@ -41,6 +41,7 @@ public class HexletTypoReporter {
             ----------------------------------------------------------
             """;
         final var appName = env.getProperty("spring.application.name");
-        log.info(msg, appName, protocol, port, contextPath, protocol, hostAddress, port, contextPath, env.getActiveProfiles());
+        log.info(msg, appName, protocol, port, contextPath,
+            protocol, hostAddress, port, contextPath, env.getActiveProfiles());
     }
 }

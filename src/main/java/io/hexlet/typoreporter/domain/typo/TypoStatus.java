@@ -86,7 +86,7 @@ public enum TypoStatus {
         };
     }
 
-    public abstract TypoStatus next(final TypoEvent event);
+    public abstract TypoStatus next(TypoEvent event);
 
     public abstract Collection<TypoEvent> getValidEvents();
 }

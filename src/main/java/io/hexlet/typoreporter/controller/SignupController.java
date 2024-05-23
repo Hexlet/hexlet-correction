@@ -67,16 +67,35 @@ public class SignupController {
             return "redirect:/workspaces";
         } catch (UsernameAlreadyExistException e) {
             log.warn(e.getMessage(), e);
-            bindingResult.addError(new FieldError("signupAccount", "username", e.getUsername(), false, null, null, e.getMessage()));
+            bindingResult.addError(
+                new FieldError(
+                    "signupAccount",
+                    "username",
+                    e.getUsername(),
+                    false,
+                    null,
+                    null,
+                    e.getMessage())
+            );
             return "account/signup";
         } catch (EmailAlreadyExistException e) {
             log.warn(e.getMessage(), e);
-            bindingResult.addError(new FieldError("signupAccount", "email", e.getEmail(), false, null, null, e.getMessage()));
+            bindingResult.addError(
+                new FieldError(
+                    "signupAccount",
+                    "email",
+                    e.getEmail(),
+                    false,
+                    null,
+                    null,
+                    e.getMessage()));
             return "account/signup";
         }
     }
 
-    private void autoLoginAfterSignup(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
+    private void autoLoginAfterSignup(HttpServletRequest request,
+                                      HttpServletResponse response,
+                                      Authentication authentication) {
         SecurityContextHolderStrategy securityContextHolderStrategy = SecurityContextHolder.getContextHolderStrategy();
         SecurityContext context = securityContextHolderStrategy.createEmptyContext();
         context.setAuthentication(authentication);

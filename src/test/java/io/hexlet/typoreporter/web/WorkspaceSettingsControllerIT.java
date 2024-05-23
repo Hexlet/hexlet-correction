@@ -119,16 +119,17 @@ public class WorkspaceSettingsControllerIT {
 
     @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspaceAndNotAdminRelated")
-    void patchWorkspaceTokenWithNoRights(final Long wksId, final String email)  throws Exception {
+    void patchWorkspaceTokenWithNoRights(final Long wksId, final String email) throws Exception {
         String previousWksToken = workspaceSettingsRepository.getWorkspaceSettingsByWorkspaceId(wksId)
             .map(WorkspaceSettings::getApiAccessToken)
             .map(UUID::toString)
             .orElse(null);
 
-        MockHttpServletResponse response = mockMvc.perform(patch("/workspace/{wksId}/token/regenerate", wksId.toString())
-                .with(user(email))
-                .with(csrf()))
-            .andReturn().getResponse();
+        MockHttpServletResponse response =
+            mockMvc.perform(patch("/workspace/{wksId}/token/regenerate", wksId.toString())
+                    .with(user(email))
+                    .with(csrf()))
+                .andReturn().getResponse();
 
         String newWksToken = workspaceSettingsRepository.getWorkspaceSettingsByWorkspaceId(wksId)
             .map(WorkspaceSettings::getApiAccessToken)

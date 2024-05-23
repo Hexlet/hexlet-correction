@@ -16,7 +16,8 @@ public class WorkspaceAlreadyExistException extends ErrorResponseException {
     private final String errorValue;
 
     public WorkspaceAlreadyExistException(String fieldName, String errorValue) {
-        super(BAD_REQUEST, ProblemDetail.forStatusAndDetail(BAD_REQUEST, "Workspace already exists"), null, format(MESSAGE_TEMPLATE, fieldName, errorValue),
+        super(BAD_REQUEST, ProblemDetail.forStatusAndDetail(BAD_REQUEST, "Workspace already exists"), null,
+            format(MESSAGE_TEMPLATE, fieldName, errorValue),
             new Object[]{fieldName, errorValue});
         this.fieldName = fieldName;
         this.errorValue = errorValue;

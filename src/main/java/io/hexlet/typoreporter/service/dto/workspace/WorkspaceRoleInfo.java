@@ -2,7 +2,7 @@ package io.hexlet.typoreporter.service.dto.workspace;
 
 import io.hexlet.typoreporter.domain.workspace.AccountRole;
 
-public record WorkspaceRoleInfo (
+public record WorkspaceRoleInfo(
     Long workspaceId,
     Long accountId,
     String workspaceName,

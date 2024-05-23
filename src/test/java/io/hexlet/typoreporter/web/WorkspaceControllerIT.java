@@ -67,11 +67,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @Transactional
 @DBRider
-@DBUnit(caseInsensitiveStrategy = LOWERCASE, dataTypeFactoryClass = DBUnitEnumPostgres.class, cacheConnection = false)
+@DBUnit(caseInsensitiveStrategy = LOWERCASE,
+    dataTypeFactoryClass = DBUnitEnumPostgres.class,
+    cacheConnection = false)
 @DataSet(value = {"workspaces.yml", "workspaceRoles.yml", "accounts.yml", "typos.yml"})
 class WorkspaceControllerIT {
 
-    private final Long NOT_EXISTING_WKS_ID = 9999L;
+    private static final Long NOT_EXISTING_WKS_ID = 9999L;
 
     @Container
     static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>(POSTGRES_IMAGE)
@@ -151,7 +153,8 @@ class WorkspaceControllerIT {
 
         MockHttpServletResponse response = mockMvc.perform(get("/workspace/{wksId}/typos", wksId)
                 .with(user(email)))
-            .andExpect(model().attributeExists("wksInfo", "wksName", "typoPage", "availableSizes", "sortProp", "sortDir", "DESC", "ASC"))
+            .andExpect(model().attributeExists("wksInfo", "wksName",
+                "typoPage", "availableSizes", "sortProp", "sortDir", "DESC", "ASC"))
             .andReturn().getResponse();
 
         Typo typo = workspace.getTypos().stream()
@@ -167,14 +170,16 @@ class WorkspaceControllerIT {
 
     @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspacesAndUsersAndTypoStatusRelated")
-    void getWorkspaceTyposPageFilteredIsSuccessful(final Long wksId, final String email, final String typoStatus) throws Exception {
+    void getWorkspaceTyposPageFilteredIsSuccessful(final Long wksId, final String email,
+                                                   final String typoStatus) throws Exception {
         Workspace workspace = repository.getWorkspaceById(wksId).orElse(null);
 
         var request = get("/workspace/{wksId}/typos", wksId).queryParam("typoStatus", typoStatus);
 
         MockHttpServletResponse response = mockMvc.perform(request
                 .with(user(email)))
-            .andExpect(model().attributeExists("wksInfo", "wksName", "typoPage", "availableSizes", "sortProp", "sortDir", "DESC", "ASC", "typoStatus"))
+            .andExpect(model().attributeExists("wksInfo", "wksName", "typoPage",
+                "availableSizes", "sortProp", "sortDir", "DESC", "ASC", "typoStatus"))
             .andReturn().getResponse();
 
         Typo typo = workspace.getTypos().stream()
@@ -324,7 +329,8 @@ class WorkspaceControllerIT {
 
         accounts.forEach(account -> {
             final var workspaceRoleId = new WorkspaceRoleId(workspace.getId(), account.getId());
-            final var workspaceRole = new WorkspaceRole(workspaceRoleId, AccountRole.ROLE_ANONYMOUS, workspace, account);
+            final var workspaceRole = new WorkspaceRole(workspaceRoleId, AccountRole.ROLE_ANONYMOUS,
+                workspace, account);
             workspace.addWorkspaceRole(workspaceRole);
         });
 
@@ -332,7 +338,8 @@ class WorkspaceControllerIT {
                 get("/workspace/{wksId}/users", wksId)
                     .with(user(email)))
             .andExpect(status().isOk())
-            .andExpect(model().attributeExists("wksInfo", "wksName", "userPage", "availableSizes", "sortProp", "sortDir", "DESC", "ASC"))
+            .andExpect(model().attributeExists("wksInfo", "wksName",
+                "userPage", "availableSizes", "sortProp", "sortDir", "DESC", "ASC"))
             .andReturn().getResponse();
 
         var html = response.getContentAsString();
@@ -352,7 +359,8 @@ class WorkspaceControllerIT {
                     .with(user(ACCOUNT_103_EMAIL))
                     .with(csrf()));
         assertThat(workspaceRoleRepository.count()).isEqualTo(rolesCountBeforeAdding + 1L);
-        Optional<WorkspaceRole> addedWksRoleOptional = workspaceRoleRepository.getWorkspaceRoleByAccountIdAndWorkspaceId(ACCOUNT_102_ID, WORKSPACE_103_ID);
+        Optional<WorkspaceRole> addedWksRoleOptional = workspaceRoleRepository
+            .getWorkspaceRoleByAccountIdAndWorkspaceId(ACCOUNT_102_ID, WORKSPACE_103_ID);
         assertThat(addedWksRoleOptional).isNotEmpty();
 
         mockMvc.perform(
@@ -361,7 +369,8 @@ class WorkspaceControllerIT {
                 .with(user(ACCOUNT_102_EMAIL))
                 .with(csrf()));
         assertThat(workspaceRoleRepository.count()).isEqualTo(rolesCountBeforeAdding + 1L);
-        Optional<WorkspaceRole> addedWksRoleStillThereOptional = workspaceRoleRepository.getWorkspaceRoleByAccountIdAndWorkspaceId(ACCOUNT_102_ID, WORKSPACE_103_ID);
+        Optional<WorkspaceRole> addedWksRoleStillThereOptional = workspaceRoleRepository
+            .getWorkspaceRoleByAccountIdAndWorkspaceId(ACCOUNT_102_ID, WORKSPACE_103_ID);
         assertThat(addedWksRoleStillThereOptional).isNotEmpty();
 
         mockMvc.perform(
@@ -370,7 +379,8 @@ class WorkspaceControllerIT {
                 .with(user(ACCOUNT_103_EMAIL))
                 .with(csrf()));
         assertThat(workspaceRoleRepository.count()).isEqualTo(rolesCountBeforeAdding);
-        Optional<WorkspaceRole> addedWksRoleDeletedOptional = workspaceRoleRepository.getWorkspaceRoleByAccountIdAndWorkspaceId(ACCOUNT_102_ID, WORKSPACE_103_ID);
+        Optional<WorkspaceRole> addedWksRoleDeletedOptional = workspaceRoleRepository
+            .getWorkspaceRoleByAccountIdAndWorkspaceId(ACCOUNT_102_ID, WORKSPACE_103_ID);
         assertThat(addedWksRoleDeletedOptional).isEmpty();
     }
 }

@@ -11,7 +11,8 @@ public class NewPasswordTheSameException extends ErrorResponseException implemen
     private static final String MESSAGE_TEMPLATE = "New password is the same as the old one";
 
     public NewPasswordTheSameException() {
-        super(CONFLICT, ProblemDetail.forStatusAndDetail(CONFLICT, "The same new password"), null, MESSAGE_TEMPLATE, null);
+        super(CONFLICT, ProblemDetail.forStatusAndDetail(CONFLICT, "The same new password"),
+            null, MESSAGE_TEMPLATE, null);
     }
 
     @Override
