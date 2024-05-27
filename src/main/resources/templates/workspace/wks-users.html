@@ -7,7 +7,8 @@
     <div class="row">
         <!-- Workspace Side Bar -->
         <!-- <div class="col-2" th:include="~{fragments/panels :: workspaceSideBar (${wksInfo.id()}, ${wksName}, 'users')}"></div> -->
-        <div class="col-2" th:include="fragments/panels :: workspaceSideBar (${wksInfo.id()}, ${wksName}, 'users')"></div>
+        <div class="col-2"
+             th:include="fragments/panels :: workspaceSideBar (${wksInfo.id()}, ${wksName}, 'users')"></div>
         <div class="col">
             <!-- Workspace progress typo bar -->
             <div class="row my-3"
@@ -22,23 +23,19 @@
                 <p th:text="#{text.add-user-to-wks}"></p>
                 <form method="POST" th:action="@{'/workspace/' + ${wksId} + '/users'}" th:object="${inputEmail}">
                     <div class="form-group">
-                        <input type="email" class="form-control" id="inputUserEmail" placeholder="Enter user email. For example: hexlet@gmail.com" th:field="*{email}"
+                        <input type="email" class="form-control" id="inputUserEmail"
+                               placeholder="Enter user email. For example: hexlet@gmail.com" th:field="*{email}"
                                th:classappend="${!#fields.hasErrors('email') && formModified}? 'is-valid'"
                                th:errorclass="is-invalid" required>
-                        <label for="inputUserEmail" th:text="#{email}"></label>
                         <div class="alert alert-danger" th:if="${#fields.hasErrors('email')}">
                             <p th:each="err : ${#fields.errors('email')}" th:text="${err}"></p>
                         </div>
                         <small id="emailHelp" class="form-text text-muted"></small>
                     </div>
-                    <button type="submit" class="btn btn-secondary" th:text="#{btn.add-to-wks}"></button>
+                    <button type="submit" class="btn btn-secondary mt-1"
+                            th:text="#{btn.add-to-wks}"></button>
                 </form>
             </div>
-            <!-- Workspace last typo date -->
-            <div class="row"
-                 th:if="${lastTypoCreatedDateAgo.isPresent() && lastTypoCreatedDate.isPresent()}"
-                 th:insert="~{fragments/workspace :: wksLastTypoDate (${lastTypoCreatedDateAgo}, ${lastTypoCreatedDate})}"></div>
-            <!-- Workspace typo page -->
             <div class="row">
                 <main class="col">
                     <div class="row">

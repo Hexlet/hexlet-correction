@@ -68,10 +68,9 @@ const generateModalStyles = () => {
   }
 
   #hexlet-correction-modal_ReportTypo-highlight {
-    text-decoration: underline;
-    color: black;
-    font-weight: 700;
-    margin: 0 10px;
+    color: white;
+    background-color: royalblue;
+    padding: 1px 0 3px 0;
   }
 
   #hexlet-correction-modal_question {
@@ -205,7 +204,7 @@ const renderModal = (elements, state) => {
   if (state.modalShown) {
     elements.modalEl.style.display = 'block';
     const { textBeforeTypo, textTypo, textAfterTypo } = state.data;
-    elements.selectedTextEl.innerHTML = `${textBeforeTypo}<u id="hexlet-correction-modal_ReportTypo-highlight">${textTypo}</u>${textAfterTypo}`;
+    elements.selectedTextEl.innerHTML = `${textBeforeTypo}<span id="hexlet-correction-modal_ReportTypo-highlight">${textTypo}</span>${textAfterTypo}`;
     elements.inputName.value = state.data.reporterName !== '' ? state.data.reporterName : state.options.userName;
     elements.commentEl.value = state.data.reporterComment;
     elements.commentEl.focus();
@@ -261,6 +260,13 @@ const view = (elements, state) => {
   return watchedState;
 }
 
+const isSelectionLeftToRight = (selection) => {
+  const range = document.createRange();
+  range.setStart(selection.focusNode, selection.focusOffset);
+  range.setEnd(selection.anchorNode, selection.anchorOffset);
+  return range.collapsed;
+}
+
 const handleTypoReporter = (options) => {
   if (!options || !options.authorizationToken && !options.workSpaceId) {
     throw new Error('Для работы модуля требуется указать workSpaceId и authorizationToken');
@@ -288,7 +294,7 @@ const handleTypoReporter = (options) => {
 
   document.addEventListener('keydown', (event) => {
     const selection = window.getSelection();
-    if (selection.isCollapsed) {
+    if (selection.isCollapsed || state.modalShown) {
       return;
     }
     if (event.ctrlKey && event.key === 'Enter') {
@@ -296,14 +302,23 @@ const handleTypoReporter = (options) => {
 
       const { anchorNode } = selection;
       const { anchorOffset } = selection;
+      const { focusNode } = selection;
       const { focusOffset } = selection;
       const maxLength = 50;
-      const end = Math.min(focusOffset + maxLength, anchorNode.length);
-      const start = Math.max(anchorOffset - maxLength, 0);
-
       state.data.textTypo = selection.toString();
-      state.data.textBeforeTypo = anchorNode.textContent.substring(start, anchorOffset);
-      state.data.textAfterTypo = anchorNode.substringData(focusOffset, end - focusOffset);
+
+      if(isSelectionLeftToRight(selection)) {
+        const start = Math.max(anchorOffset - maxLength, 0);
+        const end = Math.min(focusOffset + maxLength, anchorNode.length);
+        state.data.textBeforeTypo = anchorNode.textContent.substring(start, anchorOffset);
+        state.data.textAfterTypo = anchorNode.substringData(focusOffset, end - focusOffset);
+      } else {
+        const start = Math.max(focusOffset  - maxLength, 0);
+        const end = Math.min(anchorOffset + maxLength, anchorNode.length);
+        state.data.textBeforeTypo = anchorNode.textContent.substring(start, focusOffset);
+        state.data.textAfterTypo = anchorNode.substringData(anchorOffset, end - anchorOffset);
+      }
+
       state.modalShown = true;
     }
   });
