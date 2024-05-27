@@ -26,7 +26,6 @@ import static io.hexlet.typoreporter.domain.typo.TypoEvent.CANCEL;
 import static io.hexlet.typoreporter.test.Constraints.POSTGRES_IMAGE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 
