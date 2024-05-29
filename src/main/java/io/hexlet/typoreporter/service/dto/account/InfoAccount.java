@@ -6,4 +6,4 @@ public record InfoAccount(
     String username,
     String firstName,
     String lastName
-) {}
+) { }

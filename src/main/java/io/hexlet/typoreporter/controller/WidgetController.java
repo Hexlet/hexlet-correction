@@ -62,14 +62,16 @@ public class WidgetController {
         response.addHeader("Content-Security-Policy", "frame-ancestors " + wks.get().getUrl());
 
         if (bindingResult.hasFieldErrors("reporterComment")) {
-            log.warn("Validation error during saving typo from widget. Typo not valid. Errors: {}", bindingResult.getAllErrors());
+            log.warn("Validation error during saving typo from widget. Typo not valid. Errors: {}",
+                bindingResult.getAllErrors());
             model.addAttribute("typoReport", typoReport);
             model.addAttribute("formModified", true);
             return "widget/typo-form";
         }
 
         if (bindingResult.hasErrors()) {
-            log.error("Validation error during saving typo from widget. Typo not valid. Errors: {}", bindingResult.getAllErrors());
+            log.error("Validation error during saving typo from widget. Typo not valid. Errors: {}",
+                bindingResult.getAllErrors());
             return "widget/report-typo-error";
         }
 

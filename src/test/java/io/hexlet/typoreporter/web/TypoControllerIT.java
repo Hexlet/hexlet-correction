@@ -26,7 +26,6 @@ import static io.hexlet.typoreporter.domain.typo.TypoEvent.CANCEL;
 import static io.hexlet.typoreporter.test.Constraints.POSTGRES_IMAGE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 
@@ -114,8 +113,8 @@ public class TypoControllerIT {
     @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspaceIdsExist")
     void updateTypoStatusWithUpdatedTypoIsEmpty(final Long wksId) throws Exception {
-        final Long NOT_EXIST_TYPO_ID = 11L;
-        mockMvc.perform(patch("/typos/{id}/status", NOT_EXIST_TYPO_ID)
+        Long nonExistTypoId = 11L;
+        mockMvc.perform(patch("/typos/{id}/status", nonExistTypoId)
                 .param("wksId", wksId.toString())
                 .param("event", CANCEL.name())
                 .with(csrf()))

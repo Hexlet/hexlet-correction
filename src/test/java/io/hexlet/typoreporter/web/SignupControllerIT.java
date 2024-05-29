@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.containers.PostgreSQLContainer;
+
 import static com.github.database.rider.core.api.configuration.Orthography.LOWERCASE;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -49,16 +50,16 @@ class SignupControllerIT {
     @Autowired
     private AccountRepository accountRepository;
 
-    private final String EMAIL_UPPER_CASE = "EMAIL_ADDRESS@GOOGLE.COM";
-    private final String EMAIL_LOWER_CASE = EMAIL_UPPER_CASE.toLowerCase();
+    private static final String EMAIL_UPPER_CASE = "EMAIL_ADDRESS@GOOGLE.COM";
+    private static final String EMAIL_LOWER_CASE = EMAIL_UPPER_CASE.toLowerCase();
 
     private final SignupAccountModel model = new SignupAccountModel(
         "model_upper_case",
         EMAIL_UPPER_CASE,
-        "password","password",
+        "password", "password",
         "firstName", "lastName");
 
-        private final SignupAccountModel anotherModelWithSameButLowerCaseEmail = new SignupAccountModel(
+    private final SignupAccountModel anotherModelWithSameButLowerCaseEmail = new SignupAccountModel(
         "model_lower_case",
         EMAIL_LOWER_CASE,
         "another_password", "another_password",

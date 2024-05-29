@@ -1,6 +1,7 @@
 package io.hexlet.typoreporter.utils;
 
-import java.util.regex.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ValidationEmail {
     public static boolean isValidEmail(String email) {

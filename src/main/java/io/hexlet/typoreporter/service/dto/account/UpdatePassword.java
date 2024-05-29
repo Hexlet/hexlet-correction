@@ -9,7 +9,10 @@ import lombok.experimental.Accessors;
 @Getter
 @Setter
 @Accessors(chain = true)
-@FieldMatchConsiderCase(first = "newPassword", second = "confirmNewPassword", message = "The password and it confirmation must match")
+@FieldMatchConsiderCase(
+    first = "newPassword",
+    second = "confirmNewPassword",
+    message = "The password and it confirmation must match")
 public class UpdatePassword {
 
     private String oldPassword;

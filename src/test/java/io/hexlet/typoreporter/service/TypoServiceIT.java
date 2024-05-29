@@ -41,7 +41,8 @@ import static io.hexlet.typoreporter.domain.typo.TypoStatus.IN_PROGRESS;
 import static io.hexlet.typoreporter.domain.typo.TypoStatus.REPORTED;
 import static io.hexlet.typoreporter.domain.typo.TypoStatus.RESOLVED;
 import static io.hexlet.typoreporter.test.Constraints.POSTGRES_IMAGE;
-import static io.hexlet.typoreporter.test.factory.EntitiesFactory.*;
+import static io.hexlet.typoreporter.test.factory.EntitiesFactory.WORKSPACE_101_ID;
+import static io.hexlet.typoreporter.test.factory.EntitiesFactory.WORKSPACE_103_ID;
 import static java.util.function.Predicate.not;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -203,7 +204,7 @@ class TypoServiceIT {
 
     @Test
     void getLastTypoByWorkspaceId() {
-        Optional<Typo> Top = repository.findAll()
+        Optional<Typo> top = repository.findAll()
             .stream()
             .filter(x -> x.getWorkspace().getId().equals(WORKSPACE_101_ID))
             .sorted(Comparator.comparing(AbstractAuditingEntity::getCreatedDate))
@@ -212,7 +213,7 @@ class TypoServiceIT {
 
         Optional<TypoInfo> typoInfo = service.getLastTypoByWorkspaceId(WORKSPACE_101_ID);
         assertThat(typoInfo).isNotEmpty();
-        assertThat(typoInfo.get().id()).isEqualTo(Top.get().getId());
+        assertThat(typoInfo.get().id()).isEqualTo(top.get().getId());
         Optional<TypoInfo> typoInfo2 = service.getLastTypoByWorkspaceId(WORKSPACE_103_ID);
         assertThat(typoInfo2).isEmpty();
     }

@@ -132,6 +132,7 @@ public class WorkspaceService {
             account.getId(),
             workspace.getId()
         );
-        return workSpaceRoleOptional.filter(workspaceRole -> workspaceRole.getRole() == AccountRole.ROLE_ADMIN).isPresent();
+        return workSpaceRoleOptional.filter(workspaceRole -> workspaceRole.getRole() == AccountRole.ROLE_ADMIN)
+            .isPresent();
     }
 }
