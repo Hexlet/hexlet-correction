@@ -1,10 +1,6 @@
 package io.hexlet.typoreporter.controller;
 
-import io.hexlet.typoreporter.domain.workspace.AllowedUrl;
-import io.hexlet.typoreporter.handler.exception.AllowedUrlAlreadyExistException;
-import io.hexlet.typoreporter.service.dto.workspace.AllowedUrlDTO;
-import io.hexlet.typoreporter.utils.TextUtils;
-import io.hexlet.typoreporter.web.model.*;
+import io.hexlet.typoreporter.web.model.WorkspaceUserModel;
 import org.springframework.ui.Model;
 import io.hexlet.typoreporter.domain.account.Account;
 import io.hexlet.typoreporter.domain.typo.TypoStatus;
@@ -45,7 +41,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
 import java.util.Arrays;
@@ -327,105 +322,6 @@ public class WorkspaceController {
             return "redirect:/workspace/{wksId}/users";
         } catch (WorkspaceRoleNotFoundException e) {
             log.error("The user with email {} has no role in the workspace with id {} ", email, wksId, e);
-            return "redirect:/workspaces";
-        }
-    }
-
-    @GetMapping("/{wksId}/allowed-urls")
-    @PreAuthorize(IS_USER_RELATED_TO_WKS)
-    public String getWorkspaceAllowedUrlsPage(final Model model,
-                                              @PathVariable Long wksId,
-                                              @SortDefault("url") Pageable pageable) {
-
-        Optional<WorkspaceInfo> workSpaceInfoOptional = workspaceService.getWorkspaceInfoById(wksId);
-        if (workSpaceInfoOptional.isEmpty()) {
-            //TODO send error page
-            log.error("Workspace with id {} not found", wksId);
-            return "redirect:/workspaces";
-        }
-
-        WorkspaceInfo wksInfo = workSpaceInfoOptional.get();
-        model.addAttribute("wksName", wksInfo.name());
-        model.addAttribute("wksInfo", wksInfo);
-        getStatisticDataToModel(model, wksId);
-        getLastTypoDataToModel(model, wksId);
-
-        String mainUrl = TextUtils.trimUrl(wksInfo.url());
-
-        Optional<Workspace> workspaceOptional = workspaceService.getWorkspaceById(wksId);
-        Page<AllowedUrl> urlsPage = workspaceService.getPagedAllowedUrlsByWorkspaceIdAndUrlNot(pageable, wksId, mainUrl);
-
-        var sort = urlsPage.getSort()
-            .stream()
-            .findFirst()
-            .orElseGet(() -> asc("url"));
-
-        final Account authenticatedAccount = getAccountFromAuthentication();
-        final boolean accountIsAdminRole = workspaceService.isAdminRoleUserInWorkspace(wksId,
-            authenticatedAccount.getEmail());
-
-        if (!model.containsAttribute("inputUrl")) {
-            model.addAttribute("inputUrl", new AllowedUrlDTO(""));
-        }
-
-        model.addAttribute("isAdmin", accountIsAdminRole);
-//        model.addAttribute("sortProp", sort.getProperty());
-        model.addAttribute("sortDir", sort.getDirection());
-        model.addAttribute("DESC", DESC);
-        model.addAttribute("ASC", ASC);
-
-        model.addAttribute("formModified", false);
-        model.addAttribute("urlsPage", urlsPage);
-        model.addAttribute("mainUrl", mainUrl);
-        model.addAttribute("availableSizes", availableSizes);
-        return "workspace/wks-allowed-urls";
-    }
-
-    @PostMapping("/{wksId}/allowed-urls")
-    @PreAuthorize(IS_USER_RELATED_TO_WKS)
-    public String postAllowedUrl(Model model,
-                                     @PathVariable Long wksId,
-                                     @Valid @ModelAttribute AllowedUrlDTO inputUrl,
-                                     BindingResult bindingResult,
-                                     RedirectAttributes redirectAttributes) {
-        getStatisticDataToModel(model, wksId);
-
-        if (bindingResult.hasErrors()) {
-            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.inputUrl", bindingResult);
-            redirectAttributes.addFlashAttribute("inputUrl", inputUrl);
-            redirectAttributes.addFlashAttribute("formModified", true);
-
-            return "redirect:/workspace/{wksId}/allowed-urls";
-        }
-        try {
-            workspaceService.addAllowedUrlToWorkspace(wksId, inputUrl.url());
-            return "redirect:/workspace/{wksId}/allowed-urls";
-        } catch (WorkspaceNotFoundException e) {
-            log.error("Workspace with id {} not found", wksId);
-            return "redirect:/workspaces";
-        } catch (AllowedUrlAlreadyExistException e) {
-            log.error("Allowed url {} already exists", inputUrl.url());
-            bindingResult.addError(new FieldError("inputUrl", "url", inputUrl.url(), false, null, null, e.getDetailMessageCode()));
-            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.inputUrl", bindingResult);
-            redirectAttributes.addFlashAttribute("inputUrl", inputUrl);
-            redirectAttributes.addFlashAttribute("formModified", true);
-
-            return "redirect:/workspace/{wksId}/allowed-urls";
-        }
-    }
-
-    @DeleteMapping("/{wksId}/allowed-urls")
-    @PreAuthorize(IS_USER_RELATED_TO_WKS)
-    public String deleteAllowedUrl(Model model,
-                                @PathVariable Long wksId,
-                                @RequestParam String url) {
-        getStatisticDataToModel(model, wksId);
-
-        try {
-            workspaceService.removeAllowedUrlFromWorkspace(wksId, url);
-            return ("redirect:/workspace/") + wksId.toString() + "/allowed-urls";
-        } catch (WorkspaceNotFoundException e) {
-            log.error("Workspace with id {} not found", wksId);
             return "redirect:/workspaces";
         }
     }

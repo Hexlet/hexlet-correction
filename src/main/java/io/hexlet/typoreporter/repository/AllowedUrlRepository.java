@@ -13,8 +13,5 @@ import java.util.Optional;
 public interface AllowedUrlRepository extends JpaRepository<AllowedUrl, Long> {
     Optional<AllowedUrl> findAllowedUrlByUrlAndWorkspaceId(String url, Long wksId);
     List<AllowedUrl> findByWorkspaceId(Long wksId);
-
     Page<AllowedUrl> findPageAllowedUrlByWorkspaceId(Pageable pageable, Long wksId);
-
-    Page<AllowedUrl> findPageAllowedUrlByWorkspaceIdAndUrlNot(Pageable pageable, Long wksId, String url);
 }

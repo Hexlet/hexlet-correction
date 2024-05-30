@@ -26,7 +26,7 @@ import java.util.Objects;
 @Accessors(chain = true)
 @Entity
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-public class AllowedUrl{
+public class AllowedUrl {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "url_id_seq")
@@ -43,8 +43,12 @@ public class AllowedUrl{
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         AllowedUrl that = (AllowedUrl) o;
         return Objects.equals(url, that.url) && Objects.equals(workspace, that.workspace);
     }

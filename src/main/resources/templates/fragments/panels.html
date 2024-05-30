@@ -73,11 +73,6 @@
            th:href="@{'/workspace/' + ${wksId} + '/settings'}"
            th:text="#{wks.settings}"></a>
         <a class="list-group-item list-group-item-action"
-           th:aria-current="${itemActive} == 'urls'"
-           th:classappend="${itemActive} == 'urls' ? 'active' : ''"
-           th:href="@{'/workspace/' + ${wksId} + '/allowed-urls'}"
-           th:text="#{wks.urls}"></a>
-        <a class="list-group-item list-group-item-action"
            th:aria-current="${itemActive} == 'users'"
            th:classappend="${itemActive} == 'users' ? 'active' : ''"
            th:href="@{'/workspace/' + ${wksId} + '/users'}"

@@ -7,8 +7,6 @@ import io.hexlet.typoreporter.domain.workspace.Workspace;
 import io.hexlet.typoreporter.domain.workspace.WorkspaceRole;
 import io.hexlet.typoreporter.domain.workspace.WorkspaceRoleId;
 import io.hexlet.typoreporter.domain.workspacesettings.WorkspaceSettings;
-import io.hexlet.typoreporter.handler.exception.AllowedUrlAlreadyExistException;
-import io.hexlet.typoreporter.handler.exception.AllowedUrlNotFoundException;
 import io.hexlet.typoreporter.repository.AccountRepository;
 import io.hexlet.typoreporter.repository.AllowedUrlRepository;
 import io.hexlet.typoreporter.repository.WorkspaceRepository;
@@ -107,18 +105,11 @@ public class WorkspaceService {
         Optional<AllowedUrl> urlOptional = allowedUrlRepository
             .findAllowedUrlByUrlAndWorkspaceId(TextUtils.trimUrl(workspace.getUrl()), workspace.getId());
 
-        if(urlOptional.isPresent()) {
+        if (urlOptional.isPresent()) {
             urlOptional.get().setUrl(TextUtils.trimUrl(updateWks.url()));
-        } else {
-            AllowedUrl allowedUrl = new AllowedUrl();
-            allowedUrl.setUrl(TextUtils.trimUrl(updateWks.url()));
-            allowedUrl.setWorkspace(workspace);
-
-            workspace.addAllowedUrl(allowedUrl);
         }
 
         workspace.setUrl(updateWks.url());
-
 
         return workspaceMapper.toWorkspaceInfo(workspace);
     }
@@ -149,49 +140,6 @@ public class WorkspaceService {
         }
 
         return allowedUrlRepository.findPageAllowedUrlByWorkspaceId(pageable, wksId);
-    }
-
-    @Transactional(readOnly = true)
-    public Page<AllowedUrl> getPagedAllowedUrlsByWorkspaceIdAndUrlNot(Pageable pageable, Long wksId, String url) {
-        if (!existsWorkspaceById(wksId)) {
-            throw new WorkspaceNotFoundException(wksId);
-        }
-
-        return allowedUrlRepository.findPageAllowedUrlByWorkspaceIdAndUrlNot(pageable, wksId, url);
-    }
-
-    @Transactional
-    public void addAllowedUrlToWorkspace(Long wksId, String url) {
-
-        String trimmedUrl = TextUtils.trimUrl(url);
-
-        if(allowedUrlRepository.findAllowedUrlByUrlAndWorkspaceId(trimmedUrl, wksId).isPresent()) {
-            throw new AllowedUrlAlreadyExistException(trimmedUrl, wksId);
-        }
-
-        final Workspace workspace = workspaceRepository.getWorkspaceById(wksId)
-            .orElseThrow(() -> new WorkspaceNotFoundException(wksId));
-
-        AllowedUrl allowedUrl = new AllowedUrl();
-        allowedUrl.setUrl(trimmedUrl);
-        allowedUrl.setWorkspace(workspace);
-
-        allowedUrlRepository.save(allowedUrl);
-    }
-
-    @Transactional
-    public void removeAllowedUrlFromWorkspace(Long wksId, String url) {
-        String trimmedUrl = TextUtils.trimUrl(url);
-
-        final Workspace workspace = workspaceRepository.getWorkspaceById(wksId)
-            .orElseThrow(() -> new WorkspaceNotFoundException(wksId));
-
-        final AllowedUrl allowedUrl = allowedUrlRepository.findAllowedUrlByUrlAndWorkspaceId(url, wksId)
-            .orElseThrow(() -> new AllowedUrlNotFoundException(trimmedUrl, wksId));
-
-        if (!TextUtils.trimUrl(workspace.getUrl()).equals(trimmedUrl)) {
-            allowedUrlRepository.delete(allowedUrl);
-        }
     }
 
     @Transactional

@@ -8,7 +8,6 @@ import io.hexlet.typoreporter.domain.account.Account;
 import io.hexlet.typoreporter.domain.typo.Typo;
 import io.hexlet.typoreporter.domain.typo.TypoStatus;
 import io.hexlet.typoreporter.domain.workspace.AccountRole;
-import io.hexlet.typoreporter.domain.workspace.AllowedUrl;
 import io.hexlet.typoreporter.domain.workspace.Workspace;
 import io.hexlet.typoreporter.domain.workspace.WorkspaceRoleId;
 import io.hexlet.typoreporter.domain.workspacesettings.WorkspaceSettings;
@@ -46,10 +45,6 @@ import io.hexlet.typoreporter.domain.workspace.WorkspaceRole;
 import io.hexlet.typoreporter.service.WorkspaceRoleService;
 
 import static io.hexlet.typoreporter.test.Constraints.POSTGRES_IMAGE;
-import static io.hexlet.typoreporter.test.factory.EntitiesFactory.ACCOUNT_101_EMAIL;
-import static io.hexlet.typoreporter.test.factory.EntitiesFactory.ALLOWED_URL_101_URL;
-import static io.hexlet.typoreporter.test.factory.EntitiesFactory.ALLOWED_URL_104_URL;
-import static io.hexlet.typoreporter.test.factory.EntitiesFactory.WORKSPACE_101_ID;
 import static io.hexlet.typoreporter.test.factory.EntitiesFactory.WORKSPACE_103_ID;
 import static io.hexlet.typoreporter.test.factory.EntitiesFactory.ACCOUNT_102_ID;
 import static io.hexlet.typoreporter.test.factory.EntitiesFactory.ACCOUNT_102_EMAIL;
@@ -73,8 +68,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @Transactional
 @DBRider
-@DBUnit(caseInsensitiveStrategy = LOWERCASE, dataTypeFactoryClass = DBUnitEnumPostgres.class, cacheConnection = false)
-@DataSet(value = {"workspaces.yml", "workspaceRoles.yml", "accounts.yml", "typos.yml", "allowedUrls.yml"})
+@DBUnit(caseInsensitiveStrategy = LOWERCASE,
+    dataTypeFactoryClass = DBUnitEnumPostgres.class,
+    cacheConnection = false)
+@DataSet(value = {"workspaces.yml", "workspaceRoles.yml", "accounts.yml", "typos.yml"})
 class WorkspaceControllerIT {
 
     private final Long NOT_EXISTING_WKS_ID = 9999L;
@@ -382,74 +379,6 @@ class WorkspaceControllerIT {
         assertThat(workspaceRoleRepository.count()).isEqualTo(rolesCountBeforeAdding);
         Optional<WorkspaceRole> addedWksRoleDeletedOptional = workspaceRoleRepository.getWorkspaceRoleByAccountIdAndWorkspaceId(ACCOUNT_102_ID, WORKSPACE_103_ID);
         assertThat(addedWksRoleDeletedOptional).isEmpty();
-    }
-
-    @ParameterizedTest
-    @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspacesAndUsersRelated")
-    void getWorkspaceAllowedUrlsPage(final Long wksId, final String email) throws Exception {
-        Workspace workspace = repository.getWorkspaceById(wksId).orElseThrow();
-        Set<AllowedUrl> urls = new HashSet<>(allowedUrlRepository.findAll());
-
-        MockHttpServletResponse response = mockMvc.perform(
-                get("/workspace/{wksId}/allowed-urls", wksId)
-                    .with(user(email)))
-            .andExpect(status().isOk())
-            .andExpect(model().attributeExists("wksInfo", "wksName", "urlsPage", "availableSizes", "sortDir", "DESC", "ASC"))
-            .andReturn().getResponse();
-
-        var html = response.getContentAsString();
-        for (var wksUrl : workspace.getAllowedUrls()) {
-            var url = wksUrl.getUrl();
-            assertThat(html).contains(url);
-        }
-    }
-
-    @Test
-    void addAllowedUrlToWorkspace() throws Exception {
-        final Long urlsCountBeforeAdding = allowedUrlRepository.count();
-
-        mockMvc.perform(
-            post("/workspace/{wksId}/allowed-urls", WORKSPACE_101_ID)
-                .param("url", "https://other.com")
-                .with(user(ACCOUNT_101_EMAIL))
-                .with(csrf()));
-        assertThat(allowedUrlRepository.count()).isEqualTo(urlsCountBeforeAdding + 1L);
-        Optional<AllowedUrl> addedAllowedUrlOptional = allowedUrlRepository.findAllowedUrlByUrlAndWorkspaceId("https://other.com", WORKSPACE_101_ID);
-        assertThat(addedAllowedUrlOptional).isNotEmpty();
-
-        mockMvc.perform(
-            post("/workspace/{wksId}/allowed-urls", WORKSPACE_101_ID)
-                .param("url", ALLOWED_URL_101_URL)
-                .with(user(ACCOUNT_101_EMAIL))
-                .with(csrf()));
-        assertThat(allowedUrlRepository.count()).isEqualTo(urlsCountBeforeAdding + 1L);
-        Optional<AllowedUrl> oldAllowedUrlOptional = allowedUrlRepository.findAllowedUrlByUrlAndWorkspaceId(ALLOWED_URL_101_URL, WORKSPACE_101_ID);
-        assertThat(oldAllowedUrlOptional).isNotEmpty();
-    }
-
-    @Test
-    void delAllowedUrlFromWorkspace() throws Exception {
-        final Long urlsCountBeforeAdding = allowedUrlRepository.count();
-
-        //main workspace URL is impossible to remove
-        mockMvc.perform(
-            delete("/workspace/{wksId}/allowed-urls", WORKSPACE_101_ID)
-                .param("url", ALLOWED_URL_101_URL)
-                .with(user(ACCOUNT_101_EMAIL))
-                .with(csrf()));
-        assertThat(allowedUrlRepository.count()).isEqualTo(urlsCountBeforeAdding);
-        Optional<AllowedUrl> allowedUrlOptional = allowedUrlRepository.findAllowedUrlByUrlAndWorkspaceId(ALLOWED_URL_101_URL, WORKSPACE_101_ID);
-        assertThat(allowedUrlOptional).isNotEmpty();
-
-        //additional URL is removing
-        mockMvc.perform(
-            delete("/workspace/{wksId}/allowed-urls", WORKSPACE_101_ID)
-                .param("url", ALLOWED_URL_104_URL)
-                .with(user(ACCOUNT_101_EMAIL))
-                .with(csrf()));
-        assertThat(allowedUrlRepository.count()).isEqualTo(urlsCountBeforeAdding - 1L);
-        Optional<AllowedUrl> deletedAllowedUrlOptional = allowedUrlRepository.findAllowedUrlByUrlAndWorkspaceId(ALLOWED_URL_104_URL, WORKSPACE_101_ID);
-        assertThat(deletedAllowedUrlOptional).isEmpty();
     }
 }
 

@@ -80,6 +80,7 @@ For creating new `typo`:
 POST http://localhost:8080/api/workspaces/{workspaceId}/typos
 Content-Type: application/json
 Authorization: Basic base64(workspaceId:api-token)
+Referer: (workspaceId:allowed-url)
 
 {
     "pageUrl": "https://mysite.com/page/with/typo",

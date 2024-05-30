@@ -4,7 +4,6 @@ import io.hexlet.typoreporter.handler.exception.ForbiddenDomainException;
 import io.hexlet.typoreporter.handler.exception.WorkspaceNotFoundException;
 import io.hexlet.typoreporter.security.service.AccountDetailService;
 import io.hexlet.typoreporter.security.service.SecuredWorkspaceService;
-import io.hexlet.typoreporter.utils.TextUtils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -34,8 +33,6 @@ import java.io.IOException;
 
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
-import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON;
-
 
 @Configuration
 @EnableMethodSecurity
@@ -80,8 +77,8 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http,
-                                           SecurityContextRepository securityContextRepository,
-                                           DynamicCorsConfigurationSource dynamicCorsConfigurationSource) throws Exception {
+                                   SecurityContextRepository securityContextRepository,
+                                   DynamicCorsConfigurationSource dynamicCorsConfigurationSource) throws Exception {
         http.httpBasic();
         http.cors();
         http.exceptionHandling().accessDeniedHandler(accessDeniedHandler());
@@ -129,10 +126,11 @@ public class SecurityConfig {
                 return null;
             }
 
-        })
-        {
+        }) {
             @Override
-            protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            protected void doFilterInternal(HttpServletRequest request,
+                                            HttpServletResponse response,
+                                            FilterChain filterChain)
                 throws ServletException, IOException {
                 try {
                     super.doFilterInternal(request, response, filterChain);
@@ -142,7 +140,6 @@ public class SecurityConfig {
                     response.sendError(HttpServletResponse.SC_NOT_FOUND, e.getMessage());
                 }
             }
-        }
-        ;
+        };
     }
 }

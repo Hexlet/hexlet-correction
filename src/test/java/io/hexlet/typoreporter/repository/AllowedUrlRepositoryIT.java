@@ -39,8 +39,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @DataSet(value = {"workspaces.yml", "allowedUrls.yml"})
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class AllowedUrlRepositoryIT {
-    final Integer SUCCESSFUL_CODE = 1;
-
     @Container
     public static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>(POSTGRES_IMAGE)
         .withPassword("inmemory")

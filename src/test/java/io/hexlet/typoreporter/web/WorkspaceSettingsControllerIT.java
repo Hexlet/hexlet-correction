@@ -3,9 +3,14 @@ package io.hexlet.typoreporter.web;
 import com.github.database.rider.core.api.configuration.DBUnit;
 import com.github.database.rider.core.api.dataset.DataSet;
 import com.github.database.rider.spring.api.DBRider;
+import io.hexlet.typoreporter.domain.workspace.AllowedUrl;
+import io.hexlet.typoreporter.domain.workspace.Workspace;
 import io.hexlet.typoreporter.domain.workspacesettings.WorkspaceSettings;
+import io.hexlet.typoreporter.repository.AllowedUrlRepository;
+import io.hexlet.typoreporter.repository.WorkspaceRepository;
 import io.hexlet.typoreporter.repository.WorkspaceSettingsRepository;
 import io.hexlet.typoreporter.test.DBUnitEnumPostgres;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,15 +27,23 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.Base64;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 import static com.github.database.rider.core.api.configuration.Orthography.LOWERCASE;
 import static io.hexlet.typoreporter.test.Constraints.POSTGRES_IMAGE;
+import static io.hexlet.typoreporter.test.factory.EntitiesFactory.ACCOUNT_101_EMAIL;
+import static io.hexlet.typoreporter.test.factory.EntitiesFactory.ALLOWED_URL_101_URL;
+import static io.hexlet.typoreporter.test.factory.EntitiesFactory.ALLOWED_URL_104_URL;
+import static io.hexlet.typoreporter.test.factory.EntitiesFactory.WORKSPACE_101_ID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 
 @Testcontainers
@@ -40,8 +53,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Transactional
 @DBRider
 @DBUnit(caseInsensitiveStrategy = LOWERCASE, dataTypeFactoryClass = DBUnitEnumPostgres.class, cacheConnection = false)
-@DataSet(value = {"workspaces.yml", "workspace_settings.yml", "workspaceRoles.yml", "accounts.yml"})
+@DataSet(value = {"workspaces.yml", "workspace_settings.yml", "workspaceRoles.yml", "accounts.yml", "allowedUrls.yml"})
 public class WorkspaceSettingsControllerIT {
+
+    @Autowired
+    private WorkspaceRepository repository;
+
+    @Autowired
+    private AllowedUrlRepository urlRepository;
 
     @Container
     static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>(POSTGRES_IMAGE)
@@ -87,10 +106,25 @@ public class WorkspaceSettingsControllerIT {
             .map(Base64.getEncoder()::encodeToString)
             .orElse(null);
 
+        Workspace workspace = repository.getWorkspaceById(wksId).orElseThrow();
+        Set<AllowedUrl> urls = new HashSet<>(urlRepository.findAll());
+
         MockHttpServletResponse response = mockMvc.perform(get("/workspace/{wksId}/settings", wksId.toString())
                 .with(user(username)))
-            .andExpect(model().attributeExists("wksBasicToken"))
+            .andExpect(model().attributeExists("wksBasicToken",
+                                        "wksName",
+                                        "urlsPage",
+                                        "availableSizes",
+                                        "sortDir",
+                                        "DESC",
+                                        "ASC"))
             .andReturn().getResponse();
+
+        var html = response.getContentAsString();
+        for (var wksUrl : workspace.getAllowedUrls()) {
+            var url = wksUrl.getUrl();
+            assertThat(html).contains(url);
+        }
 
         assertThat(response.getContentAsString()).contains(apiAccessToken);
     }
@@ -137,5 +171,45 @@ public class WorkspaceSettingsControllerIT {
 
         assertThat(previousWksToken).isEqualTo(newWksToken);
         assertThat(response.getRedirectedUrl()).isEqualTo("/workspaces");
+    }
+
+    @Test
+    void addAllowedUrlToWorkspace() throws Exception {
+        final Long urlsCountBeforeAdding = urlRepository.count();
+
+        mockMvc.perform(
+            post("/workspace/{wksId}/allowed-urls", WORKSPACE_101_ID)
+                .param("url", "https://other.com")
+                .with(user(ACCOUNT_101_EMAIL))
+                .with(csrf()));
+        assertThat(urlRepository.count()).isEqualTo(urlsCountBeforeAdding + 1L);
+        var addedAllowedUrlOptional = urlRepository.findAllowedUrlByUrlAndWorkspaceId("https://other.com",
+                                                                        WORKSPACE_101_ID);
+        assertThat(addedAllowedUrlOptional).isNotEmpty();
+
+        mockMvc.perform(
+            post("/workspace/{wksId}/allowed-urls", WORKSPACE_101_ID)
+                .param("url", ALLOWED_URL_101_URL)
+                .with(user(ACCOUNT_101_EMAIL))
+                .with(csrf()));
+        assertThat(urlRepository.count()).isEqualTo(urlsCountBeforeAdding + 1L);
+        var oldAllowedUrlOptional = urlRepository.findAllowedUrlByUrlAndWorkspaceId(ALLOWED_URL_101_URL,
+                                                                        WORKSPACE_101_ID);
+        assertThat(oldAllowedUrlOptional).isNotEmpty();
+    }
+
+    @Test
+    void delAllowedUrlFromWorkspace() throws Exception {
+        final Long urlsCountBeforeAdding = urlRepository.count();
+
+        mockMvc.perform(
+            delete("/workspace/{wksId}/allowed-urls", WORKSPACE_101_ID)
+                .param("url", ALLOWED_URL_104_URL)
+                .with(user(ACCOUNT_101_EMAIL))
+                .with(csrf()));
+        assertThat(urlRepository.count()).isEqualTo(urlsCountBeforeAdding - 1L);
+        var deletedAllowedUrlOptional = urlRepository.findAllowedUrlByUrlAndWorkspaceId(ALLOWED_URL_104_URL,
+                                                                        WORKSPACE_101_ID);
+        assertThat(deletedAllowedUrlOptional).isEmpty();
     }
 }
