@@ -27,9 +27,9 @@
             </div>
             <div class="row mt-4">
                 <div class="col">
-                    <p class="fw-bold mb-2">Токен доступа для API Пространства:</p>
+                    <p class="fw-bold mb-2" th:text="|#{text.wks-access-token}|"></p>
                     <p class="form-control user-select-all d-inline-flex mb-3" readonly>[[${wksBasicToken} ?: '&lt;Token not generated&gt;']]</p>
-                    <p class="fw-bold mb-2">Используйте заголовок Authorization:</p>
+                    <p class="fw-bold mb-2" th:text="|#{text.use-header}|"></p>
                     <p class="form-control user-select-all  d-inline-flex mb-3" readonly>Basic [[${wksBasicToken}]]</p>
                 </div>
             </div>
