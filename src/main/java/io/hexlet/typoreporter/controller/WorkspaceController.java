@@ -291,7 +291,9 @@ public class WorkspaceController {
     public String addUser(@ModelAttribute("inputEmail") @Valid WorkspaceUserModel workspaceUserModel,
                           BindingResult bindingResult,
                           Model model,
-                          @PathVariable Long wksId) {
+                          @PathVariable Long wksId,
+                          @SortDefault("createdDate") Pageable pageable
+                          ) {
         model.addAttribute("formModified", true);
         if (bindingResult.hasErrors()) {
             Optional<WorkspaceInfo> workSpaceInfoOptional = workspaceService.getWorkspaceInfoById(wksId);
