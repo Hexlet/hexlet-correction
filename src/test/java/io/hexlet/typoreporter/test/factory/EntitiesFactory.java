@@ -21,6 +21,7 @@ public class EntitiesFactory {
     public static final String ACCOUNT_102_EMAIL = "test102@gmail.com";
 
     public static final String ACCOUNT_103_EMAIL = "test103@gmail.com";
+    public static final String ACCOUNT_104_EMAIL = "test103@gmail";
 
     public static final Long ACCOUNT_101_ID = 101L;
 

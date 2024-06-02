@@ -294,6 +294,45 @@ public class WorkspaceController {
                           @PathVariable Long wksId) {
         model.addAttribute("formModified", true);
         if (bindingResult.hasErrors()) {
+            Optional<WorkspaceInfo> workSpaceInfoOptional = workspaceService.getWorkspaceInfoById(wksId);
+            if (workSpaceInfoOptional.isEmpty()) {
+                //TODO send error page
+                log.error("Workspace with id {} not found", wksId);
+                return "redirect:/workspaces";
+            }
+
+            WorkspaceInfo wksInfo = workSpaceInfoOptional.get();
+            model.addAttribute("wksName", wksInfo.name());
+            model.addAttribute("wksInfo", wksInfo);
+            getStatisticDataToModel(model, wksId);
+            getLastTypoDataToModel(model, wksId);
+
+            Optional<Workspace> workspaceOptional = workspaceService.getWorkspaceById(wksId);
+            Set<WorkspaceRole> workspaceRoles = workspaceOptional.get().getWorkspaceRoles();
+            List<Account> linkedAccounts = workspaceRoles.stream()
+                .map(WorkspaceRole::getAccount)
+                .collect(Collectors.toList());
+            List<Account> allAccounts = accountService.findAll();
+            List<Account> nonLinkedAccounts = getNonLinkedAccounts(allAccounts, linkedAccounts);
+            final Account authenticatedAccount = getAccountFromAuthentication();
+            final boolean accountIsAdminRole = workspaceService.isAdminRoleUserInWorkspace(wksId,
+                authenticatedAccount.getEmail());
+            List<Account> excludeDeleteAccounts = Collections.singletonList(authenticatedAccount);
+            Page<Account> userPage = new PageImpl<>(linkedAccounts, pageable, linkedAccounts.size());
+            var sort = userPage.getSort()
+                .stream()
+                .findFirst()
+                .orElseGet(() -> asc("createdDate"));
+
+            model.addAttribute("nonLinkedAccounts", nonLinkedAccounts);
+            model.addAttribute("isAdmin", accountIsAdminRole);
+            model.addAttribute("excludeDeleteAccounts", excludeDeleteAccounts);
+            model.addAttribute("userPage", userPage);
+            model.addAttribute("availableSizes", availableSizes);
+            model.addAttribute("sortProp", sort.getProperty());
+            model.addAttribute("sortDir", sort.getDirection());
+            model.addAttribute("DESC", DESC);
+            model.addAttribute("ASC", ASC);
             return "workspace/wks-users";
         }
         try {
