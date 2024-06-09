@@ -48,11 +48,7 @@ import io.hexlet.typoreporter.domain.workspace.WorkspaceRole;
 import io.hexlet.typoreporter.service.WorkspaceRoleService;
 
 import static io.hexlet.typoreporter.test.Constraints.POSTGRES_IMAGE;
-import static io.hexlet.typoreporter.test.factory.EntitiesFactory.ACCOUNT_102_EMAIL;
-import static io.hexlet.typoreporter.test.factory.EntitiesFactory.ACCOUNT_102_ID;
-import static io.hexlet.typoreporter.test.factory.EntitiesFactory.ACCOUNT_103_EMAIL;
-import static io.hexlet.typoreporter.test.factory.EntitiesFactory.ACCOUNT_104_EMAIL;
-import static io.hexlet.typoreporter.test.factory.EntitiesFactory.WORKSPACE_103_ID;
+import static io.hexlet.typoreporter.test.factory.EntitiesFactory.*;
 import static java.util.Objects.requireNonNull;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
@@ -393,11 +389,11 @@ class WorkspaceControllerIT {
     void addUserNonValidEmailTest() throws Exception {
         var response = mockMvc.perform(
                 post("/workspace/{wksId}/users", WORKSPACE_103_ID)
-                    .param("email", ACCOUNT_104_EMAIL)
+                    .param("email", ACCOUNT_INCORRECT_EMAIL)
                     .with(user(ACCOUNT_103_EMAIL))
                     .with(csrf()))
             .andReturn();
         var body = response.getResponse().getContentAsString();
-        assertThat(body).contains(String.format("The email %s is not valid"), ACCOUNT_104_EMAIL);
+        assertThat(body).contains("The email %s is not valid", ACCOUNT_INCORRECT_EMAIL);
     }
 }
