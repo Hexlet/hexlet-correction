@@ -48,7 +48,11 @@ import io.hexlet.typoreporter.domain.workspace.WorkspaceRole;
 import io.hexlet.typoreporter.service.WorkspaceRoleService;
 
 import static io.hexlet.typoreporter.test.Constraints.POSTGRES_IMAGE;
-import static io.hexlet.typoreporter.test.factory.EntitiesFactory.*;
+import static io.hexlet.typoreporter.test.factory.EntitiesFactory.ACCOUNT_102_EMAIL;
+import static io.hexlet.typoreporter.test.factory.EntitiesFactory.ACCOUNT_102_ID;
+import static io.hexlet.typoreporter.test.factory.EntitiesFactory.ACCOUNT_103_EMAIL;
+import static io.hexlet.typoreporter.test.factory.EntitiesFactory.ACCOUNT_INCORRECT_EMAIL;
+import static io.hexlet.typoreporter.test.factory.EntitiesFactory.WORKSPACE_103_ID;
 import static java.util.Objects.requireNonNull;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
