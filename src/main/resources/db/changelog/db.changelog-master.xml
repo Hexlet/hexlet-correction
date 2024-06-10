@@ -23,4 +23,8 @@
              relativeToChangelogFile="true" />
     <include file="changesets/2023/10/2023-10-16-change-time-format-to-timestamp-with-time-zone.xml"
              relativeToChangelogFile="true" />
+    <include file="changesets/2024/05/2024-05-01-add-workspace-urls-table.xml"
+             relativeToChangelogFile="true" />
+    <include file="changesets/2024/05/2024-05-31-remove-unique-constraint-to-name-workspace.xml"
+             relativeToChangelogFile="true" />
 </databaseChangeLog>
