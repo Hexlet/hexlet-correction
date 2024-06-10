@@ -294,7 +294,7 @@ public class WorkspaceController {
                           @PathVariable Long wksId) {
         model.addAttribute("formModified", true);
         if (bindingResult.hasErrors()) {
-            return "workspace/wks-users";
+            return "redirect:/workspace/{wksId}/users";
         }
         try {
             workspaceRoleService.addAccountToWorkspace(wksId, workspaceUserModel.getEmail());

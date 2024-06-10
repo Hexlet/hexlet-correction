@@ -29,7 +29,7 @@
                             <div class="invalid-feedback" th:each="err : ${#fields.errors('name')}" th:text="${err}"></div>
                         </div>
                         <div class="form-floating mb-3">
-                            <input class="form-control" id="inputWksUrl" placeholder="p"
+                            <input class="form-control" id="inputWksUrl" placeholder="p" autofocus
                                    th:classappend="${!#fields.hasErrors('url') && formModified ? 'is-valid' : ''}"
                                    th:errorclass="is-invalid"
                                    th:field="*{url}"

@@ -1,0 +1,16 @@
+allowed_url:
+  - id: 101
+    workspace_id: 101
+    url: https://mysite.com
+  - id: 102
+    workspace_id: 102
+    url: https://mysite.net
+  - id: 103
+    workspace_id: 103
+    url: https://mysite.in
+  - id: 104
+    workspace_id: 101
+    url: https://mysite2.com
+  - id: 105
+    workspace_id: 101
+    url: https://mysite3.com
