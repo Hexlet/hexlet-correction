@@ -12,6 +12,7 @@ import io.hexlet.typoreporter.domain.workspace.Workspace;
 import io.hexlet.typoreporter.domain.workspace.WorkspaceRoleId;
 import io.hexlet.typoreporter.domain.workspacesettings.WorkspaceSettings;
 import io.hexlet.typoreporter.repository.AccountRepository;
+import io.hexlet.typoreporter.repository.AllowedUrlRepository;
 import io.hexlet.typoreporter.repository.WorkspaceRepository;
 import io.hexlet.typoreporter.repository.WorkspaceRoleRepository;
 import io.hexlet.typoreporter.service.dto.workspace.CreateWorkspace;
@@ -90,6 +91,9 @@ class WorkspaceControllerIT {
     private AccountRepository accountRepository;
 
     @Autowired
+    private AllowedUrlRepository allowedUrlRepository;
+
+    @Autowired
     private WorkspaceRoleRepository workspaceRoleRepository;
 
     @Autowired
@@ -100,6 +104,7 @@ class WorkspaceControllerIT {
 
     @Autowired
     private WorkspaceMapper workspaceMapper;
+
 
     @DynamicPropertySource
     static void datasourceProperties(DynamicPropertyRegistry registry) {
@@ -384,3 +389,5 @@ class WorkspaceControllerIT {
         assertThat(addedWksRoleDeletedOptional).isEmpty();
     }
 }
+
+

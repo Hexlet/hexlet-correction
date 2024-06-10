@@ -51,6 +51,10 @@ public class Workspace extends AbstractAuditingEntity implements Identifiable<Lo
     @Column(unique = true)
     private String url;
 
+    @OneToMany(mappedBy = "workspace", cascade = ALL, orphanRemoval = true)
+    @ToString.Exclude
+    private Set<AllowedUrl> allowedUrls = new HashSet<>();
+
     @WorkspaceDescription
     private String description;
 
@@ -87,6 +91,16 @@ public class Workspace extends AbstractAuditingEntity implements Identifiable<Lo
     public void removeWorkSpaceRole(WorkspaceRole workspaceRole) {
         workspaceRoles.remove(workspaceRole);
         workspaceRole.setWorkspace(null);
+    }
+
+    public Workspace addAllowedUrl(final AllowedUrl url) {
+        allowedUrls.add(url);
+        return this;
+    }
+
+    public Workspace removeAllowedUrl(final AllowedUrl url) {
+        allowedUrls.remove(url);
+        return this;
     }
 
     @Override
