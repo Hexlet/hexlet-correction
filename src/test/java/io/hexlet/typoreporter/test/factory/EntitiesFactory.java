@@ -2,6 +2,7 @@ package io.hexlet.typoreporter.test.factory;
 
 import io.hexlet.typoreporter.domain.Identifiable;
 import io.hexlet.typoreporter.domain.typo.Typo;
+import io.hexlet.typoreporter.domain.workspace.AllowedUrl;
 import io.hexlet.typoreporter.domain.workspace.Workspace;
 import io.hexlet.typoreporter.service.dto.typo.TypoReport;
 import io.hexlet.typoreporter.service.dto.workspace.CreateWorkspace;
@@ -35,6 +36,16 @@ public class EntitiesFactory {
 
     public static final Long WORKSPACE_103_ID = 103L;
 
+    public static final String ALLOWED_URL_101_URL = "https://mysite.com";
+
+    public static final String ALLOWED_URL_102_URL = "https://mysite.net";
+
+    public static final String ALLOWED_URL_103_URL = "https://mysite.in";
+
+    public static final String ALLOWED_URL_104_URL = "https://mysite2.com";
+
+    public static final String ALLOWED_URL_105_URL = "https://mysite3.com";
+
     public static Stream<Long> getWorkspaceIdsExist() {
         return Stream.of(WORKSPACE_101_ID, WORKSPACE_102_ID, WORKSPACE_103_ID);
     }
@@ -50,6 +61,26 @@ public class EntitiesFactory {
     public static Stream<Arguments> getWorkspaceAndAdminRelated() {
         return Stream.of(
             Arguments.of(WORKSPACE_103_ID, ACCOUNT_103_EMAIL)
+        );
+    }
+
+    public static Stream<Arguments> getWorkspaceAndAllowedUrlsRelated() {
+        return Stream.of(
+            Arguments.of(WORKSPACE_101_ID, ALLOWED_URL_101_URL),
+            Arguments.of(WORKSPACE_102_ID, ALLOWED_URL_102_URL),
+            Arguments.of(WORKSPACE_103_ID, ALLOWED_URL_103_URL),
+            Arguments.of(WORKSPACE_101_ID, ALLOWED_URL_104_URL),
+            Arguments.of(WORKSPACE_101_ID, ALLOWED_URL_105_URL)
+        );
+    }
+
+    public static Stream<Arguments> getWorkspaceAndAllowedUrlsNotRelated() {
+        return Stream.of(
+            Arguments.of(WORKSPACE_101_ID, ALLOWED_URL_102_URL),
+            Arguments.of(WORKSPACE_102_ID, ALLOWED_URL_101_URL),
+            Arguments.of(WORKSPACE_103_ID, ALLOWED_URL_104_URL),
+            Arguments.of(WORKSPACE_102_ID, ALLOWED_URL_103_URL),
+            Arguments.of(WORKSPACE_103_ID, ALLOWED_URL_105_URL)
         );
     }
 
@@ -141,6 +172,26 @@ public class EntitiesFactory {
         setField(typo2, "modifiedDate", now());
 
         return Stream.of(typo1, typo2);
+    }
+
+    public static Stream<AllowedUrl> getAllowedUrls() {
+        final var workspace = new Workspace().setId(110L);
+
+        final var allowedUrl1 = new AllowedUrl()
+            .setId(1L)
+            .setUrl("http://site.com")
+            .setWorkspace(workspace);
+
+        workspace.addAllowedUrl(allowedUrl1);
+
+        final var allowedUrl2 = new AllowedUrl()
+            .setId(2L)
+            .setUrl("http://site2.com")
+            .setWorkspace(workspace);
+
+        workspace.addAllowedUrl(allowedUrl2);
+
+        return Stream.of(allowedUrl1, allowedUrl2);
     }
 
     public static Stream<Long> getTypoIdsExist() {

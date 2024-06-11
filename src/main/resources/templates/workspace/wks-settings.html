@@ -32,6 +32,104 @@
                     <p class="fw-bold mb-2" th:text="|#{text.use-header}|"></p>
                     <p class="form-control user-select-all  d-inline-flex mb-3" readonly>Basic [[${wksBasicToken}]]</p>
                 </div>
+                <!-- Adding an url to a workspace -->
+                <div class="row my-3">
+                    <p class="fw-bold mb-2" th:text="#{text.allowed-urls}"></p>
+                    <div class="col">
+                        <form method="POST" th:action="@{'/workspace/' + ${wksId} + '/allowed-urls'}" th:object="${inputUrl}">
+                            <div class="row">
+                                <div class="col-7">
+                                    <input type="url" class="form-control mb-2 col" id="inputUrl" th:placeholder="#{text.input-url-placeholder}" th:field="*{url}"
+                                           th:classappend="${#fields.hasErrors('url') && formModified}? 'is-invalid'"
+                                           th:errorclass="is-invalid" required>
+                                </div>
+                                <div class="col-5">
+                                    <button type="submit" class="btn btn-light" th:text="#{btn.add-to-wks}"></button>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-12">
+                                    <ul class="alert alert-danger ps-5" th:if="${#fields.hasErrors('url')}">
+                                        <li th:each="err : ${#fields.errors('url')}" th:text="${err}"></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <!-- Workspace urls page -->
+                <div class="row" th:if="${urlsPage.hasContent()}">
+                    <main class="col">
+                        <div class="row">
+                            <!-- Page size dropdown -->
+                            <div class="col-5">
+                                <div class="dropdown">
+                                    <button aria-expanded="false"
+                                            class="btn btn-light dropdown-toggle"
+                                            data-bs-toggle="dropdown"
+                                            id="dropdownSizePage"
+                                            th:text="|#{btn.page-size} ${urlsPage.size}|"
+                                            type="button">
+                                    </button>
+                                    <ul aria-labelledby="dropdownSizePage" class="dropdown-menu">
+                                        <li th:each="availableSize : ${availableSizes}">
+                                            <a class="dropdown-item"
+                                               th:classappend="(${urlsPage.size} == ${availableSize} ? 'disabled' : '')"
+                                               th:href="@{'/workspace/' + ${wksId} + '/settings'(page=0,size=${availableSize},${sortDir}|)}"
+                                               th:text="${availableSize}">
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <!-- Page pagination -->
+                            <div class="col-sm-6">
+                                <ul class="pagination" sd:pagination="full"></ul>
+                            </div>
+                        </div>
+                        <!-- Workspace urls table -->
+                        <div class="row">
+                            <div class="col">
+                                <table class="table">
+                                    <!-- Workspace urls table head -->
+                                    <colgroup>
+                                        <col class="col-11">
+                                        <col class="col-1">
+                                    </colgroup>
+                                    <thead th:object="${urlsPage}">
+                                    <tr>
+                                        <th scope="col" colspan="2">
+                                            <a class="btn btn-light"
+                                               th:href="@{'/workspace/' + ${wksId} + '/settings'(size=*{size},sort=|url,${sortDir.isAscending() ? DESC : ASC}|)}">
+                                                <span th:text="#{report-url}"></span> <span>[[${sortDir.isAscending() ? '&uArr;' : '&dArr;'}]]</span>
+                                            </a>
+                                        </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <th:block th:each="url : ${urlsPage.content}" th:object="${url}">
+                                        <!-- Workspace url table row -->
+                                        <tr>
+                                            <td class="align-middle" th:text="*{url}"></td>
+                                            <td>
+                                                <form th:method="DELETE"
+                                                      th:if="isAdmin"
+                                                      th:action="@{'/workspace/' + ${wksId} + '/allowed-urls'}">
+                                                    <input type="hidden" th:value="*{url}" name="url">
+                                                    <button type="submit" class="btn btn-danger"
+                                                            th:text="#{btn.delete}"
+                                                            th:onclick="return confirm(/*[[#{text.confirm-delete-url-wks}]]*/)"
+                                                    ></button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    </th:block>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </main>
+                </div>
             </div>
         </div>
     </div>

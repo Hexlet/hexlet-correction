@@ -18,7 +18,7 @@ class CreateWorkspaceToWorkspaceTest {
         final var workspace = workspaceMapper.toWorkspace(createWorkspace);
         assertThat(workspace).usingRecursiveComparison()
             .ignoringFields("id", "typos", "createdDate", "createdBy", "modifiedDate", "modifiedBy",
-                "workspaceRoles", "accounts", "workspaceSettings")
+                "workspaceRoles", "accounts", "workspaceSettings", "allowedUrls")
             .isEqualTo(createWorkspace);
     }
 }
