@@ -33,22 +33,27 @@ import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+
 import java.time.Instant;
 import java.util.UUID;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Comparator;
+
 import org.junit.jupiter.api.Disabled;
+
 import static com.github.database.rider.core.api.configuration.Orthography.LOWERCASE;
+
 import io.hexlet.typoreporter.domain.workspace.WorkspaceRole;
 import io.hexlet.typoreporter.service.WorkspaceRoleService;
 
 import static io.hexlet.typoreporter.test.Constraints.POSTGRES_IMAGE;
-import static io.hexlet.typoreporter.test.factory.EntitiesFactory.WORKSPACE_103_ID;
-import static io.hexlet.typoreporter.test.factory.EntitiesFactory.ACCOUNT_102_ID;
 import static io.hexlet.typoreporter.test.factory.EntitiesFactory.ACCOUNT_102_EMAIL;
+import static io.hexlet.typoreporter.test.factory.EntitiesFactory.ACCOUNT_102_ID;
 import static io.hexlet.typoreporter.test.factory.EntitiesFactory.ACCOUNT_103_EMAIL;
+import static io.hexlet.typoreporter.test.factory.EntitiesFactory.ACCOUNT_INCORRECT_EMAIL;
+import static io.hexlet.typoreporter.test.factory.EntitiesFactory.WORKSPACE_103_ID;
 import static java.util.Objects.requireNonNull;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
@@ -309,7 +314,7 @@ class WorkspaceControllerIT {
     @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspacesAndUsersRelated")
     void deleteWorkspaceByIdIsSuccessful(final Long wksId,
-                                           final String username) throws Exception {
+                                         final String username) throws Exception {
 
         assertThat(repository.existsWorkspaceById(wksId)).isTrue();
 
@@ -359,10 +364,10 @@ class WorkspaceControllerIT {
         final Long rolesCountBeforeAdding = workspaceRoleRepository.count();
 
         mockMvc.perform(
-                post("/workspace/{wksId}/users", WORKSPACE_103_ID)
-                    .param("email", ACCOUNT_102_EMAIL)
-                    .with(user(ACCOUNT_103_EMAIL))
-                    .with(csrf()));
+            post("/workspace/{wksId}/users", WORKSPACE_103_ID)
+                .param("email", ACCOUNT_102_EMAIL)
+                .with(user(ACCOUNT_103_EMAIL))
+                .with(csrf()));
         assertThat(workspaceRoleRepository.count()).isEqualTo(rolesCountBeforeAdding + 1L);
         Optional<WorkspaceRole> addedWksRoleOptional = workspaceRoleRepository
             .getWorkspaceRoleByAccountIdAndWorkspaceId(ACCOUNT_102_ID, WORKSPACE_103_ID);
@@ -387,6 +392,18 @@ class WorkspaceControllerIT {
         Optional<WorkspaceRole> addedWksRoleDeletedOptional = workspaceRoleRepository
             .getWorkspaceRoleByAccountIdAndWorkspaceId(ACCOUNT_102_ID, WORKSPACE_103_ID);
         assertThat(addedWksRoleDeletedOptional).isEmpty();
+    }
+
+    @Test
+    void addUserNonValidEmailTest() throws Exception {
+        var response = mockMvc.perform(
+                post("/workspace/{wksId}/users", WORKSPACE_103_ID)
+                    .param("email", ACCOUNT_INCORRECT_EMAIL)
+                    .with(user(ACCOUNT_103_EMAIL))
+                    .with(csrf()))
+            .andReturn();
+        var body = response.getResponse().getContentAsString();
+        assertThat(body).contains("The email %s is not valid", ACCOUNT_INCORRECT_EMAIL);
     }
 }
 
