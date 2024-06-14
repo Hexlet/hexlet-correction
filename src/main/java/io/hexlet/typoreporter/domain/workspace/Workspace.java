@@ -45,7 +45,6 @@ public class Workspace extends AbstractAuditingEntity implements Identifiable<Lo
     private Long id;
 
     @WorkspaceName
-    @Column(unique = true)
     private String name;
 
     @WorkspaceUrl
