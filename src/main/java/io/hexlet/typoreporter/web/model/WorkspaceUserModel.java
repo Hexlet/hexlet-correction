@@ -12,6 +12,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class WorkspaceUserModel {
 
-    @Email(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$", message = "The email \"{0}\" is not valid")
+    @Email(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
+        message = "The email \"${validatedValue}\" is not valid")
     private String email;
 }
