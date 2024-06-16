@@ -20,8 +20,10 @@ import static com.github.database.rider.core.api.configuration.Orthography.LOWER
 import static io.hexlet.typoreporter.test.Constraints.POSTGRES_IMAGE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -67,17 +69,21 @@ public class AccountControllerIT {
             .isEqualTo(correctEmailDomain);
 
         String wrongEmailDomain = "test@test";
-        mockMvc.perform(post("/account/update")
-            .param("username", userName)
-            .param("email", wrongEmailDomain)
-            .param("password", password)
-            .param("confirmPassword", password)
-            .param("firstName", userName)
-            .param("lastName", userName)
-            .with(csrf()));
+
+        var response = mockMvc.perform(put("/account/update")
+                .param("username", userName)
+                .param("email", wrongEmailDomain)
+                .param("firstName", userName)
+                .param("lastName", userName)
+                .with(user(correctEmailDomain))
+                .with(csrf()))
+            .andExpect(status().isOk())
+            .andReturn();
+        var body = response.getResponse().getContentAsString();
         assertThat(accountRepository.findAccountByEmail(wrongEmailDomain)).isEmpty();
         assertThat(accountRepository.findAccountByEmail(correctEmailDomain).orElseThrow().getEmail())
             .isEqualTo(correctEmailDomain);
+        assertThat(body).contains(String.format("The email &quot;%s&quot; is not valid", wrongEmailDomain));
     }
 
     @Test
@@ -99,11 +105,13 @@ public class AccountControllerIT {
         assertThat(accountRepository.findAccountByEmail(emailLowerCase)).isNotEmpty();
 
         mockMvc.perform(put("/account/update")
-            .param("firstName", username)
-            .param("lastName", username)
-            .param("username", username)
-            .param("email", emailUpperCase)
-            .with(csrf()));
+                .param("firstName", username)
+                .param("lastName", username)
+                .param("username", username)
+                .param("email", emailUpperCase)
+                .with(user(emailLowerCase))
+                .with(csrf()))
+            .andExpect(status().isFound());
         assertThat(accountRepository.findAccountByEmail(emailUpperCase)).isEmpty();
         assertThat(accountRepository.findAccountByEmail(emailLowerCase)).isNotEmpty();
     }
