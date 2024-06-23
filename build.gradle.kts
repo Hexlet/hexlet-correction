@@ -48,7 +48,9 @@ dependencies {
     implementation("org.mapstruct:mapstruct:1.5.3.Final")
     // Annotation processors
     annotationProcessor("org.mapstruct:mapstruct-processor:1.5.3.Final")
-
+    //Generating models for tests
+    implementation("org.instancio:instancio-junit:3.6.0")
+    implementation("net.datafaker:datafaker:2.0.2")
     // Testing
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")

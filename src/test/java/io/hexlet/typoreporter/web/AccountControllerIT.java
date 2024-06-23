@@ -4,10 +4,16 @@ import com.github.database.rider.core.api.configuration.DBUnit;
 import com.github.database.rider.spring.api.DBRider;
 import io.hexlet.typoreporter.repository.AccountRepository;
 import io.hexlet.typoreporter.test.DBUnitEnumPostgres;
+import io.hexlet.typoreporter.test.factory.AccountModelGenerator;
+import io.hexlet.typoreporter.utils.BundleSourceUtils;
+import io.hexlet.typoreporter.utils.ModelUtils;
+import io.hexlet.typoreporter.web.model.SignupAccountModel;
+import org.instancio.Instancio;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
@@ -51,68 +57,69 @@ public class AccountControllerIT {
     @Autowired
     private AccountRepository accountRepository;
 
+    @Autowired
+    private AccountModelGenerator accountGenerator;
+
+    @Autowired
+    private ModelUtils modelUtils;
+    @Autowired
+    private BundleSourceUtils bundleSourceUtils;
+
     @Test
     void updateAccountWithWrongEmailDomain() throws Exception {
-        String userName = "testUser";
-        String correctEmailDomain = "test@test.test";
-        String password = "_Qwe1234";
+        SignupAccountModel correctAccount = Instancio.of(accountGenerator.getCorrectAccountModel()).create();
+        var correctFormParams = modelUtils.toFormParams(correctAccount);
         mockMvc.perform(post("/signup")
-            .param("username", userName)
-            .param("email", correctEmailDomain)
-            .param("password", password)
-            .param("confirmPassword", password)
-            .param("firstName", userName)
-            .param("lastName", userName)
-            .with(csrf()));
-        assertThat(accountRepository.findAccountByEmail(correctEmailDomain)).isNotEmpty();
-        assertThat(accountRepository.findAccountByEmail(correctEmailDomain).orElseThrow().getEmail())
-            .isEqualTo(correctEmailDomain);
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .params(correctFormParams)
+                .with(csrf()))
+            .andExpect(status().isFound());
+        assertThat(accountRepository.findAccountByEmail(correctAccount.getEmail())).isNotEmpty();
+        assertThat(accountRepository.findAccountByEmail(correctAccount.getEmail()).orElseThrow().getEmail())
+            .isEqualTo(correctAccount.getEmail());
 
-        String wrongEmailDomain = "test@test";
-
+        SignupAccountModel incorrectAccount = Instancio.of(accountGenerator.getIncorrectAccountModel()).create();
+        var incorrectFormParams = modelUtils.toFormParams(incorrectAccount);
         var response = mockMvc.perform(put("/account/update")
-                .param("username", userName)
-                .param("email", wrongEmailDomain)
-                .param("firstName", userName)
-                .param("lastName", userName)
-                .with(user(correctEmailDomain))
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .params(incorrectFormParams)
+                .with(user(correctAccount.getEmail()))
                 .with(csrf()))
             .andExpect(status().isOk())
             .andReturn();
+
         var body = response.getResponse().getContentAsString();
-        assertThat(accountRepository.findAccountByEmail(wrongEmailDomain)).isEmpty();
-        assertThat(accountRepository.findAccountByEmail(correctEmailDomain).orElseThrow().getEmail())
-            .isEqualTo(correctEmailDomain);
-        assertThat(body).contains(String.format("The email &quot;%s&quot; is not valid", wrongEmailDomain));
+        assertThat(accountRepository.findAccountByEmail(incorrectAccount.getEmail())).isEmpty();
+        assertThat(accountRepository.findAccountByEmail(correctAccount.getEmail()).orElseThrow().getEmail())
+            .isEqualTo(correctAccount.getEmail());
+        assertThat(body).contains(bundleSourceUtils.getValueByKey(
+            "validation.alert.wrong-email", true, new String[]{incorrectAccount.getEmail()}));
+        assertThat(body).contains(bundleSourceUtils.getValueByKey(
+            "validation.alert.wrong-username-pattern", true, new String[]{"^[-_A-Za-z0-9]*$"}));
     }
 
     @Test
     void updateAccountEmailUsingDifferentCase() throws Exception {
-        final String username = "testUser";
-        final String emailUpperCase = "TEST@TEST.RU";
-        final String emailMixedCase = "TEST@test.Ru";
-        final String emailLowerCase = "test@test.ru";
-        final String password = "_Qwe1234";
-
+        final SignupAccountModel account = Instancio.of(accountGenerator.getCorrectAccountModel()).create();
+        account.setEmail(account.getEmail().toUpperCase());
+        var accountFormParams = modelUtils.toFormParams(account);
         mockMvc.perform(post("/signup")
-            .param("username", username)
-            .param("email", emailMixedCase)
-            .param("password", password)
-            .param("confirmPassword", password)
-            .param("firstName", username)
-            .param("lastName", username)
-            .with(csrf()));
-        assertThat(accountRepository.findAccountByEmail(emailLowerCase)).isNotEmpty();
-
-        mockMvc.perform(put("/account/update")
-                .param("firstName", username)
-                .param("lastName", username)
-                .param("username", username)
-                .param("email", emailUpperCase)
-                .with(user(emailLowerCase))
-                .with(csrf()))
+            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+            .params(accountFormParams)
+            .with(csrf()))
             .andExpect(status().isFound());
-        assertThat(accountRepository.findAccountByEmail(emailUpperCase)).isEmpty();
-        assertThat(accountRepository.findAccountByEmail(emailLowerCase)).isNotEmpty();
+        assertThat(accountRepository.findAccountByEmail(account.getEmail().toLowerCase())).isNotEmpty();
+
+        final SignupAccountModel accountToUpdate = Instancio.of(accountGenerator.getCorrectAccountModel()).create();
+        accountToUpdate.setEmail(account.getEmail().toLowerCase());
+        accountFormParams = modelUtils.toFormParams(accountToUpdate);
+        mockMvc.perform(put("/account/update")
+            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+            .params(accountFormParams)
+            .with(user(account.getEmail()))
+            .with(csrf()))
+            .andExpect(status().isOk());
+        assertThat(accountRepository.findAccountByEmail(accountToUpdate.getEmail().toUpperCase())).isEmpty();
+        assertThat(accountRepository.findAccountByEmail(accountToUpdate.getEmail())).isNotEmpty();
     }
 }
