@@ -192,34 +192,13 @@ const generateModal = (state) => {
   };
 };
 
-const resetModalState = (state, errors = new Map()) => {
-  if(errors.size === 0) {
-    state.modalShown = false;
-    state.data.reporterComment = '';
-    state.data.textBeforeTypo = '';
-    state.data.textTypo = '';
-    state.data.textAfterTypo = '';
-  } else {
-    for (let label of errors.keys()) {
-      console.log(label);
-      if (label === 'reporterName') {
-        renderInvalidFeedback('hexlet-correction-modal_ReportTypo-name', errors.get(label));
-      } else {
-        renderInvalidFeedback('hexlet-correction-modal_ReportTypo-comment', errors.get(label));
-      }
-    }
-  }
+const resetModalState = (state) => {
+  state.modalShown = false;
+  state.data.reporterComment = '';
+  state.data.textBeforeTypo = '';
+  state.data.textTypo = '';
+  state.data.textAfterTypo = '';
 };
-
-const renderInvalidFeedback = (elementId, message) => {
-  const targetElement = document.getElementById(elementId);
-  const divElement = document.createElement('div');
-  divElement.className = 'invalid-feedback';
-  divElement.textContent = message;
-  divElement.style.display = 'block';
-
-  targetElement.insertAdjacentElement('afterend', divElement);
-}
 
 const renderModal = (elements, state) => {
   if (state.modalShown) {
@@ -237,16 +216,7 @@ const renderModal = (elements, state) => {
   elements.commentEl.value = '';
 };
 
-const removeInvalidElements = () => {
-  const invalidElements = document.querySelectorAll('.invalid-feedback');
-
-  invalidElements.forEach(element => {
-    element.remove();
-  });
-}
-
 const sendData = (elements, state) => async (event) => {
-  removeInvalidElements();
   event.preventDefault();
   const { value } = elements.inputName;
   state.data.reporterName = value === '' ? 'Anonymous' : value;
@@ -261,18 +231,19 @@ const sendData = (elements, state) => async (event) => {
       body: JSON.stringify(state.data),
     });
     let data = await response.json();
-    if (response.status === 201) {
+    if (isSuccessPost(response)) {
       resetModalState(state);
     } else {
       const errors = getErrors(data);
-      resetModalState(state, errors);
+      alert(errors);
     }
   } catch (error) {
-    const errorText =
-        'Error in plugin integration.\n' +
-        'Check the settings (https://fixit.hexlet.io/workspace/{workspaceID}/integration).';
-    renderInvalidFeedback('hexlet-correction-modal_ReportTypo-header', errorText);
-    throw new Error('Произошла ошибка:', error);
+        let errorText =
+            'Error in plugin integration.\n' +
+            'Check the settings (https://fixit.hexlet.io/workspace/{workspaceID}/integration).';
+        alert(errorText)
+        resetModalState(state);
+        throw new Error('Произошла ошибка:', error);
   }
 };
 
@@ -307,15 +278,17 @@ const isSelectionLeftToRight = (selection) => {
   return range.collapsed;
 }
 
+const isSuccessPost = (response) => {
+  return response.status === 201;
+}
+
 const getErrors = (data) => {
-  const errors = new Map();
-
-  for (const [key, message] of Object.entries(data.errors)) {
-    const [label, errorMessage] = message.split(": ");
-    errors.set(label, errorMessage);
-  }
-
-  return errors;
+  let text = 'There are the following errors in the submission form:\n';
+  Object.keys(data.errors).forEach(key => {
+    let message = data.errors[key];
+    text += `${message} \n`;
+  });
+  return text;
 }
 
 const handleTypoReporter = (options) => {
@@ -336,7 +309,7 @@ const handleTypoReporter = (options) => {
       reporterComment: '',
       textBeforeTypo: '',
       textTypo: '',
-      textAfterTypo: ''
+      textAfterTypo: '',
     },
   };
 
