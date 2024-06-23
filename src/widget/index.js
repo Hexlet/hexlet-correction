@@ -299,7 +299,7 @@ const handleTypoReporter = (options) => {
   const initialState = {
     modalShown: false,
     options: {
-      workSpaceUrl: 'https://hexlet-correction.herokuapp.com/api/workspaces',
+      workSpaceUrl: 'https://hexlet-correction-u17z.onrender.com/api/workspaces',
       userName: null,
       ...options,
     },
