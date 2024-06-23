@@ -35,7 +35,6 @@ import static io.hexlet.typoreporter.test.factory.EntitiesFactory.WORKSPACE_101_
 import static io.hexlet.typoreporter.test.factory.EntitiesFactory.WORKSPACE_101_TOKEN;
 import static java.time.Instant.now;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
@@ -114,8 +113,8 @@ class WorkspaceApiIT {
                 .header("Referer", ALLOWED_URL_101_URL)
                 .contentType(APPLICATION_JSON))
             .andExpect(status().isBadRequest())
-            .andExpect(content().contentType(APPLICATION_PROBLEM_JSON))
-            .andExpect(jsonPath("$.title").value("Bad Request"));
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(jsonPath("$.status").value("BAD_REQUEST"));
     }
 
     @Test
@@ -135,8 +134,8 @@ class WorkspaceApiIT {
                 .header("Referer", ALLOWED_URL_101_URL)
                 .contentType(APPLICATION_JSON))
             .andExpect(status().isBadRequest())
-            .andExpect(content().contentType(APPLICATION_PROBLEM_JSON))
-            .andExpect(jsonPath("$.title").value("Bad Request"));
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(jsonPath("$.status").value("BAD_REQUEST"));
     }
 
     @Test
@@ -157,8 +156,8 @@ class WorkspaceApiIT {
                 .header("Referer", ALLOWED_URL_101_URL)
                 .contentType(APPLICATION_JSON))
             .andExpect(status().isBadRequest())
-            .andExpect(content().contentType(APPLICATION_PROBLEM_JSON))
-            .andExpect(jsonPath("$.title").value("Bad Request"));
+            .andExpect(content().contentType(APPLICATION_JSON))
+            .andExpect(jsonPath("$.status").value("BAD_REQUEST"));
     }
 
     @ParameterizedTest

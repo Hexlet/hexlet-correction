@@ -222,7 +222,7 @@ const sendData = (elements, state) => async (event) => {
   state.data.reporterName = value === '' ? 'Anonymous' : value;
   state.data.reporterComment = elements.commentEl.value;
   try {
-    await fetch(`${state.options.workSpaceUrl}/api/workspaces/${state.options.workSpaceId}/typos`, {
+    let response = await fetch(`${state.options.workSpaceUrl}/api/workspaces/${state.options.workSpaceId}/typos`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -230,9 +230,20 @@ const sendData = (elements, state) => async (event) => {
       },
       body: JSON.stringify(state.data),
     });
-    resetModalState(state);
+    let data = await response.json();
+    if (isSuccessPost(response)) {
+      resetModalState(state);
+    } else {
+      const errors = getErrors(data);
+      alert(errors);
+    }
   } catch (error) {
-    throw new Error('Произошла ошибка:', error);
+        let errorText =
+            'Error in plugin integration.\n' +
+            'Check the settings (https://fixit.hexlet.io/workspace/{workspaceID}/integration).';
+        alert(errorText)
+        resetModalState(state);
+        throw new Error('Произошла ошибка:', error);
   }
 };
 
@@ -265,6 +276,19 @@ const isSelectionLeftToRight = (selection) => {
   range.setStart(selection.focusNode, selection.focusOffset);
   range.setEnd(selection.anchorNode, selection.anchorOffset);
   return range.collapsed;
+}
+
+const isSuccessPost = (response) => {
+  return response.status === 201;
+}
+
+const getErrors = (data) => {
+  let text = 'There are the following errors in the submission form:\n';
+  Object.keys(data.errors).forEach(key => {
+    let message = data.errors[key];
+    text += `${message} \n`;
+  });
+  return text;
 }
 
 const handleTypoReporter = (options) => {
