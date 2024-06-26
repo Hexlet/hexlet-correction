@@ -18,6 +18,7 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.containers.PostgreSQLContainer;
 
 import static com.github.database.rider.core.api.configuration.Orthography.LOWERCASE;
+import static io.hexlet.typoreporter.test.factory.EntitiesFactory.ACCOUNT_INCORRECT_EMAIL;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -122,5 +123,21 @@ class SignupControllerIT {
             .with(csrf())).andExpect((status().isFound()));
         assertThat(accountRepository.findAccountByEmail(email)).isEmpty();
 
+    }
+
+    @Test
+    void signupInAccountWithBadEmail() throws Exception {
+        model.setEmail(ACCOUNT_INCORRECT_EMAIL);
+        var response = mockMvc.perform(post("/signup")
+                .param("username", model.getUsername())
+                .param("email", model.getEmail())
+                .param("password", model.getPassword())
+                .param("confirmPassword", model.getConfirmPassword())
+                .param("firstName", model.getFirstName())
+                .param("lastName", model.getLastName())
+                .with(csrf()))
+            .andReturn();
+        var body = response.getResponse().getContentAsString();
+        assertThat(body).contains(String.format("The email &quot;%s&quot; is not valid", ACCOUNT_INCORRECT_EMAIL));
     }
 }

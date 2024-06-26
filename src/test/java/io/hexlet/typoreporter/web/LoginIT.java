@@ -52,7 +52,7 @@ class LoginIT {
     private static final String EMAIL_UPPER_CASE = "EMAIL_ADDRESS@GOOGLE.COM";
     private static final String EMAIL_LOWER_CASE = EMAIL_UPPER_CASE.toLowerCase();
 
-    private SignupAccountModel model = new SignupAccountModel(
+    private final SignupAccountModel model = new SignupAccountModel(
         "model_upper_case",
         EMAIL_UPPER_CASE,
         "password", "password",

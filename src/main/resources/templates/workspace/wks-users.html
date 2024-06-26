@@ -27,7 +27,7 @@
                                placeholder="Enter user email. For example: hexlet@gmail.com" th:field="*{email}"
                                th:classappend="${!#fields.hasErrors('email') && formModified}? 'is-valid'"
                                th:errorclass="is-invalid" required>
-                        <div class="alert alert-danger mt-1" th:if="${#fields.hasErrors('email')}">
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('email')}">
                             <p class="mb-0" th:each="err : ${#fields.errors('email')}" th:text="${err}"></p>
                         </div>
                         <small id="emailHelp" class="form-text text-muted"></small>

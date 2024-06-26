@@ -13,7 +13,7 @@
                            th:classappend="${!#fields.hasErrors('username') && formModified}? 'is-valid'"
                            th:errorclass="is-invalid">
                     <label for="inputUsername" th:text="#{username}"></label>
-                    <div class="alert alert-danger" th:if="${#fields.hasErrors('username')}">
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('username')}">
                         <p th:each="err : ${#fields.errors('username')}" th:text="${err}"></p>
                     </div>
                 </div>
@@ -24,7 +24,7 @@
                            th:classappend="${!#fields.hasErrors('email') && formModified}? 'is-valid'"
                            th:errorclass="is-invalid">
                     <label for="inputEmail" th:text="#{email}"></label>
-                    <div class="alert alert-danger" th:if="${#fields.hasErrors('email')}">
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('email')}">
                         <p th:each="err : ${#fields.errors('email')}" th:text="${err}"></p>
                     </div>
                 </div>
@@ -35,7 +35,7 @@
                            th:classappend="${!#fields.hasErrors('firstName') && formModified}? 'is-valid'"
                            th:errorclass="is-invalid">
                     <label for="inputFirstName" th:text="#{firstname}"></label>
-                    <div class="alert alert-danger" th:if="${#fields.hasErrors('firstName')}">
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('firstName')}">
                         <p th:each="err : ${#fields.errors('firstName')}" th:text="${err}"></p>
                     </div>
                 </div>
@@ -46,7 +46,7 @@
                            th:classappend="${!#fields.hasErrors('lastName') && formModified}? 'is-valid'"
                            th:errorclass="is-invalid">
                     <label for="inputLastName" th:text="#{lastname}"></label>
-                    <div class="alert alert-danger" th:if="${#fields.hasErrors('lastName')}">
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('lastName')}">
                         <p th:each="err : ${#fields.errors('lastName')}" th:text="${err}"></p>
                     </div>
                 </div>
@@ -55,7 +55,7 @@
                     <input id="inputPassword" placeholder="p" type="password" th:field="*{password}"
                            class="form-control" th:errorclass="is-invalid">
                     <label for="inputPassword" th:text="#{password}"></label>
-                    <div class="alert alert-danger" th:if="${#fields.hasErrors('password')}">
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('password')}">
                         <p th:each="err : ${#fields.errors('password')}" th:text="${err}"></p>
                     </div>
                 </div>
@@ -64,7 +64,7 @@
                     <input id="inputConfirmPassword" placeholder="p" type="password" th:field="*{confirmPassword}"
                            class="form-control" th:errorclass="is-invalid">
                     <label for="inputConfirmPassword" th:text="#{password.confirm}"></label>
-                    <div class="alert alert-danger" th:if="${#fields.hasErrors('confirmPassword')}">
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('confirmPassword')}">
                         <p th:each="err : ${#fields.errors('confirmPassword')}" th:text="${err}"></p>
                     </div>
                 </div>

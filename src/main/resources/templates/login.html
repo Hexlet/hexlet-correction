@@ -6,7 +6,7 @@
 <main class="container">
 <div class="row">
     <div class="col">
-        <div class="alert alert-danger" role="alert" th:if="${param.error}" th:text="#{alert.bad-credential}"></div>
+        <div class="invalid-feedback" role="alert" th:if="${param.error}" th:text="#{alert.bad-credential}"></div>
         <div class="alert alert-warning" role="alert" th:if="${param.logout}" th:text="#{alert.logout}"></div>
         <form method="post" th:action="@{/login}">
             <div class="form-floating mb-3">

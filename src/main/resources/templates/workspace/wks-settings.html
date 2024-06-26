@@ -49,7 +49,7 @@
                             </div>
                             <div class="row mt-2">
                                 <div class="col-12">
-                                    <ul class="alert alert-danger ps-5" th:if="${#fields.hasErrors('url')}">
+                                    <ul class="invalid-feedback" th:if="${#fields.hasErrors('url')}">
                                         <li th:each="err : ${#fields.errors('url')}" th:text="${err}"></li>
                                     </ul>
                                 </div>
