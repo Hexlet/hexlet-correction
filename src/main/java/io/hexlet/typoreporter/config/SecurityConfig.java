@@ -1,13 +1,16 @@
 package io.hexlet.typoreporter.config;
 
+import io.hexlet.typoreporter.handler.OAuth2SuccessHandler;
 import io.hexlet.typoreporter.handler.exception.ForbiddenDomainException;
 import io.hexlet.typoreporter.handler.exception.WorkspaceNotFoundException;
 import io.hexlet.typoreporter.security.service.AccountDetailService;
+import io.hexlet.typoreporter.security.service.CustomOAuth2UserService;
 import io.hexlet.typoreporter.security.service.SecuredWorkspaceService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,6 +23,7 @@ import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.context.DelegatingSecurityContextRepository;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.security.web.context.RequestAttributeSecurityContextRepository;
@@ -37,6 +41,8 @@ import static org.springframework.http.HttpMethod.POST;
 @Configuration
 @EnableMethodSecurity
 public class SecurityConfig {
+    @Autowired
+    private CustomOAuth2UserService oAuth2UserService;
 
     @Bean
     public PasswordEncoder bCryptPasswordEncoder() {
@@ -77,8 +83,9 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http,
-                                   SecurityContextRepository securityContextRepository,
-                                   DynamicCorsConfigurationSource dynamicCorsConfigurationSource) throws Exception {
+                                           SecurityContextRepository securityContextRepository,
+                                           DynamicCorsConfigurationSource dynamicCorsConfigurationSource)
+        throws Exception {
         http.httpBasic();
         http.cors();
         http.exceptionHandling().accessDeniedHandler(accessDeniedHandler());
@@ -86,6 +93,7 @@ public class SecurityConfig {
         http.authorizeHttpRequests(authz -> authz
                 .requestMatchers(GET, "/webjars/**", "/widget/**", "/fragments/**", "/img/**").permitAll()
                 .requestMatchers("/", "/login", "/signup", "/error", "/about").permitAll()
+                .requestMatchers("/oauth/**").permitAll()
                 .anyRequest().authenticated()
             )
             .formLogin(login -> login
@@ -93,6 +101,14 @@ public class SecurityConfig {
                 .usernameParameter("email")
                 .defaultSuccessUrl("/workspaces")
                 .permitAll()
+            )
+            .oauth2Login(config -> config
+                .loginPage("/login")
+                .userInfoEndpoint()
+                .userService(oAuth2UserService)
+                .and()
+                .successHandler(getOAuth2SuccessHandler())
+                .defaultSuccessUrl("/workspaces")
             )
             .csrf(csrf -> csrf
                 .ignoringRequestMatchers(
@@ -106,6 +122,11 @@ public class SecurityConfig {
 
         http.headers().frameOptions().disable();
         return http.build();
+    }
+
+    @Bean
+    public AuthenticationSuccessHandler getOAuth2SuccessHandler() {
+        return new OAuth2SuccessHandler();
     }
 
     @Bean
@@ -136,7 +157,7 @@ public class SecurityConfig {
                     super.doFilterInternal(request, response, filterChain);
                 } catch (ForbiddenDomainException e) {
                     response.sendError(HttpServletResponse.SC_FORBIDDEN, e.getMessage());
-                }  catch (WorkspaceNotFoundException e) {
+                } catch (WorkspaceNotFoundException e) {
                     response.sendError(HttpServletResponse.SC_NOT_FOUND, e.getMessage());
                 }
             }
