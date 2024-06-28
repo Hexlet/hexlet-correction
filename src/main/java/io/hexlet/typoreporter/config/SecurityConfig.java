@@ -1,5 +1,6 @@
 package io.hexlet.typoreporter.config;
 
+import io.hexlet.typoreporter.config.oauth2.OAuth2ConfigurationProperties;
 import io.hexlet.typoreporter.handler.OAuth2SuccessHandler;
 import io.hexlet.typoreporter.handler.exception.ForbiddenDomainException;
 import io.hexlet.typoreporter.handler.exception.WorkspaceNotFoundException;
@@ -18,9 +19,13 @@ import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.oauth2.client.CommonOAuth2Provider;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.registration.ClientRegistration;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -43,6 +48,8 @@ import static org.springframework.http.HttpMethod.POST;
 public class SecurityConfig {
     @Autowired
     private CustomOAuth2UserService oAuth2UserService;
+    @Autowired
+    private OAuth2ConfigurationProperties oAuth2ConfigurationProperties;
 
     @Bean
     public PasswordEncoder bCryptPasswordEncoder() {
@@ -105,9 +112,11 @@ public class SecurityConfig {
             .oauth2Login(config -> config
                 .loginPage("/login")
                 .userInfoEndpoint()
-                .userService(oAuth2UserService)
-                .and()
+                    .userService(oAuth2UserService)
+                    .and()
+                .clientRegistrationRepository(getClientRegistrationRepository())
                 .successHandler(getOAuth2SuccessHandler())
+                .defaultSuccessUrl("/workspaces")
             )
             .csrf(csrf -> csrf
                 .ignoringRequestMatchers(
@@ -123,15 +132,18 @@ public class SecurityConfig {
         return http.build();
     }
 
-    /*@Bean
+
+    @Bean
     public ClientRegistrationRepository getClientRegistrationRepository() {
-        return new ClientRegistrationRepository() {
-            @Override
-            public ClientRegistration findByRegistrationId(String registrationId) {
-                return null;
-            }
-        };
-    }*/
+        return new InMemoryClientRegistrationRepository(githubClientRegistration());
+    }
+    private ClientRegistration githubClientRegistration() {
+        return CommonOAuth2Provider.GITHUB.getBuilder("github")
+            .clientId(oAuth2ConfigurationProperties.getClientId())
+            .clientSecret(oAuth2ConfigurationProperties.getClientSecret())
+            .scope(oAuth2ConfigurationProperties.getScope())
+            .build();
+    }
 
     @Bean
     public AuthenticationSuccessHandler getOAuth2SuccessHandler() {
@@ -168,6 +180,10 @@ public class SecurityConfig {
                     response.sendError(HttpServletResponse.SC_FORBIDDEN, e.getMessage());
                 } catch (WorkspaceNotFoundException e) {
                     response.sendError(HttpServletResponse.SC_NOT_FOUND, e.getMessage());
+                } catch (IllegalArgumentException e) {
+                    if (e.getMessage().contains("principalNull")) {
+                        response.sendRedirect("/login");
+                    }
                 }
             }
         };

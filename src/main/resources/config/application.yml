@@ -13,15 +13,13 @@ spring:
         enabled: true
     problemdetails:
       enabled: true
-
   security:
     oauth2:
       client:
         registration:
           github:
-            client-id: ${GITHUB_CLIENT_ID}
-            client-secret: ${GITHUB_CLIENT_SECRET}
+            clientId: Ov23liAF8M9hkDjqebdW
+            clientSecret: c7b69f3056cb406cca53ea412b0cd06353749731
             scope:
-              - user
-              - email
-              - profile
+              - user:email
+              - read:user
