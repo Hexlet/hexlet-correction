@@ -112,11 +112,10 @@ public class SecurityConfig {
             .oauth2Login(config -> config
                 .loginPage("/login")
                 .userInfoEndpoint()
-                    .userService(oAuth2UserService)
-                    .and()
+                .userService(oAuth2UserService)
+                .and()
                 .clientRegistrationRepository(getClientRegistrationRepository())
                 .successHandler(getOAuth2SuccessHandler())
-                .defaultSuccessUrl("/workspaces")
             )
             .csrf(csrf -> csrf
                 .ignoringRequestMatchers(
