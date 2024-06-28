@@ -151,7 +151,7 @@ public class AccountService implements SignupAccountUseCase, QueryAccount {
             account.setUsername(user.getLogin());
             account.setPassword(user.getPassword());
             account.setFirstName(user.getFirstName());
-            account.setLastName(user.getFirstName());
+            account.setLastName(user.getLastName());
             accountRepository.save(account);
         }
     }

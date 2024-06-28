@@ -108,7 +108,6 @@ public class SecurityConfig {
                 .userService(oAuth2UserService)
                 .and()
                 .successHandler(getOAuth2SuccessHandler())
-                .defaultSuccessUrl("/workspaces")
             )
             .csrf(csrf -> csrf
                 .ignoringRequestMatchers(
