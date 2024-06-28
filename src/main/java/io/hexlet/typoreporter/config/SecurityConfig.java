@@ -21,8 +21,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.client.registration.ClientRegistration;
-import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -125,7 +123,7 @@ public class SecurityConfig {
         return http.build();
     }
 
-    @Bean
+    /*@Bean
     public ClientRegistrationRepository getClientRegistrationRepository() {
         return new ClientRegistrationRepository() {
             @Override
@@ -133,7 +131,7 @@ public class SecurityConfig {
                 return null;
             }
         };
-    }
+    }*/
 
     @Bean
     public AuthenticationSuccessHandler getOAuth2SuccessHandler() {
