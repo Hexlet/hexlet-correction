@@ -13,6 +13,6 @@ import lombok.Setter;
 public class WorkspaceUserModel {
 
     @Email(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
-        message = "{validation.alert.wrong-email}")
+        message = "The email \"${validatedValue}\" is not valid")
     private String email;
 }

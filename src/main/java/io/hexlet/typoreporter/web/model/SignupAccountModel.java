@@ -27,8 +27,7 @@ public class SignupAccountModel {
     private String username;
 
     @Email(regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$",
-        //message = "The email \"${validatedValue}\" is not valid")
-        message = "{validation.alert.wrong-email}")
+        message = "The email \"${validatedValue}\" is not valid")
     private String email;
 
     @AccountPassword
