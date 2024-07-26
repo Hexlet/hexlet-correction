@@ -103,7 +103,7 @@
                                 <tbody>
                                 <th:block th:each="userInfo : ${userPage.content}" th:object="${userInfo}">
                                     <!-- Workspace user table row -->
-                                    <tr aria-expanded="false" class="accordion collapsed" data-bs-toggle="collapse">
+                                    <tr>
                                         <td th:text="*{id}"></td>
                                         <td th:text="*{firstName}"></td>
                                         <td th:text="*{lastName}"></td>
@@ -121,24 +121,8 @@
                                         </td>
                                     </tr>
                                     <!-- Workspace user table row collapsed part -->
-                                    <tr>
-                                        <td class="p-0" colspan="7">
-                                            <div class="accordion-collapse collapse" th:id="|collapseUserRowId_*{id}|">
-                                                <div class="p-4">
-                                                    <div class="row mb-2">
-                                                        <!-- Workspace user table row delete buttons -->
-                                                        <div class="col-1">
-                                                            <form th:action="@{'/users/' + *{id}(wksId=${wksId})}"
-                                                                  th:method="delete">
-                                                                <button class="btn btn-danger" type="submit">Delete
-                                                                </button>
-                                                            </form>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
+                                    <!-- Deleted -->
+                                    <!-- TODO add possibility for admin to leave workspace (i.e. delete himself from wks), like in posthog service -->
                                 </th:block>
                                 </tbody>
                             </table>
