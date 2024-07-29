@@ -141,15 +141,13 @@ public class AccountService implements SignupAccountUseCase, QueryAccount {
     }
     @Transactional
     public void processOAuthPostLogin(CustomOAuth2User user) {
-        //TODO: убрать после тестирования
-        //accountRepository.deleteAll();
         var existUser = accountRepository.existsByEmail(user.getEmail());
         if (!existUser) {
             Account account = new Account();
             account.setEmail(user.getEmail());
             account.setAuthProvider(AuthProvider.GITHUB);
             account.setUsername(user.getLogin());
-            account.setPassword(user.getPassword());
+            account.setPassword(passwordEncoder.encode(user.getPassword()));
             account.setFirstName(user.getFirstName());
             account.setLastName(user.getLastName());
             accountRepository.save(account);

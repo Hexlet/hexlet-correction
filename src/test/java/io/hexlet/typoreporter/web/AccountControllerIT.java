@@ -20,6 +20,7 @@ import static com.github.database.rider.core.api.configuration.Orthography.LOWER
 import static io.hexlet.typoreporter.test.Constraints.POSTGRES_IMAGE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
@@ -74,6 +75,7 @@ public class AccountControllerIT {
             .param("confirmPassword", password)
             .param("firstName", userName)
             .param("lastName", userName)
+            .with(user(correctEmailDomain))
             .with(csrf()));
         assertThat(accountRepository.findAccountByEmail(wrongEmailDomain)).isEmpty();
         assertThat(accountRepository.findAccountByEmail(correctEmailDomain).orElseThrow().getEmail())
@@ -103,6 +105,7 @@ public class AccountControllerIT {
             .param("lastName", username)
             .param("username", username)
             .param("email", emailUpperCase)
+            .with(user(emailLowerCase))
             .with(csrf()));
         assertThat(accountRepository.findAccountByEmail(emailUpperCase)).isEmpty();
         assertThat(accountRepository.findAccountByEmail(emailLowerCase)).isNotEmpty();

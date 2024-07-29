@@ -22,7 +22,8 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
                                         HttpServletResponse response,
                                         Authentication authentication) throws IOException, ServletException {
         CustomOAuth2User oAuth2User = (CustomOAuth2User) authentication.getPrincipal();
-        if (oAuth2User.getEmail() == null) {
+        if (oAuth2User.getEmail() == null
+            || (oAuth2User.getFirstName() == null && oAuth2User.getLastName() == null)) {
             //TODO: добавить ошибку на фронт, если email приватный
             response.sendRedirect("/login");
         }

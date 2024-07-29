@@ -403,7 +403,7 @@ class WorkspaceControllerIT {
                     .with(csrf()))
             .andReturn();
         var body = response.getResponse().getContentAsString();
-        assertThat(body).contains("The email %s is not valid", ACCOUNT_INCORRECT_EMAIL);
+        assertThat(body).contains(String.format("The email &quot;%s&quot; is not valid", ACCOUNT_INCORRECT_EMAIL));
     }
 }
 
