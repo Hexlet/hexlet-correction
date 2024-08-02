@@ -1,7 +1,5 @@
-console.log("d495bd24a1e9db08f68b63d5fbc238c4e143931c");
-
 const generateModalStyles = () => {
-  const modalStyleEl = document.createElement("style");
+  const modalStyleEl = document.createElement('style');
   modalStyleEl.textContent = `
   #hexlet-correction-modal_modal {
     position: fixed;
@@ -116,81 +114,72 @@ const generateModalStyles = () => {
 
 const handleBodyScroll = (modalIsOpen) => {
   if (modalIsOpen) {
-    document.body.style.overflow = "hidden";
+    document.body.style.overflow = 'hidden';
   } else {
-    document.body.style.overflow = "auto";
+    document.body.style.overflow = 'auto';
   }
 };
 
 const generateModal = (state) => {
   generateModalStyles();
 
-  const modalEl = document.createElement("div");
-  modalEl.id = "hexlet-correction-modal_modal";
-  modalEl.style.display = state.modalShown ? "block" : "none";
+  const modalEl = document.createElement('div');
+  modalEl.id = 'hexlet-correction-modal_modal';
+  modalEl.style.display = state.modalShown ? 'block' : 'none';
 
-  const divContent = document.createElement("div");
-  divContent.id = "hexlet-correction-modal_modal-content";
+  const divContent = document.createElement('div');
+  divContent.id = 'hexlet-correction-modal_modal-content';
   modalEl.append(divContent);
 
-  const divTypoReporter = document.createElement("div");
-  divTypoReporter.id = "hexlet-correction-modal_ReportTypo";
+  const divTypoReporter = document.createElement('div');
+  divTypoReporter.id = 'hexlet-correction-modal_ReportTypo';
   divContent.append(divTypoReporter);
 
-  const divHeader = document.createElement("div");
-  divHeader.id = "hexlet-correction-modal_ReportTypo-header";
-  divHeader.textContent = "Сообщите об ошибке на странице";
+  const divHeader = document.createElement('div');
+  divHeader.id = 'hexlet-correction-modal_ReportTypo-header';
+  divHeader.textContent = 'Сообщите об ошибке на странице';
 
-  const divFirstLabel = document.createElement("div");
-  divFirstLabel.classList.add("hexlet-correction-modal_ReportTypo-label");
-  divFirstLabel.textContent = "Ошибка содержится в следующем тексте:";
+  const divFirstLabel = document.createElement('div');
+  divFirstLabel.classList.add('hexlet-correction-modal_ReportTypo-label');
+  divFirstLabel.textContent = 'Ошибка содержится в следующем тексте:';
 
-  const selectedTextEl = document.createElement("div");
-  selectedTextEl.id = "hexlet-correction-modal_ReportTypo-message";
+  const selectedTextEl = document.createElement('div');
+  selectedTextEl.id = 'hexlet-correction-modal_ReportTypo-message';
 
-  const inputName = document.createElement("input");
-  inputName.type = "text";
-  inputName.placeholder = "Введите свое имя или email";
-  inputName.id = "hexlet-correction-modal_ReportTypo-name";
-  inputName.value =
-    state.options.userName === null ? "" : state.options.userName;
+  const inputName = document.createElement('input');
+  inputName.type = 'text';
+  inputName.placeholder = 'Введите свое имя или email';
+  inputName.id = 'hexlet-correction-modal_ReportTypo-name';
+  inputName.value = state.options.userName === null ? '' : state.options.userName;
 
-  const commentEl = document.createElement("textarea");
-  commentEl.id = "hexlet-correction-modal_ReportTypo-comment";
-  commentEl.placeholder = "Опишите ошибку";
+  const commentEl = document.createElement('textarea');
+  commentEl.id = 'hexlet-correction-modal_ReportTypo-comment';
+  commentEl.placeholder = 'Опишите ошибку';
 
-  const divSecondLabel = document.createElement("div");
-  divSecondLabel.classList.add("hexlet-correction-modal_ReportTypo-label");
-  const strong = document.createElement("strong");
-  strong.id = "hexlet-correction-modal_question";
-  strong.textContent = "Отправить сообщение об ошибке редактору сайта?";
+  const divSecondLabel = document.createElement('div');
+  divSecondLabel.classList.add('hexlet-correction-modal_ReportTypo-label');
+  const strong = document.createElement('strong');
+  strong.id = 'hexlet-correction-modal_question';
+  strong.textContent = 'Отправить сообщение об ошибке редактору сайта?';
   divSecondLabel.append(strong);
 
-  const divButtons = document.createElement("div");
-  divButtons.style.textAlign = "right";
+  const divButtons = document.createElement('div');
+  divButtons.style.textAlign = 'right';
 
-  const submitBtn = document.createElement("button");
-  submitBtn.type = "button";
-  submitBtn.id = "hexlet-correction-modal_ReportTypo-submit";
-  submitBtn.textContent = "Отправить";
+  const submitBtn = document.createElement('button');
+  submitBtn.type = 'button';
+  submitBtn.id = 'hexlet-correction-modal_ReportTypo-submit';
+  submitBtn.textContent = 'Отправить';
 
-  const cancelBtn = document.createElement("button");
-  cancelBtn.type = "button";
-  cancelBtn.id = "hexlet-correction-modal_ReportTypo-cancel";
-  cancelBtn.textContent = "Отмена";
+  const cancelBtn = document.createElement('button');
+  cancelBtn.type = 'button';
+  cancelBtn.id = 'hexlet-correction-modal_ReportTypo-cancel';
+  cancelBtn.textContent = 'Отмена';
 
   divButtons.append(submitBtn, cancelBtn);
-  divTypoReporter.append(
-    divHeader,
-    divFirstLabel,
-    selectedTextEl,
-    inputName,
-    commentEl,
-    divSecondLabel,
-    divButtons
-  );
+  divTypoReporter.append(divHeader, divFirstLabel, selectedTextEl, inputName, commentEl, divSecondLabel, divButtons);
 
-  const body = document.querySelector("body");
+  const body = document.querySelector('body');
   body.append(modalEl);
 
   return {
@@ -205,57 +194,50 @@ const generateModal = (state) => {
 
 const resetModalState = (state) => {
   state.modalShown = false;
-  state.data.reporterComment = "";
-  state.data.textBeforeTypo = "";
-  state.data.textTypo = "";
-  state.data.textAfterTypo = "";
+  state.data.reporterComment = '';
+  state.data.textBeforeTypo = '';
+  state.data.textTypo = '';
+  state.data.textAfterTypo = '';
 };
 
 const renderModal = (elements, state) => {
   if (state.modalShown) {
-    elements.modalEl.style.display = "block";
+    elements.modalEl.style.display = 'block';
     const { textBeforeTypo, textTypo, textAfterTypo } = state.data;
     elements.selectedTextEl.innerHTML = `${textBeforeTypo}<span id="hexlet-correction-modal_ReportTypo-highlight">${textTypo}</span>${textAfterTypo}`;
-    elements.inputName.value =
-      state.data.reporterName !== ""
-        ? state.data.reporterName
-        : state.options.userName;
+    elements.inputName.value = state.data.reporterName !== '' ? state.data.reporterName : state.options.userName;
     elements.commentEl.value = state.data.reporterComment;
     elements.commentEl.focus();
     return;
   }
 
-  elements.modalEl.style.display = "none";
-  elements.selectedTextEl.innerHTML = "";
-  elements.commentEl.value = "";
+  elements.modalEl.style.display = 'none';
+  elements.selectedTextEl.innerHTML = '';
+  elements.commentEl.value = '';
 };
 
 const sendData = (elements, state) => async (event) => {
   event.preventDefault();
   const { value } = elements.inputName;
-  state.data.reporterName = value === "" ? "Anonymous" : value;
+  state.data.reporterName = value === '' ? 'Anonymous' : value;
   state.data.reporterComment = elements.commentEl.value;
   try {
-    await fetch(
-      `${state.options.workSpaceUrl}/api/workspaces/${state.options.workSpaceId}/typos`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Basic ${state.options.authorizationToken}`,
-        },
-        body: JSON.stringify(state.data),
-      }
-    );
+    await fetch(`${state.options.workSpaceUrl}/api/workspaces/${state.options.workSpaceId}/typos`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Basic ${state.options.authorizationToken}`,
+      },
+      body: JSON.stringify(state.data),
+    });
     resetModalState(state);
   } catch (error) {
-    throw new Error("Произошла ошибка:", error);
+    throw new Error('Произошла ошибка:', error);
   }
 };
 
 const view = (elements, state) => {
-  const watch = (state, callback) =>
-    new Proxy(state, {
+  const watch = (state, callback) => new Proxy(state, {
       set(target, prop, value) {
         const prevValue = target[prop];
         const result = Reflect.set(target, prop, value);
@@ -266,7 +248,7 @@ const view = (elements, state) => {
 
   const watchedState = watch(state, (path) => {
     switch (path) {
-      case "modalShown":
+      case 'modalShown':
         renderModal(elements, state);
         handleBodyScroll(state.modalShown);
         break;
@@ -286,40 +268,37 @@ const isSelectionLeftToRight = (selection) => {
 };
 
 const handleTypoReporter = (options) => {
+  console.log('a6d050ea952b3b2f5b9498f673426bb70b2241d4');
   if (!options || (!options.authorizationToken && !options.workSpaceId)) {
-    throw new Error(
-      "Для работы модуля требуется указать workSpaceId и authorizationToken"
-    );
+    throw new Error('Для работы модуля требуется указать workSpaceId и authorizationToken');
   }
 
   const initialState = {
     modalShown: false,
     options: {
-      workSpaceUrl: "https://hexlet-correction.herokuapp.com/api/workspaces",
+      workSpaceUrl: 'https://hexlet-correction.herokuapp.com/api/workspaces',
       userName: null,
       ...options,
     },
     data: {
-      pageUrl: "",
-      reporterName: "",
-      reporterComment: "",
-      textBeforeTypo: "",
-      textTypo: "",
-      textAfterTypo: "",
+      pageUrl: '',
+      reporterName: '',
+      reporterComment: '',
+      textBeforeTypo: '',
+      textTypo: '',
+      textAfterTypo: '',
     },
   };
 
   const elements = generateModal(initialState);
   const state = view(elements, initialState);
 
-  console.log("Widget is initialized");
-
-  document.addEventListener("keydown", (event) => {
+  document.addEventListener('keydown', (event) => {
     const selection = window.getSelection();
     if (selection.isCollapsed || state.modalShown) {
       return;
     }
-    if (event.ctrlKey && event.key === "Enter") {
+    if (event.ctrlKey && event.key === 'Enter') {
       state.data.pageUrl = window.location.href;
 
       const { anchorNode } = selection;
@@ -332,42 +311,30 @@ const handleTypoReporter = (options) => {
       if (isSelectionLeftToRight(selection)) {
         const start = Math.max(anchorOffset - maxLength, 0);
         const end = Math.min(focusOffset + maxLength, anchorNode.length);
-        state.data.textBeforeTypo = anchorNode.textContent.substring(
-          start,
-          anchorOffset
-        );
-        state.data.textAfterTypo = anchorNode.substringData(
-          focusOffset,
-          end - focusOffset
-        );
+        state.data.textBeforeTypo = anchorNode.textContent.substring(start, anchorOffset);
+        state.data.textAfterTypo = anchorNode.substringData(focusOffset, end - focusOffset);
       } else {
         const start = Math.max(focusOffset - maxLength, 0);
         const end = Math.min(anchorOffset + maxLength, anchorNode.length);
-        state.data.textBeforeTypo = anchorNode.textContent.substring(
-          start,
-          focusOffset
-        );
-        state.data.textAfterTypo = anchorNode.substringData(
-          anchorOffset,
-          end - anchorOffset
-        );
+        state.data.textBeforeTypo = anchorNode.textContent.substring(start, focusOffset);
+        state.data.textAfterTypo = anchorNode.substringData(anchorOffset, end - anchorOffset);
       }
 
       state.modalShown = true;
     }
   });
 
-  elements.submitBtn.addEventListener("click", sendData(elements, state));
-  elements.cancelBtn.addEventListener("click", () => resetModalState(state));
+  elements.submitBtn.addEventListener('click', sendData(elements, state));
+  elements.cancelBtn.addEventListener('click', () => resetModalState(state));
 
-  elements.modalEl.addEventListener("click", (event) => {
+  elements.modalEl.addEventListener('click', (event) => {
     if (event.target === elements.modalEl) {
       resetModalState(state);
     }
   });
 
-  elements.modalEl.addEventListener("keydown", (event) => {
-    if (state.modalShown && event.key === "Escape") {
+  elements.modalEl.addEventListener('keydown', (event) => {
+    if (state.modalShown && event.key === 'Escape') {
       resetModalState(state);
     }
   });
