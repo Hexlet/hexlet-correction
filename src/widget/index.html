@@ -217,10 +217,16 @@
         </footer>
     </div>
     <script src="../assets/dist/js/bootstrap.bundle.min.js"></script>                
-    <script src="https://cdn.jsdelivr.net/gh/hexlet/hexlet-correction@main/src/widget/index.js"></script>
-    <script>
-        handleTypoReporter({ authorizationToken: 'MjQyOmVlYTZkMWE1LTNkMGQtNDg1Yi04OGMwLWVkOGU1YTRlOGZjMA==',
-        workSpaceUrl: 'https://hexlet-correction.herokuapp.com', workSpaceId: '242'})
-    </script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/gh/hexlet/hexlet-correction@main/src/widget/index.js?v=' + new Date().getTime();
+    document.body.appendChild(script);
+});
+</script>;
+<script>
+    handleTypoReporter({ authorizationToken: 'MjQyOmVlYTZkMWE1LTNkMGQtNDg1Yi04OGMwLWVkOGU1YTRlOGZjMA==',
+    workSpaceUrl: 'https://fixit.hexlet.io', workSpaceId: '242'})
+</script>
 </body>
 </html>
