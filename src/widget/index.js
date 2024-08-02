@@ -238,13 +238,13 @@ const sendData = (elements, state) => async (event) => {
 
 const view = (elements, state) => {
   const watch = (state, callback) => new Proxy(state, {
-    set(target, prop, value) {
-      const prevValue = target[prop];
-      const result = Reflect.set(target, prop, value);
-      callback(prop, value, prevValue);
-      return result;
-    },
-  });
+      set(target, prop, value) {
+        const prevValue = target[prop];
+        const result = Reflect.set(target, prop, value);
+        callback(prop, value, prevValue);
+        return result;
+      },
+    });
 
   const watchedState = watch(state, (path) => {
     switch (path) {
@@ -258,17 +258,18 @@ const view = (elements, state) => {
   });
 
   return watchedState;
-}
+};
 
 const isSelectionLeftToRight = (selection) => {
   const range = document.createRange();
   range.setStart(selection.focusNode, selection.focusOffset);
   range.setEnd(selection.anchorNode, selection.anchorOffset);
   return range.collapsed;
-}
+};
 
 const handleTypoReporter = (options) => {
-  if (!options || !options.authorizationToken && !options.workSpaceId) {
+  console.log('a6d050ea952b3b2f5b9498f673426bb70b2241d4');
+  if (!options || (!options.authorizationToken && !options.workSpaceId)) {
     throw new Error('Для работы модуля требуется указать workSpaceId и authorizationToken');
   }
 
@@ -307,13 +308,13 @@ const handleTypoReporter = (options) => {
       const maxLength = 50;
       state.data.textTypo = selection.toString();
 
-      if(isSelectionLeftToRight(selection)) {
+      if (isSelectionLeftToRight(selection)) {
         const start = Math.max(anchorOffset - maxLength, 0);
         const end = Math.min(focusOffset + maxLength, anchorNode.length);
         state.data.textBeforeTypo = anchorNode.textContent.substring(start, anchorOffset);
         state.data.textAfterTypo = anchorNode.substringData(focusOffset, end - focusOffset);
       } else {
-        const start = Math.max(focusOffset  - maxLength, 0);
+        const start = Math.max(focusOffset - maxLength, 0);
         const end = Math.min(anchorOffset + maxLength, anchorNode.length);
         state.data.textBeforeTypo = anchorNode.textContent.substring(start, focusOffset);
         state.data.textAfterTypo = anchorNode.substringData(anchorOffset, end - anchorOffset);
