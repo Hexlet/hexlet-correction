@@ -268,7 +268,7 @@ const isSelectionLeftToRight = (selection) => {
 };
 
 const handleTypoReporter = (options) => {
-  console.log('a6d050ea952b3b2f5b9498f673426bb70b2241d4');
+  console.log('Script loaded:', new Date().getTime());
   if (!options || (!options.authorizationToken && !options.workSpaceId)) {
     throw new Error('Для работы модуля требуется указать workSpaceId и authorizationToken');
   }
