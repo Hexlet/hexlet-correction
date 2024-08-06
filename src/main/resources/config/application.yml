@@ -18,8 +18,8 @@ spring:
       client:
         registration:
           github:
-            clientId: #add clientId of your OAuth App
-            clientSecret: #add clientSecret of your OAuth App
+            clientId: Ov23liMZqO6eA0FyjeM4
+            clientSecret: 3948c7b7ac39d2ee6611e611259c9422cdf00f96
             scope:
               - user:email
               - read:user

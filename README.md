@@ -25,21 +25,13 @@ To build the final jar:
 make build
 ```
 
-### How to add a OAuth2 app for local development
-Before starting local development, you must create an OAuth application and add clientID and clientSecret to application.yaml: 
-
-```bash
-clientId: #add clientId of your OAuth App
-clientSecret: #add clientSecret of your OAuth App
-```
-
-See more at https://spring.io/guides/tutorials/spring-boot-oauth2#github-register-application
-
 ### How to add a OAuth2 app to external server
 You need to add environment variables:
 ```bash
 GITHUB_CLIENT_ID
 GITHUB_CLIENT_SECRET
+
+See more at https://spring.io/guides/tutorials/spring-boot-oauth2#github-register-application
 ```
 
 ### Development with vagrant
