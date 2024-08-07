@@ -4,13 +4,8 @@ import io.hexlet.typoreporter.domain.account.constraint.AccountPassword;
 import io.hexlet.typoreporter.domain.account.constraint.AccountUsername;
 import io.hexlet.typoreporter.service.dto.FieldMatchConsiderCase;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 @Getter
 @Setter
@@ -38,11 +33,9 @@ public class SignupAccountModel {
     @ToString.Exclude
     private String confirmPassword;
 
-    @NotBlank
     @Size(min = 1, max = 50)
     private String firstName;
 
-    @NotBlank
     @Size(min = 1, max = 50)
     private String lastName;
 }
