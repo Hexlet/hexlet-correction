@@ -48,6 +48,7 @@ dependencies {
     implementation("org.mapstruct:mapstruct:1.5.3.Final")
     // Annotation processors
     annotationProcessor("org.mapstruct:mapstruct-processor:1.5.3.Final")
+    implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
     // Testing
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
