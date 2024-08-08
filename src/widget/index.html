@@ -216,17 +216,26 @@
             Created by the Bootstrap team · © 2023
         </footer>
     </div>
-    <script src="../assets/dist/js/bootstrap.bundle.min.js"></script>                
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    const script = document.createElement('script');
-    script.src = 'https://cdn.jsdelivr.net/gh/hexlet/hexlet-correction@main/src/widget/index.js?v=' + new Date().getTime();
-    document.body.appendChild(script);
-});
-</script>;
-<script>
-    handleTypoReporter({ authorizationToken: 'MjQyOmVlYTZkMWE1LTNkMGQtNDg1Yi04OGMwLWVkOGU1YTRlOGZjMA==',
-    workSpaceUrl: 'https://fixit.hexlet.io', workSpaceId: '242'})
-</script>
+    <script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function loadScript(src, callback) {
+            const body = document.querySelector('body')
+            const script = document.createElement('script');
+            script.src = src;
+            script.onload = callback;
+            body.appendChild(script);
+        };
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const scriptSrc = 'https://cdn.jsdelivr.net/gh/hexlet/hexlet-correction@main/src/widget/index.js?v=' + new Date().getTime();
+            loadScript(scriptSrc, function () {
+                handleTypoReporter({
+                    authorizationToken: 'MjQyOmVlYTZkMWE1LTNkMGQtNDg1Yi04OGMwLWVkOGU1YTRlOGZjMA==',
+                    workSpaceUrl: 'https://fixit.hexlet.io',
+                    workSpaceId: '242'
+                })
+            });
+        });
+    </script>
 </body>
 </html>
