@@ -21,11 +21,11 @@ function loadScript(src, callback) {
 };
 
 document.addEventListener('DOMContentLoaded', function () {
-  const scriptSrc = 'https://cdn.jsdelivr.net/gh/hexlet/hexlet-correction@main/src/widget/index.js?v=' + new Date().getTime();
+  const scriptSrc = 'https://cdn.jsdelivr.net/gh/hexlet/hexlet-correction@latest/src/widget/index.js?v=' + new Date().getTime();
   loadScript(scriptSrc, function () {
-    handleTypoReporter({ 
+    handleTypoReporter({
       authorizationToken: '[[${wksBasicToken}]]',
-      workSpaceUrl: '[[${rootUrl}]]', 
+      workSpaceUrl: '[[${rootUrl}]]',
       workSpaceId: '[[${wksId}]]'})
   });
 });
