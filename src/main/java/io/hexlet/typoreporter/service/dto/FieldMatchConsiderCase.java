@@ -3,13 +3,10 @@ package io.hexlet.typoreporter.service.dto;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 
-import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-
-import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
-import static java.lang.annotation.ElementType.TYPE;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
  * Validation annotation to validate that 2 fields have the same value.
@@ -27,6 +24,8 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * message = "The password and it confirmation must match")}
  */
 @Constraint(validatedBy = FieldMatchConsiderCaseValidator.class)
+@Target({ ElementType.TYPE })
+@Retention(RetentionPolicy.RUNTIME)
 public @interface FieldMatchConsiderCase {
 
     String message() default "The {first} and {second} fields must be equal";
@@ -45,16 +44,4 @@ public @interface FieldMatchConsiderCase {
      */
     String second();
 
-    /**
-     * Defines several <code>@FieldMatch</code> annotations on the same element
-     *
-     * @see FieldMatchConsiderCase
-     */
-    @Target({TYPE, ANNOTATION_TYPE})
-    @Retention(RUNTIME)
-    @Documented
-    @interface List {
-
-        FieldMatchConsiderCase[] value();
-    }
 }
