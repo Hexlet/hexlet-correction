@@ -83,18 +83,25 @@ public class WorkspaceSettingsControllerIT {
     @ParameterizedTest
     @MethodSource("io.hexlet.typoreporter.test.factory.EntitiesFactory#getWorkspacesAndUsersRelated")
     void getWorkspaceIntegrationPageIsSuccessful(final Long wksId, final String email) throws Exception {
-        final var apiAccessToken = workspaceSettingsRepository.getWorkspaceSettingsByWorkspaceId(wksId)
+        final var workspaces =  workspaceSettingsRepository.getWorkspaceSettingsByWorkspaceId(wksId);
+        final var apiAccessToken = workspaces
             .map(s -> s.getId() + ":" + s.getApiAccessToken())
             .map(String::getBytes)
             .map(Base64.getEncoder()::encodeToString)
             .orElse(null);
 
+        final var wksName = workspaces
+            .map(m -> m.getWorkspace().getName())
+            .orElse(null);
+
         MockHttpServletResponse response = mockMvc.perform(get("/workspace/{wksId}/integration", wksId.toString())
                 .with(user(email)))
-            .andExpect(model().attributeExists("wksBasicToken"))
+            .andExpect(model().attributeExists("wksBasicToken", "wksName"))
             .andReturn().getResponse();
 
         assertThat(response.getContentAsString()).contains(apiAccessToken);
+        assertThat(response.getContentAsString()).contains(wksName);
+
     }
 
     @ParameterizedTest
@@ -213,4 +220,5 @@ public class WorkspaceSettingsControllerIT {
                                                                         WORKSPACE_101_ID);
         assertThat(deletedAllowedUrlOptional).isEmpty();
     }
+
 }
