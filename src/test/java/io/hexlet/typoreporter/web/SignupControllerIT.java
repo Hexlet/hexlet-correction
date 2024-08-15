@@ -53,6 +53,7 @@ class SignupControllerIT {
 
     private static final String EMAIL_UPPER_CASE = "EMAIL_ADDRESS@GOOGLE.COM";
     private static final String EMAIL_LOWER_CASE = EMAIL_UPPER_CASE.toLowerCase();
+    private static final String EMPTY_NAME = "";
 
     private final SignupAccountModel model = new SignupAccountModel(
         "model_upper_case",
@@ -90,6 +91,22 @@ class SignupControllerIT {
             .param("firstName", anotherModelWithSameButLowerCaseEmail.getFirstName())
             .param("lastName", anotherModelWithSameButLowerCaseEmail.getLastName())
             .with(csrf()));
+        assertThat(accountRepository.count()).isEqualTo(1L);
+    }
+
+    @Test
+    void createAccountWithEmptyNames() throws Exception {
+        model.setFirstName(EMPTY_NAME);
+        model.setLastName(EMPTY_NAME);
+        mockMvc.perform(post("/signup")
+                .param("username", model.getUsername())
+                .param("email", model.getEmail())
+                .param("password", model.getPassword())
+                .param("confirmPassword", model.getConfirmPassword())
+                .param("firstName", model.getFirstName())
+                .param("lastName", model.getLastName())
+                .with(csrf()))
+            .andReturn();
         assertThat(accountRepository.count()).isEqualTo(1L);
     }
 
@@ -140,4 +157,5 @@ class SignupControllerIT {
         var body = response.getResponse().getContentAsString();
         assertThat(body).contains(String.format("The email &quot;%s&quot; is not valid", ACCOUNT_INCORRECT_EMAIL));
     }
+
 }
