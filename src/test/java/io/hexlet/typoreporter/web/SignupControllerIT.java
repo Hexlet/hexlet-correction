@@ -157,5 +157,4 @@ class SignupControllerIT {
         var body = response.getResponse().getContentAsString();
         assertThat(body).contains(String.format("The email &quot;%s&quot; is not valid", ACCOUNT_INCORRECT_EMAIL));
     }
-
 }
