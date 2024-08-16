@@ -95,19 +95,20 @@ class SignupControllerIT {
     }
 
     @Test
-    void createAccountWithEmptyNames() throws Exception {
-        model.setFirstName(EMPTY_NAME);
-        model.setLastName(EMPTY_NAME);
+        void createAccountWithEmptyNames() throws Exception {
+        String email = "testEmptyNames@test.ru";
+        String firstName = EMPTY_NAME;
+        String lastName = EMPTY_NAME;
         mockMvc.perform(post("/signup")
                 .param("username", model.getUsername())
-                .param("email", model.getEmail())
+                .param("email", email)
                 .param("password", model.getPassword())
                 .param("confirmPassword", model.getConfirmPassword())
-                .param("firstName", model.getFirstName())
-                .param("lastName", model.getLastName())
+                .param("firstName", firstName)
+                .param("lastName", lastName)
                 .with(csrf()))
             .andReturn();
-        assertThat(accountRepository.findAccountByEmail(model.getEmail())).isNotEmpty();
+        assertThat(accountRepository.findAccountByEmail(email)).isNotEmpty();
     }
 
     @Test
