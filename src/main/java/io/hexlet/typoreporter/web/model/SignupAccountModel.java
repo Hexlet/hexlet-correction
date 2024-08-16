@@ -5,7 +5,11 @@ import io.hexlet.typoreporter.domain.account.constraint.AccountUsername;
 import io.hexlet.typoreporter.service.dto.FieldMatchConsiderCase;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
