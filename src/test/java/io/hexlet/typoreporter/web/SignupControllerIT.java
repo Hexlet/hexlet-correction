@@ -107,7 +107,7 @@ class SignupControllerIT {
                 .param("lastName", model.getLastName())
                 .with(csrf()))
             .andReturn();
-        assertThat(accountRepository.count()).isEqualTo(1L);
+        assertThat(accountRepository.findAccountByEmail(model.getEmail())).isNotEmpty();
     }
 
     @Test
