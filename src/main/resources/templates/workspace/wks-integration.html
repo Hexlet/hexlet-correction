@@ -12,18 +12,27 @@
                     <p class="fw-bold mb-2"th:text="#{text.script-descr}"></p>
                     <pre style="font-size:18px" class="form-control user-select-all d-inline-flex mb-3" readonly>
 &lt;script&gt;
+function loadScript(src, callback) {
+  const body = document.querySelector('body')
+  const script = document.createElement('script');
+  script.src = src;
+  script.onload = callback;
+  body.appendChild(script);
+};
+
 document.addEventListener('DOMContentLoaded', function () {
-    const script = document.createElement('script');
-    script.src = 'https://cdn.jsdelivr.net/gh/hexlet/hexlet-correction@main/src/widget/index.js?v=' + new Date().getTime();
-    document.body.appendChild(script);
+  const scriptSrc = 'https://cdn.jsdelivr.net/gh/hexlet/hexlet-correction@latest/src/widget/index.js?v=' + new Date().getTime();
+  loadScript(scriptSrc, function () {
+    handleTypoReporter({
+      authorizationToken: '[[${wksBasicToken}]]',
+      workSpaceUrl: '[[${rootUrl}]]',
+      workSpaceId: '[[${wksId}]]'})
+  });
 });
-&lt;/script&gt;;
-&lt;script&gt;
-    handleTypoReporter({ authorizationToken: '[[${wksBasicToken}]]',
-    workSpaceUrl: '[[${rootUrl}]]', workSpaceId: '[[${wksId}]]'})
-&lt;/script&gt;</pre>
-                </div>
-            </div>
+&lt;/script&gt;
+                  </pre>
+              </div>
+          </div>
         </div>
     </div>
 </main>
