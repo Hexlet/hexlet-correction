@@ -19,7 +19,5 @@ public class OAuth2ConfigurationProperties {
     private String clientSecret;
     @Value("scope")
     private HashSet<String> scope;
-    @Value("redirect-uri")
-    private String redirectUri;
 }
 

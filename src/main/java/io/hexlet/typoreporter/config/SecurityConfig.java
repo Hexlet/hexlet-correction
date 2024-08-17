@@ -2,6 +2,7 @@ package io.hexlet.typoreporter.config;
 
 import io.hexlet.typoreporter.config.oauth2.OAuth2ConfigurationProperties;
 import io.hexlet.typoreporter.handler.exception.ForbiddenDomainException;
+import io.hexlet.typoreporter.handler.exception.OAuth2Exception;
 import io.hexlet.typoreporter.handler.exception.WorkspaceNotFoundException;
 import io.hexlet.typoreporter.security.service.AccountDetailService;
 import io.hexlet.typoreporter.security.service.SecuredWorkspaceService;
@@ -12,6 +13,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -98,6 +100,7 @@ public class SecurityConfig {
                 .requestMatchers(GET, "/webjars/**", "/widget/**", "/fragments/**", "/img/**").permitAll()
                 .requestMatchers("/", "/login", "/signup", "/error", "/about").permitAll()
                 .requestMatchers("/oauth/**").permitAll()
+                .requestMatchers("/login/oauth/code/**").permitAll()
                 .anyRequest().authenticated()
             )
             .formLogin(login -> login
@@ -108,8 +111,6 @@ public class SecurityConfig {
             )
             .oauth2Login(config -> config
                 .loginPage("/login")
-                .defaultSuccessUrl("/workspaces")
-                .failureUrl("/login")
             )
             .csrf(csrf -> csrf
                 .ignoringRequestMatchers(
@@ -134,10 +135,10 @@ public class SecurityConfig {
         return CommonOAuth2Provider.GITHUB.getBuilder("github")
             .clientId(oAuth2ConfigurationProperties.getClientId())
             .clientSecret(oAuth2ConfigurationProperties.getClientSecret())
-            .redirectUri(oAuth2ConfigurationProperties.getRedirectUri())
             .scope(oAuth2ConfigurationProperties.getScope())
             .build();
     }
+
 
     @Bean
     @RequestScope
@@ -176,6 +177,12 @@ public class SecurityConfig {
                     response.sendError(HttpServletResponse.SC_FORBIDDEN, e.getMessage());
                 } catch (WorkspaceNotFoundException e) {
                     response.sendError(HttpServletResponse.SC_NOT_FOUND, e.getMessage());
+                } catch (OAuth2Exception e) {
+                    if (e.getStatusCode() == HttpStatus.BAD_REQUEST) {
+                        response.sendRedirect("/oauth/exception/name");
+                    } else {
+                        response.sendRedirect("/oauth/exception");
+                    }
                 }
             }
         };

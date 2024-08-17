@@ -40,12 +40,12 @@ public class CustomOAuth2User implements OAuth2User {
     }
     //TODO: fix required sets first and last names after issue #286 will be done (empty names)
     public String getFirstName() {
-        String[] fullName = Objects.requireNonNull(oAuth2User.<String>getAttribute("name")).split(" ");
-        return fullName[1];
+        String[] fullName = oAuth2User.<String>getAttribute("name").split(" ");
+        return fullName[1] != null ? fullName[1] : "";
     }
     public String getLastName() {
-        String[] fullName = Objects.requireNonNull(oAuth2User.<String>getAttribute("name")).split(" ");
-        return fullName[0];
+        String[] fullName = oAuth2User.<String>getAttribute("name").split(" ");
+        return fullName[0] != null ? fullName[0] : "";
     }
     public String getPassword() {
         Integer password = oAuth2User.getAttribute("id");
