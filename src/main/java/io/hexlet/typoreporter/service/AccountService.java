@@ -143,13 +143,11 @@ public class AccountService implements SignupAccountUseCase, QueryAccount {
     public void processOAuthPostLogin(CustomOAuth2User user) {
         var existUser = accountRepository.existsByEmail(user.getEmail());
         if (!existUser) {
-            Account account = new Account();
-            account.setEmail(user.getEmail());
+            SignupAccount signupAccount = new SignupAccount(
+                user.getLogin(), user.getEmail(),
+                passwordEncoder.encode(user.getPassword()), user.getFirstName(), user.getLastName());
+            Account account = accountMapper.toAccount(signupAccount);
             account.setAuthProvider(AuthProvider.GITHUB);
-            account.setUsername(user.getLogin());
-            account.setPassword(passwordEncoder.encode(user.getPassword()));
-            account.setFirstName(user.getFirstName());
-            account.setLastName(user.getLastName());
             accountRepository.save(account);
         }
     }

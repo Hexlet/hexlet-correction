@@ -20,6 +20,7 @@ spring:
           github:
             clientId: Ov23liMZqO6eA0FyjeM4
             clientSecret: 3948c7b7ac39d2ee6611e611259c9422cdf00f96
+            redirect-uri: "{baseUrl}/workspaces"
             scope:
               - user:email
               - read:user

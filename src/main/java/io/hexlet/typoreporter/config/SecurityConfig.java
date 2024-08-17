@@ -1,11 +1,9 @@
 package io.hexlet.typoreporter.config;
 
 import io.hexlet.typoreporter.config.oauth2.OAuth2ConfigurationProperties;
-import io.hexlet.typoreporter.handler.OAuth2SuccessHandler;
 import io.hexlet.typoreporter.handler.exception.ForbiddenDomainException;
 import io.hexlet.typoreporter.handler.exception.WorkspaceNotFoundException;
 import io.hexlet.typoreporter.security.service.AccountDetailService;
-import io.hexlet.typoreporter.security.service.CustomOAuth2UserService;
 import io.hexlet.typoreporter.security.service.SecuredWorkspaceService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -28,12 +26,13 @@ import org.springframework.security.oauth2.client.registration.ClientRegistratio
 import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.context.DelegatingSecurityContextRepository;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.security.web.context.RequestAttributeSecurityContextRepository;
 import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.context.annotation.RequestScope;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
@@ -46,8 +45,6 @@ import static org.springframework.http.HttpMethod.POST;
 @Configuration
 @EnableMethodSecurity
 public class SecurityConfig {
-    @Autowired
-    private CustomOAuth2UserService oAuth2UserService;
     @Autowired
     private OAuth2ConfigurationProperties oAuth2ConfigurationProperties;
 
@@ -111,11 +108,8 @@ public class SecurityConfig {
             )
             .oauth2Login(config -> config
                 .loginPage("/login")
-                .userInfoEndpoint()
-                .userService(oAuth2UserService)
-                .and()
-                .clientRegistrationRepository(getClientRegistrationRepository())
-                .successHandler(getOAuth2SuccessHandler())
+                .defaultSuccessUrl("/workspaces")
+                .failureUrl("/login")
             )
             .csrf(csrf -> csrf
                 .ignoringRequestMatchers(
@@ -140,14 +134,17 @@ public class SecurityConfig {
         return CommonOAuth2Provider.GITHUB.getBuilder("github")
             .clientId(oAuth2ConfigurationProperties.getClientId())
             .clientSecret(oAuth2ConfigurationProperties.getClientSecret())
+            .redirectUri(oAuth2ConfigurationProperties.getRedirectUri())
             .scope(oAuth2ConfigurationProperties.getScope())
             .build();
     }
 
     @Bean
-    public AuthenticationSuccessHandler getOAuth2SuccessHandler() {
-        return new OAuth2SuccessHandler();
+    @RequestScope
+    public RestTemplate getRestTemplate() {
+        return new RestTemplate();
     }
+
 
     @Bean
     public AccessDeniedHandler accessDeniedHandler() {
@@ -179,10 +176,6 @@ public class SecurityConfig {
                     response.sendError(HttpServletResponse.SC_FORBIDDEN, e.getMessage());
                 } catch (WorkspaceNotFoundException e) {
                     response.sendError(HttpServletResponse.SC_NOT_FOUND, e.getMessage());
-                } catch (IllegalArgumentException e) {
-                    if (e.getMessage().contains("principalNull")) {
-                        response.sendRedirect("/login");
-                    }
                 }
             }
         };

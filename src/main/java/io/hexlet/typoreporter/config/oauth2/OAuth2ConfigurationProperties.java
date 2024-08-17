@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.List;
+import java.util.HashSet;
 
 @Configuration
 @ConfigurationProperties(prefix = "spring.security.oauth2.client.registration.github")
@@ -18,6 +18,8 @@ public class OAuth2ConfigurationProperties {
     @Value("clientSecret")
     private String clientSecret;
     @Value("scope")
-    private List<String> scope;
+    private HashSet<String> scope;
+    @Value("redirect-uri")
+    private String redirectUri;
 }
 
