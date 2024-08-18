@@ -97,7 +97,7 @@ class SignupControllerIT {
     @Test
     void createAccountWithEmptyNames() throws Exception {
         String emptyNamesUser = "testEmptyNamesUser";
-        String emptyNamesEmail = "testEmptyNames@test.ru";
+        String emptyNamesEmail = "testemptynames@test.ru";
         String emptyNamesPassword = "P@$$w0rd";
         mockMvc.perform(post("/signup")
                 .param("username", emptyNamesUser)
