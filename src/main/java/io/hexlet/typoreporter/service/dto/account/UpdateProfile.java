@@ -20,11 +20,9 @@ public class UpdateProfile {
         message = "The email \"${validatedValue}\" is not valid")
     private String email;
 
-    @NotBlank
-    @Size(min = 1, max = 50)
+    @Size(max = 50)
     private String firstName;
 
-    @NotBlank
-    @Size(min = 1, max = 50)
+    @Size(max = 50)
     private String lastName;
 }
