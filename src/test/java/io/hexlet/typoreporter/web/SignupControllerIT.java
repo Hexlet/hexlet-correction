@@ -98,11 +98,12 @@ class SignupControllerIT {
     void createAccountWithEmptyNames() throws Exception {
         String emptyNamesUser = "testEmptyNamesUser";
         String emptyNamesEmail = "testEmptyNames@test.ru";
+        String emptyNamesPassword = "P@$$w0rd";
         mockMvc.perform(post("/signup")
                 .param("username", emptyNamesUser)
                 .param("email", emptyNamesEmail)
-                .param("password", model.getPassword())
-                .param("confirmPassword", model.getConfirmPassword())
+                .param("password", emptyNamesPassword)
+                .param("confirmPassword", emptyNamesPassword)
                 .param("firstName", EMPTY_NAME)
                 .param("lastName", EMPTY_NAME)
                 .with(csrf()))
