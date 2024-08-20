@@ -24,7 +24,7 @@
                 <form method="POST" th:action="@{'/workspace/' + ${wksId} + '/users'}" th:object="${inputEmail}">
                     <div class="form-group">
                         <input type="email" class="form-control" id="inputUserEmail"
-                               placeholder="Enter user email. For example: hexlet@gmail.com" th:field="*{email}"
+                               th:placeholder="#{wks.users.email-placeholder}" th:field="*{email}"
                                th:classappend="${!#fields.hasErrors('email') && formModified}? 'is-valid'"
                                th:errorclass="is-invalid" required>
                         <div class="invalid-feedback" th:if="${#fields.hasErrors('email')}">
