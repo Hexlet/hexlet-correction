@@ -164,8 +164,10 @@ class SignupControllerIT {
                 .with(csrf()))
             .andReturn();
         var body = response.getResponse().getContentAsString();
+        var result = accountRepository.findAccountByEmail(model.getEmail().toLowerCase());
 
         assertThat(body).contains(source.getMessage("alert.passwords-dont-match", null, null));
+        assertThat(result).isEmpty();
 
     }
 
