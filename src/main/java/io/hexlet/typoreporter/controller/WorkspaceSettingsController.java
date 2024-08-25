@@ -10,7 +10,6 @@ import io.hexlet.typoreporter.service.WorkspaceService;
 import io.hexlet.typoreporter.service.WorkspaceSettingsService;
 import io.hexlet.typoreporter.service.dto.typo.TypoInfo;
 import io.hexlet.typoreporter.service.dto.workspace.AllowedUrlDTO;
-import io.hexlet.typoreporter.service.dto.workspace.WorkspaceInfo;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
