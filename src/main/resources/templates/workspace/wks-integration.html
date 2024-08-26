@@ -6,19 +6,33 @@
 <main class="container-fluid">
     <div class="row">
         <div class="col-2" th:insert="fragments/panels :: workspaceSideBar (${wksId}, ${wksName}, 'integration')"></div>
-        <div class="col">
+        <div class="col-10">
             <div class="row mt-4">
                 <div class="col">
                     <p class="fw-bold mb-2"th:text="#{text.script-descr}"></p>
                     <pre style="font-size:18px" class="form-control user-select-all d-inline-flex mb-3" readonly>
-&lt;script src="https://cdn.jsdelivr.net/gh/hexlet/hexlet-correction@main/src/widget/index.js"&gt;&lt;/script&gt;;
-
 &lt;script&gt;
-    handleTypoReporter({ authorizationToken: '[[${wksBasicToken}]]',
-    workSpaceUrl: '[[${rootUrl}]]', workSpaceId: '[[${wksId}]]'})
-&lt;/script&gt;</pre>
-                </div>
-            </div>
+function loadScript(src, callback) {
+  const body = document.querySelector('body')
+  const script = document.createElement('script');
+  script.src = src;
+  script.onload = callback;
+  body.appendChild(script);
+};
+
+document.addEventListener('DOMContentLoaded', function () {
+  const scriptSrc = 'https://cdn.jsdelivr.net/gh/hexlet/hexlet-correction@latest/src/widget/index.js?v=' + new Date().getTime();
+  loadScript(scriptSrc, function () {
+    handleTypoReporter({
+      authorizationToken: '[[${wksBasicToken}]]',
+      workSpaceUrl: '[[${rootUrl}]]',
+      workSpaceId: '[[${wksId}]]'})
+  });
+});
+&lt;/script&gt;
+                  </pre>
+              </div>
+          </div>
         </div>
     </div>
 </main>
