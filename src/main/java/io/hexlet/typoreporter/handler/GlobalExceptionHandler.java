@@ -1,6 +1,11 @@
 package io.hexlet.typoreporter.handler;
 
-import io.hexlet.typoreporter.handler.exception.*;
+import io.hexlet.typoreporter.handler.exception.AccountAlreadyExistException;
+import io.hexlet.typoreporter.handler.exception.AccountNotFoundException;
+import io.hexlet.typoreporter.handler.exception.NewPasswordTheSameException;
+import io.hexlet.typoreporter.handler.exception.OAuth2Exception;
+import io.hexlet.typoreporter.handler.exception.OldPasswordWrongException;
+import io.hexlet.typoreporter.handler.exception.WorkspaceAlreadyExistException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
