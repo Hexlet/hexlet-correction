@@ -12,12 +12,14 @@ import java.util.HashSet;
 @ConfigurationProperties(prefix = "spring.security.oauth2.client.registration.github")
 @Getter
 @Setter
-public class OAuth2ConfigurationProperties {
+public class GithubConfigurationProperties {
     @Value("clientId")
     private String clientId;
     @Value("clientSecret")
     private String clientSecret;
     @Value("scope")
     private HashSet<String> scope;
+    @Value("redirect-uri")
+    private String redirectUri;
 }
 

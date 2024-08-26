@@ -143,19 +143,19 @@ public class AccountService implements SignupAccountUseCase, QueryAccount {
         return sourceAccount;
     }
     @Transactional
-    public void processOAuthPostLogin(CustomOAuth2User user) {
+    public void createOrUpdate(CustomOAuth2User user) {
         if (user.getFirstName().isEmpty() || user.getLastName().isEmpty()) {
             throw new OAuth2Exception(HttpStatus.BAD_REQUEST,
                 ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "Firstname or lastname is empty"), null);
         }
-        var existUser = accountRepository.existsByEmail(user.getEmail());
-        if (!existUser) {
+        //var existUser = accountRepository.existsByEmail(user.getEmail());
+        //if (!existUser) {
             SignupAccount signupAccount = new SignupAccount(
                 user.getLogin(), user.getEmail(),
                 passwordEncoder.encode(user.getPassword()), user.getFirstName(), user.getLastName());
             Account account = accountMapper.toAccount(signupAccount);
             account.setAuthProvider(AuthProvider.GITHUB);
             accountRepository.save(account);
-        }
+        //}
     }
 }

@@ -1,10 +1,6 @@
 package io.hexlet.typoreporter.handler;
 
-import io.hexlet.typoreporter.handler.exception.AccountAlreadyExistException;
-import io.hexlet.typoreporter.handler.exception.AccountNotFoundException;
-import io.hexlet.typoreporter.handler.exception.NewPasswordTheSameException;
-import io.hexlet.typoreporter.handler.exception.OldPasswordWrongException;
-import io.hexlet.typoreporter.handler.exception.WorkspaceAlreadyExistException;
+import io.hexlet.typoreporter.handler.exception.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -51,5 +47,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(WorkspaceAlreadyExistException.class)
     public ResponseEntity<String> handleWorkSpaceAlreadyExistException(WorkspaceAlreadyExistException ex) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(OAuth2Exception.class)
+    public ResponseEntity<String> handleOAuth2Exception(OAuth2Exception ex) {
+        return ResponseEntity.status(ex.getStatusCode()).body(ex.getMessage());
     }
 }

@@ -6,6 +6,7 @@
 <main class="container">
     <div class="row">
         <div class="col">
+            <div class="alert alert-danger" role="alert" th:if="${isOAuth2Fail}" th:text="#{alert.oauth2.exception}"></div>
             <form method="post" th:action="@{/signup}" th:object="${signupAccount}">
                 <div class="form-floating mb-3">
                     <input id="inputUsername" placeholder="p" type="text" th:field="*{username}"
@@ -69,6 +70,11 @@
                     </div>
                 </div>
                 <button class="btn btn-primary" type="submit" th:text="#{btn.create-account}"></button>
+                <div class="row">
+                    <div class="mt-4">
+                        <a class="link-primary" href="/oauth2/authorization/github" th:text="#{link.sign-in-with-github}"></a>
+                    </div>
+                </div>
             </form>
         </div>
     </div>

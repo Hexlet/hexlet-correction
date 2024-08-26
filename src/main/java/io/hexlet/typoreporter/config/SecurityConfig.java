@@ -1,10 +1,12 @@
 package io.hexlet.typoreporter.config;
 
-import io.hexlet.typoreporter.config.oauth2.OAuth2ConfigurationProperties;
+import io.hexlet.typoreporter.config.oauth2.GithubConfigurationProperties;
+import io.hexlet.typoreporter.handler.OAuth2LoginFailureHandler;
+import io.hexlet.typoreporter.handler.OAuth2LoginSuccessHandler;
 import io.hexlet.typoreporter.handler.exception.ForbiddenDomainException;
-import io.hexlet.typoreporter.handler.exception.OAuth2Exception;
 import io.hexlet.typoreporter.handler.exception.WorkspaceNotFoundException;
 import io.hexlet.typoreporter.security.service.AccountDetailService;
+import io.hexlet.typoreporter.security.service.CustomOAuth2UserService;
 import io.hexlet.typoreporter.security.service.SecuredWorkspaceService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -13,7 +15,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -23,11 +24,15 @@ import org.springframework.security.config.oauth2.client.CommonOAuth2Provider;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.authentication.OAuth2LoginAuthenticationProvider;
+import org.springframework.security.oauth2.client.endpoint.DefaultAuthorizationCodeTokenResponseClient;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.context.DelegatingSecurityContextRepository;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.security.web.context.RequestAttributeSecurityContextRepository;
@@ -48,7 +53,7 @@ import static org.springframework.http.HttpMethod.POST;
 @EnableMethodSecurity
 public class SecurityConfig {
     @Autowired
-    private OAuth2ConfigurationProperties oAuth2ConfigurationProperties;
+    private GithubConfigurationProperties githubConfigurationProperties;
 
     @Bean
     public PasswordEncoder bCryptPasswordEncoder() {
@@ -74,10 +79,19 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(DaoAuthenticationProvider apiProvider,
-                                                       DaoAuthenticationProvider accountProvider) {
-        return new ProviderManager(apiProvider, accountProvider);
+    public OAuth2LoginAuthenticationProvider githubProvider(CustomOAuth2UserService customOAuth2UserService) {
+        var responseClient = new DefaultAuthorizationCodeTokenResponseClient();
+        return new OAuth2LoginAuthenticationProvider(responseClient, customOAuth2UserService);
     }
+
+    @Bean
+    public AuthenticationManager authenticationManager(DaoAuthenticationProvider apiProvider,
+                                                       DaoAuthenticationProvider accountProvider,
+                                                       OAuth2LoginAuthenticationProvider githubProvider
+    ) {
+        return new ProviderManager(apiProvider, accountProvider, githubProvider);
+    }
+
 
     @Bean
     public SecurityContextRepository securityContextRepository() {
@@ -99,7 +113,6 @@ public class SecurityConfig {
         http.authorizeHttpRequests(authz -> authz
                 .requestMatchers(GET, "/webjars/**", "/widget/**", "/fragments/**", "/img/**").permitAll()
                 .requestMatchers("/", "/login", "/signup", "/error", "/about").permitAll()
-                .requestMatchers("/oauth/**").permitAll()
                 .requestMatchers("/login/oauth/code/**").permitAll()
                 .anyRequest().authenticated()
             )
@@ -111,6 +124,8 @@ public class SecurityConfig {
             )
             .oauth2Login(config -> config
                 .loginPage("/login")
+                .successHandler(getOAuth2LoginSuccessHandler())
+                .failureHandler(getOAuth2LoginFailureHandler())
             )
             .csrf(csrf -> csrf
                 .ignoringRequestMatchers(
@@ -126,16 +141,26 @@ public class SecurityConfig {
         return http.build();
     }
 
+    @Bean
+    public AuthenticationSuccessHandler getOAuth2LoginSuccessHandler() {
+        return new OAuth2LoginSuccessHandler();
+    }
+
+    @Bean
+    public AuthenticationFailureHandler getOAuth2LoginFailureHandler() {
+        return new OAuth2LoginFailureHandler();
+    }
 
     @Bean
     public ClientRegistrationRepository getClientRegistrationRepository() {
         return new InMemoryClientRegistrationRepository(githubClientRegistration());
     }
+
     private ClientRegistration githubClientRegistration() {
         return CommonOAuth2Provider.GITHUB.getBuilder("github")
-            .clientId(oAuth2ConfigurationProperties.getClientId())
-            .clientSecret(oAuth2ConfigurationProperties.getClientSecret())
-            .scope(oAuth2ConfigurationProperties.getScope())
+            .clientId(githubConfigurationProperties.getClientId())
+            .clientSecret(githubConfigurationProperties.getClientSecret())
+            .scope(githubConfigurationProperties.getScope())
             .build();
     }
 
@@ -177,12 +202,6 @@ public class SecurityConfig {
                     response.sendError(HttpServletResponse.SC_FORBIDDEN, e.getMessage());
                 } catch (WorkspaceNotFoundException e) {
                     response.sendError(HttpServletResponse.SC_NOT_FOUND, e.getMessage());
-                } catch (OAuth2Exception e) {
-                    if (e.getStatusCode() == HttpStatus.BAD_REQUEST) {
-                        response.sendRedirect("/oauth/exception/name");
-                    } else {
-                        response.sendRedirect("/oauth/exception");
-                    }
                 }
             }
         };
