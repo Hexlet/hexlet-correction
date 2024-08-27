@@ -55,7 +55,6 @@ class SignupControllerIT {
 
     private static final String EMAIL_UPPER_CASE = "EMAIL_ADDRESS@GOOGLE.COM";
     private static final String EMAIL_LOWER_CASE = EMAIL_UPPER_CASE.toLowerCase();
-    private static final String EMPTY_NAME = "";
 
     private final SignupAccountModel model = new SignupAccountModel(
         "model_upper_case",
@@ -106,19 +105,20 @@ class SignupControllerIT {
 
     @Test
     void createAccountWithEmptyNames() throws Exception {
-        String emptyNamesUser = "testEmptyNamesUser";
-        String emptyNamesEmail = "testemptynames@test.ru";
-        String emptyNamesPassword = "P@$$w0rd";
+        String username = "testEmptyNamesUser";
+        String email = "testemptynames@test.ru";
+        String password = "P@$$w0rd";
+        String emptyName = "";
         mockMvc.perform(post("/signup")
-                .param("username", emptyNamesUser)
-                .param("email", emptyNamesEmail)
-                .param("password", emptyNamesPassword)
-                .param("confirmPassword", emptyNamesPassword)
-                .param("firstName", EMPTY_NAME)
-                .param("lastName", EMPTY_NAME)
+                .param("username", username)
+                .param("email", email)
+                .param("password", password)
+                .param("confirmPassword", password)
+                .param("firstName", emptyName)
+                .param("lastName", emptyName)
                 .with(csrf()))
             .andReturn();
-        assertThat(accountRepository.findAccountByEmail(emptyNamesEmail)).isNotEmpty();
+        assertThat(accountRepository.findAccountByEmail(email)).isNotEmpty();
     }
 
     @Test
