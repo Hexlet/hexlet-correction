@@ -18,7 +18,7 @@ import lombok.ToString;
 @FieldMatchConsiderCase(
     first = "password",
     second = "confirmPassword",
-    message = "The password and it confirmation must match")
+    message = "{alert.passwords-dont-match}")
 @ToString
 public class SignupAccountModel {
 

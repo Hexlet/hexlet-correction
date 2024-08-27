@@ -5,24 +5,26 @@ import com.github.database.rider.spring.api.DBRider;
 import io.hexlet.typoreporter.repository.AccountRepository;
 import io.hexlet.typoreporter.test.DBUnitEnumPostgres;
 import io.hexlet.typoreporter.web.model.SignupAccountModel;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import static com.github.database.rider.core.api.configuration.Orthography.LOWERCASE;
+import static io.hexlet.typoreporter.test.Constraints.POSTGRES_IMAGE;
 import static io.hexlet.typoreporter.test.factory.EntitiesFactory.ACCOUNT_INCORRECT_EMAIL;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.assertj.core.api.Assertions.assertThat;
-import static io.hexlet.typoreporter.test.Constraints.POSTGRES_IMAGE;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -66,6 +68,14 @@ class SignupControllerIT {
         EMAIL_LOWER_CASE,
         "another_password", "another_password",
         "another_firstName", "another_lastName");
+
+    private static ResourceBundleMessageSource source;
+
+    @BeforeAll
+    static void init() {
+        source = new ResourceBundleMessageSource();
+        source.setBasename("messages_en");
+    }
 
     @Test
     void createAccountWithIgnoreEmailCase() throws Exception {
@@ -158,4 +168,25 @@ class SignupControllerIT {
         var body = response.getResponse().getContentAsString();
         assertThat(body).contains(String.format("The email &quot;%s&quot; is not valid", ACCOUNT_INCORRECT_EMAIL));
     }
+
+    @Test
+    void signupInPasswordsDontMatch() throws Exception {
+        model.setConfirmPassword("WrongPassword123");
+        var response = mockMvc.perform(post("/signup")
+                .param("username", model.getUsername())
+                .param("email", model.getEmail())
+                .param("password", model.getPassword())
+                .param("confirmPassword", model.getConfirmPassword())
+                .param("firstName", model.getFirstName())
+                .param("lastName", model.getLastName())
+                .with(csrf()))
+            .andReturn();
+        var body = response.getResponse().getContentAsString();
+        var result = accountRepository.findAccountByEmail(model.getEmail().toLowerCase());
+
+        assertThat(body).contains(source.getMessage("alert.passwords-dont-match", null, null));
+        assertThat(result).isEmpty();
+
+    }
+
 }

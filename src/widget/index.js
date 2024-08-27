@@ -158,10 +158,6 @@ const generateModal = (state) => {
 
   const divSecondLabel = document.createElement('div');
   divSecondLabel.classList.add('hexlet-correction-modal_ReportTypo-label');
-  const strong = document.createElement('strong');
-  strong.id = 'hexlet-correction-modal_question';
-  strong.textContent = 'Отправить сообщение об ошибке редактору сайта?';
-  divSecondLabel.append(strong);
 
   const divButtons = document.createElement('div');
   divButtons.style.textAlign = 'right';
