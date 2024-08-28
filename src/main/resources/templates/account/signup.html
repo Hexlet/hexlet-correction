@@ -30,17 +30,6 @@
                 </div>
 
                 <div class="form-floating mb-3">
-                    <input id="inputFirstName" placeholder="p" type="text" th:field="*{firstName}"
-                           class="form-control"
-                           th:classappend="${!#fields.hasErrors('firstName') && formModified}? 'is-valid'"
-                           th:errorclass="is-invalid">
-                    <label for="inputFirstName" th:text="#{firstname}"></label>
-                    <div class="invalid-feedback" th:if="${#fields.hasErrors('firstName')}">
-                        <p th:each="err : ${#fields.errors('firstName')}" th:text="${err}"></p>
-                    </div>
-                </div>
-
-                <div class="form-floating mb-3">
                     <input id="inputLastName" placeholder="p" type="text" th:field="*{lastName}"
                            class="form-control"
                            th:classappend="${!#fields.hasErrors('lastName') && formModified}? 'is-valid'"
