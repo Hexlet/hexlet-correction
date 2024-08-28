@@ -104,6 +104,24 @@ class SignupControllerIT {
     }
 
     @Test
+    void createAccountWithEmptyNames() throws Exception {
+        String username = "testEmptyNamesUser";
+        String email = "testemptynames@test.ru";
+        String password = "P@$$w0rd";
+        String emptyName = "";
+        mockMvc.perform(post("/signup")
+                .param("username", username)
+                .param("email", email)
+                .param("password", password)
+                .param("confirmPassword", password)
+                .param("firstName", emptyName)
+                .param("lastName", emptyName)
+                .with(csrf()))
+            .andReturn();
+        assertThat(accountRepository.findAccountByEmail(email)).isNotEmpty();
+    }
+
+    @Test
     void createAccountWithWrongEmailDomain() throws Exception {
         String userName = "testUser";
         String password = "_Qwe1234";
