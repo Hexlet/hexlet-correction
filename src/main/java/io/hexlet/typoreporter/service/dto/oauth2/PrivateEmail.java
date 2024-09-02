@@ -1,12 +1,8 @@
 package io.hexlet.typoreporter.service.dto.oauth2;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.Data;
 
-@Getter
-@Setter
-@ToString
+@Data
 public class PrivateEmail {
     private String email;
     private boolean verified;

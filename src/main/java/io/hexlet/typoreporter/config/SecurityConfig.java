@@ -1,7 +1,7 @@
 package io.hexlet.typoreporter.config;
 
+import io.hexlet.typoreporter.config.oauth2.CustomAuthenticationFilter;
 import io.hexlet.typoreporter.config.oauth2.GithubConfigurationProperties;
-import io.hexlet.typoreporter.handler.OAuth2LoginFailureHandler;
 import io.hexlet.typoreporter.handler.OAuth2LoginSuccessHandler;
 import io.hexlet.typoreporter.handler.exception.ForbiddenDomainException;
 import io.hexlet.typoreporter.handler.exception.WorkspaceNotFoundException;
@@ -29,9 +29,9 @@ import org.springframework.security.oauth2.client.endpoint.DefaultAuthorizationC
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
+import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.context.DelegatingSecurityContextRepository;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
@@ -54,6 +54,8 @@ import static org.springframework.http.HttpMethod.POST;
 public class SecurityConfig {
     @Autowired
     private GithubConfigurationProperties githubConfigurationProperties;
+    @Autowired
+    private CustomAuthenticationFilter customAuthenticationFilter;
 
     @Bean
     public PasswordEncoder bCryptPasswordEncoder() {
@@ -114,6 +116,7 @@ public class SecurityConfig {
                 .requestMatchers(GET, "/webjars/**", "/widget/**", "/fragments/**", "/img/**").permitAll()
                 .requestMatchers("/", "/login", "/signup", "/error", "/about").permitAll()
                 .requestMatchers("/login/oauth/code/**").permitAll()
+                .requestMatchers("/login/oauth/error/handler").permitAll()
                 .anyRequest().authenticated()
             )
             .formLogin(login -> login
@@ -125,7 +128,6 @@ public class SecurityConfig {
             .oauth2Login(config -> config
                 .loginPage("/login")
                 .successHandler(getOAuth2LoginSuccessHandler())
-                .failureHandler(getOAuth2LoginFailureHandler())
             )
             .csrf(csrf -> csrf
                 .ignoringRequestMatchers(
@@ -133,7 +135,8 @@ public class SecurityConfig {
                     new AntPathRequestMatcher("/typo/form/*", POST.name())
                 )
             )
-            .addFilterBefore(corsFilter(dynamicCorsConfigurationSource), CorsFilter.class);
+            .addFilterBefore(corsFilter(dynamicCorsConfigurationSource), CorsFilter.class)
+            .addFilterBefore(customAuthenticationFilter, OAuth2LoginAuthenticationFilter.class);
 
         http.securityContext().securityContextRepository(securityContextRepository);
 
@@ -144,11 +147,6 @@ public class SecurityConfig {
     @Bean
     public AuthenticationSuccessHandler getOAuth2LoginSuccessHandler() {
         return new OAuth2LoginSuccessHandler();
-    }
-
-    @Bean
-    public AuthenticationFailureHandler getOAuth2LoginFailureHandler() {
-        return new OAuth2LoginFailureHandler();
     }
 
     @Bean

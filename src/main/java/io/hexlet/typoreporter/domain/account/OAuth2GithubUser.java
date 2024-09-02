@@ -1,18 +1,22 @@
 package io.hexlet.typoreporter.domain.account;
 
+import io.hexlet.typoreporter.domain.workspace.AccountRole;
 import io.hexlet.typoreporter.service.dto.oauth2.PrivateEmail;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
-public class CustomOAuth2User implements OAuth2User {
+public class OAuth2GithubUser implements OAuth2User {
     private final OAuth2User oAuth2User;
     private final PrivateEmail privateEmail;
 
-    public CustomOAuth2User(OAuth2User oAuth2User, PrivateEmail email) {
+    public OAuth2GithubUser(OAuth2User oAuth2User, PrivateEmail email) {
         this.oAuth2User = oAuth2User;
         this.privateEmail = email;
     }
@@ -24,7 +28,9 @@ public class CustomOAuth2User implements OAuth2User {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return oAuth2User.getAuthorities();
+        Set<GrantedAuthority> authorities = new HashSet<>();
+        authorities.add(new SimpleGrantedAuthority(AccountRole.ROLE_USER.name()));
+        return authorities;
     }
 
     @Override
@@ -35,18 +41,22 @@ public class CustomOAuth2User implements OAuth2User {
     public String getEmail() {
         return this.privateEmail.getEmail();
     }
+
     public String getLogin() {
         return oAuth2User.getAttribute("login");
     }
+
     //TODO: fix required sets first and last names after issue #286 will be done (empty names)
     public String getFirstName() {
         String[] fullName = oAuth2User.<String>getAttribute("name").split(" ");
         return fullName[1] != null ? fullName[1] : "";
     }
+
     public String getLastName() {
         String[] fullName = oAuth2User.<String>getAttribute("name").split(" ");
         return fullName[0] != null ? fullName[0] : "";
     }
+
     public String getPassword() {
         Integer password = oAuth2User.getAttribute("id");
         return Objects.requireNonNull(password).toString();

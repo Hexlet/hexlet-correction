@@ -2,7 +2,7 @@ package io.hexlet.typoreporter.service;
 
 import io.hexlet.typoreporter.domain.account.Account;
 import io.hexlet.typoreporter.domain.account.AuthProvider;
-import io.hexlet.typoreporter.domain.account.CustomOAuth2User;
+import io.hexlet.typoreporter.domain.account.OAuth2GithubUser;
 import io.hexlet.typoreporter.handler.exception.AccountAlreadyExistException;
 import io.hexlet.typoreporter.handler.exception.AccountNotFoundException;
 import io.hexlet.typoreporter.handler.exception.NewPasswordTheSameException;
@@ -123,6 +123,7 @@ public class AccountService implements SignupAccountUseCase, QueryAccount {
         Account updAccount = accountMapper.toAccount(updateProfile, sourceAccount);
         updAccount.setUsername(normalizedUserName);
         updAccount.setEmail(normalizedEmail);
+        System.out.println("12: " + updAccount);
         accountRepository.save(updAccount);
         return updAccount;
     }
@@ -142,20 +143,20 @@ public class AccountService implements SignupAccountUseCase, QueryAccount {
         accountRepository.save(sourceAccount);
         return sourceAccount;
     }
+
     @Transactional
-    public void createOrUpdate(CustomOAuth2User user) {
+    public void createGithubUser(OAuth2GithubUser user) {
         if (user.getFirstName().isEmpty() || user.getLastName().isEmpty()) {
             throw new OAuth2Exception(HttpStatus.BAD_REQUEST,
                 ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "Firstname or lastname is empty"), null);
         }
-        //var existUser = accountRepository.existsByEmail(user.getEmail());
-        //if (!existUser) {
-            SignupAccount signupAccount = new SignupAccount(
-                user.getLogin(), user.getEmail(),
-                passwordEncoder.encode(user.getPassword()), user.getFirstName(), user.getLastName());
-            Account account = accountMapper.toAccount(signupAccount);
-            account.setAuthProvider(AuthProvider.GITHUB);
-            accountRepository.save(account);
-        //}
+
+        SignupAccount signupAccount = new SignupAccount(
+            user.getLogin(), user.getEmail(),
+            passwordEncoder.encode(user.getPassword()), user.getFirstName(), user.getLastName());
+        Account account = accountMapper.toAccount(signupAccount);
+        account.setAuthProvider(AuthProvider.GITHUB);
+        accountRepository.save(account);
+
     }
 }

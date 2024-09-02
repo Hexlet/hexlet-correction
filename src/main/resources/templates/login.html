@@ -7,7 +7,7 @@
 <div class="row">
     <div class="col">
         <div class="alert alert-danger" role="alert" th:if="${param.error}" th:text="#{alert.bad-credential}"></div>
-        <div class="alert alert-danger" role="alert" th:if="${isOAuth2Fail}" th:text="#{alert.oauth2.exception}"></div>
+        <div class="alert alert-danger" role="alert" th:if="${isGithubFail}" th:text="#{alert.oauth2.exception}"></div>
         <div class="alert alert-danger" role="alert" th:if="${isFullNameException}" th:text="#{alert.oauth2.exception.name}"></div>
         <div class="alert alert-warning" role="alert" th:if="${param.logout}" th:text="#{alert.logout}"></div>
         <form method="post" th:action="@{/login}">

@@ -6,7 +6,7 @@
 <main class="container">
     <div class="row">
         <div class="col">
-            <div class="alert alert-danger" role="alert" th:if="${isOAuth2Fail}" th:text="#{alert.oauth2.exception}"></div>
+            <div class="alert alert-danger" role="alert" th:if="${isGithubFail}" th:text="#{alert.oauth2.exception}"></div>
             <form method="post" th:action="@{/signup}" th:object="${signupAccount}">
                 <div class="form-floating mb-3">
                     <input id="inputUsername" placeholder="p" type="text" th:field="*{username}"
