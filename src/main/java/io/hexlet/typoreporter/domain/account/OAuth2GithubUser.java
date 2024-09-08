@@ -4,6 +4,7 @@ import io.hexlet.typoreporter.domain.workspace.AccountRole;
 import io.hexlet.typoreporter.service.dto.oauth2.PrivateEmail;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.Collection;
@@ -12,11 +13,12 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-public class OAuth2GithubUser implements OAuth2User {
+public class OAuth2GithubUser extends DefaultOAuth2User {
     private final OAuth2User oAuth2User;
     private final PrivateEmail privateEmail;
 
     public OAuth2GithubUser(OAuth2User oAuth2User, PrivateEmail email) {
+        super(oAuth2User.getAuthorities(), oAuth2User.getAttributes(), "id");
         this.oAuth2User = oAuth2User;
         this.privateEmail = email;
     }

@@ -55,6 +55,7 @@ dependencies {
     testImplementation("org.testcontainers:junit-jupiter")
     testImplementation("org.testcontainers:postgresql")
     testImplementation("com.github.database-rider:rider-spring:1.36.0")
+    implementation("com.c4-soft.springaddons:spring-addons-oauth2-test:7.6.12")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     testAnnotationProcessor("org.mapstruct:mapstruct-processor:1.5.3.Final")
 }
