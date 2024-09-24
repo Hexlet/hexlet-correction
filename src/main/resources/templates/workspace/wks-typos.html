@@ -148,7 +148,7 @@
                                         th:aria-controls="|collapseTypoRowId_*{id}|"
                                         th:classappend="|table-*{typoStatus.getStyle}|"
                                         th:data-bs-target="|#collapseTypoRowId_*{id}|">
-                                        <td th:text="*{pageUrl}"></td>
+                                        <td th:text="*{pageUrl}" class="text-break"></td>
                                         <td th:text="*{reporterName}"></td>
                                         <td th:text="*{createdDateAgo}"></td>
                                         <td th:text="*{modifiedDateAgo}"></td>
