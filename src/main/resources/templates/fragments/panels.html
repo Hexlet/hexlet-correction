@@ -31,7 +31,7 @@
                 <!-- End Switcher -->
                 <div class="navbar-nav" sec:authorize="isAuthenticated()">
                     <li class="nav-item">
-                        <a class="nav-link" href="/" th:text="${#authentication.getName()}"></a>
+                        <span class="d-block px-2 py-2 text-white-50" th:text="${#authentication.getName()}"></span>
                     </li>
                     <li class="nav-item">
                         <form th:action="@{/logout}" th:method="post">
