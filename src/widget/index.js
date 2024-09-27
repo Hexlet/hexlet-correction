@@ -188,13 +188,47 @@ const generateModal = (state) => {
   };
 };
 
-const resetModalState = (state) => {
-  state.modalShown = false;
-  state.data.reporterComment = '';
-  state.data.textBeforeTypo = '';
-  state.data.textTypo = '';
-  state.data.textAfterTypo = '';
+const resetModalState = (state, errors = new Map()) => {
+  if(errors.size === 0) {
+    state.modalShown = false;
+    state.data.reporterComment = '';
+    state.data.textBeforeTypo = '';
+    state.data.textTypo = '';
+    state.data.textAfterTypo = '';
+  } else {
+    for (let label of errors.keys()) {
+      console.log(label);
+      if (label === 'reporterName') {
+        renderInvalidFeedback('hexlet-correction-modal_ReportTypo-name', errors.get(label));
+      } else {
+        renderInvalidFeedback('hexlet-correction-modal_ReportTypo-comment', errors.get(label));
+      }
+    }
+  }
 };
+
+const renderInvalidFeedback = (elementId, message) => {
+  const targetElement = document.getElementById(elementId);
+  const divElement = document.createElement('div');
+  divElement.textContent = message;
+
+  targetElement.insertAdjacentElement('afterend', divElement);
+
+  const style = document.createElement('style');
+  style.textContent = `
+    .hexlet-correction-modal_ReportTypo-invalid-feedback {
+      display: block;
+      width: 100%;
+      margin-top: 0.25rem;
+      font-size: 0.875em;
+      color: #dc3545;
+    }
+  `;
+
+  document.head.insertAdjacentElement('beforeend', style);
+
+  divElement.classList.add('hexlet-correction-modal_ReportTypo-invalid-feedback');
+}
 
 const renderModal = (elements, state) => {
   if (state.modalShown) {
@@ -212,13 +246,22 @@ const renderModal = (elements, state) => {
   elements.commentEl.value = '';
 };
 
+const removeInvalidElements = () => {
+  const invalidElements = document.querySelectorAll('.hexlet-correction-modal_ReportTypo-invalid-feedback');
+
+  invalidElements.forEach(element => {
+    element.remove();
+  });
+}
+
 const sendData = (elements, state) => async (event) => {
+  removeInvalidElements();
   event.preventDefault();
   const { value } = elements.inputName;
   state.data.reporterName = value === '' ? 'Anonymous' : value;
   state.data.reporterComment = elements.commentEl.value;
   try {
-    await fetch(`${state.options.workSpaceUrl}/api/workspaces/${state.options.workSpaceId}/typos`, {
+    let response = await fetch(`${state.options.workSpaceUrl}/api/workspaces/${state.options.workSpaceId}/typos`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -226,8 +269,18 @@ const sendData = (elements, state) => async (event) => {
       },
       body: JSON.stringify(state.data),
     });
-    resetModalState(state);
+    let data = await response.json();
+    if (response.status === 201) {
+      resetModalState(state);
+    } else {
+      const errors = getErrors(data);
+      resetModalState(state, errors);
+    }
   } catch (error) {
+    const errorText =
+        'Error in plugin integration.\n' +
+        'Check the settings (https://fixit.hexlet.io/workspace/{workspaceID}/integration).';
+    renderInvalidFeedback('hexlet-correction-modal_ReportTypo-header', errorText);
     throw new Error('Произошла ошибка:', error);
   }
 };
@@ -263,6 +316,17 @@ const isSelectionLeftToRight = (selection) => {
   return range.collapsed;
 };
 
+const getErrors = (data) => {
+  const errors = new Map();
+
+  for (const [key, message] of Object.entries(data.errors)) {
+    const [label, errorMessage] = message.split(": ");
+    errors.set(label, errorMessage);
+  }
+
+  return errors;
+}
+
 const handleTypoReporter = (options) => {
   console.log('commit 6ced041');
   if (!options || (!options.authorizationToken && !options.workSpaceId)) {
@@ -272,7 +336,7 @@ const handleTypoReporter = (options) => {
   const initialState = {
     modalShown: false,
     options: {
-      workSpaceUrl: 'https://hexlet-correction.herokuapp.com/api/workspaces',
+      workSpaceUrl: 'http://localhost:8080/api/workspaces',
       userName: null,
       ...options,
     },
@@ -282,7 +346,7 @@ const handleTypoReporter = (options) => {
       reporterComment: '',
       textBeforeTypo: '',
       textTypo: '',
-      textAfterTypo: '',
+      textAfterTypo: ''
     },
   };
 
