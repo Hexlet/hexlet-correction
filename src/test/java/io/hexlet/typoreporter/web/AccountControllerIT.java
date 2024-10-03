@@ -3,11 +3,13 @@ package io.hexlet.typoreporter.web;
 import com.github.database.rider.core.api.configuration.DBUnit;
 import com.github.database.rider.spring.api.DBRider;
 import io.hexlet.typoreporter.repository.AccountRepository;
+import io.hexlet.typoreporter.service.dto.account.CustomUserDetails;
 import io.hexlet.typoreporter.test.DBUnitEnumPostgres;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
@@ -15,6 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+
+import java.util.List;
 
 import static com.github.database.rider.core.api.configuration.Orthography.LOWERCASE;
 import static io.hexlet.typoreporter.test.Constraints.POSTGRES_IMAGE;
@@ -75,7 +79,7 @@ public class AccountControllerIT {
             .param("confirmPassword", password)
             .param("firstName", userName)
             .param("lastName", userName)
-            .with(user(correctEmailDomain))
+            .with(user(new CustomUserDetails(correctEmailDomain, "password", "SampleNickname", List.of(new SimpleGrantedAuthority("USER")))))
             .with(csrf()));
         assertThat(accountRepository.findAccountByEmail(wrongEmailDomain)).isEmpty();
         assertThat(accountRepository.findAccountByEmail(correctEmailDomain).orElseThrow().getEmail())
@@ -105,7 +109,7 @@ public class AccountControllerIT {
             .param("lastName", username)
             .param("username", username)
             .param("email", emailUpperCase)
-            .with(user(emailLowerCase))
+            .with(user(new CustomUserDetails(emailLowerCase, "password", "SampleNickname", List.of(new SimpleGrantedAuthority("USER")))))
             .with(csrf()));
         assertThat(accountRepository.findAccountByEmail(emailUpperCase)).isEmpty();
         assertThat(accountRepository.findAccountByEmail(emailLowerCase)).isNotEmpty();

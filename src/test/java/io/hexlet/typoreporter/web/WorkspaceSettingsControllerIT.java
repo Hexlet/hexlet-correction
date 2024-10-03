@@ -9,6 +9,7 @@ import io.hexlet.typoreporter.domain.workspacesettings.WorkspaceSettings;
 import io.hexlet.typoreporter.repository.AllowedUrlRepository;
 import io.hexlet.typoreporter.repository.WorkspaceRepository;
 import io.hexlet.typoreporter.repository.WorkspaceSettingsRepository;
+import io.hexlet.typoreporter.service.dto.account.CustomUserDetails;
 import io.hexlet.typoreporter.test.DBUnitEnumPostgres;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -17,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -26,10 +28,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import java.util.Base64;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 import static com.github.database.rider.core.api.configuration.Orthography.LOWERCASE;
 import static io.hexlet.typoreporter.test.Constraints.POSTGRES_IMAGE;
@@ -95,7 +94,7 @@ public class WorkspaceSettingsControllerIT {
             .orElse(null);
 
         MockHttpServletResponse response = mockMvc.perform(get("/workspace/{wksId}/integration", wksId.toString())
-                .with(user(email)))
+            .with(user(new CustomUserDetails(email, "password", "SampleNickname", List.of(new SimpleGrantedAuthority("USER"))))))
             .andExpect(model().attributeExists("wksBasicToken", "wksName"))
             .andReturn().getResponse();
 
@@ -117,7 +116,7 @@ public class WorkspaceSettingsControllerIT {
         Set<AllowedUrl> urls = new HashSet<>(urlRepository.findAll());
 
         MockHttpServletResponse response = mockMvc.perform(get("/workspace/{wksId}/settings", wksId.toString())
-                .with(user(username)))
+                .with(user(new CustomUserDetails(username, "password", "SampleNickname", List.of(new SimpleGrantedAuthority("USER"))))))
             .andExpect(model().attributeExists("wksBasicToken",
                                         "wksName",
                                         "urlsPage",
@@ -145,8 +144,8 @@ public class WorkspaceSettingsControllerIT {
             .orElse(null);
 
         MockHttpServletResponse response = mockMvc.perform(patch("/workspace/{wksId}/token/regenerate", wksId)
-                .with(user(email))
-                .with(csrf()))
+                .with(user(new CustomUserDetails(email, "password", "SampleNickname", List.of(new SimpleGrantedAuthority("USER")))))
+            .with(csrf()))
             .andReturn().getResponse();
 
         String newWksToken = workspaceSettingsRepository.getWorkspaceSettingsByWorkspaceId(wksId)
@@ -168,7 +167,7 @@ public class WorkspaceSettingsControllerIT {
 
         MockHttpServletResponse response =
             mockMvc.perform(patch("/workspace/{wksId}/token/regenerate", wksId.toString())
-                    .with(user(email))
+                    .with(user(new CustomUserDetails(email, "password", "SampleNickname", List.of(new SimpleGrantedAuthority("USER")))))
                     .with(csrf()))
                 .andReturn().getResponse();
 
@@ -188,8 +187,8 @@ public class WorkspaceSettingsControllerIT {
         mockMvc.perform(
             post("/workspace/{wksId}/allowed-urls", WORKSPACE_101_ID)
                 .param("url", "https://other.com")
-                .with(user(ACCOUNT_101_EMAIL))
-                .with(csrf()));
+                .with(user(new CustomUserDetails(ACCOUNT_101_EMAIL, "password", "SampleNickname", List.of(new SimpleGrantedAuthority("USER")))))
+            .with(csrf()));
         assertThat(urlRepository.count()).isEqualTo(urlsCountBeforeAdding + 1L);
         var addedAllowedUrlOptional = urlRepository.findAllowedUrlByUrlAndWorkspaceId("https://other.com",
                                                                         WORKSPACE_101_ID);
@@ -198,7 +197,7 @@ public class WorkspaceSettingsControllerIT {
         mockMvc.perform(
             post("/workspace/{wksId}/allowed-urls", WORKSPACE_101_ID)
                 .param("url", ALLOWED_URL_101_URL)
-                .with(user(ACCOUNT_101_EMAIL))
+                .with(user(new CustomUserDetails(ACCOUNT_101_EMAIL, "password", "SampleNickname", List.of(new SimpleGrantedAuthority("USER")))))
                 .with(csrf()));
         assertThat(urlRepository.count()).isEqualTo(urlsCountBeforeAdding + 1L);
         var oldAllowedUrlOptional = urlRepository.findAllowedUrlByUrlAndWorkspaceId(ALLOWED_URL_101_URL,
@@ -213,7 +212,7 @@ public class WorkspaceSettingsControllerIT {
         mockMvc.perform(
             delete("/workspace/{wksId}/allowed-urls", WORKSPACE_101_ID)
                 .param("url", ALLOWED_URL_104_URL)
-                .with(user(ACCOUNT_101_EMAIL))
+                .with(user(new CustomUserDetails(ACCOUNT_101_EMAIL, "password", "SampleNickname", List.of(new SimpleGrantedAuthority("USER")))))
                 .with(csrf()));
         assertThat(urlRepository.count()).isEqualTo(urlsCountBeforeAdding - 1L);
         var deletedAllowedUrlOptional = urlRepository.findAllowedUrlByUrlAndWorkspaceId(ALLOWED_URL_104_URL,
