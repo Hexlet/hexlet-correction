@@ -79,7 +79,8 @@ public class AccountControllerIT {
             .param("confirmPassword", password)
             .param("firstName", userName)
             .param("lastName", userName)
-            .with(user(new CustomUserDetails(correctEmailDomain, "password", "SampleNickname", List.of(new SimpleGrantedAuthority("USER")))))
+            .with(user(new CustomUserDetails(correctEmailDomain, "password", "SampleNickname",
+                List.of(new SimpleGrantedAuthority("USER")))))
             .with(csrf()));
         assertThat(accountRepository.findAccountByEmail(wrongEmailDomain)).isEmpty();
         assertThat(accountRepository.findAccountByEmail(correctEmailDomain).orElseThrow().getEmail())
@@ -109,7 +110,8 @@ public class AccountControllerIT {
             .param("lastName", username)
             .param("username", username)
             .param("email", emailUpperCase)
-            .with(user(new CustomUserDetails(emailLowerCase, "password", "SampleNickname", List.of(new SimpleGrantedAuthority("USER")))))
+            .with(user(new CustomUserDetails(emailLowerCase, "password", "SampleNickname",
+                List.of(new SimpleGrantedAuthority("USER")))))
             .with(csrf()));
         assertThat(accountRepository.findAccountByEmail(emailUpperCase)).isEmpty();
         assertThat(accountRepository.findAccountByEmail(emailLowerCase)).isNotEmpty();

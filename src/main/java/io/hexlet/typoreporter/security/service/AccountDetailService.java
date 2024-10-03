@@ -25,7 +25,8 @@ public class AccountDetailService implements UserDetailsService {
         final String normalizedEmail = TextUtils.toLowerCaseData(email);
         return accountRepository.findAccountByEmail(normalizedEmail)
             .map(acc -> {
-                Collection<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority("USER"));
+                Collection<GrantedAuthority> authorities =
+                    Collections.singletonList(new SimpleGrantedAuthority("USER"));
                 return new CustomUserDetails(acc.getEmail(), acc.getPassword(), acc.getUsername(), authorities);
             })
             .orElseThrow(() -> new UsernameNotFoundException("Account with email='" + email + "' not found"));
