@@ -37,16 +37,13 @@
                                 <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
                             </svg>
                         </a>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+                        <ul class="dropdown-menu dropdown-menu-end pb-0" aria-labelledby="profileDropdown">
                             <span class="py-1 px-3 d-block fw-bolder" th:text="${#authentication.getPrincipal().nickname}"></span>
                             <span class="py-1 px-3 d-block" th:text="${#authentication.getName()}"></span>
+                            <form class="border-top dropdown-item" th:action="@{/logout}" th:method="post">
+                                <button class="btn px-0 text-start w-100" type="submit" th:text="#{navbar.logout}">Logout</button>
+                            </form>
                         </ul>
-                    </li>
-
-                    <li class="nav-item">
-                        <form th:action="@{/logout}" th:method="post">
-                            <button class="btn btn-link nav-link" type="submit" th:text="#{navbar.logout}">Logout</button>
-                        </form>
                     </li>
                 </div>
                 <div class="navbar-nav" sec:authorize="isAnonymous()">
