@@ -1,26 +1,19 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/header :: head}"></head>
-<body class="d-flex min-vh-100">
-<nav th:replace="~{fragments/panels :: mainNavbarTop}"></nav>
-<div class="container-fluid d-flex flex-column p-0 m-0">
-    <div class=" bg-light mx-auto mt-5">
-        <main class="bg-light p-3">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+
+<div layout:fragment="content">
+    <div class="mx-auto mt-5">
+        <main class="p-3">
             <div class="container p-0">
-                <h1 class="my-4">О проекте</h1>
-                <p class="display-6">Добро пожаловать в open-source проект Hexlet-Correction</p>
-                <p>
-                    Сервис для уведомления владельцев сайтов об ошибках и опечатках.
-                    После интеграции с сайтом посетители имеют возможность выделить ошибку
-                    или опечатку и сообщить об этом администратору. Проект работает на Java.
-                </p>
-                <p>Задачи можно обсудить в сообществе
-                    <a href="https://t.me/hexletcommunity/12">telegram</a>
+                <h1 class="my-4" th:text="#{text.about-header}"></h1>
+                <p class="display-6" th:text="#{text.about-welcome}"></p>
+                <p th:text="#{text.about-description}"></p>
+                <p th:inline="text">[[#{text.about-community}]] <a href="https://t.me/hexletcommunity/12">telegram</a>
                 </p>
             </div>
         </main>
     </div>
-    <footer th:replace="~{fragments/footer :: footer}"></footer>
 </div>
-</body>
 </html>
