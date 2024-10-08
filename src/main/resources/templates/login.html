@@ -6,7 +6,9 @@
 <main class="container">
 <div class="row">
     <div class="col">
-        <div class="invalid-feedback" role="alert" th:if="${param.error}" th:text="#{alert.bad-credential}"></div>
+        <div class="alert alert-danger" role="alert" th:if="${param.error}" th:text="#{alert.bad-credential}"></div>
+        <div class="alert alert-danger" role="alert" th:if="${isGithubFail}" th:text="#{alert.oauth2.exception}"></div>
+        <div class="alert alert-danger" role="alert" th:if="${isFullNameException}" th:text="#{alert.oauth2.exception.name}"></div>
         <div class="alert alert-warning" role="alert" th:if="${param.logout}" th:text="#{alert.logout}"></div>
         <form method="post" th:action="@{/login}">
             <div class="form-floating mb-3">
@@ -26,6 +28,8 @@
 <div class="row">
     <div class="mt-4">
         <a class="link-primary" th:href="@{/signup}" th:text="#{link.signup}"></a>
+        <br>
+        <a class="link-primary" href="/oauth2/authorization/github" th:text="#{link.sign-in-with-github}"></a>
     </div>
 </div>
 </main>

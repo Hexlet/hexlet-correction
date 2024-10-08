@@ -25,6 +25,15 @@ To build the final jar:
 make build
 ```
 
+### How to add a OAuth2 app to external server
+You need to add environment variables:
+```bash
+GITHUB_CLIENT_ID
+GITHUB_CLIENT_SECRET
+
+See more at https://spring.io/guides/tutorials/spring-boot-oauth2#github-register-application
+```
+
 ### Development with vagrant
 
 Install Vagrant and VM provider (Virtualbox).

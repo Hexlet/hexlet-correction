@@ -2,6 +2,12 @@ package io.hexlet.typoreporter.service;
 
 import io.hexlet.typoreporter.domain.account.Account;
 import io.hexlet.typoreporter.domain.account.AuthProvider;
+import io.hexlet.typoreporter.domain.account.OAuth2GithubUser;
+import io.hexlet.typoreporter.handler.exception.AccountAlreadyExistException;
+import io.hexlet.typoreporter.handler.exception.AccountNotFoundException;
+import io.hexlet.typoreporter.handler.exception.NewPasswordTheSameException;
+import io.hexlet.typoreporter.handler.exception.OAuth2Exception;
+import io.hexlet.typoreporter.handler.exception.OldPasswordWrongException;
 import io.hexlet.typoreporter.repository.AccountRepository;
 import io.hexlet.typoreporter.repository.WorkspaceRoleRepository;
 import io.hexlet.typoreporter.service.account.EmailAlreadyExistException;
@@ -15,11 +21,9 @@ import io.hexlet.typoreporter.service.dto.workspace.WorkspaceRoleInfo;
 import io.hexlet.typoreporter.service.mapper.AccountMapper;
 import io.hexlet.typoreporter.service.mapper.WorkspaceRoleMapper;
 import io.hexlet.typoreporter.utils.TextUtils;
-import io.hexlet.typoreporter.handler.exception.AccountAlreadyExistException;
-import io.hexlet.typoreporter.handler.exception.AccountNotFoundException;
-import io.hexlet.typoreporter.handler.exception.NewPasswordTheSameException;
-import io.hexlet.typoreporter.handler.exception.OldPasswordWrongException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ProblemDetail;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -119,6 +123,7 @@ public class AccountService implements SignupAccountUseCase, QueryAccount {
         Account updAccount = accountMapper.toAccount(updateProfile, sourceAccount);
         updAccount.setUsername(normalizedUserName);
         updAccount.setEmail(normalizedEmail);
+        System.out.println("12: " + updAccount);
         accountRepository.save(updAccount);
         return updAccount;
     }
@@ -137,5 +142,21 @@ public class AccountService implements SignupAccountUseCase, QueryAccount {
         sourceAccount.setPassword(newPassword);
         accountRepository.save(sourceAccount);
         return sourceAccount;
+    }
+
+    @Transactional
+    public void createGithubUser(OAuth2GithubUser user) {
+        if (user.getFirstName().isEmpty() || user.getLastName().isEmpty()) {
+            throw new OAuth2Exception(HttpStatus.BAD_REQUEST,
+                ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "Firstname or lastname is empty"), null);
+        }
+
+        SignupAccount signupAccount = new SignupAccount(
+            user.getLogin(), user.getEmail(),
+            passwordEncoder.encode(user.getPassword()), user.getFirstName(), user.getLastName());
+        Account account = accountMapper.toAccount(signupAccount);
+        account.setAuthProvider(AuthProvider.GITHUB);
+        accountRepository.save(account);
+
     }
 }

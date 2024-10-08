@@ -41,9 +41,10 @@ public class SignupController {
     private final SecurityContextRepository securityContextRepository;
 
     @GetMapping("/signup")
-    public String getSignUpPage(final Model model) {
+    public String getSignUpPage(final Model model, HttpServletRequest request) {
         model.addAttribute("signupAccount", new SignupAccountModel());
         model.addAttribute("formModified", false);
+        request.getSession().setAttribute("isSignupPage", true);
         return "account/signup";
     }
 
