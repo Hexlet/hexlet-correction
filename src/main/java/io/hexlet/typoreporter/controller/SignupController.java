@@ -1,10 +1,11 @@
 package io.hexlet.typoreporter.controller;
 
-import io.hexlet.typoreporter.domain.workspace.AccountRole;
+import io.hexlet.typoreporter.security.service.AccountDetailService;
 import io.hexlet.typoreporter.service.account.EmailAlreadyExistException;
 import io.hexlet.typoreporter.service.account.UsernameAlreadyExistException;
 import io.hexlet.typoreporter.service.account.signup.SignupAccountMapper;
 import io.hexlet.typoreporter.service.account.signup.SignupAccountUseCase;
+import io.hexlet.typoreporter.service.dto.account.CustomUserDetails;
 import io.hexlet.typoreporter.service.dto.account.InfoAccount;
 import io.hexlet.typoreporter.web.model.SignupAccountModel;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,8 +28,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.List;
-
 
 @Slf4j
 @Controller
@@ -39,6 +38,7 @@ public class SignupController {
     private final SignupAccountUseCase signupAccountUseCase;
     private final SignupAccountMapper signupAccountMapper;
     private final SecurityContextRepository securityContextRepository;
+    private final AccountDetailService accountDetailService;
 
     @GetMapping("/signup")
     public String getSignUpPage(final Model model) {
@@ -61,8 +61,16 @@ public class SignupController {
         final InfoAccount newAccount;
         try {
             newAccount = signupAccountUseCase.signup(signupAccountMapper.toSignupAccount(signupAccountModel));
-            final var authentication = UsernamePasswordAuthenticationToken.
-                authenticated(newAccount.email(), null, List.of(AccountRole.ROLE_GUEST::name));
+
+            CustomUserDetails userDetails = (CustomUserDetails) accountDetailService
+                .loadUserByUsername(newAccount.email());
+
+            final var authentication = new UsernamePasswordAuthenticationToken(
+                userDetails,
+                null,
+                userDetails.getAuthorities()
+            );
+
             autoLoginAfterSignup(request, response, authentication);
             return "redirect:/workspaces";
         } catch (UsernameAlreadyExistException e) {
