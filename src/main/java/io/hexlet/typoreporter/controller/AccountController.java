@@ -1,7 +1,9 @@
 package io.hexlet.typoreporter.controller;
 
 import io.hexlet.typoreporter.domain.account.Account;
+import io.hexlet.typoreporter.security.service.AccountDetailService;
 import io.hexlet.typoreporter.service.AccountService;
+import io.hexlet.typoreporter.service.dto.account.CustomUserDetails;
 import io.hexlet.typoreporter.service.dto.account.UpdatePassword;
 import io.hexlet.typoreporter.service.dto.account.UpdateProfile;
 import io.hexlet.typoreporter.handler.exception.AccountAlreadyExistException;
@@ -23,8 +25,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.List;
-
 @Slf4j
 @Controller
 @RequestMapping("/account")
@@ -32,6 +32,7 @@ import java.util.List;
 public class AccountController {
 
     private final AccountService accountService;
+    private final AccountDetailService accountDetailService;
 
     @GetMapping
     public String getAccountInfoPage(final Model model, final Authentication authentication) {
@@ -64,8 +65,15 @@ public class AccountController {
         try {
             final String email = authentication.getName();
             Account updatedAccount = accountService.updateProfile(updateProfile, email);
-            final var authenticated = UsernamePasswordAuthenticationToken.authenticated(updatedAccount.getEmail(),
-                updatedAccount.getPassword(), List.of(() -> "ROLE_USER"));
+
+            CustomUserDetails userDetails = (CustomUserDetails) accountDetailService
+                .loadUserByUsername(updatedAccount.getEmail());
+
+            final var authenticated = new UsernamePasswordAuthenticationToken(
+                userDetails,
+                userDetails.getPassword(),
+                userDetails.getAuthorities()
+            );
             SecurityContextHolder.getContext().setAuthentication(authenticated);
             return "redirect:/account";
         } catch (AccountAlreadyExistException e) {
@@ -93,8 +101,14 @@ public class AccountController {
         try {
             final String email = authentication.getName();
             Account updatedAccount = accountService.updatePassword(updatePassword, email);
-            final var authenticated = UsernamePasswordAuthenticationToken.authenticated(updatedAccount.getEmail(),
-                updatedAccount.getPassword(), List.of(() -> "ROLE_USER"));
+            CustomUserDetails userDetails = (CustomUserDetails) accountDetailService
+                .loadUserByUsername(updatedAccount.getEmail());
+
+            final var authenticated = new UsernamePasswordAuthenticationToken(
+                userDetails,
+                userDetails.getPassword(),
+                userDetails.getAuthorities()
+            );
             SecurityContextHolder.getContext().setAuthentication(authenticated);
             return "redirect:/account";
         } catch (OldPasswordWrongException | NewPasswordTheSameException e) {
