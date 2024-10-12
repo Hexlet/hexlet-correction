@@ -30,8 +30,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -184,9 +182,9 @@ public class AccountService implements SignupAccountUseCase, QueryAccount {
     }
 
     private boolean isAccountChanged(Account account, OAuth2GithubUser user) {
-        return !account.getEmail().equalsIgnoreCase(user.getEmail()) ||
-            !account.getUsername().equalsIgnoreCase(user.getLogin()) ||
-            !account.getFirstName().equalsIgnoreCase(user.getFirstName()) ||
-            !account.getLastName().equalsIgnoreCase(user.getLastName());
+        return !account.getEmail().equalsIgnoreCase(user.getEmail())
+            || !account.getUsername().equalsIgnoreCase(user.getLogin())
+            || !account.getFirstName().equalsIgnoreCase(user.getFirstName())
+            || !account.getLastName().equalsIgnoreCase(user.getLastName());
     }
 }
