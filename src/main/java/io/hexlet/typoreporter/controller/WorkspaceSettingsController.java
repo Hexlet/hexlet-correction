@@ -167,13 +167,18 @@ public class WorkspaceSettingsController {
     @GetMapping("/integration")
     @PreAuthorize(IS_USER_RELATED_TO_WKS)
     public String getWorkspaceIntegrationPage(Model model, @PathVariable Long wksId, HttpServletRequest req) {
-        if (!workspaceService.existsWorkspaceById(wksId)) {
+        var wksOptional = workspaceService.getWorkspaceInfoById(wksId).orElse(null);
+
+        if (wksOptional == null) {
             //TODO send to error page
             log.error("Workspace with id {} not found", wksId);
             return "redirect:/workspaces";
         }
 
         addTokenAndUrlToModel(model, wksId, req);
+
+        model.addAttribute("wksInfo", wksOptional);
+        model.addAttribute("wksName", wksOptional.name());
 
         getStatisticDataToModel(model, wksId);
         getLastTypoDataToModel(model, wksId);

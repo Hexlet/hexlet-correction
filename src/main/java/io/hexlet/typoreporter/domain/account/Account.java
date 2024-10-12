@@ -74,12 +74,10 @@ public class Account extends AbstractAuditingEntity implements Identifiable<Long
     @ToString.Exclude
     private String password;
 
-    @NotBlank
-    @Size(min = 1, max = 50)
+    @Size(max = 50)
     private String firstName;
 
-    @NotBlank
-    @Size(min = 1, max = 50)
+    @Size(max = 50)
     private String lastName;
 
     @OneToMany(mappedBy = "account", cascade = ALL, orphanRemoval = true)

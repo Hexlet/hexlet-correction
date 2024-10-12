@@ -4,8 +4,8 @@
 
 <body>
 <nav aria-label="Main navbar" class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark" th:fragment="mainNavbarTop">
-    <div class="container-fluid">
-        <a class="navbar-brand" th:href="@{/workspaces}">Hexlet Typo Reporter</a>
+    <div class="container">
+        <a class="navbar-brand" th:href="@{/workspaces}">FixIT</a>
         <button aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler"
                 data-bs-target="#mainNavbar" data-bs-toggle="collapse" type="button">
             <span class="navbar-toggler-icon"></span>
@@ -31,7 +31,7 @@
                 <!-- End Switcher -->
                 <div class="navbar-nav" sec:authorize="isAuthenticated()">
                     <li class="nav-item">
-                        <a class="nav-link" href="/" th:text="${#authentication.getName()}"></a>
+                        <span class="d-block px-2 py-2 text-white-50" th:text="${#authentication.getName()}"></span>
                     </li>
                     <li class="nav-item">
                         <form th:action="@{/logout}" th:method="post">

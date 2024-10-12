@@ -2,7 +2,6 @@ package io.hexlet.typoreporter.service.dto.account;
 
 import io.hexlet.typoreporter.domain.account.constraint.AccountUsername;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,11 +19,9 @@ public class UpdateProfile {
         message = "The email \"${validatedValue}\" is not valid")
     private String email;
 
-    @NotBlank
-    @Size(min = 1, max = 50)
+    @Size(max = 50)
     private String firstName;
 
-    @NotBlank
-    @Size(min = 1, max = 50)
+    @Size(max = 50)
     private String lastName;
 }
