@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="2024-10-06-add-table-social-links-to-accounts" author="d1z3d">
+        <comment>Таблица для хранения ID пользователя из социальной сети, т.к. пользователя можно идентифицировать только по нему</comment>
+        <createTable tableName="account_social_links">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_SOCIAL_LINKS_OF_USERS" />
+            </column>
+            <column name="account_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="login" type="BIGINT">
+                <constraints nullable="true" />
+            </column>
+            <column name="auth_provider" type="AUTH_PROVIDER">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseColumnNames="account_id" baseTableName="account_social_links"
+                                 constraintName="FK_SOCIAL_LINKS_ON_ACCOUNT" referencedTableName="account"
+                                 referencedColumnNames="id" />
+        <createSequence sequenceName="social_links_to_accounts_id_seq" startValue="1" incrementBy="15" />
+    </changeSet>
+</databaseChangeLog>

@@ -3,6 +3,7 @@ package io.hexlet.typoreporter.domain.account;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import io.hexlet.typoreporter.domain.AbstractAuditingEntity;
+import io.hexlet.typoreporter.domain.AccountSocialLink;
 import io.hexlet.typoreporter.domain.Identifiable;
 import io.hexlet.typoreporter.domain.account.constraint.AccountUsername;
 import io.hexlet.typoreporter.domain.typo.Typo;
@@ -89,6 +90,10 @@ public class Account extends AbstractAuditingEntity implements Identifiable<Long
     @ToString.Exclude
     private List<Typo> typos = new ArrayList<>();
 
+    @OneToMany(mappedBy = "account", cascade = ALL, orphanRemoval = true)
+    @ToString.Exclude
+    private List<AccountSocialLink> accountSocialLinks = new ArrayList<>();
+
     public Account addTypo(final Typo typo) {
         typos.add(typo);
         typo.setAccount(this);
@@ -110,6 +115,17 @@ public class Account extends AbstractAuditingEntity implements Identifiable<Long
     public void removeWorkSpaceRole(WorkspaceRole workspaceRole) {
         workspaceRoles.remove(workspaceRole);
         workspaceRole.setAccount(null);
+    }
+
+    public Account addAccountsSocialLinks(AccountSocialLink accountSocialLink) {
+        accountSocialLink.setAccount(this);
+        accountSocialLinks.add(accountSocialLink);
+        return this;
+    }
+
+    public void removeAccountsSocialLinks(AccountSocialLink accountSocialLink) {
+        accountSocialLinks.remove(accountSocialLink);
+        accountSocialLink.setAccount(null);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package io.hexlet.typoreporter.service;
 
+import io.hexlet.typoreporter.domain.AccountSocialLink;
 import io.hexlet.typoreporter.domain.account.Account;
 import io.hexlet.typoreporter.domain.account.AuthProvider;
 import io.hexlet.typoreporter.domain.account.OAuth2GithubUser;
@@ -29,6 +30,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -123,7 +126,6 @@ public class AccountService implements SignupAccountUseCase, QueryAccount {
         Account updAccount = accountMapper.toAccount(updateProfile, sourceAccount);
         updAccount.setUsername(normalizedUserName);
         updAccount.setEmail(normalizedEmail);
-        System.out.println("12: " + updAccount);
         accountRepository.save(updAccount);
         return updAccount;
     }
@@ -156,7 +158,35 @@ public class AccountService implements SignupAccountUseCase, QueryAccount {
             passwordEncoder.encode(user.getPassword()), user.getFirstName(), user.getLastName());
         Account account = accountMapper.toAccount(signupAccount);
         account.setAuthProvider(AuthProvider.GITHUB);
+        AccountSocialLink link = new AccountSocialLink();
+        link.setAccount(account);
+        link.setLogin(user.getId());
+        link.setAuthProvider(AuthProvider.GITHUB);
+        account.addAccountsSocialLinks(link);
         accountRepository.save(account);
+    }
 
+    @Transactional
+    public void updateGithubUser(Account sourceAccount, OAuth2GithubUser user) {
+        if (isAccountChanged(sourceAccount, user)) {
+            var accountByEmail = accountRepository.findAccountByEmail(user.getEmail());
+            var accountByUsername = accountRepository.findAccountByEmail(user.getEmail());
+            var isNewEmailCanBeUsed = accountByEmail.map(account -> account.equals(sourceAccount)).orElse(true);
+            var isNewUsernameCanBeUsed = accountByUsername.map(account -> account.equals(sourceAccount)).orElse(true);
+            if (isNewEmailCanBeUsed && isNewUsernameCanBeUsed) {
+                sourceAccount.setUsername(user.getLogin());
+                sourceAccount.setEmail(user.getEmail());
+                sourceAccount.setFirstName(user.getFirstName());
+                sourceAccount.setLastName(user.getLastName());
+                accountRepository.save(sourceAccount);
+            }
+        }
+    }
+
+    private boolean isAccountChanged(Account account, OAuth2GithubUser user) {
+        return !account.getEmail().equalsIgnoreCase(user.getEmail()) ||
+            !account.getUsername().equalsIgnoreCase(user.getLogin()) ||
+            !account.getFirstName().equalsIgnoreCase(user.getFirstName()) ||
+            !account.getLastName().equalsIgnoreCase(user.getLastName());
     }
 }

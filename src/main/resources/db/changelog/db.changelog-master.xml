@@ -27,4 +27,6 @@
              relativeToChangelogFile="true" />
     <include file="changesets/2024/05/2024-05-31-remove-unique-constraint-to-name-workspace.xml"
              relativeToChangelogFile="true" />
+    <include file="changesets/2024/10/2024-10-06-add-table-social-links-to-accounts.xml"
+             relativeToChangelogFile="true" />
 </databaseChangeLog>

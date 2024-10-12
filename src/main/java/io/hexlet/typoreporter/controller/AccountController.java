@@ -35,7 +35,6 @@ public class AccountController {
 
     @GetMapping
     public String getAccountInfoPage(final Model model, final Authentication authentication) {
-        System.out.println("customAuth2-: " + authentication.toString());
         final var accountInfo = accountService.getInfoAccount(authentication.getName());
         final var workspaceInfos = accountService.getWorkspacesInfoListByEmail(accountInfo.email());
         model.addAttribute("workspaceRoleInfoList", workspaceInfos);

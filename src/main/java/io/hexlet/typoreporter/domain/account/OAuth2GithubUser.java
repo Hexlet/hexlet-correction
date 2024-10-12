@@ -63,4 +63,8 @@ public class OAuth2GithubUser extends DefaultOAuth2User {
         Integer password = oAuth2User.getAttribute("id");
         return Objects.requireNonNull(password).toString();
     }
+
+    public Integer getId() {
+        return Objects.requireNonNull(oAuth2User.getAttribute("id"));
+    }
 }
