@@ -9,15 +9,19 @@ import io.hexlet.typoreporter.domain.typo.Typo;
 import io.hexlet.typoreporter.domain.typo.TypoStatus;
 import io.hexlet.typoreporter.domain.workspace.AccountRole;
 import io.hexlet.typoreporter.domain.workspace.Workspace;
+import io.hexlet.typoreporter.domain.workspace.WorkspaceRole;
 import io.hexlet.typoreporter.domain.workspace.WorkspaceRoleId;
 import io.hexlet.typoreporter.domain.workspacesettings.WorkspaceSettings;
 import io.hexlet.typoreporter.repository.AccountRepository;
 import io.hexlet.typoreporter.repository.AllowedUrlRepository;
 import io.hexlet.typoreporter.repository.WorkspaceRepository;
 import io.hexlet.typoreporter.repository.WorkspaceRoleRepository;
+import io.hexlet.typoreporter.service.WorkspaceRoleService;
+import io.hexlet.typoreporter.service.dto.account.CustomUserDetails;
 import io.hexlet.typoreporter.service.dto.workspace.CreateWorkspace;
 import io.hexlet.typoreporter.service.mapper.WorkspaceMapper;
 import io.hexlet.typoreporter.test.DBUnitEnumPostgres;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -25,6 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -35,18 +40,16 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.time.Instant;
-import java.util.UUID;
-import java.util.Set;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Comparator;
+import java.util.UUID;
+import java.util.Set;
 
-import org.junit.jupiter.api.Disabled;
 
 import static com.github.database.rider.core.api.configuration.Orthography.LOWERCASE;
 
-import io.hexlet.typoreporter.domain.workspace.WorkspaceRole;
-import io.hexlet.typoreporter.service.WorkspaceRoleService;
 
 import static io.hexlet.typoreporter.test.Constraints.POSTGRES_IMAGE;
 import static io.hexlet.typoreporter.test.factory.EntitiesFactory.ACCOUNT_102_EMAIL;
@@ -127,7 +130,8 @@ class WorkspaceControllerIT {
 
         MockHttpServletResponse response = mockMvc.perform(
                 get("/workspace/{wksId}", wksId)
-                    .with(user(email)))
+                    .with(user(new CustomUserDetails(email, "password", "SampleNickname",
+                        List.of(new SimpleGrantedAuthority("USER"))))))
             .andExpect(model().attributeExists("wksInfo", "wksName"))
             .andReturn().getResponse();
 
@@ -140,7 +144,8 @@ class WorkspaceControllerIT {
                                              final String email) throws Exception {
         mockMvc.perform(get("/workspace/{wksId}", wksId))
             .andExpect(redirectedUrl("/workspaces"));
-        mockMvc.perform(get("/workspace/{wksId}", wksId).with(user(email)))
+        mockMvc.perform(get("/workspace/{wksId}", wksId).with(user(new CustomUserDetails(email,
+                "password", "SampleNickname", List.of(new SimpleGrantedAuthority("USER"))))))
             .andExpect(redirectedUrl("/workspaces"));
     }
 
@@ -162,7 +167,8 @@ class WorkspaceControllerIT {
         Workspace workspace = repository.getWorkspaceById(wksId).orElse(null);
 
         MockHttpServletResponse response = mockMvc.perform(get("/workspace/{wksId}/typos", wksId)
-                .with(user(email)))
+                .with(user(new CustomUserDetails(email, "password", "SampleNickname",
+                    List.of(new SimpleGrantedAuthority("USER"))))))
             .andExpect(model().attributeExists("wksInfo", "wksName",
                 "typoPage", "availableSizes", "sortProp", "sortDir", "DESC", "ASC"))
             .andReturn().getResponse();
@@ -187,7 +193,8 @@ class WorkspaceControllerIT {
         var request = get("/workspace/{wksId}/typos", wksId).queryParam("typoStatus", typoStatus);
 
         MockHttpServletResponse response = mockMvc.perform(request
-                .with(user(email)))
+                .with(user(new CustomUserDetails(email, "password", "SampleNickname",
+                    List.of(new SimpleGrantedAuthority("USER"))))))
             .andExpect(model().attributeExists("wksInfo", "wksName", "typoPage",
                 "availableSizes", "sortProp", "sortDir", "DESC", "ASC", "typoStatus"))
             .andReturn().getResponse();
@@ -217,7 +224,8 @@ class WorkspaceControllerIT {
         Workspace workspace = repository.getWorkspaceById(wksId).orElse(null);
 
         MockHttpServletResponse response = mockMvc.perform(get("/workspace/{wksId}/update", wksId)
-                .with(user(email)))
+                .with(user(new CustomUserDetails(email, "password", "SampleNickname",
+                    List.of(new SimpleGrantedAuthority("USER"))))))
             .andExpect(model().attributeExists("wksName", "formModified", "formModified"))
             .andReturn().getResponse();
         assertThat(response.getContentAsString()).contains(workspace.getDescription());
@@ -240,7 +248,8 @@ class WorkspaceControllerIT {
                 .param("name", newWksName)
                 .param("url", "https://other.com")
                 .param("description", "Wks description 01")
-                .with(user(username))
+                .with(user(new CustomUserDetails(username, "password", "SampleNickname",
+                    List.of(new SimpleGrantedAuthority("USER")))))
                 .with(csrf()))
             .andExpect(redirectedUrl("/workspace/" + wksId));
 
@@ -269,7 +278,8 @@ class WorkspaceControllerIT {
         mockMvc.perform(put("/workspace/{wksId}/update", wksId)
                 .param("name", newWksName)
                 .param("description", wksDescription)
-                .with(user(username))
+                .with(user(new CustomUserDetails(username, "password", "SampleNickname",
+                    List.of(new SimpleGrantedAuthority("USER")))))
                 .with(csrf()))
             .andExpect(model().attributeExists("createWorkspace"));
 
@@ -300,7 +310,8 @@ class WorkspaceControllerIT {
                 .param("name", wks.getName())
                 .param("description", wksDescription)
                 .param("url", newWksUrl)
-                .with(user(username))
+                .with(user(new CustomUserDetails(username, "password", "SampleNickname",
+                    List.of(new SimpleGrantedAuthority("USER")))))
                 .with(csrf()))
             .andExpect(model().attributeExists("createWorkspace"));
 
@@ -320,7 +331,8 @@ class WorkspaceControllerIT {
 
         MockHttpServletResponse response = mockMvc.perform(
                 delete("/workspace/{wksId}", wksId)
-                    .with(user(username))
+                    .with(user(new CustomUserDetails(username, "password", "SampleNickname",
+                        List.of(new SimpleGrantedAuthority("USER")))))
                     .with(csrf()))
             .andReturn()
             .getResponse();
@@ -346,7 +358,8 @@ class WorkspaceControllerIT {
 
         MockHttpServletResponse response = mockMvc.perform(
                 get("/workspace/{wksId}/users", wksId)
-                    .with(user(email)))
+                    .with(user(new CustomUserDetails(email, "password", "SampleNickname",
+                        List.of(new SimpleGrantedAuthority("USER"))))))
             .andExpect(status().isOk())
             .andExpect(model().attributeExists("wksInfo", "wksName",
                 "userPage", "availableSizes", "sortProp", "sortDir", "DESC", "ASC"))
@@ -366,7 +379,8 @@ class WorkspaceControllerIT {
         mockMvc.perform(
             post("/workspace/{wksId}/users", WORKSPACE_103_ID)
                 .param("email", ACCOUNT_102_EMAIL)
-                .with(user(ACCOUNT_103_EMAIL))
+                .with(user(new CustomUserDetails(ACCOUNT_103_EMAIL, "password", "SampleNickname",
+                    List.of(new SimpleGrantedAuthority("USER")))))
                 .with(csrf()));
         assertThat(workspaceRoleRepository.count()).isEqualTo(rolesCountBeforeAdding + 1L);
         Optional<WorkspaceRole> addedWksRoleOptional = workspaceRoleRepository
@@ -376,7 +390,8 @@ class WorkspaceControllerIT {
         mockMvc.perform(
             delete("/workspace/{wksId}/users", WORKSPACE_103_ID)
                 .param("email", ACCOUNT_102_EMAIL)
-                .with(user(ACCOUNT_102_EMAIL))
+                .with(user(new CustomUserDetails(ACCOUNT_102_EMAIL, "password", "SampleNickname",
+                    List.of(new SimpleGrantedAuthority("USER")))))
                 .with(csrf()));
         assertThat(workspaceRoleRepository.count()).isEqualTo(rolesCountBeforeAdding + 1L);
         Optional<WorkspaceRole> addedWksRoleStillThereOptional = workspaceRoleRepository
@@ -386,7 +401,8 @@ class WorkspaceControllerIT {
         mockMvc.perform(
             delete("/workspace/{wksId}/users", WORKSPACE_103_ID)
                 .param("email", ACCOUNT_102_EMAIL)
-                .with(user(ACCOUNT_103_EMAIL))
+                .with(user(new CustomUserDetails(ACCOUNT_103_EMAIL, "password", "SampleNickname",
+                    List.of(new SimpleGrantedAuthority("USER")))))
                 .with(csrf()));
         assertThat(workspaceRoleRepository.count()).isEqualTo(rolesCountBeforeAdding);
         Optional<WorkspaceRole> addedWksRoleDeletedOptional = workspaceRoleRepository
@@ -399,7 +415,8 @@ class WorkspaceControllerIT {
         var response = mockMvc.perform(
                 post("/workspace/{wksId}/users", WORKSPACE_103_ID)
                     .param("email", ACCOUNT_INCORRECT_EMAIL)
-                    .with(user(ACCOUNT_103_EMAIL))
+                    .with(user(new CustomUserDetails(ACCOUNT_103_EMAIL, "password", "SampleNickname",
+                        List.of(new SimpleGrantedAuthority("USER")))))
                     .with(csrf()))
             .andReturn();
         var body = response.getResponse().getContentAsString();

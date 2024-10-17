@@ -30,13 +30,20 @@
                 </li>
                 <!-- End Switcher -->
                 <div class="navbar-nav" sec:authorize="isAuthenticated()">
-                    <li class="nav-item">
-                        <span class="d-block px-2 py-2 text-white-50" th:text="${#authentication.getName()}"></span>
-                    </li>
-                    <li class="nav-item">
-                        <form th:action="@{/logout}" th:method="post">
-                            <button class="btn btn-link nav-link" type="submit" th:text="#{navbar.logout}">Logout</button>
-                        </form>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+                                <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+                                <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
+                            </svg>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end pb-0" aria-labelledby="profileDropdown">
+                            <span class="py-1 px-3 d-block fw-bolder" th:text="${#authentication.getPrincipal().nickname}"></span>
+                            <span class="py-1 px-3 d-block" th:text="${#authentication.getName()}"></span>
+                            <form class="border-top dropdown-item" th:action="@{/logout}" th:method="post">
+                                <button class="btn px-0 text-start w-100" type="submit" th:text="#{navbar.logout}">Logout</button>
+                            </form>
+                        </ul>
                     </li>
                 </div>
                 <div class="navbar-nav" sec:authorize="isAnonymous()">
