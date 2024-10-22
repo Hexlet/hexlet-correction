@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sd="http://www.w3.org/1999/xhtml">
-<head th:replace="~{fragments/header :: head}"></head>
-<body style="padding-top: 4.5rem">
-<nav th:replace="~{fragments/panels :: mainNavbarTop}"></nav>
-<main class="container-fluid">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sd="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+
+<div layout:fragment="content" class="container-fluid">
     <div class="row">
         <!-- Workspace Side Bar -->
         <div class="col-2" th:include="fragments/panels :: workspaceSideBar (${wksInfo.id()}, ${wksName}, 'typos')"></div>
@@ -148,7 +148,7 @@
                                         th:aria-controls="|collapseTypoRowId_*{id}|"
                                         th:classappend="|table-*{typoStatus.getStyle}|"
                                         th:data-bs-target="|#collapseTypoRowId_*{id}|">
-                                        <td th:text="*{pageUrl}"></td>
+                                        <td th:text="*{pageUrl}" class="text-break"></td>
                                         <td th:text="*{reporterName}"></td>
                                         <td th:text="*{createdDateAgo}"></td>
                                         <td th:text="*{modifiedDateAgo}"></td>
@@ -216,6 +216,5 @@
             </div>
         </div>
     </div>
-</main>
-</body>
+</div>
 </html>

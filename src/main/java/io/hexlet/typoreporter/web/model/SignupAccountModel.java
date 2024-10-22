@@ -4,7 +4,6 @@ import io.hexlet.typoreporter.domain.account.constraint.AccountPassword;
 import io.hexlet.typoreporter.domain.account.constraint.AccountUsername;
 import io.hexlet.typoreporter.service.dto.FieldMatchConsiderCase;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -19,14 +18,15 @@ import lombok.ToString;
 @FieldMatchConsiderCase(
     first = "password",
     second = "confirmPassword",
-    message = "The password and it confirmation must match")
+    message = "{alert.passwords-dont-match}")
 @ToString
 public class SignupAccountModel {
 
     @AccountUsername
     private String username;
 
-    @Email(regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", message = "The email \"{0}\" incorrect")
+    @Email(regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$",
+        message = "The email \"${validatedValue}\" is not valid")
     private String email;
 
     @AccountPassword
@@ -37,11 +37,9 @@ public class SignupAccountModel {
     @ToString.Exclude
     private String confirmPassword;
 
-    @NotBlank
-    @Size(min = 1, max = 50)
+    @Size(max = 50)
     private String firstName;
 
-    @NotBlank
-    @Size(min = 1, max = 50)
+    @Size(max = 50)
     private String lastName;
 }

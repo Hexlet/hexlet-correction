@@ -38,6 +38,7 @@ dependencies {
     implementation("io.github.jpenren:thymeleaf-spring-data-dialect:3.6.0")
     implementation("org.webjars:webjars-locator-core:0.58")
     implementation("org.webjars:bootstrap:5.2.3")
+    implementation("nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.3.0")
     // Database
     runtimeOnly("org.postgresql:postgresql:42.5.4")
     implementation("io.hypersistence:hypersistence-utils-hibernate-60:3.2.0")
@@ -48,7 +49,6 @@ dependencies {
     implementation("org.mapstruct:mapstruct:1.5.3.Final")
     // Annotation processors
     annotationProcessor("org.mapstruct:mapstruct-processor:1.5.3.Final")
-
     // Testing
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")

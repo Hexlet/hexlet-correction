@@ -84,7 +84,8 @@ public class SecurityConfig {
         http.exceptionHandling().accessDeniedHandler(accessDeniedHandler());
 
         http.authorizeHttpRequests(authz -> authz
-                .requestMatchers(GET, "/webjars/**", "/widget/**", "/fragments/**", "/img/**").permitAll()
+                .requestMatchers(GET, "/webjars/**", "/widget/**", "/fragments/**", "/img/**",
+                    "/favicon.ico").permitAll()
                 .requestMatchers("/", "/login", "/signup", "/error", "/about").permitAll()
                 .anyRequest().authenticated()
             )

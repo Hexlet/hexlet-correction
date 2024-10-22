@@ -1,32 +1,111 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/header :: head}"></head>
-<body class="d-flex min-vh-100">
-<nav th:replace="~{fragments/panels :: mainNavbarTop}"></nav>
-<div class="container-fluid d-flex flex-column p-0 m-0">
-    <div class=" bg-light mx-auto mt-5">
-        <main class="bg-light p-3">
-            <h1 class="display-1">Hexlet Typo Reporter</h1>
-            <p class="display-6">Сервис для отправки сообщений об ошибках в тексте на Вашем сайте</p>
-            <div class="row">
-                <div class="d-flex justify-content-evenly m-1 border">
-                    <img alt="modal window example" class="w-70" src="" th:src="@{img/landing/typo-form-screen.png}" />
-                    <p class="fs-4 m-2 p-2">
-                        Добавьте на страницу <b>виджет</b>, через который пользователи смогут сообщать об опечатках
-                    </p>
-                </div>
-                <div class="d-flex justify-content-evenly m-1 border">
-                    <div class="fs-4 m-2 p-2">
-                        <p>Отслеживайте ошибки и их <b>статус</b></p>
-                        <a class="btn btn-primary border" th:href="@{/workspaces}">Перейти в сервис</a>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+
+<body class="bg-light bg-gradient">
+    <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
+        <symbol id="check2" fill="white" viewBox="0 0 16 16">
+            <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
+        </symbol>
+        <symbol id="circle-half" fill="white" viewBox="0 0 16 16">
+            <path d="M8 15A7 7 0 1 0 8 1v14zm0 1A8 8 0 1 1 8 0a8 8 0 0 1 0 16z"/>
+        </symbol>
+        <symbol id="moon-stars-fill" viewBox="0 0 16 16">
+            <path d="M6 .278a.768.768 0 0 1 .08.858 7.208 7.208 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277.527 0 1.04-.055 1.533-.16a.787.787 0 0 1 .81.316.733.733 0 0 1-.031.893A8.349 8.349 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.752.752 0 0 1 6 .278z"/>
+            <path d="M10.794 3.148a.217.217 0 0 1 .412 0l.387 1.162c.173.518.579.924 1.097 1.097l1.162.387a.217.217 0 0 1 0 .412l-1.162.387a1.734 1.734 0 0 0-1.097 1.097l-.387 1.162a.217.217 0 0 1-.412 0l-.387-1.162A1.734 1.734 0 0 0 9.31 6.593l-1.162-.387a.217.217 0 0 1 0-.412l1.162-.387a1.734 1.734 0 0 0 1.097-1.097l.387-1.162zM13.863.099a.145.145 0 0 1 .274 0l.258.774c.115.346.386.617.732.732l.774.258a.145.145 0 0 1 0 .274l-.774.258a1.156 1.156 0 0 0-.732.732l-.258.774a.145.145 0 0 1-.274 0l-.258-.774a1.156 1.156 0 0 0-.732-.732l-.774-.258a.145.145 0 0 1 0-.274l.774-.258c.346-.115.617-.386.732-.732L13.863.1z"/>
+        </symbol>
+        <symbol id="sun-fill" viewBox="0 0 16 16">
+            <path d="M8 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0zm0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13zm8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5zM3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8zm10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0zm-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zm9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707zM4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708z"/>
+        </symbol>
+    </svg>
+    <div layout:fragment="content">
+        <section class="py-5" id="heroes">
+            <div class="container my-5">
+                <div class="row p-4 pb-0 pe-lg-0 pt-lg-5 align-items-center rounded-3 border-0 shadow-lg">
+                    <div class="col-lg-7 p-3 p-lg-5 pt-lg-3">
+                        <h1 class="display-4 fw-bold lh-1 text-body-emphasis">FixIT</h1>
+                        <p class="lead" th:text="#{text.heroes}"></p>
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-start mb-4 mb-lg-3" sec:authorize="isAnonymous()">
+                            <a role="button" class="btn btn-primary btn-lg px-4 me-md-2" th:href="@{/signup}" th:text="#{navbar.signup}"></a>
+                            <a role="button" class="btn btn-outline-secondary btn-lg px-4" th:href="@{/login}" th:text="#{navbar.login}"></a>
+                        </div>
                     </div>
-                    <img alt="app screenshot with typo statuses" class="w-50" src=""
-                         th:src="@{img/landing/typo-info-screen.png}" />
+                    <div class="col-lg-4 offset-lg-1 p-0 overflow-hidden shadow-lg">
+                        <img class="rounded-lg-3" src="https://fixit.hexlet.io/img/landing/typo-form-screen.png" alt="fixit widget screen" width="720">
+                    </div>
                 </div>
             </div>
-        </main>
+        </section>
+        <section id="features">
+            <div class="container px-4">
+                <h2 class="pb-2 border-bottom" th:text="#{text.features-header}"></h2>
+                <div class="row g-4 py-5 row-cols-1 row-cols-lg-3">
+                    <div class="feature col">
+                        <div class="feature-icon d-inline-flex align-items-center justify-content-center bg-gradient fs-2 mb-3 text-primary">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="4rem" height="4rem" fill="currentColor" class="bi bi-bookmark-star" viewBox="0 0 16 16">
+                                <path d="M7.84 4.1a.178.178 0 0 1 .32 0l.634 1.285a.18.18 0 0 0 .134.098l1.42.206c.145.021.204.2.098.303L9.42 6.993a.18.18 0 0 0-.051.158l.242 1.414a.178.178 0 0 1-.258.187l-1.27-.668a.18.18 0 0 0-.165 0l-1.27.668a.178.178 0 0 1-.257-.187l.242-1.414a.18.18 0 0 0-.05-.158l-1.03-1.001a.178.178 0 0 1 .098-.303l1.42-.206a.18.18 0 0 0 .134-.098z"/>
+                                <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1z"/>
+                            </svg>
+                        </div>
+                        <h3 class="fs-4 text-body-emphasis" th:text="#{text.features-sub-header1}"></h3>
+                        <p class="lead fs-6" th:text="#{text.features-description1}"></p>
+                    </div>
+                    <div class="feature col">
+                        <div class="feature-icon d-inline-flex align-items-center justify-content-center bg-gradient fs-2 mb-3 text-primary">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="4rem" height="4rem" fill="currentColor" class="bi" viewBox="0 0 16 16">
+                                <path d="M14.5 3a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2z"/>
+                                <path d="M7 5.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5m-1.496-.854a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 1 1 .708-.708l.146.147 1.146-1.147a.5.5 0 0 1 .708 0M7 9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5m-1.496-.854a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 0 1 .708-.708l.146.147 1.146-1.147a.5.5 0 0 1 .708 0"/>
+                            </svg>
+                        </div>
+                        <h3 class="fs-4 text-body-emphasis" th:text="#{text.features-sub-header2}"></h3>
+                        <p class="lead fs-6" th:text="#{text.features-description2}"></p>
+                    </div>
+                    <div class="feature col">
+                        <div class="feature-icon d-inline-flex align-items-center justify-content-center bg-gradient fs-2 mb-3 text-primary">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="4rem" height="4rem" fill="currentColor" class="bi bi-arrow-through-heart" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M2.854 15.854A.5.5 0 0 1 2 15.5V14H.5a.5.5 0 0 1-.354-.854l1.5-1.5A.5.5 0 0 1 2 11.5h1.793l.53-.53c-.771-.802-1.328-1.58-1.704-2.32-.798-1.575-.775-2.996-.213-4.092C3.426 2.565 6.18 1.809 8 3.233c1.25-.98 2.944-.928 4.212-.152L13.292 2 12.147.854A.5.5 0 0 1 12.5 0h3a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-.854.354L14 2.707l-1.006 1.006c.236.248.44.531.6.845.562 1.096.585 2.517-.213 4.092-.793 1.563-2.395 3.288-5.105 5.08L8 13.912l-.276-.182a22 22 0 0 1-2.685-2.062l-.539.54V14a.5.5 0 0 1-.146.354zm2.893-4.894A20.4 20.4 0 0 0 8 12.71c2.456-1.666 3.827-3.207 4.489-4.512.679-1.34.607-2.42.215-3.185-.817-1.595-3.087-2.054-4.346-.761L8 4.62l-.358-.368c-1.259-1.293-3.53-.834-4.346.761-.392.766-.464 1.845.215 3.185.323.636.815 1.33 1.519 2.065l1.866-1.867a.5.5 0 1 1 .708.708z"/>
+                            </svg>
+                        </div>
+                        <h3 class="fs-4 text-body-emphasis" th:text="#{text.features-sub-header3}"></h3>
+                        <p class="lead fs-6" th:text="#{text.features-description3}"></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section id="how-it-works">
+            <div class="container px-4 py-5">
+                <h2 class="pb-2 border-bottom" th:text="#{text.how-it-works-header}"></h2>
+                <div class="row row-cols-1 row-cols-lg-3 align-items-stretch g-4 py-5">
+                    <div class="col">
+                        <div class="card card-cover h-100 overflow-hidden text-bg-dark bg-gradient rounded-4 shadow-lg">
+                            <div class="d-flex flex-column h-100 p-5 text-white text-shadow-1">
+                                <h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold" th:text="#{text.how-it-works-sub-header1}"></h3>
+                                <p class="lead fs-6" th:text="#{text.how-it-works-description1}"></p>
+                                <a role="button" class="btn btn-primary btn-md" sec:authorize="isAnonymous()" th:href="@{/signup}" th:text="#{navbar.signup}"></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card card-cover h-100 overflow-hidden text-bg-dark bg-gradient rounded-4 shadow-lg">
+                            <div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
+                                <h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold" th:text="#{text.how-it-works-sub-header2}"></h3>
+                                <p class="lead fs-6" th:text="#{text.how-it-works-description2}"></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card card-cover h-100 overflow-hidden text-bg-dark bg-gradient rounded-4 shadow-lg">
+                            <div class="d-flex flex-column h-100 p-5 pb-3 text-shadow-1">
+                                <h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold" th:text="#{text.how-it-works-sub-header3}"></h3>
+                                <p class="lead fs-6" th:text="#{text.how-it-works-description3}"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
     </div>
-    <footer th:replace="~{fragments/footer :: footer}"></footer>
-</div>
 </body>
 </html>

@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:sd="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/header :: head}"></head>
-<body style="padding-top: 4.5rem">
-<nav th:replace="~{fragments/panels :: mainNavbarTop}"></nav>
-<main class="container-fluid">
+<html lang="en" xmlns:sd="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+
+<div layout:fragment="content" class="container-fluid">
     <div class="row">
         <!-- Workspace Side Bar -->
         <!-- <div class="col-2" th:include="~{fragments/panels :: workspaceSideBar (${wksInfo.id()}, ${wksName}, 'users')}"></div> -->
@@ -24,10 +24,10 @@
                 <form method="POST" th:action="@{'/workspace/' + ${wksId} + '/users'}" th:object="${inputEmail}">
                     <div class="form-group">
                         <input type="email" class="form-control" id="inputUserEmail"
-                               placeholder="Enter user email. For example: hexlet@gmail.com" th:field="*{email}"
+                               th:placeholder="#{wks.users.email-placeholder}" th:field="*{email}"
                                th:classappend="${!#fields.hasErrors('email') && formModified}? 'is-valid'"
                                th:errorclass="is-invalid" required>
-                        <div class="alert alert-danger mt-1" th:if="${#fields.hasErrors('email')}">
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('email')}">
                             <p class="mb-0" th:each="err : ${#fields.errors('email')}" th:text="${err}"></p>
                         </div>
                         <small id="emailHelp" class="form-text text-muted"></small>
@@ -103,7 +103,7 @@
                                 <tbody>
                                 <th:block th:each="userInfo : ${userPage.content}" th:object="${userInfo}">
                                     <!-- Workspace user table row -->
-                                    <tr aria-expanded="false" class="accordion collapsed" data-bs-toggle="collapse">
+                                    <tr>
                                         <td th:text="*{id}"></td>
                                         <td th:text="*{firstName}"></td>
                                         <td th:text="*{lastName}"></td>
@@ -121,24 +121,8 @@
                                         </td>
                                     </tr>
                                     <!-- Workspace user table row collapsed part -->
-                                    <tr>
-                                        <td class="p-0" colspan="7">
-                                            <div class="accordion-collapse collapse" th:id="|collapseUserRowId_*{id}|">
-                                                <div class="p-4">
-                                                    <div class="row mb-2">
-                                                        <!-- Workspace user table row delete buttons -->
-                                                        <div class="col-1">
-                                                            <form th:action="@{'/users/' + *{id}(wksId=${wksId})}"
-                                                                  th:method="delete">
-                                                                <button class="btn btn-danger" type="submit">Delete
-                                                                </button>
-                                                            </form>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
+                                    <!-- Deleted -->
+                                    <!-- TODO add possibility for admin to leave workspace (i.e. delete himself from wks), like in posthog service -->
                                 </th:block>
                                 </tbody>
                             </table>
@@ -148,6 +132,5 @@
             </div>
         </div>
     </div>
-</main>
-</body>
+</div>
 </html>

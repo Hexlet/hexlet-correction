@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
-<head th:replace="~{fragments/header :: head}"></head>
-<body style="padding-top: 4.5rem">
-<nav th:replace="~{fragments/panels :: mainNavbarTop}"></nav>
-<main class="container-fluid">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+
+<div layout:fragment="content" class="container-fluid">
     <div class="row">
         <div class="col-2" th:insert="fragments/panels :: workspaceSideBar (${wksId}, ${wksName}, 'settings')"></div>
         <div class="col">
@@ -49,7 +49,7 @@
                             </div>
                             <div class="row mt-2">
                                 <div class="col-12">
-                                    <ul class="alert alert-danger ps-5" th:if="${#fields.hasErrors('url')}">
+                                    <ul class="invalid-feedback" th:if="${#fields.hasErrors('url')}">
                                         <li th:each="err : ${#fields.errors('url')}" th:text="${err}"></li>
                                     </ul>
                                 </div>
@@ -133,6 +133,5 @@
             </div>
         </div>
     </div>
-</main>
-</body>
+</div>
 </html>
