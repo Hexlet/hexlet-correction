@@ -43,7 +43,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.security.Principal;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -93,7 +92,7 @@ public class WorkspaceController {
 
     @PostMapping
     public String postCreateWorkspacePage(final Model model,
-                                          Principal principal,
+                                          Authentication principal,
                                           @Valid @ModelAttribute CreateWorkspace createWorkspace,
                                           BindingResult bindingResult) {
         String email = principal.getName();
