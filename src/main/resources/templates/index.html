@@ -23,7 +23,7 @@
     <div layout:fragment="content">
         <section class="py-5" id="heroes">
             <div class="container my-5">
-                <div class="row p-4 pb-0 pe-lg-0 pt-lg-5 align-items-center rounded-3 border-0 shadow-lg">
+                <div class="row p-4 pt-lg-5 align-items-center rounded-3 border-0 shadow-lg">
                     <div class="col-lg-7 p-3 p-lg-5 pt-lg-3">
                         <h1 class="display-4 fw-bold lh-1 text-body-emphasis">FixIT</h1>
                         <p class="lead" th:text="#{text.heroes}"></p>
@@ -32,8 +32,8 @@
                             <a role="button" class="btn btn-outline-secondary btn-lg px-4" th:href="@{/login}" th:text="#{navbar.login}"></a>
                         </div>
                     </div>
-                    <div class="col-lg-4 offset-lg-1 p-0 overflow-hidden shadow-lg">
-                        <img class="rounded-lg-3" src="https://fixit.hexlet.io/img/landing/typo-form-screen.png" alt="fixit widget screen" width="720">
+                    <div class="col-lg-5 p-0 overflow-hidden shadow-lg">
+                        <img class="rounded-lg-3 img-fluid" src="https://fixit.hexlet.io/img/landing/typo-form-screen.png" alt="fixit widget screen" width="720">
                     </div>
                 </div>
             </div>
@@ -81,7 +81,7 @@
                     <div class="col">
                         <div class="card card-cover h-100 overflow-hidden text-bg-dark bg-gradient rounded-4 shadow-lg">
                             <div class="d-flex flex-column h-100 p-5 text-white text-shadow-1">
-                                <h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold" th:text="#{text.how-it-works-sub-header1}"></h3>
+                                <h3 class="pt-5 display-6 lh-1 fw-bold" th:text="#{text.how-it-works-sub-header1}"></h3>
                                 <p class="lead fs-6" th:text="#{text.how-it-works-description1}"></p>
                                 <a role="button" class="btn btn-primary btn-md" sec:authorize="isAnonymous()" th:href="@{/signup}" th:text="#{navbar.signup}"></a>
                             </div>
@@ -90,7 +90,7 @@
                     <div class="col">
                         <div class="card card-cover h-100 overflow-hidden text-bg-dark bg-gradient rounded-4 shadow-lg">
                             <div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
-                                <h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold" th:text="#{text.how-it-works-sub-header2}"></h3>
+                                <h3 class="pt-5 display-6 lh-1 fw-bold" th:text="#{text.how-it-works-sub-header2}"></h3>
                                 <p class="lead fs-6" th:text="#{text.how-it-works-description2}"></p>
                             </div>
                         </div>
@@ -98,7 +98,7 @@
                     <div class="col">
                         <div class="card card-cover h-100 overflow-hidden text-bg-dark bg-gradient rounded-4 shadow-lg">
                             <div class="d-flex flex-column h-100 p-5 pb-3 text-shadow-1">
-                                <h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold" th:text="#{text.how-it-works-sub-header3}"></h3>
+                                <h3 class="pt-5 display-6 lh-1 fw-bold" th:text="#{text.how-it-works-sub-header3}"></h3>
                                 <p class="lead fs-6" th:text="#{text.how-it-works-description3}"></p>
                             </div>
                         </div>
