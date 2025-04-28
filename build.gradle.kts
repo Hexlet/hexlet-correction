@@ -32,6 +32,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-validation")
+    implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
     runtimeOnly("org.springframework.boot:spring-boot-devtools")
     // Thymeleaf
     implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity6:3.1.1.RELEASE")
@@ -55,6 +56,7 @@ dependencies {
     testImplementation("org.testcontainers:junit-jupiter")
     testImplementation("org.testcontainers:postgresql")
     testImplementation("com.github.database-rider:rider-spring:1.36.0")
+    implementation("com.c4-soft.springaddons:spring-addons-oauth2-test:7.6.12")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     testAnnotationProcessor("org.mapstruct:mapstruct-processor:1.5.3.Final")
 }

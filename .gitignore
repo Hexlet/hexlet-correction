@@ -437,6 +437,7 @@ fabric.properties
 .idea/
 !**/src/main/**/out/
 !**/src/test/**/out/
+!**/src/main/generated/**
 /node/
 
 # JPA Buddy settings
