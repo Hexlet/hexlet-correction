@@ -1,0 +1,66 @@
+package io.hexlet.typoreporter.service.oauth2;
+
+import io.hexlet.typoreporter.domain.account.AuthProvider;
+import io.hexlet.typoreporter.service.AccountService;
+import io.hexlet.typoreporter.service.account.signup.SignupAccount;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
+import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
+import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
+import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+@Service
+@RequiredArgsConstructor
+public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
+
+    private final AccountService accountService;
+
+    @Override
+    public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
+
+        OAuth2User oAuth2User = new DefaultOAuth2UserService().loadUser(userRequest);
+        String oAuth2Provider = userRequest.getClientRegistration().getRegistrationId().toUpperCase();
+        String accessToken = userRequest.getAccessToken().getTokenValue();
+        Map<String, Object> oAuth2UserAttributes = oAuth2User.getAttributes();
+
+        OAuth2UserInfo oAuth2UserInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(
+            oAuth2Provider, accessToken, oAuth2UserAttributes);
+
+        String email = oAuth2UserInfo.getEmail();
+
+        if (email == null) {
+            throw new OAuth2AuthenticationException("Email from provider " + oAuth2Provider + " not received");
+        }
+
+        if (!accountService.existsByEmail(email)) {
+            var newAccount = new SignupAccount(
+                oAuth2UserInfo.getUsername(),
+                email,
+                "OAUTH2_USER",
+                oAuth2UserInfo.getFirstName(),
+                oAuth2UserInfo.getLastName(),
+                AuthProvider.valueOf(oAuth2Provider).name()
+            );
+            var createdAccount = accountService.signup(newAccount);
+        }
+
+        if (oAuth2UserAttributes.get("email") == null) {
+            oAuth2UserAttributes = new HashMap<>(oAuth2UserAttributes);
+            oAuth2UserAttributes.put("email", email);
+        }
+
+        return new DefaultOAuth2User(
+            List.of(new SimpleGrantedAuthority("ROLE_USER")),
+            oAuth2UserAttributes,
+            "email"
+        );
+    }
+}

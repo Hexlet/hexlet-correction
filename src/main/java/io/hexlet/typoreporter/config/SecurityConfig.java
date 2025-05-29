@@ -4,10 +4,12 @@ import io.hexlet.typoreporter.handler.exception.ForbiddenDomainException;
 import io.hexlet.typoreporter.handler.exception.WorkspaceNotFoundException;
 import io.hexlet.typoreporter.security.service.AccountDetailService;
 import io.hexlet.typoreporter.security.service.SecuredWorkspaceService;
+import io.hexlet.typoreporter.service.oauth2.CustomOAuth2UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -37,6 +39,9 @@ import static org.springframework.http.HttpMethod.POST;
 @Configuration
 @EnableMethodSecurity
 public class SecurityConfig {
+
+    @Value("${spring.security.oauth2.enable:true}")
+    private boolean oauth2Enable;
 
     @Bean
     public PasswordEncoder bCryptPasswordEncoder() {
@@ -78,7 +83,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http,
                                    SecurityContextRepository securityContextRepository,
-                                   DynamicCorsConfigurationSource dynamicCorsConfigurationSource) throws Exception {
+                                   DynamicCorsConfigurationSource dynamicCorsConfigurationSource,
+                                   CustomOAuth2UserService customOAuth2UserService) throws Exception {
         http.httpBasic();
         http.cors();
         http.exceptionHandling().accessDeniedHandler(accessDeniedHandler());
@@ -102,6 +108,14 @@ public class SecurityConfig {
                 )
             )
             .addFilterBefore(corsFilter(dynamicCorsConfigurationSource), CorsFilter.class);
+
+        if (oauth2Enable) {
+            http.oauth2Login(oauth -> oauth
+                .loginPage("/login")
+                .userInfoEndpoint(userInfo ->
+                    userInfo.userService(customOAuth2UserService))
+                .defaultSuccessUrl("/workspaces", true));
+        }
 
         http.securityContext().securityContextRepository(securityContextRepository);
 
