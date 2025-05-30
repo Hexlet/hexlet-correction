@@ -16,9 +16,10 @@ import static java.util.Optional.ofNullable;
 public class HexletTypoReporter {
 
     public static void main(String[] args) {
-        Dotenv dotenv = Dotenv.load();
-        System.setProperty("GITHUB_CLIENT_ID", dotenv.get("GITHUB_CLIENT_ID"));
-        System.setProperty("GITHUB_CLIENT_SECRET", dotenv.get("GITHUB_CLIENT_SECRET"));
+        Dotenv dotenv = Dotenv
+            .configure()
+            .ignoreIfMissing()
+            .load();
 
         final var env = SpringApplication.run(HexletTypoReporter.class, args).getEnvironment();
         logApplicationStartup(env);
