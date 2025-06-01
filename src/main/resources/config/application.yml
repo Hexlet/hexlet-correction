@@ -18,8 +18,8 @@ spring:
       client:
         registration:
           yandex:
-            client-id: bd05dc69ecd9412b9f24cbf6d7b2cc2a
-            client-secret: 7968a52098dc4e9592b02cbef34e977c
+            client-id: ${YANDEX_CLIENT_ID}
+            client-secret: ${YANDEX_CLIENT_SECRET}
             redirect-uri: https://fixit.hexlet.io/login/oauth2/code/yandex
             authorization-grant-type: authorization_code
             scope: login:email, login:info
