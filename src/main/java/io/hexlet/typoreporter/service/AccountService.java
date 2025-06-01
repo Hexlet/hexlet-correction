@@ -2,6 +2,7 @@ package io.hexlet.typoreporter.service;
 
 import io.hexlet.typoreporter.domain.account.Account;
 import io.hexlet.typoreporter.domain.account.AuthProvider;
+import io.hexlet.typoreporter.handler.exception.DuplicateYandexIdException;
 import io.hexlet.typoreporter.repository.AccountRepository;
 import io.hexlet.typoreporter.repository.WorkspaceRoleRepository;
 import io.hexlet.typoreporter.service.account.EmailAlreadyExistException;
@@ -25,6 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @Transactional
@@ -137,5 +139,45 @@ public class AccountService implements SignupAccountUseCase, QueryAccount {
         sourceAccount.setPassword(newPassword);
         accountRepository.save(sourceAccount);
         return sourceAccount;
+    }
+
+    public void processYandexOAuth2User(
+        String email, String login, String firstName, String lastName, String yandexId)
+        throws DuplicateYandexIdException {
+
+        accountRepository.findAccountByYandexId(yandexId)
+            .filter(account -> !account.getEmail().equals(email))
+            .ifPresent(account -> {
+                throw new DuplicateYandexIdException("Яндекс аккаунт уже привязан к " + account.getEmail());
+            });
+
+        accountRepository.findAccountByEmail(email)
+            .map(account -> {
+                if (account.getYandexId() == null) {
+                    account.setYandexId(yandexId);
+                }
+                if (account.getFirstName() == null && firstName != null) {
+                    account.setFirstName(firstName);
+                }
+                if (account.getLastName() == null && lastName != null) {
+                    account.setLastName(lastName);
+                }
+                accountRepository.save(account);
+                return accountMapper.toInfoAccount(account);
+            })
+            .orElseGet(() -> {
+                Account account = new Account();
+                account.setEmail(email);
+                account.setUsername(login);
+                account.setFirstName(firstName);
+                account.setLastName(lastName);
+                account.setYandexId(yandexId);
+                account.setPassword(passwordEncoder.encode(UUID.randomUUID().toString()));
+                account.setAuthProvider(AuthProvider.YANDEX);
+                account.setCreatedBy("yandex-oauth");
+                account.setModifiedBy("yandex-oauth");
+                accountRepository.save(account);
+                return accountMapper.toInfoAccount(account);
+            });
     }
 }
