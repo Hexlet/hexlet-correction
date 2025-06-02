@@ -37,11 +37,11 @@ public class YandexOAuth2Service implements OAuth2UserService<OAuth2UserRequest,
         try {
             accountService.processYandexOAuth2User(email, login, firstName, lastName, yandexId);
 
-            Map<String, Object> securityAttributes = new HashMap<>(attributes);
-            securityAttributes.put("email", email);
+            Map<String, Object> resultAttributes = new HashMap<>(attributes);
+            resultAttributes.put("email", email);
 
             return new CustomOAuth2User(Collections.singleton(new SimpleGrantedAuthority("USER")),
-            securityAttributes,
+            resultAttributes,
             "email");
         } catch (DuplicateYandexIdException e) {
             throw new OAuth2AuthenticationException("Этот яндекс аккаунт уже привязан к другому email");
