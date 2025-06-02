@@ -174,8 +174,6 @@ public class AccountService implements SignupAccountUseCase, QueryAccount {
                 account.setYandexId(yandexId);
                 account.setPassword(passwordEncoder.encode(UUID.randomUUID().toString()));
                 account.setAuthProvider(AuthProvider.YANDEX);
-                account.setCreatedBy("yandex-oauth");
-                account.setModifiedBy("yandex-oauth");
                 accountRepository.save(account);
                 return accountMapper.toInfoAccount(account);
             });
