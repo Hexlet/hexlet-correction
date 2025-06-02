@@ -9,6 +9,7 @@ import io.hexlet.typoreporter.service.account.EmailAlreadyExistException;
 import io.hexlet.typoreporter.service.account.UsernameAlreadyExistException;
 import io.hexlet.typoreporter.service.account.signup.SignupAccount;
 import io.hexlet.typoreporter.service.account.signup.SignupAccountUseCase;
+import io.hexlet.typoreporter.service.dto.account.CustomUserDetails;
 import io.hexlet.typoreporter.service.dto.account.InfoAccount;
 import io.hexlet.typoreporter.service.dto.account.UpdatePassword;
 import io.hexlet.typoreporter.service.dto.account.UpdateProfile;
@@ -21,6 +22,9 @@ import io.hexlet.typoreporter.handler.exception.AccountNotFoundException;
 import io.hexlet.typoreporter.handler.exception.NewPasswordTheSameException;
 import io.hexlet.typoreporter.handler.exception.OldPasswordWrongException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -172,8 +176,21 @@ public class AccountService implements SignupAccountUseCase, QueryAccount {
                 account.setFirstName(firstName);
                 account.setLastName(lastName);
                 account.setYandexId(yandexId);
-                account.setPassword(passwordEncoder.encode(UUID.randomUUID().toString()));
+                String password = passwordEncoder.encode(UUID.randomUUID().toString());
+                account.setPassword(password);
                 account.setAuthProvider(AuthProvider.YANDEX);
+
+                CustomUserDetails accountDetail = new CustomUserDetails(
+                    email,
+                    password,
+                    login,
+                    List.of(new SimpleGrantedAuthority("ROLE_USER"))
+                );
+
+                var tempAuth = new UsernamePasswordAuthenticationToken(
+                    accountDetail, null, accountDetail.getAuthorities());
+                SecurityContextHolder.getContext().setAuthentication(tempAuth);
+
                 accountRepository.save(account);
                 return accountMapper.toInfoAccount(account);
             });
