@@ -14,6 +14,7 @@ spring:
     problemdetails:
       enabled: true
   security:
+    require-ssl: false
     oauth2:
       client:
         registration:
@@ -30,3 +31,6 @@ spring:
             token-uri: https://oauth.yandex.ru/token
             user-info-uri: https://login.yandex.ru/info
             user-name-attribute: default_email
+server:
+  ssl:
+    enabled: false
