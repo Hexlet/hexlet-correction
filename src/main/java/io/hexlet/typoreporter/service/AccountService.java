@@ -180,7 +180,7 @@ public class AccountService implements SignupAccountUseCase, QueryAccount {
                 account.setPassword(password);
                 account.setAuthProvider(AuthProvider.YANDEX);
 
-                CustomUserDetails accountDetail = new CustomUserDetails(
+                CustomUserDetails customUserDetails = new CustomUserDetails(
                     email,
                     password,
                     login,
@@ -188,7 +188,7 @@ public class AccountService implements SignupAccountUseCase, QueryAccount {
                 );
 
                 var tempAuth = new UsernamePasswordAuthenticationToken(
-                    accountDetail, null, accountDetail.getAuthorities());
+                    customUserDetails, null, customUserDetails.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(tempAuth);
 
                 accountRepository.save(account);

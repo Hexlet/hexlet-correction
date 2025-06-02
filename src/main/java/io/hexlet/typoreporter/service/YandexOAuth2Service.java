@@ -44,7 +44,7 @@ public class YandexOAuth2Service implements OAuth2UserService<OAuth2UserRequest,
             resultAttributes,
             "email");
         } catch (DuplicateYandexIdException e) {
-            throw new OAuth2AuthenticationException("Этот яндекс аккаунт уже привязан к другому email");
+            throw new OAuth2AuthenticationException("This Yandex account is already linked to another email");
         }
     }
 }
