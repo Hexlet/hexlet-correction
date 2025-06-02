@@ -20,7 +20,7 @@ spring:
           yandex:
             client-id: ${YANDEX_CLIENT_ID}
             client-secret: ${YANDEX_CLIENT_SECRET}
-            redirect-uri: https://fixit.hexlet.io/login/oauth2/code/yandex
+            redirect-uri: https://hexlet-correction-cnd1.onrender.com/login/oauth2/code/yandex
             authorization-grant-type: authorization_code
             scope: login:email, login:info
             client-name: Yandex
