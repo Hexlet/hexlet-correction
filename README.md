@@ -21,11 +21,14 @@ Before you can build this project, you must install and configure the following 
 
 To enable Yandex authorization, you need to register on yandexID and create your web application, 
 add ClientID and Client secret in your secret
+
 then you need go to the application.yml file
 and change Redirect URI: http://{your-domain}/login/oauth2/code/yandex
 
 deploy: https://hexlet-correction-cnd1.onrender.com
+
 path for registration/login in this deploy: https://hexlet-correction-cnd1.onrender.com/oauth2/authorization/yandex
+
 in your application, you need to change the domain
 
 ### Packaging as uber-jar
