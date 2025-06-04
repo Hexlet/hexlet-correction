@@ -13,6 +13,10 @@
 logging:
   level:
     ROOT: INFO
+    org.springframework.security: DEBUG
+    org.springframework.web: DEBUG
+    org.springframework.security.oauth2: TRACE
+    org.apache.http: DEBUG
 
 spring:
   devtools:
