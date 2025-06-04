@@ -152,7 +152,7 @@ public class AccountService implements SignupAccountUseCase, QueryAccount {
         accountRepository.findAccountByYandexId(yandexId)
             .filter(account -> !account.getEmail().equals(email))
             .ifPresent(account -> {
-                throw new DuplicateYandexIdException("Яндекс аккаунт уже привязан к " + account.getEmail());
+                throw new DuplicateYandexIdException("The Yandex account is already linked to" + account.getEmail());
             });
 
         accountRepository.findAccountByEmail(email)
