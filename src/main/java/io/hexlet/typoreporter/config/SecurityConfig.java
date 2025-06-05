@@ -26,6 +26,7 @@ import org.springframework.security.web.context.DelegatingSecurityContextReposit
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.security.web.context.RequestAttributeSecurityContextRepository;
 import org.springframework.security.web.context.SecurityContextRepository;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -85,6 +86,10 @@ public class SecurityConfig {
         http.httpBasic();
         http.cors();
         http.exceptionHandling().accessDeniedHandler(accessDeniedHandler());
+
+        http.csrf(csrf -> csrf
+            .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+        );
 
         http.authorizeHttpRequests(authz -> authz
                 .requestMatchers(GET, "/webjars/**", "/widget/**", "/fragments/**", "/img/**",
