@@ -25,6 +25,18 @@ add ClientID and Client secret in your secret
 then you need go to the application.yml file
 and change Redirect URI: http://{your-domain}/login/oauth2/code/yandex
 
+## Registration/Authorization with GitHub
+
+For registration or/and authorization account with GitHub:
+- Create OAuth app https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/creating-an-oauth-app
+- Get values the `Client ID` and `Client Secret` and add to environment variables
+
+```bash
+GITHUB_CLIENT_ID=your_github_client_id
+GITHUB_CLIENT_SECRET=your_github_client_secret
+```
+
+
 ### Packaging as uber-jar
 
 To build the final jar:
