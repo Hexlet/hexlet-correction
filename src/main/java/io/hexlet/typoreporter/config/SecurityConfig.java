@@ -89,6 +89,10 @@ public class SecurityConfig {
 
         http.csrf(csrf -> csrf
             .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+        ).csrf(csrf -> csrf
+            .ignoringRequestMatchers(
+                "/login/oauth2/code/**",
+                "/oauth2/authorization/**")
         );
 
         http.authorizeHttpRequests(authz -> authz
