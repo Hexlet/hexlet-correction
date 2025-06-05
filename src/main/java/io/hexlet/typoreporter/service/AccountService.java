@@ -2,7 +2,6 @@ package io.hexlet.typoreporter.service;
 
 import io.hexlet.typoreporter.domain.account.Account;
 import io.hexlet.typoreporter.domain.account.AuthProvider;
-import io.hexlet.typoreporter.handler.exception.DuplicateYandexIdException;
 import io.hexlet.typoreporter.repository.AccountRepository;
 import io.hexlet.typoreporter.repository.WorkspaceRoleRepository;
 import io.hexlet.typoreporter.service.account.EmailAlreadyExistException;
