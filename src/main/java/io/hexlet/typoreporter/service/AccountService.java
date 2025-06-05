@@ -72,7 +72,29 @@ public class AccountService implements SignupAccountUseCase, QueryAccount {
         accToSave.setEmail(normalizedEmail);
         accToSave.setUsername(normalizedUsername);
         accToSave.setPassword(passwordEncoder.encode(signupAccount.password()));
-        accToSave.setAuthProvider(AuthProvider.EMAIL);
+
+        if (accToSave.getAuthProvider() == null) {
+            accToSave.setAuthProvider(AuthProvider.EMAIL);
+        } else if (accToSave.getAuthProvider().toString().equalsIgnoreCase("YANDEX")) {
+            accountRepository.findAccountByYandexId(accToSave.getYandexId())
+                .filter(account -> !account.getEmail().equals(normalizedEmail))
+                .ifPresent(account -> {
+                    throw new DuplicateYandexIdException(
+                        "The Yandex account is already linked to" + account.getEmail());
+                });
+        }
+
+        CustomUserDetails accountDetail = new CustomUserDetails(
+            normalizedEmail,
+            accToSave.getPassword(),
+            normalizedUsername,
+            List.of(new SimpleGrantedAuthority("ROLE_USER"))
+        );
+
+        var tempAuth = new UsernamePasswordAuthenticationToken(
+            accountDetail, null, accountDetail.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(tempAuth);
+
         accountRepository.save(accToSave);
         return accountMapper.toInfoAccount(accToSave);
     }
@@ -143,56 +165,5 @@ public class AccountService implements SignupAccountUseCase, QueryAccount {
         sourceAccount.setPassword(newPassword);
         accountRepository.save(sourceAccount);
         return sourceAccount;
-    }
-
-    public void processYandexOAuth2User(
-        String email, String login, String firstName, String lastName, String yandexId)
-        throws DuplicateYandexIdException {
-
-        accountRepository.findAccountByYandexId(yandexId)
-            .filter(account -> !account.getEmail().equals(email))
-            .ifPresent(account -> {
-                throw new DuplicateYandexIdException("The Yandex account is already linked to" + account.getEmail());
-            });
-
-        accountRepository.findAccountByEmail(email)
-            .map(account -> {
-                if (account.getYandexId() == null) {
-                    account.setYandexId(yandexId);
-                }
-                if (account.getFirstName() == null && firstName != null) {
-                    account.setFirstName(firstName);
-                }
-                if (account.getLastName() == null && lastName != null) {
-                    account.setLastName(lastName);
-                }
-                accountRepository.save(account);
-                return accountMapper.toInfoAccount(account);
-            })
-            .orElseGet(() -> {
-                Account account = new Account();
-                account.setEmail(email);
-                account.setUsername(login);
-                account.setFirstName(firstName);
-                account.setLastName(lastName);
-                account.setYandexId(yandexId);
-                String password = passwordEncoder.encode(UUID.randomUUID().toString());
-                account.setPassword(password);
-                account.setAuthProvider(AuthProvider.YANDEX);
-
-                CustomUserDetails customUserDetails = new CustomUserDetails(
-                    email,
-                    password,
-                    login,
-                    List.of(new SimpleGrantedAuthority("ROLE_USER"))
-                );
-
-                var tempAuth = new UsernamePasswordAuthenticationToken(
-                    customUserDetails, null, customUserDetails.getAuthorities());
-                SecurityContextHolder.getContext().setAuthentication(tempAuth);
-
-                accountRepository.save(account);
-                return accountMapper.toInfoAccount(account);
-            });
     }
 }
