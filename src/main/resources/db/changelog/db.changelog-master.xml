@@ -27,8 +27,6 @@
              relativeToChangelogFile="true" />
     <include file="changesets/2024/05/2024-05-31-remove-unique-constraint-to-name-workspace.xml"
              relativeToChangelogFile="true" />
-    <include file="changesets/2025/06/2025-06-31-add-yandex-id-to-account.xml"
-             relativeToChangelogFile="true"/>
     <include file="changesets/2025/06/2025-06-31-add-yandex-to-auth-provider.xml"
              relativeToChangelogFile="true"/>
 </databaseChangeLog>

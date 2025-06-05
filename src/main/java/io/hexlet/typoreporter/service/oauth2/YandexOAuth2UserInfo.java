@@ -41,9 +41,4 @@ public class YandexOAuth2UserInfo implements OAuth2UserInfo {
     public Map<String, Object> getAttributes() {
         return attributes;
     }
-
-    @Override
-    public String getYandexId() {
-        return (String) attributes.get("id");
-    }
 }

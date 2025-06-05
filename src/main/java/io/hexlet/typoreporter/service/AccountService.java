@@ -74,13 +74,6 @@ public class AccountService implements SignupAccountUseCase, QueryAccount {
 
         if (accToSave.getAuthProvider() == null) {
             accToSave.setAuthProvider(AuthProvider.EMAIL);
-        } else if (accToSave.getAuthProvider().toString().equalsIgnoreCase("YANDEX")) {
-            accountRepository.findAccountByYandexId(accToSave.getYandexId())
-                .filter(account -> !TextUtils.toLowerCaseData(account.getEmail()).equals(normalizedEmail))
-                .ifPresent(account -> {
-                    throw new DuplicateYandexIdException(
-                        "The Yandex account is already linked to " + account.getEmail());
-                });
         }
 
         CustomUserDetails accountDetail = new CustomUserDetails(

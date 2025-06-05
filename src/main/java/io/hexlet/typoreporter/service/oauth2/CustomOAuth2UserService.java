@@ -48,8 +48,7 @@ public class    CustomOAuth2UserService implements OAuth2UserService<OAuth2UserR
                 "OAUTH2_USER",
                 oAuth2UserInfo.getFirstName(),
                 oAuth2UserInfo.getLastName(),
-                AuthProvider.valueOf(oAuth2Provider).name(),
-                oAuth2UserInfo.getYandexId()
+                AuthProvider.valueOf(oAuth2Provider).name()
             );
             var createdAccount = accountService.signup(newAccount);
         }

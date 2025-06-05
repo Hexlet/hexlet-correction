@@ -8,6 +8,5 @@ public interface OAuth2UserInfo {
     String getPassword();
     String getFirstName();
     String getLastName();
-    String getYandexId();
     Map<String, Object> getAttributes();
 }

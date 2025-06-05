@@ -41,7 +41,7 @@
                             </svg>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end pb-0" aria-labelledby="profileDropdown">
-                            <span class="py-1 px-3 d-block fw-bolder" th:text="${#authentication.getPrincipal().name}"></span>
+                            <span class="py-1 px-3 d-block fw-bolder" th:text="${#authentication.getName()}"></span>
                             <span class="py-1 px-3 d-block" th:text="${#authentication.getName()}"></span>
                             <form class="border-top dropdown-item" th:action="@{/logout}" th:method="post">
                                 <button class="btn px-0 text-start w-100" type="submit" th:text="#{navbar.logout}">Logout</button>
