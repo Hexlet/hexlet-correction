@@ -33,6 +33,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation ("org.springframework.boot:spring-boot-starter-oauth2-client")
+    implementation("org.springframework.boot:spring-boot-starter-webflux")
     runtimeOnly("org.springframework.boot:spring-boot-devtools")
     // Thymeleaf
     implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity6:3.1.1.RELEASE")
@@ -48,6 +49,7 @@ dependencies {
     compileOnly("org.projectlombok:lombok-mapstruct-binding:0.2.0")
     implementation("org.ocpsoft.prettytime:prettytime:5.0.6.Final")
     implementation("org.mapstruct:mapstruct:1.5.3.Final")
+    implementation("io.github.cdimascio:dotenv-java:3.2.0")
     // Annotation processors
     annotationProcessor("org.mapstruct:mapstruct-processor:1.5.3.Final")
     // Testing
