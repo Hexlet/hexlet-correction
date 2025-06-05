@@ -10,7 +10,8 @@ public record SignupAccount(
     String yandexId
 ) {
 
-    public SignupAccount(String authProvider, String lastName, String firstName, String password, String email, String username) {
+    public SignupAccount(
+        String authProvider, String lastName, String firstName, String password, String email, String username) {
         this(username, email, password, firstName, lastName, authProvider, null);
     }
 

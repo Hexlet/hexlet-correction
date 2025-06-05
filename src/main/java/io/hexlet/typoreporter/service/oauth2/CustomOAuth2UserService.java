@@ -41,7 +41,7 @@ public class    CustomOAuth2UserService implements OAuth2UserService<OAuth2UserR
             throw new OAuth2AuthenticationException("Email from provider " + oAuth2Provider + " not received");
         }
 
-        if (!accountService.existsByEmail(email) ) {
+        if (!accountService.existsByEmail(email)) {
             var newAccount = new SignupAccount(
                 oAuth2UserInfo.getUsername(),
                 email,
