@@ -76,10 +76,10 @@ public class AccountService implements SignupAccountUseCase, QueryAccount {
             accToSave.setAuthProvider(AuthProvider.EMAIL);
         } else if (accToSave.getAuthProvider().toString().equalsIgnoreCase("YANDEX")) {
             accountRepository.findAccountByYandexId(accToSave.getYandexId())
-                .filter(account -> !account.getEmail().equals(normalizedEmail))
+                .filter(account -> !TextUtils.toLowerCaseData(account.getEmail()).equals(normalizedEmail))
                 .ifPresent(account -> {
                     throw new DuplicateYandexIdException(
-                        "The Yandex account is already linked to" + account.getEmail());
+                        "The Yandex account is already linked to " + account.getEmail());
                 });
         }
 
