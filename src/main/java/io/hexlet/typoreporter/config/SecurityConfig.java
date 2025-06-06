@@ -20,6 +20,9 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.web.AuthorizationRequestRepository;
+import org.springframework.security.oauth2.client.web.HttpSessionOAuth2AuthorizationRequestRepository;
+import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.context.DelegatingSecurityContextRepository;
@@ -44,6 +47,11 @@ public class SecurityConfig {
     @Bean
     public PasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public AuthorizationRequestRepository<OAuth2AuthorizationRequest> authorizationRequestRepository() {
+        return new HttpSessionOAuth2AuthorizationRequestRepository();
     }
 
     @Bean
@@ -132,6 +140,18 @@ public class SecurityConfig {
     @Bean
     public AccessDeniedHandler accessDeniedHandler() {
         return new CustomAccessDeniedHandler();
+    }
+
+    protected void configure(HttpSecurity http) throws Exception {
+        http
+            .sessionManagement()
+            .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED) // или ALWAYS
+            .and()
+            .oauth2Login()
+            .authorizationEndpoint()
+            .authorizationRequestRepository(authorizationRequestRepository())
+            .and()
+            .defaultSuccessUrl("/workspaces", true);
     }
 
     @Bean
