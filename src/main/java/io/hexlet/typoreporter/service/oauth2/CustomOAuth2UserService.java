@@ -4,17 +4,13 @@ import io.hexlet.typoreporter.domain.account.AuthProvider;
 import io.hexlet.typoreporter.service.AccountService;
 import io.hexlet.typoreporter.service.account.signup.SignupAccount;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
-import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Service
@@ -29,10 +25,9 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         OAuth2User oAuth2User = new DefaultOAuth2UserService().loadUser(userRequest);
         String oAuth2Provider = userRequest.getClientRegistration().getRegistrationId().toUpperCase();
         String accessToken = userRequest.getAccessToken().getTokenValue();
-        Map<String, Object> oAuth2UserAttributes = oAuth2User.getAttributes();
 
         OAuth2UserInfo oAuth2UserInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(
-            oAuth2Provider, accessToken, oAuth2UserAttributes);
+            oAuth2Provider, accessToken, oAuth2User.getAttributes());
 
         String email = oAuth2UserInfo.getEmail();
 
@@ -49,18 +44,17 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
                 oAuth2UserInfo.getLastName(),
                 AuthProvider.valueOf(oAuth2Provider).name()
             );
-            var createdAccount = accountService.signup(newAccount);
+            accountService.signup(newAccount);
         }
 
-        if (oAuth2UserAttributes.get("email") == null) {
-            oAuth2UserAttributes = new HashMap<>(oAuth2UserAttributes);
-            oAuth2UserAttributes.put("email", email);
-        }
+        Map<String, Object> oAuth2UserAttributes = oAuth2UserInfo.getAttributes();
+        oAuth2UserAttributes.putIfAbsent("email", email);
 
-        return new DefaultOAuth2User(
-            List.of(new SimpleGrantedAuthority("ROLE_USER")),
+        return new CustomOAuth2User(
+            oAuth2User.getAuthorities(),
             oAuth2UserAttributes,
-            "email"
+            "email",
+            oAuth2UserInfo.getUsername()
         );
     }
 }

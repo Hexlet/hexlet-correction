@@ -26,6 +26,13 @@ logging:
     web: DEBUG
     org.hibernate.type.descriptor.sql: TRACE
     org.springframework.security: TRACE
+    org:
+      springframework:
+        web:
+          client:
+            RestTemplate: DEBUG
+        security:
+          oauth2: TRACE
     io.hexlet.typoreporter: DEBUG
 server:
   error:

@@ -42,7 +42,7 @@ dependencies {
     implementation("org.webjars:bootstrap:5.2.3")
     implementation("nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.3.0")
     // Database
-    runtimeOnly("org.postgresql:postgresql:42.5.4")
+    runtimeOnly("org.postgresql:postgresql:42.5.5")
     implementation("io.hypersistence:hypersistence-utils-hibernate-60:3.2.0")
     implementation("org.liquibase:liquibase-core:4.26.0")
     // Utils
@@ -50,6 +50,7 @@ dependencies {
     implementation("org.ocpsoft.prettytime:prettytime:5.0.6.Final")
     implementation("org.mapstruct:mapstruct:1.5.3.Final")
     implementation("io.github.cdimascio:dotenv-java:3.2.0")
+    implementation("org.antlr:antlr4-runtime:4.10.1")
     // Annotation processors
     annotationProcessor("org.mapstruct:mapstruct-processor:1.5.3.Final")
     // Testing

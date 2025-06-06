@@ -4,6 +4,7 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -14,7 +15,7 @@ public class GithubOAuth2UserInfo implements OAuth2UserInfo {
 
     public GithubOAuth2UserInfo(String accessToken, Map<String, Object> attributes) {
         this.accessToken = accessToken;
-        this.attributes = attributes;
+        this.attributes = new HashMap<>(attributes);
     }
 
     @Override
@@ -44,11 +45,6 @@ public class GithubOAuth2UserInfo implements OAuth2UserInfo {
     @Override
     public String getUsername() {
         return attributes.get("login").toString();
-    }
-
-    @Override
-    public String getPassword() {
-        return "";
     }
 
     @Override

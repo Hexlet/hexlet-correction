@@ -1,18 +1,21 @@
 package io.hexlet.typoreporter.service.dto.account;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
+
 @AllArgsConstructor
 public class CustomUserDetails implements UserDetails {
 
     private String email;
     private String password;
-    @Getter
-    private final String name;
+    private String username;
     private Collection<? extends GrantedAuthority> authorities;
+
+    public String getNickname() {
+        return username;
+    }
 
     @Override
     public String getUsername() {

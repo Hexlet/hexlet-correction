@@ -3,7 +3,13 @@ spring:
     name: hexletTypoReporter
   security:
     oauth2:
-      enable: false
+      client:
+        registration:
+          github:
+            client-id: test
+            client-secret: test
+            redirect-uri: http://localhost:8080
+            scope: read:user
   jpa:
     open-in-view: true
     show-sql: true
@@ -26,7 +32,6 @@ logging:
     root: INFO
     web: DEBUG
     org.hibernate.type.descriptor.sql: TRACE
-    org.springframework.core.env: DEBUG
     io.hexlet.typoreporter: DEBUG
     # Bug in database rider, a lot of log 'warning'
     com.github.database.rider.core.api.dataset.ScriptableTable: ERROR

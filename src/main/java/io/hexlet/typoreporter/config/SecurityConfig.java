@@ -9,7 +9,6 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -40,8 +39,6 @@ import static org.springframework.http.HttpMethod.POST;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    @Value("${spring.security.oauth2.enable:true}")
-    private boolean oauth2Enable;
 
     @Bean
     public PasswordEncoder bCryptPasswordEncoder() {
@@ -101,6 +98,11 @@ public class SecurityConfig {
                 .defaultSuccessUrl("/workspaces")
                 .permitAll()
             )
+            .oauth2Login(oauth -> oauth
+                .loginPage("/login")
+                .userInfoEndpoint(userInfo ->
+                    userInfo.userService(customOAuth2UserService))
+                .defaultSuccessUrl("/workspaces", true))
             .csrf(csrf -> csrf
                 .ignoringRequestMatchers(
                     new AntPathRequestMatcher("/api/**", POST.name()),
@@ -108,14 +110,6 @@ public class SecurityConfig {
                 )
             )
             .addFilterBefore(corsFilter(dynamicCorsConfigurationSource), CorsFilter.class);
-
-        if (oauth2Enable) {
-            http.oauth2Login(oauth -> oauth
-                .loginPage("/login")
-                .userInfoEndpoint(userInfo ->
-                    userInfo.userService(customOAuth2UserService))
-                .defaultSuccessUrl("/workspaces", true));
-        }
 
         http.securityContext().securityContextRepository(securityContextRepository);
 
