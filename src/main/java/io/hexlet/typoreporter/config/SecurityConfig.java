@@ -87,13 +87,7 @@ public class SecurityConfig {
         http.cors();
         http.exceptionHandling().accessDeniedHandler(accessDeniedHandler());
 
-        http.csrf(csrf -> csrf
-            .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-        ).csrf(csrf -> csrf
-            .ignoringRequestMatchers(
-                "/login/oauth2/code/**",
-                "/oauth2/authorization/**")
-        );
+
 
         http.authorizeHttpRequests(authz -> authz
                 .requestMatchers(GET, "/webjars/**", "/widget/**", "/fragments/**", "/img/**",
@@ -117,9 +111,6 @@ public class SecurityConfig {
                 .loginPage("/login")
                 .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService))
                 .defaultSuccessUrl("/workspaces", true)
-            )
-            .sessionManagement(session -> session
-                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
             )
             .addFilterBefore(corsFilter(dynamicCorsConfigurationSource), CorsFilter.class);
 
