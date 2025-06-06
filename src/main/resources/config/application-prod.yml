@@ -51,3 +51,9 @@ server:
     min-response-size: 1024
   error:
     include-stacktrace: never
+  servlet:
+    session:
+      cookie:
+        secure: true
+        same-site: none
+        domain: https://hexlet-correction-cnd1.onrender.com
