@@ -13,10 +13,6 @@ public class CustomUserDetails implements UserDetails {
     private String username;
     private Collection<? extends GrantedAuthority> authorities;
 
-    public String getNickname() {
-        return username;
-    }
-
     @Override
     public String getUsername() {
         return email;
@@ -50,6 +46,10 @@ public class CustomUserDetails implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public String getNickname() {
+        return username;
     }
 }
 
