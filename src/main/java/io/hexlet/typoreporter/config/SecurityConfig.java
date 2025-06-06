@@ -126,10 +126,16 @@ public class SecurityConfig {
                 .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService))
                 .defaultSuccessUrl("/workspaces", true)
             )
-            .sessionManagement(session -> session
-                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-            )
             .addFilterBefore(corsFilter(dynamicCorsConfigurationSource), CorsFilter.class);
+
+        http.sessionManagement()
+            .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+            .and()
+            .oauth2Login()
+            .authorizationEndpoint()
+            .authorizationRequestRepository(authorizationRequestRepository())
+            .and()
+            .defaultSuccessUrl("/workspaces", true);
 
         http.securityContext().securityContextRepository(securityContextRepository);
 
@@ -140,18 +146,6 @@ public class SecurityConfig {
     @Bean
     public AccessDeniedHandler accessDeniedHandler() {
         return new CustomAccessDeniedHandler();
-    }
-
-    protected void configure(HttpSecurity http) throws Exception {
-        http
-            .sessionManagement()
-            .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED) // или ALWAYS
-            .and()
-            .oauth2Login()
-            .authorizationEndpoint()
-            .authorizationRequestRepository(authorizationRequestRepository())
-            .and()
-            .defaultSuccessUrl("/workspaces", true);
     }
 
     @Bean
