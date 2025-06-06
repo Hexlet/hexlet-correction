@@ -10,7 +10,6 @@ import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserServ
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
-import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +19,7 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
-public class    CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
+public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
 
     private final AccountService accountService;
 
@@ -58,7 +57,7 @@ public class    CustomOAuth2UserService implements OAuth2UserService<OAuth2UserR
             oAuth2UserAttributes.put("email", email);
         }
 
-        return new DefaultOAuth2User(
+        return new CustomOAuth2User(
             List.of(new SimpleGrantedAuthority("ROLE_USER")),
             oAuth2UserAttributes,
             "email"
