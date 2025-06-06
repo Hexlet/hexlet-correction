@@ -39,6 +39,11 @@ spring:
     cache: true
   liquibase:
     contexts: prod
+  session:
+    store-type: redis
+  redis:
+    host: localhost
+    port: 6379
 server:
   port: 8080
   compression:

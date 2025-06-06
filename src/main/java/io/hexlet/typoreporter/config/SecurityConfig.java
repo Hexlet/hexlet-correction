@@ -128,33 +128,11 @@ public class SecurityConfig {
                 .defaultSuccessUrl("/workspaces", true)
             )
             .addFilterBefore(corsFilter(dynamicCorsConfigurationSource), CorsFilter.class);
-
-        http.sessionManagement()
-            .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-            .and()
-            .oauth2Login()
-            .authorizationEndpoint()
-            .authorizationRequestRepository(authorizationRequestRepository())
-            .and()
-            .defaultSuccessUrl("/workspaces", true);
-
+        
         http.securityContext().securityContextRepository(securityContextRepository);
 
         http.headers().frameOptions().disable();
         return http.build();
-    }
-
-    @Bean
-    CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration config = new CorsConfiguration();
-        config.setAllowCredentials(true);
-        config.addAllowedOrigin("https://hexlet-correction-cnd1.onrender.com");
-        config.addAllowedHeader("*");
-        config.addAllowedMethod("*");
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", config);
-        return source;
     }
 
     @Bean
