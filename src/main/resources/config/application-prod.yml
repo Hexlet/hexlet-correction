@@ -47,3 +47,10 @@ server:
     min-response-size: 1024
   error:
     include-stacktrace: never
+  servlet:
+    session:
+      cookie:
+        name: JSESSIONID
+        secure: true
+        same-site: none
+        domain: hexlet-correction-2n6d.onrender.com
