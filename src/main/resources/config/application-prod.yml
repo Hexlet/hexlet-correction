@@ -39,10 +39,6 @@ spring:
     cache: true
   liquibase:
     contexts: prod
-  session:
-    store-type: jdbc
-    jdbc:
-      initialize-schema: always
 server:
   port: 8080
   compression:

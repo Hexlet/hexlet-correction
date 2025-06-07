@@ -50,7 +50,6 @@ dependencies {
     implementation("org.ocpsoft.prettytime:prettytime:5.0.6.Final")
     implementation("org.mapstruct:mapstruct:1.5.3.Final")
     implementation("io.github.cdimascio:dotenv-java:3.2.0")
-    implementation ("org.springframework.session:spring-session-jdbc")
     // Annotation processors
     annotationProcessor("org.mapstruct:mapstruct-processor:1.5.3.Final")
     // Testing
