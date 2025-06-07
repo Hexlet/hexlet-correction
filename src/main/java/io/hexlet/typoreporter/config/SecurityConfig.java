@@ -26,6 +26,7 @@ import org.springframework.security.web.context.HttpSessionSecurityContextReposi
 import org.springframework.security.web.context.RequestAttributeSecurityContextRepository;
 import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.session.web.http.DefaultCookieSerializer;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
@@ -51,6 +52,16 @@ public class SecurityConfig {
         apiProvider.setUserDetailsService(userDetailsService);
         apiProvider.setPasswordEncoder(NoOpPasswordEncoder.getInstance());
         return apiProvider;
+    }
+
+    @Bean
+    public DefaultCookieSerializer cookieSerializer() {
+        DefaultCookieSerializer serializer = new DefaultCookieSerializer();
+        serializer.setCookieName("JSESSIONID");
+        serializer.setSameSite("None");
+        serializer.setUseSecureCookie(true);
+        serializer.setDomainName("hexlet-correction-2n6d.onrender.com");
+        return serializer;
     }
 
     @Bean
