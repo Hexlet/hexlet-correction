@@ -29,6 +29,8 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.io.IOException;
 
@@ -84,6 +86,10 @@ public class SecurityConfig {
         http.httpBasic();
         http.cors();
         http.exceptionHandling().accessDeniedHandler(accessDeniedHandler());
+        http.anonymous().disable()
+            .sessionManagement(session -> session
+                .sessionFixation().migrateSession()
+            );
 
         http.authorizeHttpRequests(authz -> authz
                 .requestMatchers(GET, "/webjars/**", "/widget/**", "/fragments/**", "/img/**",
@@ -102,6 +108,10 @@ public class SecurityConfig {
                     new AntPathRequestMatcher("/api/**", POST.name()),
                     new AntPathRequestMatcher("/typo/form/*", POST.name())
                 )
+                .ignoringRequestMatchers(
+                    "/login/oauth2/code/*",
+                    "/logout"
+                )
             )
             .oauth2Login(oauth2 -> oauth2
                 .loginPage("/login")
@@ -119,6 +129,19 @@ public class SecurityConfig {
     @Bean
     public AccessDeniedHandler accessDeniedHandler() {
         return new CustomAccessDeniedHandler();
+    }
+
+    @Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**")
+                    .allowedOrigins("https://hexlet-correction-2n6d.onrender.com")
+                    .allowCredentials(true)
+                    .allowedMethods("GET", "POST");
+            }
+        };
     }
 
     @Bean
