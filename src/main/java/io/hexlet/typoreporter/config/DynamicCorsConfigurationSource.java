@@ -5,11 +5,14 @@ import io.hexlet.typoreporter.handler.exception.WorkspaceNotFoundException;
 import io.hexlet.typoreporter.repository.AllowedUrlRepository;
 import io.hexlet.typoreporter.utils.TextUtils;
 import lombok.AllArgsConstructor;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.Arrays;
 import java.util.List;
@@ -53,5 +56,19 @@ public class DynamicCorsConfigurationSource implements CorsConfigurationSource {
         }
 
         return null;
+    }
+
+
+    @Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**")
+                    .allowedOrigins("https://your-frontend.com")
+                    .allowCredentials(true)
+                    .allowedMethods("GET", "POST");
+            }
+        };
     }
 }

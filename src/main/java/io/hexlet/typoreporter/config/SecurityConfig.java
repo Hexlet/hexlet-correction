@@ -91,6 +91,7 @@ public class SecurityConfig {
         http.httpBasic();
         http.cors();
         http.exceptionHandling().accessDeniedHandler(accessDeniedHandler());
+        http.anonymous().disable();
 
         http.authorizeHttpRequests(authz -> authz
                 .requestMatchers(GET, "/webjars/**", "/widget/**", "/fragments/**", "/img/**",
