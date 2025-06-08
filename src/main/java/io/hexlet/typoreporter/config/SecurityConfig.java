@@ -119,15 +119,6 @@ public class SecurityConfig {
     }
 
     @Bean
-    public RestTemplate restTemplate() {
-        RestTemplate restTemplate = new RestTemplate();
-        restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
-        ((HttpComponentsClientHttpRequestFactory) restTemplate.getRequestFactory())
-            .setConnectTimeout(5000); // 5 секунд
-        return restTemplate;
-    }
-
-    @Bean
     public AccessDeniedHandler accessDeniedHandler() {
         return new CustomAccessDeniedHandler();
     }

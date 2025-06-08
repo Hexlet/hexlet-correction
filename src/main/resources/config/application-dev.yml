@@ -30,7 +30,6 @@ logging:
     org.springframework.security: TRACE
     org.springframework.web: DEBUG
     org.springframework.session: DEBUG
-    org.springframework.web.client.RestTemplate: DEBUG
     io.hexlet.typoreporter: DEBUG
 server:
   error:
