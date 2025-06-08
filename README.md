@@ -19,11 +19,15 @@ Before you can build this project, you must install and configure the following 
 
 ### Yandex authorization
 
-To enable Yandex authorization, you need to register on yandexID and create your web application, 
-add ClientID and Client secret in your secret
+To enable Yandex authorization, you need to register on [Yandex ID OAuth](https://oauth.yandex.ru/) and create your web application, 
+add `ClientID` and `Client secret` in your secret
 
-then you need go to the application.yml file
-and change Redirect URI: http://{your-domain}/login/oauth2/code/yandex
+```bash
+YANDEX_CLIENT_ID=your_yadex_client_id_values
+YANDEX_CLIENT_SECRET=your_yandex_client_secret_values
+```
+
+
 
 ## Registration/Authorization with GitHub
 
