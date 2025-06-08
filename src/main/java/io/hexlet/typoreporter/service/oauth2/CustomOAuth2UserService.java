@@ -12,6 +12,7 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @Service
@@ -48,7 +49,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
             accountService.signup(newAccount);
         }
 
-        Map<String, Object> oAuth2UserAttributes = oAuth2UserInfo.getAttributes();
+        Map<String, Object> oAuth2UserAttributes = new HashMap<>(oAuth2UserInfo.getAttributes());
         oAuth2UserAttributes.putIfAbsent("email", email);
 
         return new CustomOAuth2User(
