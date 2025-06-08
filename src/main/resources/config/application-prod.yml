@@ -21,14 +21,6 @@ logging:
     org.springframework.session: DEBUG
 
 spring:
-  session:
-    store-type: redis
-    timeout: 1800
-  redis:
-    host: ${REDIS_HOST}
-    port: 6379
-    password: ${REDIS_PASSWORD}
-    ssl: true
   devtools:
     restart:
       enabled: false
