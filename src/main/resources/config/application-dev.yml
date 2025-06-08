@@ -20,6 +20,8 @@ spring:
     hiddenmethod:
       filter:
         enabled: true
+  session:
+    timeout: 1800
 logging:
   level:
     root: INFO
@@ -28,7 +30,11 @@ logging:
     org.springframework.security: TRACE
     org.springframework.web: DEBUG
     org.springframework.session: DEBUG
+    org.springframework.web.client.RestTemplate: DEBUG
     io.hexlet.typoreporter: DEBUG
 server:
   error:
     include-stacktrace: on_param
+  servlet:
+    session:
+      timeout: 1800
