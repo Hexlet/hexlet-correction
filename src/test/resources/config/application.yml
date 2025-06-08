@@ -24,18 +24,15 @@ spring:
           yandex:
             client-id: mock-yandex-client
             client-secret: mock-secret
-            redirect-uri: http://fixit.hexlet.io/login/oauth2/code/yandex
+            redirect-uri: http://localhost:8080
             authorization-grant-type: authorization_code
             scope: login:email
             client-name: Yandex
           github:
-            client-id: ${GITHUB_CLIENT_ID}
-            client-secret: ${GITHUB_CLIENT_SECRET}
-            scope:
-              - read:user
-              - user:email
-            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
-            client-name: GitHub
+            client-id: test
+            client-secret: test
+            redirect-uri: http://localhost:8080
+            scope: read:user
         provider:
           yandex:
             authorization-uri: https://oauth.yandex.ru/authorize

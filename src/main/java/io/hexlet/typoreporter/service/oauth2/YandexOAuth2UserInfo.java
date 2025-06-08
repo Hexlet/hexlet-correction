@@ -33,11 +33,6 @@ public class YandexOAuth2UserInfo implements OAuth2UserInfo {
     }
 
     @Override
-    public String getPassword() {
-        return null;
-    }
-
-    @Override
     public Map<String, Object> getAttributes() {
         return attributes;
     }

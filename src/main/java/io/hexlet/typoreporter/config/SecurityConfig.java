@@ -55,16 +55,6 @@ public class SecurityConfig {
     }
 
     @Bean
-    public DefaultCookieSerializer cookieSerializer() {
-        DefaultCookieSerializer serializer = new DefaultCookieSerializer();
-        serializer.setCookieName("JSESSIONID");
-        serializer.setSameSite("None");
-        serializer.setUseSecureCookie(true);
-        serializer.setDomainName("hexlet-correction-2n6d.onrender.com");
-        return serializer;
-    }
-
-    @Bean
     public DaoAuthenticationProvider accountProvider(AccountDetailService userDetailsService,
                                                      PasswordEncoder pEncoder) {
         final var accountProvider = new DaoAuthenticationProvider();

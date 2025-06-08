@@ -28,14 +28,18 @@ and change Redirect URI: http://{your-domain}/login/oauth2/code/yandex
 ## Registration/Authorization with GitHub
 
 For registration or/and authorization account with GitHub:
-- Create OAuth app https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/creating-an-oauth-app
-- Get values the `Client ID` and `Client Secret` and add to environment variables
+- Create OAuth app https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/creating-an-oauth-app.
+- Get values the `Client ID` and `Client Secret` and add to environment variables in any known way.
 
+For example, you can create an `.env` file in the root of the project, where you can enter the names of variables
+and their values as shown below:
 ```bash
-GITHUB_CLIENT_ID=your_github_client_id
-GITHUB_CLIENT_SECRET=your_github_client_secret
+GITHUB_CLIENT_ID=your_github_client_id_values
+GITHUB_CLIENT_SECRET=your_github_client_secret_values
 ```
-
+A `.env.example` file has been created in the root of the project, which specifies the variables as they should be specified. For these variables, you need to specify the values you received.
+You can copy this file and rename to `.env`, change and use.
+```
 
 ### Packaging as uber-jar
 
