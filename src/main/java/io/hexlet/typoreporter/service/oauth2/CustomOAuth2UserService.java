@@ -29,7 +29,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         String accessToken = userRequest.getAccessToken().getTokenValue();
 
         OAuth2UserInfo oAuth2UserInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(
-            oAuth2Provider, accessToken, oAuth2User.getAttributes());
+            oAuth2Provider, accessToken, new HashMap<>(oAuth2User.getAttributes()));
 
         String email = TextUtils.toLowerCaseData(oAuth2UserInfo.getEmail());
 
@@ -49,7 +49,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
             accountService.signup(newAccount);
         }
 
-        Map<String, Object> oAuth2UserAttributes = new HashMap<>(oAuth2UserInfo.getAttributes());
+        Map<String, Object> oAuth2UserAttributes = oAuth2UserInfo.getAttributes();
         oAuth2UserAttributes.putIfAbsent("email", email);
 
         return new CustomOAuth2User(

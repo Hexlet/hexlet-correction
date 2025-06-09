@@ -15,7 +15,7 @@ public class GithubOAuth2UserInfo implements OAuth2UserInfo {
 
     public GithubOAuth2UserInfo(String accessToken, Map<String, Object> attributes) {
         this.accessToken = accessToken;
-        this.attributes = new HashMap<>(attributes);
+        this.attributes = attributes;
     }
 
     @Override
