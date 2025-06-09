@@ -3,6 +3,7 @@ package io.hexlet.typoreporter.service.oauth2;
 import io.hexlet.typoreporter.domain.account.AuthProvider;
 import io.hexlet.typoreporter.service.AccountService;
 import io.hexlet.typoreporter.service.account.signup.SignupAccount;
+import io.hexlet.typoreporter.utils.TextUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -11,6 +12,7 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @Service
@@ -27,7 +29,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         String accessToken = userRequest.getAccessToken().getTokenValue();
 
         OAuth2UserInfo oAuth2UserInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(
-            oAuth2Provider, accessToken, oAuth2User.getAttributes());
+            oAuth2Provider, accessToken, new HashMap<>(oAuth2User.getAttributes()));
 
         String email = oAuth2UserInfo.getEmail();
 
@@ -35,10 +37,12 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
             throw new OAuth2AuthenticationException("Email from provider " + oAuth2Provider + " not received");
         }
 
-        if (!accountService.existsByEmail(email)) {
+        String normalizedEmail = TextUtils.toLowerCaseData(email);
+
+        if (!accountService.existsByEmail(normalizedEmail)) {
             var newAccount = new SignupAccount(
                 oAuth2UserInfo.getUsername(),
-                email,
+                normalizedEmail,
                 "OAUTH2_USER",
                 oAuth2UserInfo.getFirstName(),
                 oAuth2UserInfo.getLastName(),
@@ -48,7 +52,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         }
 
         Map<String, Object> oAuth2UserAttributes = oAuth2UserInfo.getAttributes();
-        oAuth2UserAttributes.putIfAbsent("email", email);
+        oAuth2UserAttributes.putIfAbsent("email", normalizedEmail);
 
         return new CustomOAuth2User(
             oAuth2User.getAuthorities(),
