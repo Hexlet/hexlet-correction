@@ -31,16 +31,18 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         OAuth2UserInfo oAuth2UserInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(
             oAuth2Provider, accessToken, new HashMap<>(oAuth2User.getAttributes()));
 
-        String email = TextUtils.toLowerCaseData(oAuth2UserInfo.getEmail());
+        String email = oAuth2UserInfo.getEmail();
 
         if (email == null) {
             throw new OAuth2AuthenticationException("Email from provider " + oAuth2Provider + " not received");
         }
 
-        if (!accountService.existsByEmail(email)) {
+        String normalizedEmail = TextUtils.toLowerCaseData(email);
+
+        if (!accountService.existsByEmail(normalizedEmail)) {
             var newAccount = new SignupAccount(
                 oAuth2UserInfo.getUsername(),
-                email,
+                normalizedEmail,
                 "OAUTH2_USER",
                 oAuth2UserInfo.getFirstName(),
                 oAuth2UserInfo.getLastName(),
@@ -50,7 +52,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         }
 
         Map<String, Object> oAuth2UserAttributes = oAuth2UserInfo.getAttributes();
-        oAuth2UserAttributes.putIfAbsent("email", email);
+        oAuth2UserAttributes.putIfAbsent("email", normalizedEmail);
 
         return new CustomOAuth2User(
             oAuth2User.getAuthorities(),
