@@ -26,10 +26,7 @@ add `ClientID` and `Client secret` in your secret
 YANDEX_CLIENT_ID=your_yadex_client_id_values
 YANDEX_CLIENT_SECRET=your_yandex_client_secret_values
 ```
-
-
-
-## Registration/Authorization with GitHub
+### Registration/Authorization with GitHub
 
 For registration or/and authorization account with GitHub:
 - Create OAuth app https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/creating-an-oauth-app.
