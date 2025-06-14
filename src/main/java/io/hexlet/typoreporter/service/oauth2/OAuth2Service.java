@@ -17,7 +17,7 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
-public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
+public class OAuth2Service implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
 
     private final AccountService accountService;
 
@@ -57,7 +57,8 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         return new CustomOAuth2User(
             oAuth2User.getAuthorities(),
             oAuth2UserAttributes,
-            "email"
+            "email",
+            oAuth2UserInfo.getUsername()
         );
     }
 }
