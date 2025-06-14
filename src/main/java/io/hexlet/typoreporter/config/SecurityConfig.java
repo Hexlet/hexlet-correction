@@ -80,7 +80,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http,
                                    SecurityContextRepository securityContextRepository,
                                    DynamicCorsConfigurationSource dynamicCorsConfigurationSource,
-                                           OAuth2Service OAuth2Service) throws Exception {
+                                           OAuth2Service oAuth2Service) throws Exception {
         http.httpBasic();
         http.cors();
         http.exceptionHandling().accessDeniedHandler(accessDeniedHandler());
@@ -105,7 +105,7 @@ public class SecurityConfig {
             )
             .oauth2Login(oauth2 -> oauth2
                 .loginPage("/login")
-                .userInfoEndpoint(userInfo -> userInfo.userService(OAuth2Service))
+                .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2Service))
                 .defaultSuccessUrl("/workspaces", true)
             )
             .addFilterBefore(corsFilter(dynamicCorsConfigurationSource), CorsFilter.class);
