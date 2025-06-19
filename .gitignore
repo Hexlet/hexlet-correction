@@ -441,3 +441,6 @@ fabric.properties
 
 # JPA Buddy settings
 /.jpb/
+
+# Amplicode
+amplicode.xml
