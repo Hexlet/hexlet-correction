@@ -60,6 +60,7 @@ dependencies {
     testImplementation("org.testcontainers:junit-jupiter")
     testImplementation("org.testcontainers:postgresql")
     testImplementation("com.github.database-rider:rider-spring:1.36.0")
+    testImplementation("org.springframework.cloud:spring-cloud-contract-wiremock:4.0.2")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     testAnnotationProcessor("org.mapstruct:mapstruct-processor:1.5.3.Final")
 }
