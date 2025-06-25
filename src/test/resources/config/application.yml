@@ -17,6 +17,34 @@ spring:
         enabled: true
     problemdetails:
       enabled: true
+  security:
+    oauth2:
+      client:
+        registration:
+          yandex:
+            client-id: test-client-id
+            client-secret: test-client-secret
+            redirect-uri: http://localhost:8080/login/oauth2/code/yandex
+            authorization-grant-type: authorization_code
+            scope: login:email
+            client-name: Yandex
+          github:
+            client-id: test
+            client-secret: test
+            redirect-uri: http://localhost:8080/login/oauth2/code/github
+            scope: read:user
+        provider:
+          yandex:
+            authorization-uri: https://oauth.yandex.ru/authorize
+            token-uri: https://oauth.yandex.ru/token
+            user-info-uri: https://login.yandex.ru/info
+            user-name-attribute: default_email
+          github:
+            authorization-uri: https://github.com/login/oauth/authorize
+            token-uri: https://github.com/login/oauth/access_token
+            user-info-uri: https://api.github.com/user
+            user-name-attribute: login
+
 
 logging:
   level:

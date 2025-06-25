@@ -1,5 +1,7 @@
 package io.hexlet.typoreporter;
 
+import io.github.cdimascio.dotenv.Dotenv;
+import io.github.cdimascio.dotenv.DotenvEntry;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -7,6 +9,7 @@ import org.springframework.core.env.Environment;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Set;
 
 import static java.util.Optional.ofNullable;
 
@@ -15,6 +18,15 @@ import static java.util.Optional.ofNullable;
 public class HexletTypoReporter {
 
     public static void main(String[] args) {
+        Dotenv dotenv = Dotenv.configure()
+            .ignoreIfMalformed()
+            .ignoreIfMissing()
+            .load();
+
+        Set<DotenvEntry> dotenvInFile = dotenv.entries(Dotenv.Filter.DECLARED_IN_ENV_FILE);
+        dotenvInFile.forEach(entry ->
+            System.setProperty(entry.getKey(), entry.getValue()));
+
         final var env = SpringApplication.run(HexletTypoReporter.class, args).getEnvironment();
         logApplicationStartup(env);
     }

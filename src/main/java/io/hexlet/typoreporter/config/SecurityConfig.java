@@ -4,6 +4,7 @@ import io.hexlet.typoreporter.handler.exception.ForbiddenDomainException;
 import io.hexlet.typoreporter.handler.exception.WorkspaceNotFoundException;
 import io.hexlet.typoreporter.security.service.AccountDetailService;
 import io.hexlet.typoreporter.security.service.SecuredWorkspaceService;
+import io.hexlet.typoreporter.service.oauth2.OAuth2Service;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -78,7 +79,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http,
                                    SecurityContextRepository securityContextRepository,
-                                   DynamicCorsConfigurationSource dynamicCorsConfigurationSource) throws Exception {
+                                   DynamicCorsConfigurationSource dynamicCorsConfigurationSource,
+                                           OAuth2Service oAuth2Service) throws Exception {
         http.httpBasic();
         http.cors();
         http.exceptionHandling().accessDeniedHandler(accessDeniedHandler());
@@ -86,7 +88,7 @@ public class SecurityConfig {
         http.authorizeHttpRequests(authz -> authz
                 .requestMatchers(GET, "/webjars/**", "/widget/**", "/fragments/**", "/img/**",
                     "/favicon.ico").permitAll()
-                .requestMatchers("/", "/login", "/signup", "/error", "/about").permitAll()
+                .requestMatchers("/", "/login", "/signup", "/error", "/about", "/oauth2/**").permitAll()
                 .anyRequest().authenticated()
             )
             .formLogin(login -> login
@@ -100,6 +102,11 @@ public class SecurityConfig {
                     new AntPathRequestMatcher("/api/**", POST.name()),
                     new AntPathRequestMatcher("/typo/form/*", POST.name())
                 )
+            )
+            .oauth2Login(oauth2 -> oauth2
+                .loginPage("/login")
+                .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2Service))
+                .defaultSuccessUrl("/workspaces", true)
             )
             .addFilterBefore(corsFilter(dynamicCorsConfigurationSource), CorsFilter.class);
 

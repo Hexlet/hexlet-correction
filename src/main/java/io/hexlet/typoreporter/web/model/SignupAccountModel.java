@@ -42,4 +42,7 @@ public class SignupAccountModel {
 
     @Size(max = 50)
     private String lastName;
+
+
+    private String authProvider;
 }

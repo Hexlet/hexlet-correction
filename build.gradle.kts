@@ -32,6 +32,9 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-validation")
+    implementation ("org.springframework.boot:spring-boot-starter-oauth2-client")
+    implementation("org.springframework.boot:spring-boot-starter-webflux")
+    implementation("org.springframework.session:spring-session-core")
     runtimeOnly("org.springframework.boot:spring-boot-devtools")
     // Thymeleaf
     implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity6:3.1.1.RELEASE")
@@ -40,13 +43,15 @@ dependencies {
     implementation("org.webjars:bootstrap:5.2.3")
     implementation("nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.3.0")
     // Database
-    runtimeOnly("org.postgresql:postgresql:42.5.4")
+    runtimeOnly("org.postgresql:postgresql:42.5.5")
     implementation("io.hypersistence:hypersistence-utils-hibernate-60:3.2.0")
     implementation("org.liquibase:liquibase-core:4.26.0")
     // Utils
     compileOnly("org.projectlombok:lombok-mapstruct-binding:0.2.0")
     implementation("org.ocpsoft.prettytime:prettytime:5.0.6.Final")
     implementation("org.mapstruct:mapstruct:1.5.3.Final")
+    implementation("io.github.cdimascio:dotenv-java:3.2.0")
+    implementation("org.antlr:antlr4-runtime:4.10.1")
     // Annotation processors
     annotationProcessor("org.mapstruct:mapstruct-processor:1.5.3.Final")
     // Testing
@@ -55,6 +60,7 @@ dependencies {
     testImplementation("org.testcontainers:junit-jupiter")
     testImplementation("org.testcontainers:postgresql")
     testImplementation("com.github.database-rider:rider-spring:1.36.0")
+    testImplementation("org.springframework.cloud:spring-cloud-contract-wiremock:4.0.2")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     testAnnotationProcessor("org.mapstruct:mapstruct-processor:1.5.3.Final")
 }

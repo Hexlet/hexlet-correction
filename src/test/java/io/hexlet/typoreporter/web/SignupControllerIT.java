@@ -60,13 +60,15 @@ class SignupControllerIT {
         "model_upper_case",
         EMAIL_UPPER_CASE,
         "password", "password",
-        "firstName", "lastName");
+        "firstName", "lastName",
+        "EMAIL");
 
     private final SignupAccountModel anotherModelWithSameButLowerCaseEmail = new SignupAccountModel(
         "model_lower_case",
         EMAIL_LOWER_CASE,
         "another_password", "another_password",
-        "another_firstName", "another_lastName");
+        "another_firstName", "another_lastName",
+        "EMAIL");
 
     private static ResourceBundleMessageSource source;
 

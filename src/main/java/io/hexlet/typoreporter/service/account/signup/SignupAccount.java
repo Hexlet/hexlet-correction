@@ -5,7 +5,8 @@ public record SignupAccount(
     String email,
     String password,
     String firstName,
-    String lastName
+    String lastName,
+    String authProvider
 ) {
 
     @Override

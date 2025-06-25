@@ -56,7 +56,8 @@ class LoginIT {
         "model_upper_case",
         EMAIL_UPPER_CASE,
         "password", "password",
-        "firstName", "lastName");
+        "firstName", "lastName",
+        "EMAIL");
 
     @Test
     void loginByEmailInAnyCaseSuccess() throws Exception {
