@@ -20,7 +20,7 @@ Before you can build this project, you must install and configure the following 
 ### Yandex authorization
 
 To enable Yandex authorization, you need to register on [Yandex ID OAuth](https://oauth.yandex.ru/) and create your web application, 
-add `ClientID` and `Client secret` in your secret
+add `ClientID` and `Client secret` in your secret.
 
 ```bash
 YANDEX_CLIENT_ID=your_yadex_client_id_values
