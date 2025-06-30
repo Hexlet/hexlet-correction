@@ -14,7 +14,7 @@ Highlight text and press <kbd>Ctrl+Enter</kbd>
 
 Before you can build this project, you must install and configure the following dependencies on your machine:
 
-1. Java 19
+1. Java 21
 2. Docker, Docker Compose
 
 ### Yandex authorization
