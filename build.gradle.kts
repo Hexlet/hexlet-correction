@@ -1,7 +1,7 @@
 group = "io.hexlet"
 version = "0.0.1-SNAPSHOT"
 description = "Hexlet Typo Reporter"
-java.sourceCompatibility = JavaVersion.VERSION_19
+java.sourceCompatibility = JavaVersion.VERSION_21
 
 plugins {
     id("java")
