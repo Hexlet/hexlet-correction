@@ -1,5 +1,6 @@
 package io.hexlet.typoreporter.config;
 
+import io.hexlet.typoreporter.handler.OAuth2AuthenticationFailureHandler;
 import io.hexlet.typoreporter.handler.exception.ForbiddenDomainException;
 import io.hexlet.typoreporter.handler.exception.WorkspaceNotFoundException;
 import io.hexlet.typoreporter.security.service.AccountDetailService;
@@ -102,7 +103,8 @@ public class SecurityConfig {
                 .loginPage("/login")
                 .userInfoEndpoint(userInfo ->
                     userInfo.userService(socialOAuth2UserService))
-                .defaultSuccessUrl("/workspaces", true))
+                .defaultSuccessUrl("/workspaces", true)
+                .failureHandler(new OAuth2AuthenticationFailureHandler()))
             .csrf(csrf -> csrf
                 .ignoringRequestMatchers(
                     new AntPathRequestMatcher("/api/**", POST.name()),

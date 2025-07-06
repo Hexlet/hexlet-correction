@@ -1,7 +1,6 @@
 package io.hexlet.typoreporter.service.oauth2;
 
 import io.hexlet.typoreporter.domain.account.AuthProvider;
-import io.hexlet.typoreporter.handler.exception.GithubAuthenticationException;
 import io.hexlet.typoreporter.service.AccountService;
 import io.hexlet.typoreporter.service.account.signup.SignupAccount;
 import io.hexlet.typoreporter.service.dto.oauth2.CustomOAuth2User;
@@ -13,6 +12,7 @@ import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserServ
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
+import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -60,7 +60,8 @@ public class SocialOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         String oAuth2Provider = userRequest.getClientRegistration().getRegistrationId();
         AuthProvider authProvider = AuthProvider.fromString(oAuth2Provider);
         if (authProvider == null) {
-            throw new IllegalArgumentException("Unsupported provider: " + oAuth2Provider);
+            throw new OAuth2AuthenticationException(
+                new OAuth2Error("unsupported_provider", "Unsupported provider: " + oAuth2Provider, null));
         }
         return authProvider;
     }
@@ -72,7 +73,8 @@ public class SocialOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
             email = getEmailFromGithub(accessTokenValue);
         }
         if (email == null) {
-            throw new NullPointerException("Email from provider " + authProvider.name() + " not received");
+            throw new OAuth2AuthenticationException(new OAuth2Error("email_not_received",
+                "Email from provider " + authProvider.name() + " not received", null));
         }
         return TextUtils.toLowerCaseData(email);
     }
@@ -96,7 +98,8 @@ public class SocialOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
                 .findFirst()
                 .orElse(null);
         } catch (WebClientResponseException e) {
-            throw new GithubAuthenticationException("Failed to retrieve email from GitHub");
+            throw new OAuth2AuthenticationException(
+                new OAuth2Error("failed_retrieve_email", "Failed to retrieve email from GitHub", null));
         }
     }
 
