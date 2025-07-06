@@ -40,7 +40,6 @@ import static org.springframework.http.HttpMethod.POST;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-
     @Bean
     public PasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();

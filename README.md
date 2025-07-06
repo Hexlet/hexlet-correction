@@ -14,8 +14,34 @@ Highlight text and press <kbd>Ctrl+Enter</kbd>
 
 Before you can build this project, you must install and configure the following dependencies on your machine:
 
-1. Java 19
+1. Java 21
 2. Docker, Docker Compose
+
+### Yandex authorization
+
+To enable Yandex authorization, you need to register on [Yandex ID OAuth](https://oauth.yandex.ru/) and create your web application, 
+add `ClientID` and `Client secret` in your secret
+
+```bash
+YANDEX_CLIENT_ID=your_yadex_client_id_values
+YANDEX_CLIENT_SECRET=your_yandex_client_secret_values
+```
+
+### Registration/Authorization with GitHub
+
+For registration or/and authorization account with GitHub:
+- Create OAuth app https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/creating-an-oauth-app.
+- Authorization callback URL = {baseUrl}/login/oauth2/code/github, for example: http://localhost:8080/login/oauth2/code/github
+- Get values the `Client ID` and `Client Secret` and add to environment variables in any known way.
+
+For example, you can create an `.env` file in the root of the project, where you can enter the names of variables
+and their values as shown below:
+```bash
+GITHUB_CLIENT_ID=your_github_client_id_values
+GITHUB_CLIENT_SECRET=your_github_client_secret_values
+```
+A `.env.example` file has been created in the root of the project, which specifies the variables as they should be specified. For these variables, you need to specify the values you received.
+You can copy this file and rename to `.env`, change and use.
 
 ### Packaging as uber-jar
 
@@ -92,21 +118,6 @@ Referer: (workspaceId:allowed-url)
 }
 ```
 
-## Registration/Authorization with GitHub
-
-For registration or/and authorization account with GitHub:
-- Create OAuth app https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/creating-an-oauth-app.
-- Authorization callback URL = {baseUrl}/login/oauth2/code/github, for example: http://localhost:8080/login/oauth2/code/github
-- Get values the `Client ID` and `Client Secret` and add to environment variables in any known way.
-
-For example, you can create an `.env` file in the root of the project, where you can enter the names of variables
-and their values as shown below:
-```bash
-GITHUB_CLIENT_ID=your_github_client_id_values
-GITHUB_CLIENT_SECRET=your_github_client_secret_values
-```
-A `.env.example` file has been created in the root of the project, which specifies the variables as they should be specified. For these variables, you need to specify the values you received.
-You can copy this file and rename to `.env`, change and use.
 ---
 
 [![Hexlet Ltd. logo](https://raw.githubusercontent.com/Hexlet/assets/master/images/hexlet_logo128.png)](https://hexlet.io/?utm_source=github&utm_medium=link&utm_campaign=hexlet-correction)

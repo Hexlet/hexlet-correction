@@ -9,10 +9,22 @@ spring:
             client-id: fake-client-id
             client-secret: fake-client-secret
             redirect-uri: "{baseUrl}/login/oauth2/code/github"
+          yandex:
+            client-id: test-client-id
+            client-secret: test-client-secret
+            redirect-uri: http://localhost:8080/login/oauth2/code/yandex
+            authorization-grant-type: authorization_code
+            scope: login:email
+            client-name: Yandex
         provider:
           github:
             user-info-uri: https://api.github.com/user
             user-name-attribute: login
+          yandex:
+            authorization-uri: https://oauth.yandex.ru/authorize
+            token-uri: https://oauth.yandex.ru/token
+            user-info-uri: https://login.yandex.ru/info
+            user-name-attribute: default_email
   jpa:
     open-in-view: true
     show-sql: true
@@ -29,7 +41,6 @@ spring:
         enabled: true
     problemdetails:
       enabled: true
-
 logging:
   level:
     root: INFO

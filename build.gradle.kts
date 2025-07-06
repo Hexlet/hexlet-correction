@@ -1,7 +1,7 @@
 group = "io.hexlet"
 version = "0.0.1-SNAPSHOT"
 description = "Hexlet Typo Reporter"
-java.sourceCompatibility = JavaVersion.VERSION_19
+java.sourceCompatibility = JavaVersion.VERSION_21
 
 plugins {
     id("java")
@@ -34,6 +34,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
     implementation("org.springframework.boot:spring-boot-starter-webflux")
+    implementation("org.springframework.session:spring-session-core")
     runtimeOnly("org.springframework.boot:spring-boot-devtools")
     // Thymeleaf
     implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity6:3.1.1.RELEASE")
