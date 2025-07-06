@@ -16,6 +16,13 @@ public interface WorkspaceMapper {
 
     PrettyTime PRETTY_TIME = new PrettyTime();
 
+    @Mapping(target = "workspaceSettings", ignore = true)
+    @Mapping(target = "workspaceRoles", ignore = true)
+    @Mapping(target = "typos", ignore = true)
+    @Mapping(target = "removeTypo", ignore = true)
+    @Mapping(target = "removeAllowedUrl", ignore = true)
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "allowedUrls", ignore = true)
     Workspace toWorkspace(CreateWorkspace source);
 
     @Mapping(target = "createdDateAgo", source = "createdDate", qualifiedByName = "mapToPrettyDateAgo")

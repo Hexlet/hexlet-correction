@@ -4,7 +4,7 @@ import io.hexlet.typoreporter.handler.exception.ForbiddenDomainException;
 import io.hexlet.typoreporter.handler.exception.WorkspaceNotFoundException;
 import io.hexlet.typoreporter.security.service.AccountDetailService;
 import io.hexlet.typoreporter.security.service.SecuredWorkspaceService;
-import io.hexlet.typoreporter.service.oauth2.CustomOAuth2UserService;
+import io.hexlet.typoreporter.service.oauth2.SocialOAuth2UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -81,7 +81,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http,
                                    SecurityContextRepository securityContextRepository,
                                    DynamicCorsConfigurationSource dynamicCorsConfigurationSource,
-                                   CustomOAuth2UserService customOAuth2UserService) throws Exception {
+                                   SocialOAuth2UserService socialOAuth2UserService) throws Exception {
         http.httpBasic();
         http.cors();
         http.exceptionHandling().accessDeniedHandler(accessDeniedHandler());
@@ -101,7 +101,7 @@ public class SecurityConfig {
             .oauth2Login(oauth -> oauth
                 .loginPage("/login")
                 .userInfoEndpoint(userInfo ->
-                    userInfo.userService(customOAuth2UserService))
+                    userInfo.userService(socialOAuth2UserService))
                 .defaultSuccessUrl("/workspaces", true))
             .csrf(csrf -> csrf
                 .ignoringRequestMatchers(

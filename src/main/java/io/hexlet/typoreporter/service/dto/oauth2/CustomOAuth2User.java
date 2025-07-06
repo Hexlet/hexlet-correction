@@ -1,4 +1,4 @@
-package io.hexlet.typoreporter.service.oauth2;
+package io.hexlet.typoreporter.service.dto.oauth2;
 
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;

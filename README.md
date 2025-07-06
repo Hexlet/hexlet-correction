@@ -96,6 +96,7 @@ Referer: (workspaceId:allowed-url)
 
 For registration or/and authorization account with GitHub:
 - Create OAuth app https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/creating-an-oauth-app.
+- Authorization callback URL = {baseUrl}/login/oauth2/code/github, for example: http://localhost:8080/login/oauth2/code/github
 - Get values the `Client ID` and `Client Secret` and add to environment variables in any known way.
 
 For example, you can create an `.env` file in the root of the project, where you can enter the names of variables

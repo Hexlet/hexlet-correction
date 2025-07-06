@@ -51,6 +51,7 @@ dependencies {
     implementation("org.mapstruct:mapstruct:1.5.3.Final")
     implementation("io.github.cdimascio:dotenv-java:3.2.0")
     implementation("org.antlr:antlr4-runtime:4.10.1")
+    implementation("org.mockito:mockito-inline:5.2.0")
     // Annotation processors
     annotationProcessor("org.mapstruct:mapstruct-processor:1.5.3.Final")
     // Testing
@@ -59,6 +60,7 @@ dependencies {
     testImplementation("org.testcontainers:junit-jupiter")
     testImplementation("org.testcontainers:postgresql")
     testImplementation("com.github.database-rider:rider-spring:1.36.0")
+    testImplementation("org.wiremock:wiremock-standalone:3.13.1")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     testAnnotationProcessor("org.mapstruct:mapstruct-processor:1.5.3.Final")
 }

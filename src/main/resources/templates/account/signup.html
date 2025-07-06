@@ -51,8 +51,9 @@
         </div>
     </div>
     <div class="row">
-        <div class="mt-4">
-            <a class="link-primary" th:href="@{/oauth2/authorization/github}" th:text="#{link.github-create-account}"></a>
+        <div class="mt-4" th:switch="${#locale.language}">
+            <a class="link-primary" th:case="en" th:href="@{/oauth2/authorization/github}" th:text="#{link.github-create-account}"></a>
+            <a class="link-primary" th:case="ru" th:href="@{/oauth2/authorization/yandex}" th:text="#{link.yandex-create-account}"></a>
         </div>
     </div>
 </div>

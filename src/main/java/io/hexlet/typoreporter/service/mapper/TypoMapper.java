@@ -17,6 +17,10 @@ public interface TypoMapper {
 
     PrettyTime PRETTY_TIME = new PrettyTime();
 
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "typoStatus", ignore = true)
+    @Mapping(target = "account", ignore = true)
+    @Mapping(target = "workspace", ignore = true)
     Typo toTypo(TypoReport source);
 
     @Mapping(target = "modifiedDateAgo", source = "modifiedDate", qualifiedByName = "mapToPrettyDateAgo")
