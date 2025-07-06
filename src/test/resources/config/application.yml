@@ -6,10 +6,13 @@ spring:
       client:
         registration:
           github:
-            client-id: test
-            client-secret: test
-            redirect-uri: http://localhost:8080
-            scope: read:user
+            client-id: fake-client-id
+            client-secret: fake-client-secret
+            redirect-uri: "{baseUrl}/login/oauth2/code/github"
+        provider:
+          github:
+            user-info-uri: https://api.github.com/user
+            user-name-attribute: login
   jpa:
     open-in-view: true
     show-sql: true
@@ -31,7 +34,12 @@ logging:
   level:
     root: INFO
     web: DEBUG
-    org.hibernate.type.descriptor.sql: TRACE
+    org:
+      hibernate.type.descriptor.sql: TRACE
+      springframework:
+        security: DEBUG
+        web:
+          client: DEBUG
     io.hexlet.typoreporter: DEBUG
     # Bug in database rider, a lot of log 'warning'
     com.github.database.rider.core.api.dataset.ScriptableTable: ERROR
